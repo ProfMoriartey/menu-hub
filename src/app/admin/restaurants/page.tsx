@@ -1,15 +1,16 @@
-import { db } from "~/server/db"; // Assuming your Drizzle client is exported from '@/db/index.ts' or similar
-import { restaurants } from "~/server/db/schema"; // Import your restaurants schema
-import { Button } from "~/components/ui/button"; // Shadcn UI Button
-import { Input } from "~/components/ui/input"; // Shadcn UI Input
-import { Label } from "~/components/ui/label"; // Shadcn UI Label
+// app/admin/restaurants/page.tsx
+import { db } from "~/server/db";
+import { restaurants } from "~/server/db/schema";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "~/components/ui/card"; // Shadcn UI Card
+} from "~/components/ui/card";
 import {
   Table,
   TableBody,
@@ -17,13 +18,30 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "~/components/ui/table"; // Shadcn UI Table
-import { revalidatePath } from "next/cache"; // For revalidating data after mutation
-import { eq } from "drizzle-orm"; // Drizzle ORM utility for equality checks
-import { z } from "zod"; // For form validation
-import { redirect } from "next/navigation"; // For redirecting after successful creation
+} from "~/components/ui/table";
+import { revalidatePath } from "next/cache";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { redirect } from "next/navigation";
+// NEW IMPORTS FOR DELETE CONFIRMATION
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
+import { Trash2 } from "lucide-react"; // For the delete icon
 
-// Zod schema for form validation
+// NEW IMPORT for Edit Dialog
+import { EditRestaurantDialog } from "~/components/admin/EditRestaurantDialog";
+import Link from "next/link";
+
+// Zod schema for form validation (existing - for create)
 const createRestaurantSchema = z.object({
   name: z.string().min(1, { message: "Restaurant name is required." }),
   slug: z
@@ -34,29 +52,33 @@ const createRestaurantSchema = z.object({
     }),
 });
 
-// Server Action to add a new restaurant
-// This function runs on the server and interacts with the database.
+// Zod schema for update validation (similar to create, but includes ID)
+const updateRestaurantSchema = z.object({
+  id: z.string().uuid(), // ID is required for update
+  name: z.string().min(1, { message: "Restaurant name is required." }),
+  slug: z
+    .string()
+    .min(1, { message: "Restaurant slug is required." })
+    .regex(/^[a-z0-9-]+$/, {
+      message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
+    }),
+});
+
+// Server Action to add a new restaurant (existing)
 async function addRestaurant(formData: FormData) {
-  "use server"; // Mark this function as a Server Action
+  "use server";
 
   const name = formData.get("name") as string;
   const slug = formData.get("slug") as string;
 
-  // Validate the input using Zod
   const validationResult = createRestaurantSchema.safeParse({ name, slug });
 
   if (!validationResult.success) {
-    // In a real application, you'd handle these errors more gracefully,
-    // perhaps by returning them to the client component to display.
     console.error("Validation failed:", validationResult.error.errors);
-    // For now, we'll just throw an error or redirect back.
-    // A more robust solution would involve using a state management library or
-    // passing errors back via a different mechanism (e.g., useFormState hook).
     throw new Error("Invalid input for restaurant creation.");
   }
 
   try {
-    // Check if slug already exists
     const existingRestaurant = await db.query.restaurants.findFirst({
       where: eq(restaurants.slug, validationResult.data.slug),
     });
@@ -67,38 +89,100 @@ async function addRestaurant(formData: FormData) {
       );
     }
 
-    // Insert the new restaurant into the database
     await db.insert(restaurants).values({
       name: validationResult.data.name,
       slug: validationResult.data.slug,
     });
 
-    // Revalidate the path to show the newly added restaurant immediately
     revalidatePath("/admin/restaurants");
-    // Optionally redirect after successful creation
-    // redirect('/admin/restaurants'); // Uncomment if you want to redirect to a clean state
   } catch (error) {
     console.error("Error adding restaurant:", error);
-    // Again, in a production app, you'd return a user-friendly error message.
     throw new Error(
       `Failed to add restaurant: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
 
+// Server Action to delete a restaurant (existing)
+async function deleteRestaurant(restaurantId: string) {
+  "use server";
+
+  try {
+    await db.delete(restaurants).where(eq(restaurants.id, restaurantId));
+    revalidatePath("/admin/restaurants");
+  } catch (error) {
+    console.error("Error deleting restaurant:", error);
+    throw new Error("Failed to delete restaurant.");
+  }
+}
+
+// NEW SERVER ACTION: Update a restaurant
+async function updateRestaurant(formData: FormData) {
+  "use server";
+
+  const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
+  const slug = formData.get("slug") as string;
+
+  // Validate the input using Zod
+  const validationResult = updateRestaurantSchema.safeParse({ id, name, slug });
+
+  if (!validationResult.success) {
+    console.error("Validation failed:", validationResult.error.errors);
+    // Throw error to be caught by the client component's handleSubmit
+    throw new Error(
+      validationResult.error.errors.map((e) => e.message).join(", "),
+    );
+  }
+
+  try {
+    // Check for duplicate slug, excluding the current restaurant being updated
+    const existingRestaurantWithSameSlug = await db.query.restaurants.findFirst(
+      {
+        where: (restaurant, { and, eq, ne }) =>
+          and(
+            eq(restaurant.slug, validationResult.data.slug),
+            ne(restaurant.id, validationResult.data.id),
+          ),
+      },
+    );
+
+    if (existingRestaurantWithSameSlug) {
+      throw new Error(
+        "A restaurant with this slug already exists. Please choose a different one.",
+      );
+    }
+
+    // Update the restaurant in the database
+    await db
+      .update(restaurants)
+      .set({
+        name: validationResult.data.name,
+        slug: validationResult.data.slug,
+        updatedAt: new Date(), // Manually update updatedAt timestamp
+      })
+      .where(eq(restaurants.id, validationResult.data.id));
+
+    revalidatePath("/admin/restaurants"); // Revalidate to update the list
+  } catch (error) {
+    console.error("Error updating restaurant:", error);
+    throw new Error(
+      `Failed to update restaurant: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+}
+
 // Main Admin Restaurants Page Component (Server Component)
 export default async function AdminRestaurantsPage() {
-  // Fetch all restaurants from the database
-  // This runs on the server.
   const allRestaurants = await db.query.restaurants.findMany({
-    orderBy: (restaurants, { asc }) => [asc(restaurants.name)], // Order by name
+    orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
   });
 
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-bold">Manage Restaurants</h1>
 
-      {/* Add New Restaurant Card */}
+      {/* Add New Restaurant Card (existing) */}
       <Card>
         <CardHeader>
           <CardTitle>Add New Restaurant</CardTitle>
@@ -136,7 +220,7 @@ export default async function AdminRestaurantsPage() {
         </CardContent>
       </Card>
 
-      {/* List of Existing Restaurants */}
+      {/* List of Existing Restaurants (updated for edit) */}
       <Card>
         <CardHeader>
           <CardTitle>Existing Restaurants</CardTitle>
@@ -170,14 +254,58 @@ export default async function AdminRestaurantsPage() {
                       <TableCell>
                         {new Date(restaurant.createdAt).toLocaleDateString()}
                       </TableCell>
-                      <TableCell className="text-right">
-                        {/* Placeholder for Edit and Delete buttons */}
-                        <Button variant="outline" size="sm" className="mr-2">
-                          Edit
-                        </Button>
-                        <Button variant="destructive" size="sm">
-                          Delete
-                        </Button>
+                      <TableCell className="flex items-center justify-end space-x-2 text-right">
+                        <Link
+                          href={`/admin/restaurants/${restaurant.id}/categories`}
+                          passHref
+                        >
+                          <Button variant="secondary" size="sm">
+                            Categories
+                          </Button>
+                        </Link>
+                        {/* Edit Button with Dialog */}
+                        <EditRestaurantDialog
+                          restaurant={restaurant}
+                          updateRestaurantAction={updateRestaurant}
+                        />
+
+                        {/* Delete Button with Confirmation Dialog */}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="destructive" size="icon">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Are you absolutely sure?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will
+                                permanently delete the
+                                <strong> {restaurant.name} </strong> restaurant
+                                and all its associated categories and menu items
+                                from your database.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction asChild>
+                                <form
+                                  action={async () => {
+                                    "use server";
+                                    await deleteRestaurant(restaurant.id);
+                                  }}
+                                >
+                                  <Button variant="destructive" type="submit">
+                                    Delete
+                                  </Button>
+                                </form>
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </TableCell>
                     </TableRow>
                   ))}
