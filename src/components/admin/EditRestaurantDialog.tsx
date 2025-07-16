@@ -24,7 +24,7 @@ interface Restaurant {
   name: string;
   slug: string;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }
 
 // Zod schema for form validation

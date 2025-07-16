@@ -141,9 +141,9 @@ async function deleteCategory(categoryId: string, restaurantId: string) {
 export default async function AdminCategoriesPage({
   params,
 }: {
-  params: { restaurantId: string };
+  params: Promise<{ restaurantId: string }>;
 }) {
-  const { restaurantId } = params;
+  const { restaurantId } = await params;
 
   // Fetch the restaurant details to display its name
   const restaurantDetails = await db.query.restaurants.findFirst({
