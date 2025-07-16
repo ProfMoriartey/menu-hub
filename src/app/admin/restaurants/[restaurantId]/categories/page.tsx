@@ -38,6 +38,7 @@ import { Trash2, Pencil } from "lucide-react"; // Icons
 
 // NEW: Edit Category Dialog Component (will be created next)
 import { EditCategoryDialog } from "~/components/admin/EditCategoryDialog";
+import Link from "next/link";
 
 // Zod schema for adding a category
 const createCategorySchema = z.object({
@@ -230,6 +231,14 @@ export default async function AdminCategoriesPage({
                         {new Date(category.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="flex items-center justify-end space-x-2 text-right">
+                        <Link
+                          href={`/admin/restaurants/${restaurantId}/categories/${category.id}/menu-items`}
+                          passHref
+                        >
+                          <Button variant="secondary" size="sm">
+                            Items
+                          </Button>
+                        </Link>
                         {/* Edit Button with Dialog */}
                         <EditCategoryDialog
                           category={category}
