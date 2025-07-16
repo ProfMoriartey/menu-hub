@@ -32,7 +32,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { AddMenuItemForm } from "~/components/admin/AddMenuItemForm";
 import { ResponsiveImage } from "~/components/shared/ResponsiveImage";
 

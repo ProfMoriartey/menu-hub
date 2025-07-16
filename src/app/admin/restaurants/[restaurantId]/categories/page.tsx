@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { revalidatePath } from "next/cache";
-import { eq, and } from "drizzle-orm"; // Import 'and' for combined conditions
+import { eq } from "drizzle-orm"; // Import 'and' for combined conditions
 import { z } from "zod";
 import { notFound } from "next/navigation"; // To handle non-existent restaurantId
 import {
@@ -34,7 +34,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { Trash2, Pencil } from "lucide-react"; // Icons
+import { Trash2 } from "lucide-react"; // Icons
 
 // NEW: Edit Category Dialog Component (will be created next)
 import { EditCategoryDialog } from "~/components/admin/EditCategoryDialog";

@@ -1,7 +1,7 @@
 // app/[restaurantSlug]/item/[itemId]/page.tsx
 import { db } from "~/server/db";
-import { menuItems, restaurants, categories } from "~/server/db/schema";
-import { eq, and } from "drizzle-orm";
+import { menuItems } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { ResponsiveImage } from "~/components/shared/ResponsiveImage";
 import Link from "next/link";
