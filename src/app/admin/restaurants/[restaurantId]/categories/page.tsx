@@ -1,6 +1,6 @@
 // app/admin/restaurants/[restaurantId]/categories/page.tsx
 import { db } from "~/server/db";
-import { categories, restaurants } from "~/server/db/schema"; // Import both schemas
+import { categories, restaurants } from "~/server/db/schema";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -20,9 +20,9 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { revalidatePath } from "next/cache";
-import { eq, and } from "drizzle-orm"; // Import 'and' for combined conditions
+import { eq, and } from "drizzle-orm";
 import { z } from "zod";
-import { notFound } from "next/navigation"; // To handle non-existent restaurantId
+import { notFound } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,22 +34,29 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { Trash2, Pencil } from "lucide-react"; // Icons
+import { Trash2, Pencil } from "lucide-react";
 
-// NEW: Edit Category Dialog Component (will be created next)
 import { EditCategoryDialog } from "~/components/admin/EditCategoryDialog";
+
+// Define the props type explicitly for clarity and type safety
+interface AdminCategoriesPageProps {
+  params: {
+    restaurantId: string;
+  };
+  // searchParams?: { [key: string]: string | string[] | undefined }; // Uncomment if you use search params
+}
 
 // Zod schema for adding a category
 const createCategorySchema = z.object({
   name: z.string().min(1, { message: "Category name is required." }),
-  restaurantId: z.string().uuid(), // Ensure restaurantId is a valid UUID
+  restaurantId: z.string().uuid(),
 });
 
 // Zod schema for updating a category
 const updateCategorySchema = z.object({
-  id: z.string().uuid(), // Category ID
+  id: z.string().uuid(),
   name: z.string().min(1, { message: "Category name is required." }),
-  restaurantId: z.string().uuid(), // Restaurant ID
+  restaurantId: z.string().uuid(),
 });
 
 // Server Action to add a new category
@@ -75,7 +82,6 @@ async function addCategory(formData: FormData) {
       restaurantId: validationResult.data.restaurantId,
     });
 
-    // Revalidate the specific path for this restaurant's categories
     revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
   } catch (error) {
     console.error("Error adding category:", error);
@@ -91,7 +97,7 @@ async function updateCategory(formData: FormData) {
 
   const id = formData.get("id") as string;
   const name = formData.get("name") as string;
-  const restaurantId = formData.get("restaurantId") as string; // Needed for revalidation
+  const restaurantId = formData.get("restaurantId") as string;
 
   const validationResult = updateCategorySchema.safeParse({
     id,
@@ -115,7 +121,7 @@ async function updateCategory(formData: FormData) {
       })
       .where(eq(categories.id, validationResult.data.id));
 
-    revalidatePath(`/admin/restaurants/${restaurantId}/categories`); // Revalidate
+    revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
   } catch (error) {
     console.error("Error updating category:", error);
     throw new Error(
@@ -130,7 +136,7 @@ async function deleteCategory(categoryId: string, restaurantId: string) {
 
   try {
     await db.delete(categories).where(eq(categories.id, categoryId));
-    revalidatePath(`/admin/restaurants/${restaurantId}/categories`); // Revalidate
+    revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
   } catch (error) {
     console.error("Error deleting category:", error);
     throw new Error("Failed to delete category.");
@@ -140,24 +146,20 @@ async function deleteCategory(categoryId: string, restaurantId: string) {
 // Main Categories Page Component (Server Component)
 export default async function AdminCategoriesPage({
   params,
-}: {
-  params: { restaurantId: string };
-}) {
+}: AdminCategoriesPageProps) {
   const { restaurantId } = params;
 
-  // Fetch the restaurant details to display its name
   const restaurantDetails = await db.query.restaurants.findFirst({
     where: eq(restaurants.id, restaurantId),
   });
 
   if (!restaurantDetails) {
-    notFound(); // If restaurant doesn't exist, show 404 page
+    notFound();
   }
 
-  // Fetch categories for this specific restaurant
   const allCategories = await db.query.categories.findMany({
     where: eq(categories.restaurantId, restaurantId),
-    orderBy: (categories, { asc }) => [asc(categories.order)], // Order by the 'order' column
+    orderBy: (categories, { asc }) => [asc(categories.order)],
   });
 
   return (
@@ -165,8 +167,8 @@ export default async function AdminCategoriesPage({
       <h1 className="text-3xl font-bold">
         Manage Categories for {restaurantDetails.name}
       </h1>
-      <p className="text-lg text-gray-600">Restaurant ID: {restaurantId}</p>{" "}
-      {/* For debugging/info */}
+      <p className="text-lg text-gray-600">Restaurant ID: {restaurantId}</p>
+
       {/* Add New Category Card */}
       <Card>
         <CardHeader>
@@ -177,7 +179,6 @@ export default async function AdminCategoriesPage({
         </CardHeader>
         <CardContent>
           <form action={addCategory} className="space-y-4">
-            {/* Hidden input for restaurantId */}
             <input type="hidden" name="restaurantId" value={restaurantId} />
             <div>
               <Label htmlFor="name">Category Name</Label>
@@ -189,11 +190,11 @@ export default async function AdminCategoriesPage({
                 required
               />
             </div>
-            {/* No 'order' input for now, it's serial. If you want manual order, you'd add an input here. */}
             <Button type="submit">Add Category</Button>
           </form>
         </CardContent>
       </Card>
+
       {/* List of Existing Categories */}
       <Card>
         <CardHeader>
@@ -230,14 +231,12 @@ export default async function AdminCategoriesPage({
                         {new Date(category.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="flex items-center justify-end space-x-2 text-right">
-                        {/* Edit Button with Dialog */}
                         <EditCategoryDialog
                           category={category}
                           restaurantId={restaurantId}
                           updateCategoryAction={updateCategory}
                         />
 
-                        {/* Delete Button with Confirmation Dialog */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button variant="destructive" size="icon">
