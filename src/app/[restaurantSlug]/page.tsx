@@ -3,16 +3,15 @@ import { db } from "~/server/db";
 import { restaurants, categories, menuItems } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-
 // NEW: Client Component for Category Navigation and Menu Display
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
 
-// Define the props type for this page
+// Define the props type for this page - Updated for Next.js App Router
 interface PageProps {
   params: Promise<{
     restaurantSlug: string;
   }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
 // Main Restaurant Menu Page Component (Server Component)
