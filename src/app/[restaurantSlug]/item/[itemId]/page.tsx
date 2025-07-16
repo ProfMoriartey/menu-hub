@@ -10,16 +10,16 @@ import { ChevronLeft } from "lucide-react"; // Back icon
 
 // Define the props type for this page
 interface PageProps {
-  params: {
+  params: Promise<{
     restaurantSlug: string;
     itemId: string;
-  };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 // Main Menu Item Detail Page Component (Server Component)
 export default async function MenuItemDetailPage({ params }: PageProps) {
-  const { restaurantSlug, itemId } = params;
+  const { restaurantSlug, itemId } = await params;
 
   // Fetch the menu item details, including its associated restaurant and category
   const itemDetails = await db.query.menuItems.findFirst({
