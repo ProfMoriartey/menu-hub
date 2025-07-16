@@ -38,14 +38,6 @@ import { Trash2, Pencil } from "lucide-react";
 
 import { EditCategoryDialog } from "~/components/admin/EditCategoryDialog";
 
-// Define the props type explicitly for clarity and type safety
-interface AdminCategoriesPageProps {
-  params: {
-    restaurantId: string;
-  };
-  // searchParams?: { [key: string]: string | string[] | undefined }; // Uncomment if you use search params
-}
-
 // Zod schema for adding a category
 const createCategorySchema = z.object({
   name: z.string().min(1, { message: "Category name is required." }),
@@ -146,7 +138,9 @@ async function deleteCategory(categoryId: string, restaurantId: string) {
 // Main Categories Page Component (Server Component)
 export default async function AdminCategoriesPage({
   params,
-}: AdminCategoriesPageProps) {
+}: {
+  params: Record<string, string>;
+}) {
   const { restaurantId } = params;
 
   const restaurantDetails = await db.query.restaurants.findFirst({
