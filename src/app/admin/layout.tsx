@@ -1,34 +1,32 @@
+// app/admin/layout.tsx
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { ClerkProvider, UserButton } from "@clerk/nextjs"; // Import ClerkProvider and UserButton
-import Link from "next/link";
+import { ClerkProvider, UserButton } from "@clerk/nextjs";
+import Link from "next/link"; // Make sure Link is imported
 
 export default async function AdminDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth(); // Get the authenticated user's ID
-
-  // Get the ADMIN_USER_ID from environment variables
+  const { userId } = await auth();
   const adminUserId = process.env.ADMIN_USER_ID;
 
-  // Check if the user is authenticated AND if their ID matches the admin ID
   if (!userId || userId !== adminUserId) {
-    // If not authenticated or not the admin, redirect them.
-    // You might want to redirect to a specific login page or a generic access denied page.
-    redirect("/sign-in"); // Redirect to Clerk's default sign-in page
+    redirect("/sign-in");
   }
 
   return (
     <ClerkProvider>
-      {" "}
-      {/* Ensure ClerkProvider wraps the layout if it's not in root layout */}
       <div className="flex min-h-screen bg-gray-100">
         {/* Admin Sidebar/Navigation */}
-        <aside className="w-64 bg-gray-800 p-4 text-white">
+        <aside className="flex w-64 flex-col bg-gray-800 p-4 text-white">
+          {" "}
+          {/* Added flex-col */}
           <h2 className="mb-6 text-2xl font-bold">Admin Dashboard</h2>
-          <nav>
+          <nav className="flex-grow">
+            {" "}
+            {/* Added flex-grow */}
             <ul>
               <li className="mb-2">
                 <Link
@@ -38,28 +36,13 @@ export default async function AdminDashboardLayout({
                   Restaurants
                 </Link>
               </li>
-              {/* Add more navigation links as you build out sections */}
-              <li className="mb-2">
-                <Link
-                  href="/admin/categories"
-                  className="block rounded p-2 hover:bg-gray-700"
-                >
-                  Categories
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link
-                  href="/admin/menu-items"
-                  className="block rounded p-2 hover:bg-gray-700"
-                >
-                  Menu Items
-                </Link>
-              </li>
+              {/* REMOVED: Categories and Menu Items links for now */}
             </ul>
           </nav>
-          <div className="mt-8">
-            <UserButton afterSignOutUrl="/" />{" "}
-            {/* Clerk's user button for managing profile and sign out */}
+          <div className="mt-auto p-2">
+            {" "}
+            {/* Added mt-auto to push to bottom */}
+            <UserButton afterSignOutUrl="/" />
           </div>
         </aside>
 
