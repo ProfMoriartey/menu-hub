@@ -38,6 +38,14 @@ import { Trash2, Pencil } from "lucide-react";
 
 import { EditCategoryDialog } from "~/components/admin/EditCategoryDialog";
 
+// Define the exact PageProps type expected by Next.js App Router
+interface PageProps {
+  params: {
+    restaurantId: string;
+  };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
 // Zod schema for adding a category
 const createCategorySchema = z.object({
   name: z.string().min(1, { message: "Category name is required." }),
@@ -138,9 +146,8 @@ async function deleteCategory(categoryId: string, restaurantId: string) {
 // Main Categories Page Component (Server Component)
 export default async function AdminCategoriesPage({
   params,
-}: {
-  params: Record<string, string>;
-}) {
+  searchParams,
+}: PageProps) {
   const { restaurantId } = params;
 
   const restaurantDetails = await db.query.restaurants.findFirst({
