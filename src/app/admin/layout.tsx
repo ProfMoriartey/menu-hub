@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ClerkProvider, UserButton } from "@clerk/nextjs"; // Import ClerkProvider and UserButton
+import Link from "next/link";
 
 export default async function AdminDashboardLayout({
   children,
@@ -30,29 +31,29 @@ export default async function AdminDashboardLayout({
           <nav>
             <ul>
               <li className="mb-2">
-                <a
+                <Link
                   href="/admin/restaurants"
                   className="block rounded p-2 hover:bg-gray-700"
                 >
                   Restaurants
-                </a>
+                </Link>
               </li>
               {/* Add more navigation links as you build out sections */}
               <li className="mb-2">
-                <a
+                <Link
                   href="/admin/categories"
                   className="block rounded p-2 hover:bg-gray-700"
                 >
                   Categories
-                </a>
+                </Link>
               </li>
               <li className="mb-2">
-                <a
+                <Link
                   href="/admin/menu-items"
                   className="block rounded p-2 hover:bg-gray-700"
                 >
                   Menu Items
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>
