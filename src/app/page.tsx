@@ -1,37 +1,32 @@
+// app/page.tsx
 import Link from "next/link";
+import { db } from "~/server/db";
+// import { restaurants } from "~/server/db/schema";
 
-export default function HomePage() {
+// NEW: Import the HomePageClient component
+import { HomePageClient } from "~/components/public/HomePageClient";
+
+// Main Landing Page Component (Server Component)
+export default async function HomePage() {
+  // Fetch restaurants (this remains a Server-side operation)
+  const allRestaurants = await db.query.restaurants.findMany({
+    limit: 6, // Limit to a few for the landing page
+    orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
+  });
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 text-gray-800">
+      {/* Pass fetched data to the Client Component */}
+      <HomePageClient restaurants={allRestaurants} />
+
+      <footer className="mt-auto w-full py-8 text-center text-sm text-gray-600">
+        <p>&copy; {new Date().getFullYear()} Vidakai. All rights reserved.</p>
+        <p className="mt-2">
+          <Link href="/admin" className="text-blue-600 hover:underline">
+            Admin Login
           </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
-        </div>
-      </div>
-    </main>
+        </p>
+      </footer>
+    </div>
   );
 }
