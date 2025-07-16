@@ -1,7 +1,7 @@
 // src/components/admin/AddMenuItemForm.tsx
 "use client"; // This is a Client Component
 
-import { useState } from "react";
+import { useState, useRef } from "react"; // Make sure useRef is imported
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -65,7 +65,7 @@ export function AddMenuItemForm({
   const [formErrors, setFormErrors] = useState<z.ZodIssue[]>([]); // To display validation errors
 
   // Form reference to reset it after submission
-  const formRef = useState<HTMLFormElement | null>(null);
+  const formRef = useRef<HTMLFormElement>(null); // Use useRef instead of useState
 
   const handleSubmit = async (formData: FormData) => {
     setFormErrors([]); // Clear previous errors

@@ -43,11 +43,11 @@ import { z } from "zod";
 
 // Define the props type for this page (remains the same)
 interface PageProps {
-  params: {
+  params: Promise<{
     restaurantId: string;
     categoryId: string;
-  };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 // Zod schema for adding a menu item (remains here for server-side validation)
@@ -155,7 +155,7 @@ async function deleteMenuItem(
 
 // Main Menu Items Page Component (Server Component)
 export default async function AdminMenuItemsPage({ params }: PageProps) {
-  const { restaurantId, categoryId } = params;
+  const { restaurantId, categoryId } = await params;
 
   const restaurantDetails = await db.query.restaurants.findFirst({
     where: eq(restaurants.id, restaurantId),
