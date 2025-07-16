@@ -25,7 +25,7 @@ interface Category {
   name: string;
   order: number; // Include order as it's in the schema
   createdAt: Date;
-  updatedAt: Date | null;
+  updatedAt: Date;
 }
 
 // Zod schema for form validation
