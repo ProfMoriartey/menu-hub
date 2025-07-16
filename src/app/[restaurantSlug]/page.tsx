@@ -11,15 +11,15 @@ import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
 
 // Define the props type for this page
 interface PageProps {
-  params: {
+  params: Promise<{
     restaurantSlug: string;
-  };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 // Main Restaurant Menu Page Component (Server Component)
 export default async function RestaurantMenuPage({ params }: PageProps) {
-  const { restaurantSlug } = params;
+  const { restaurantSlug } = await params;
 
   // 1. Fetch Restaurant Details
   const restaurantDetails = await db.query.restaurants.findFirst({
