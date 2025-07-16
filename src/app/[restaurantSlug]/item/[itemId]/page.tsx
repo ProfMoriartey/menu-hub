@@ -14,7 +14,7 @@ interface PageProps {
     restaurantSlug: string;
     itemId: string;
   }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>; // <--- Change here
 }
 
 // Main Menu Item Detail Page Component (Server Component)

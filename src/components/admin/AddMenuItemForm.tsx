@@ -1,7 +1,7 @@
 // src/components/admin/AddMenuItemForm.tsx
 "use client"; // This is a Client Component
 
-import { useState, useRef } from "react"; // Make sure useRef is imported
+import { useState, useRef } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -17,6 +17,8 @@ import {
 import { UploadButton } from "~/utils/uploadthing"; // Your Uploadthing component
 import { z } from "zod";
 import { useFormStatus } from "react-dom"; // For pending state of Server Action
+import Image from "next/image"; // NEW: Import Next.js Image component
+// REMOVED: import { ResponsiveImage } from "~/components/shared/ResponsiveImage";
 
 // Zod schema for adding a menu item (re-defined here for client-side validation)
 const createMenuItemSchema = z.object({
@@ -50,7 +52,7 @@ interface AddMenuItemFormProps {
   restaurantId: string;
   categoryId: string;
   categoryName: string;
-  addMenuItemAction: (formData: FormData) => Promise<void>; // Server Action prop
+  addMenuItemAction: (formData: FormData) => Promise<void>;
 }
 
 export function AddMenuItemForm({
@@ -59,29 +61,32 @@ export function AddMenuItemForm({
   categoryName,
   addMenuItemAction,
 }: AddMenuItemFormProps) {
-  const [imageUrl, setImageUrl] = useState<string>(""); // State to hold the uploaded image URL
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [isVegetarian, setIsVegetarian] = useState(false);
   const [isGlutenFree, setIsGlutenFree] = useState(false);
-  const [formErrors, setFormErrors] = useState<z.ZodIssue[]>([]); // To display validation errors
+  const [formErrors, setFormErrors] = useState<z.ZodIssue[]>([]);
 
-  // Form reference to reset it after submission
-  const formRef = useRef<HTMLFormElement>(null); // Use useRef instead of useState
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // State to manage the image source for Next.js Image component
+  const [displayImageUrl, setDisplayImageUrl] = useState<string>("");
+  // Fallback image URL
+  const fallbackImageUrl = `https://placehold.co/128x128/E0E0E0/333333?text=No+Image`;
 
   const handleSubmit = async (formData: FormData) => {
-    setFormErrors([]); // Clear previous errors
+    setFormErrors([]);
 
-    // Manually append boolean values for checkboxes
     formData.set("isVegetarian", isVegetarian ? "on" : "");
     formData.set("isGlutenFree", isGlutenFree ? "on" : "");
-    formData.set("imageUrl", imageUrl); // Append the URL from state
+    formData.set("imageUrl", imageUrl);
 
     const validationResult = createMenuItemSchema.safeParse({
       name: formData.get("name"),
       description: formData.get("description"),
       price: formData.get("price"),
       ingredients: formData.get("ingredients"),
-      isVegetarian: isVegetarian, // Use boolean state directly for Zod
-      isGlutenFree: isGlutenFree, // Use boolean state directly for Zod
+      isVegetarian: isVegetarian,
+      isGlutenFree: isGlutenFree,
       imageUrl: imageUrl,
       restaurantId: restaurantId,
       categoryId: categoryId,
@@ -94,15 +99,14 @@ export function AddMenuItemForm({
 
     try {
       await addMenuItemAction(formData);
-      // Clear form fields on success
       formRef.current?.reset();
-      setImageUrl(""); // Clear image URL state
+      setImageUrl(""); // Clear internal state
+      setDisplayImageUrl(""); // Clear display state
       setIsVegetarian(false);
       setIsGlutenFree(false);
-      setFormErrors([]); // Clear errors on successful submission
+      setFormErrors([]);
     } catch (error) {
       console.error("Error adding menu item:", error);
-      // Set a general error or parse specific errors if the Server Action throws them
       setFormErrors([
         {
           message:
@@ -119,12 +123,11 @@ export function AddMenuItemForm({
       <CardHeader>
         <CardTitle>Add New Menu Item</CardTitle>
         <CardDescription>
-          Create a new dish for the "{categoryName}" category.
+          Create a new dish for the &quot;{categoryName}&quot; category.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form ref={formRef} action={handleSubmit} className="space-y-4">
-          {/* Hidden inputs for context */}
           <input type="hidden" name="restaurantId" value={restaurantId} />
           <input type="hidden" name="categoryId" value={categoryId} />
 
@@ -188,7 +191,6 @@ export function AddMenuItemForm({
             )}
           </div>
 
-          {/* Dietary Labels */}
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -210,25 +212,31 @@ export function AddMenuItemForm({
             </div>
           </div>
 
-          {/* Image Upload with Uploadthing */}
           <div>
             <Label htmlFor="imageUrl">Item Image</Label>
-            {/* Display uploaded image preview */}
-            {imageUrl && (
+            {/* Display uploaded image preview using Next.js Image */}
+            {displayImageUrl && ( // Use displayImageUrl for rendering
               <div className="mb-2">
-                <img
-                  src={imageUrl}
+                <Image
+                  src={displayImageUrl} // Use state for src
                   alt="Uploaded Preview"
-                  className="h-32 w-32 rounded-md object-cover"
+                  width={128}
+                  height={128}
+                  className="rounded-md object-cover"
+                  onError={(e) => {
+                    // onError is fine in Client Component
+                    e.currentTarget.src = fallbackImageUrl;
+                    e.currentTarget.onerror = null; // Prevent infinite loop
+                  }}
                 />
               </div>
             )}
             <UploadButton
-              endpoint="imageUploader" // Ensure this matches your src/app/api/uploadthing/core.ts
+              endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 if (res && res.length > 0 && res[0]) {
-                  setImageUrl(res[0].url); // Update state with the URL
-                  // alert("Upload Completed! Image URL set."); // Consider using a toast in production
+                  setImageUrl(res[0].url); // Update internal state for form submission
+                  setDisplayImageUrl(res[0].url); // Update state for image preview
                 } else {
                   setFormErrors([
                     {

@@ -1,10 +1,8 @@
 // app/[restaurantSlug]/page.tsx
 import { db } from "~/server/db";
 import { restaurants, categories, menuItems } from "~/server/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { ResponsiveImage } from "~/components/shared/ResponsiveImage"; // Re-use our image component
-import Link from "next/link"; // For linking to item detail pages
 
 // NEW: Client Component for Category Navigation and Menu Display
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
