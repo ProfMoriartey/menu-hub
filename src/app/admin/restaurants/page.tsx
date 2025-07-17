@@ -10,7 +10,7 @@ import { RestaurantManagementClient } from "~/components/admin/RestaurantManagem
 
 // Zod schema for form validation (for add and update, used by Server Actions)
 const restaurantSchema = z.object({
-  id: z.string().uuid().optional(), // Optional for create, required for update
+  id: z.string().uuid().optional(),
   name: z.string().min(1, { message: "Restaurant name is required." }),
   slug: z
     .string()
@@ -18,48 +18,54 @@ const restaurantSchema = z.object({
     .regex(/^[a-z0-9-]+$/, {
       message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
     }),
+  address: z.string().optional(),
+  country: z.string().optional(),
+  foodType: z.string().optional(),
+  isActive: z.coerce.boolean().default(true),
 });
 
 // Server Action to add a new restaurant
 async function addRestaurant(formData: FormData) {
   "use server";
 
-  const name = formData.get("name") as string;
-  const slug = formData.get("slug") as string;
+  const rawData = {
+    name: formData.get("name"),
+    slug: formData.get("slug"),
+    address: formData.get("address"),
+    country: formData.get("country"),
+    foodType: formData.get("foodType"),
+    isActive: formData.get("isActive") === "on",
+  };
 
-  const validationResult = restaurantSchema.safeParse({ name, slug });
+  const result = restaurantSchema.safeParse(rawData);
 
-  if (!validationResult.success) {
-    console.error("Validation failed:", validationResult.error.errors);
+  if (!result.success) {
+    console.error("Validation failed:", result.error.errors);
     throw new Error(
-      "Invalid input for restaurant creation: " +
-        validationResult.error.errors.map((e) => e.message).join(", "),
+      "Invalid input: " + result.error.errors.map((e) => e.message).join(", "),
     );
   }
 
-  try {
-    const existingRestaurant = await db.query.restaurants.findFirst({
-      where: eq(restaurants.slug, validationResult.data.slug),
-    });
+  const { name, slug, address, country, foodType, isActive } = result.data;
 
-    if (existingRestaurant) {
-      throw new Error(
-        "A restaurant with this slug already exists. Please choose a different one.",
-      );
-    }
+  const existing = await db.query.restaurants.findFirst({
+    where: eq(restaurants.slug, slug),
+  });
 
-    await db.insert(restaurants).values({
-      name: validationResult.data.name,
-      slug: validationResult.data.slug,
-    });
-
-    revalidatePath("/admin/restaurants");
-  } catch (error) {
-    console.error("Error adding restaurant:", error);
-    throw new Error(
-      `Failed to add restaurant: ${error instanceof Error ? error.message : String(error)}`,
-    );
+  if (existing) {
+    throw new Error("Slug already exists.");
   }
+
+  await db.insert(restaurants).values({
+    name,
+    slug,
+    address,
+    country,
+    foodType,
+    isActive,
+  });
+
+  revalidatePath("/admin/restaurants");
 }
 
 // Server Action to delete a restaurant
@@ -79,53 +85,50 @@ async function deleteRestaurant(restaurantId: string) {
 async function updateRestaurant(formData: FormData) {
   "use server";
 
-  const id = formData.get("id") as string;
-  const name = formData.get("name") as string;
-  const slug = formData.get("slug") as string;
+  const rawData = {
+    id: formData.get("id"),
+    name: formData.get("name"),
+    slug: formData.get("slug"),
+    address: formData.get("address"),
+    country: formData.get("country"),
+    foodType: formData.get("foodType"),
+    isActive: formData.get("isActive") === "on",
+  };
 
-  const validationResult = restaurantSchema.safeParse({ id, name, slug });
+  const result = restaurantSchema.safeParse(rawData);
 
-  if (!validationResult.success) {
-    console.error("Validation failed:", validationResult.error.errors);
+  if (!result.success) {
+    console.error("Validation failed:", result.error.errors);
     throw new Error(
-      "Invalid input for restaurant update: " +
-        validationResult.error.errors.map((e) => e.message).join(", "),
+      "Invalid input: " + result.error.errors.map((e) => e.message).join(", "),
     );
   }
 
-  try {
-    const existingRestaurantWithSameSlug = await db.query.restaurants.findFirst(
-      {
-        where: (restaurant, { and: drizzleAnd, eq: drizzleEq, ne }) =>
-          drizzleAnd(
-            drizzleEq(restaurant.slug, validationResult.data.slug),
-            ne(restaurant.id, validationResult.data.id!), // Use ! for non-null assertion since it's optional in schema
-          ),
-      },
-    );
+  const { id, name, slug, address, country, foodType, isActive } = result.data;
 
-    if (existingRestaurantWithSameSlug) {
-      throw new Error(
-        "A restaurant with this slug already exists. Please choose a different one.",
-      );
-    }
+  const existing = await db.query.restaurants.findFirst({
+    where: (restaurant, { and, eq, ne }) =>
+      and(eq(restaurant.slug, slug), ne(restaurant.id, id!)),
+  });
 
-    await db
-      .update(restaurants)
-      .set({
-        name: validationResult.data.name,
-        slug: validationResult.data.slug,
-        updatedAt: new Date(),
-      })
-      .where(eq(restaurants.id, validationResult.data.id!)); // Use ! for non-null assertion
-
-    revalidatePath("/admin/restaurants");
-  } catch (error) {
-    console.error("Error updating restaurant:", error);
-    throw new Error(
-      `Failed to update restaurant: ${error instanceof Error ? error.message : String(error)}`,
-    );
+  if (existing) {
+    throw new Error("Slug already exists.");
   }
+
+  await db
+    .update(restaurants)
+    .set({
+      name,
+      slug,
+      address,
+      country,
+      foodType,
+      isActive,
+      updatedAt: new Date(),
+    })
+    .where(eq(restaurants.id, id!));
+
+  revalidatePath("/admin/restaurants");
 }
 
 // Main Admin Restaurants Page Component (Server Component)

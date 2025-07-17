@@ -37,18 +37,18 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { EditRestaurantDialog } from "~/components/admin/EditRestaurantDialog";
-import { cn } from "~/lib/utils";
+import { Switch } from "../ui/switch";
 
 interface Restaurant {
   id: string;
   name: string;
   slug: string;
-  createdAt: Date;
-  updatedAt: Date | null;
+  address?: string;
   country?: string;
   foodType?: string;
-  address?: string;
   isActive?: boolean;
+  createdAt: Date;
+  updatedAt: Date | null;
 }
 
 interface RestaurantManagementClientProps {
@@ -59,15 +59,18 @@ interface RestaurantManagementClientProps {
 }
 
 const createRestaurantSchema = z.object({
-  name: z.string().min(1, { message: "Restaurant name is required." }),
+  name: z.string().min(1),
   slug: z
     .string()
-    .min(1, { message: "Restaurant slug is required." })
-    .regex(/^[a-z0-9-]+$/, {
-      message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
-    }),
-  country: z.string().min(1, { message: "Country is required." }),
-  foodType: z.string().min(1, { message: "Food type is required." }),
+    .min(1)
+    .regex(/^[a-z0-9-]+$/),
+  country: z.string().min(1),
+  foodType: z.string().min(1),
+  address: z.string().optional(),
+  isActive: z
+    .string()
+    .optional()
+    .transform((val) => val === "on"),
 });
 
 function SubmitButton() {
@@ -87,16 +90,10 @@ export function RestaurantManagementClient({
 }: RestaurantManagementClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [formErrors, setFormErrors] = useState<{
-    name?: string;
-    slug?: string;
-    country?: string;
-    foodType?: string;
-    general?: string;
-  }>({});
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [isNewRestaurantActive, setIsNewRestaurantActive] = useState(true); // New state for add form
 
   const addFormRef = useRef<HTMLFormElement>(null);
-
   const filteredRestaurants = initialRestaurants.filter((restaurant) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -111,30 +108,28 @@ export function RestaurantManagementClient({
   const handleAddSubmit = async (formData: FormData) => {
     setFormErrors({});
 
-    const name = formData.get("name") as string;
-    const slug = formData.get("slug") as string;
-    const country = formData.get("country") as string;
-    const foodType = formData.get("foodType") as string;
+    // Manually append isActive to formData for the add action
+    formData.set("isActive", isNewRestaurantActive ? "on" : ""); // Ensure 'on' or empty string is sent
 
-    const validationResult = createRestaurantSchema.safeParse({
-      name,
-      slug,
-      country,
-      foodType,
-    });
+    const values = {
+      name: formData.get("name") as string,
+      slug: formData.get("slug") as string,
+      country: formData.get("country") as string,
+      foodType: formData.get("foodType") as string,
+      address: formData.get("address") as string,
+      isActive: formData.get("isActive") as string,
+    };
 
-    if (!validationResult.success) {
-      const errors: {
-        name?: string;
-        slug?: string;
-        country?: string;
-        foodType?: string;
-      } = {};
-      validationResult.error.errors.forEach((err) => {
-        if (err.path[0] === "name") errors.name = err.message;
-        if (err.path[0] === "slug") errors.slug = err.message;
-        if (err.path[0] === "country") errors.country = err.message;
-        if (err.path[0] === "foodType") errors.foodType = err.message;
+    const result = createRestaurantSchema.safeParse(values);
+
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        const key =
+          Array.isArray(err.path) && typeof err.path[0] === "string"
+            ? err.path[0]
+            : "general";
+        errors[key] = err.message;
       });
       setFormErrors(errors);
       return;
@@ -145,11 +140,10 @@ export function RestaurantManagementClient({
       setIsAddDialogOpen(false);
       addFormRef.current?.reset();
       setFormErrors({});
+      setIsNewRestaurantActive(true); // Reset switch state for next add
     } catch (error) {
-      console.error("Error adding restaurant:", error);
       setFormErrors({
-        general:
-          error instanceof Error ? error.message : "Failed to add restaurant.",
+        general: error instanceof Error ? error.message : "Add failed.",
       });
     }
   };
@@ -172,7 +166,7 @@ export function RestaurantManagementClient({
             <DialogHeader>
               <DialogTitle>Add New Restaurant</DialogTitle>
               <DialogDescription>
-                Create a new restaurant entry in your system.
+                Fill out the details below to create a new restaurant.
               </DialogDescription>
             </DialogHeader>
             <form
@@ -181,39 +175,45 @@ export function RestaurantManagementClient({
               className="space-y-4"
             >
               <div>
-                <Label htmlFor="name">Restaurant Name</Label>
-                <Input id="name" name="name" type="text" required />
+                <Label htmlFor="name">Name</Label>
+                <Input id="name" name="name" required />
                 {formErrors.name && (
-                  <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>
+                  <p className="text-sm text-red-500">{formErrors.name}</p>
                 )}
               </div>
               <div>
-                <Label htmlFor="slug">URL Slug</Label>
-                <Input id="slug" name="slug" type="text" required />
-                <p className="mt-1 text-sm text-gray-500">
-                  This will be used in the URL: `/yourdomain.com/pizza-palace`
-                </p>
+                <Label htmlFor="slug">Slug</Label>
+                <Input id="slug" name="slug" required />
                 {formErrors.slug && (
-                  <p className="mt-1 text-sm text-red-500">{formErrors.slug}</p>
+                  <p className="text-sm text-red-500">{formErrors.slug}</p>
                 )}
               </div>
               <div>
                 <Label htmlFor="country">Country</Label>
-                <Input id="country" name="country" type="text" required />
+                <Input id="country" name="country" required />
                 {formErrors.country && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {formErrors.country}
-                  </p>
+                  <p className="text-sm text-red-500">{formErrors.country}</p>
                 )}
               </div>
               <div>
                 <Label htmlFor="foodType">Type of Food</Label>
-                <Input id="foodType" name="foodType" type="text" required />
+                <Input id="foodType" name="foodType" required />
                 {formErrors.foodType && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {formErrors.foodType}
-                  </p>
+                  <p className="text-sm text-red-500">{formErrors.foodType}</p>
                 )}
+              </div>
+              <div>
+                <Label htmlFor="address">Address</Label>
+                <Input id="address" name="address" />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="isActive"
+                  name="isActive" // Important for FormData
+                  checked={isNewRestaurantActive} // Controlled state
+                  onCheckedChange={setIsNewRestaurantActive} // Update state
+                />
+                <Label htmlFor="isActive">Active</Label>
               </div>
               {formErrors.general && (
                 <p className="text-center text-sm text-red-500">
@@ -237,19 +237,15 @@ export function RestaurantManagementClient({
         </CardHeader>
         <CardContent>
           {filteredRestaurants.length === 0 ? (
-            <p className="text-center text-gray-500">
-              No restaurants found matching your search.
-            </p>
+            <p className="text-center text-gray-500">No results found.</p>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredRestaurants.map((restaurant) => (
                 <Card key={restaurant.id} className="flex h-full flex-col">
                   <CardHeader className="flex-grow">
-                    <CardTitle className="text-xl">{restaurant.name}</CardTitle>
-                    <CardDescription className="text-sm text-gray-600">
-                      Slug: {restaurant.slug}
-                    </CardDescription>
-                    <p className="mt-1 text-xs text-gray-500">
+                    <CardTitle>{restaurant.name}</CardTitle>
+                    <CardDescription>Slug: {restaurant.slug}</CardDescription>
+                    <p className="text-xs text-gray-500">
                       Created:{" "}
                       {new Date(restaurant.createdAt).toLocaleDateString()}
                     </p>
@@ -274,14 +270,10 @@ export function RestaurantManagementClient({
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
+                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete the <strong>{restaurant.name}</strong>{" "}
-                            restaurant and all its associated categories and
-                            menu items from your database.
+                            This will permanently delete{" "}
+                            <strong>{restaurant.name}</strong> and all its data.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

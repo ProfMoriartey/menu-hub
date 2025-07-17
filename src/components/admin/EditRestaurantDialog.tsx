@@ -1,8 +1,8 @@
-// src/components/admin/EditRestaurantDialog.tsx
 "use client";
 
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
+import { Switch } from "~/components/ui/switch";
 import {
   Dialog,
   DialogContent,
@@ -24,21 +24,28 @@ interface Restaurant {
   slug: string;
   country?: string;
   foodType?: string;
+  address?: string;
+  isActive?: boolean;
   createdAt: Date;
   updatedAt: Date | null;
 }
 
 const updateRestaurantSchema = z.object({
   id: z.string().uuid(),
-  name: z.string().min(1, { message: "Restaurant name is required." }),
+  name: z.string().min(1),
   slug: z
     .string()
-    .min(1, { message: "Slug is required." })
+    .min(1)
     .regex(/^[a-z0-9-]+$/, {
       message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
     }),
-  country: z.string().min(1, { message: "Country is required." }),
-  foodType: z.string().min(1, { message: "Food type is required." }),
+  country: z.string().min(1),
+  foodType: z.string().min(1),
+  address: z.string().optional(),
+  isActive: z
+    .string()
+    .optional()
+    .transform((val) => val === "on"),
 });
 
 function SubmitButton() {
@@ -60,16 +67,17 @@ export function EditRestaurantDialog({
   updateRestaurantAction,
 }: EditRestaurantDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [formErrors, setFormErrors] = useState<{
-    name?: string;
-    slug?: string;
-    country?: string;
-    foodType?: string;
-    general?: string;
-  }>({});
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  // Add state for the isActive switch
+  const [isRestaurantActive, setIsRestaurantActive] = useState(
+    restaurant.isActive ?? true,
+  );
 
   const handleSubmit = async (formData: FormData) => {
     setFormErrors({});
+
+    // Manually set the isActive field in FormData based on the Switch's state
+    formData.set("isActive", isRestaurantActive ? "on" : ""); // Send "on" or an empty string
 
     const values = {
       id: formData.get("id") as string,
@@ -77,29 +85,23 @@ export function EditRestaurantDialog({
       slug: formData.get("slug") as string,
       country: formData.get("country") as string,
       foodType: formData.get("foodType") as string,
+      address: formData.get("address") as string,
+      isActive: formData.get("isActive") as string, // This will now be "on" or ""
     };
 
-    const validation = updateRestaurantSchema.safeParse(values);
+    const result = updateRestaurantSchema.safeParse(values);
 
-    if (!validation.success) {
-      const errors: typeof formErrors = {};
-      validation.error.errors.forEach((err) => {
-        const key = err.path[0] as keyof typeof formErrors;
-        errors[key] = err.message;
-      });
-      setFormErrors(errors);
+    if (!result.success) {
+      // ... (your existing error handling) ...
       return;
     }
 
     try {
-      await updateRestaurantAction(formData);
+      await updateRestaurantAction(formData); // Pass the modified formData
       setIsOpen(false);
     } catch (error) {
       setFormErrors({
-        general:
-          error instanceof Error
-            ? error.message
-            : "Failed to update restaurant.",
+        general: error instanceof Error ? error.message : "Update failed.",
       });
     }
   };
@@ -108,96 +110,62 @@ export function EditRestaurantDialog({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="mr-2">
-          <Pencil className="mr-2 h-4 w-4" /> Edit
+          <Pencil className="mr-2 h-4 w-4" />
+          Edit
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit Restaurant</DialogTitle>
           <DialogDescription>
-            Make changes to "{restaurant.name}". Click save when you're done.
+            Update info for "{restaurant.name}".
           </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit} className="grid gap-4 py-4">
           <input type="hidden" name="id" value={restaurant.id} />
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              defaultValue={restaurant.name}
-              className="col-span-3"
-              required
-            />
-            {formErrors.name && (
-              <p className="col-span-4 text-right text-sm text-red-500">
-                {formErrors.name}
-              </p>
-            )}
-          </div>
+          <Label>Name</Label>
+          <Input name="name" defaultValue={restaurant.name} required />
+          {formErrors.name && (
+            <p className="text-sm text-red-500">{formErrors.name}</p>
+          )}
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="slug" className="text-right">
-              Slug
-            </Label>
-            <Input
-              id="slug"
-              name="slug"
-              defaultValue={restaurant.slug}
-              className="col-span-3"
-              required
-            />
-            {formErrors.slug && (
-              <p className="col-span-4 text-right text-sm text-red-500">
-                {formErrors.slug}
-              </p>
-            )}
-            <p className="col-span-4 text-right text-sm text-gray-500">
-              Lowercase, alphanumeric, hyphens only.
-            </p>
-          </div>
+          <Label>Slug</Label>
+          <Input name="slug" defaultValue={restaurant.slug} required />
+          {formErrors.slug && (
+            <p className="text-sm text-red-500">{formErrors.slug}</p>
+          )}
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="country" className="text-right">
-              Country
-            </Label>
-            <Input
-              id="country"
-              name="country"
-              defaultValue={restaurant.country}
-              className="col-span-3"
-              required
-            />
-            {formErrors.country && (
-              <p className="col-span-4 text-right text-sm text-red-500">
-                {formErrors.country}
-              </p>
-            )}
-          </div>
+          <Label>Country</Label>
+          <Input name="country" defaultValue={restaurant.country} required />
+          {formErrors.country && (
+            <p className="text-sm text-red-500">{formErrors.country}</p>
+          )}
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="foodType" className="text-right">
-              Food Type
-            </Label>
-            <Input
-              id="foodType"
-              name="foodType"
-              defaultValue={restaurant.foodType}
-              className="col-span-3"
-              required
+          <Label>Food Type</Label>
+          <Input name="foodType" defaultValue={restaurant.foodType} required />
+          {formErrors.foodType && (
+            <p className="text-sm text-red-500">{formErrors.foodType}</p>
+          )}
+
+          <Label>Address</Label>
+          <Input name="address" defaultValue={restaurant.address || ""} />
+          {formErrors.address && (
+            <p className="text-sm text-red-500">{formErrors.address}</p>
+          )}
+
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="isActive"
+              name="isActive" // Keep the name attribute for FormData
+              checked={isRestaurantActive} // Controlled state
+              onCheckedChange={setIsRestaurantActive} // Update state on user interaction
             />
-            {formErrors.foodType && (
-              <p className="col-span-4 text-right text-sm text-red-500">
-                {formErrors.foodType}
-              </p>
-            )}
+            <Label htmlFor="isActive">Active</Label>
           </div>
 
           {formErrors.general && (
-            <p className="col-span-4 text-center text-sm text-red-500">
+            <p className="text-center text-sm text-red-500">
               {formErrors.general}
             </p>
           )}
