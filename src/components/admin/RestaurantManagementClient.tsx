@@ -45,6 +45,10 @@ interface Restaurant {
   slug: string;
   createdAt: Date;
   updatedAt: Date | null;
+  country?: string;
+  foodType?: string;
+  address?: string;
+  isActive?: boolean;
 }
 
 interface RestaurantManagementClientProps {
@@ -62,6 +66,8 @@ const createRestaurantSchema = z.object({
     .regex(/^[a-z0-9-]+$/, {
       message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
     }),
+  country: z.string().min(1, { message: "Country is required." }),
+  foodType: z.string().min(1, { message: "Food type is required." }),
 });
 
 function SubmitButton() {
@@ -84,30 +90,51 @@ export function RestaurantManagementClient({
   const [formErrors, setFormErrors] = useState<{
     name?: string;
     slug?: string;
+    country?: string;
+    foodType?: string;
     general?: string;
   }>({});
 
   const addFormRef = useRef<HTMLFormElement>(null);
 
-  const filteredRestaurants = initialRestaurants.filter(
-    (restaurant) =>
-      restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      restaurant.slug.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredRestaurants = initialRestaurants.filter((restaurant) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      restaurant.name.toLowerCase().includes(term) ||
+      restaurant.slug.toLowerCase().includes(term) ||
+      restaurant.country?.toLowerCase().includes(term) ||
+      restaurant.foodType?.toLowerCase().includes(term) ||
+      restaurant.address?.toLowerCase().includes(term)
+    );
+  });
 
   const handleAddSubmit = async (formData: FormData) => {
     setFormErrors({});
 
     const name = formData.get("name") as string;
     const slug = formData.get("slug") as string;
+    const country = formData.get("country") as string;
+    const foodType = formData.get("foodType") as string;
 
-    const validationResult = createRestaurantSchema.safeParse({ name, slug });
+    const validationResult = createRestaurantSchema.safeParse({
+      name,
+      slug,
+      country,
+      foodType,
+    });
 
     if (!validationResult.success) {
-      const errors: { name?: string; slug?: string } = {};
+      const errors: {
+        name?: string;
+        slug?: string;
+        country?: string;
+        foodType?: string;
+      } = {};
       validationResult.error.errors.forEach((err) => {
         if (err.path[0] === "name") errors.name = err.message;
         if (err.path[0] === "slug") errors.slug = err.message;
+        if (err.path[0] === "country") errors.country = err.message;
+        if (err.path[0] === "foodType") errors.foodType = err.message;
       });
       setFormErrors(errors);
       return;
@@ -132,7 +159,7 @@ export function RestaurantManagementClient({
       <div className="flex flex-col items-center gap-4 md:flex-row">
         <Input
           type="text"
-          placeholder="Search restaurants by name or slug..."
+          placeholder="Search by name, slug, country, type, or address..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="flex-grow md:w-2/3"
@@ -168,6 +195,24 @@ export function RestaurantManagementClient({
                 </p>
                 {formErrors.slug && (
                   <p className="mt-1 text-sm text-red-500">{formErrors.slug}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="country">Country</Label>
+                <Input id="country" name="country" type="text" required />
+                {formErrors.country && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {formErrors.country}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="foodType">Type of Food</Label>
+                <Input id="foodType" name="foodType" type="text" required />
+                {formErrors.foodType && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {formErrors.foodType}
+                  </p>
                 )}
               </div>
               {formErrors.general && (
@@ -212,8 +257,6 @@ export function RestaurantManagementClient({
                   <CardContent className="mt-auto flex justify-end space-x-2 p-4 pt-0">
                     <Link
                       href={`/admin/restaurants/${restaurant.id}/categories`}
-                      passHref
-                      legacyBehavior
                     >
                       <Button variant="secondary" size="sm">
                         Categories
@@ -236,10 +279,9 @@ export function RestaurantManagementClient({
                           </AlertDialogTitle>
                           <AlertDialogDescription>
                             This action cannot be undone. This will permanently
-                            delete the
-                            <strong> {restaurant.name} </strong> restaurant and
-                            all its associated categories and menu items from
-                            your database.
+                            delete the <strong>{restaurant.name}</strong>{" "}
+                            restaurant and all its associated categories and
+                            menu items from your database.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

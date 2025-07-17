@@ -15,12 +15,33 @@ export const createTable = pgTableCreator((name) => `menu-hub_${name}`);
 // This table stores information about each restaurant.
 // Each restaurant will have a unique 'slug' for its URL path.
 export const restaurants = createTable('restaurants', {
-  id: uuid('id').defaultRandom().primaryKey(), // Unique ID for the restaurant
-  name: text('name').notNull(),                 // Name of the restaurant
-  slug: text('slug').unique().notNull(),        // Unique slug for URL (e.g., 'pizza-palace')
-  createdAt: timestamp('created_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).notNull(), // Timestamp when the record was created
-  updatedAt: timestamp('updated_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()), // Timestamp when the record was last updated
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  slug: text('slug').unique().notNull(),
+
+  // ✅ New Fields
+  logoUrl: text('logo_url'),                       // Uploadthing single image
+  galleryUrls: text('gallery_urls').array(),       // Uploadthing multiple images
+  address: text('address'),
+  country: text('country').default("Not Set").notNull(),
+  foodType: text('food_type').default("Not Set").notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
+
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`).notNull(),
+
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()),
 });
+
+// old schema
+// export const restaurants = createTable('restaurants', {
+//   id: uuid('id').defaultRandom().primaryKey(), // Unique ID for the restaurant
+//   name: text('name').notNull(),                 // Name of the restaurant
+//   slug: text('slug').unique().notNull(),        // Unique slug for URL (e.g., 'pizza-palace')
+//   createdAt: timestamp('created_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).notNull(), // Timestamp when the record was created
+//   updatedAt: timestamp('updated_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()), // Timestamp when the record was last updated
+// });
 
 // Define relations for the restaurants table
 // A restaurant can have many categories and many menu items

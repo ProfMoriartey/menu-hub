@@ -1,5 +1,5 @@
 // src/components/admin/EditRestaurantDialog.tsx
-"use client"; // This is a Client Component
+"use client";
 
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -14,35 +14,35 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Pencil } from "lucide-react"; // Edit icon
-import { z } from "zod"; // For validation
-import { useFormStatus } from "react-dom"; // For pending state of Server Action
+import { Pencil } from "lucide-react";
+import { z } from "zod";
+import { useFormStatus } from "react-dom";
 
-// Define the shape of a restaurant for type safety
 interface Restaurant {
   id: string;
   name: string;
   slug: string;
+  country?: string;
+  foodType?: string;
   createdAt: Date;
   updatedAt: Date | null;
 }
 
-// Zod schema for form validation
 const updateRestaurantSchema = z.object({
-  id: z.string().uuid(), // ID is required for update
+  id: z.string().uuid(),
   name: z.string().min(1, { message: "Restaurant name is required." }),
   slug: z
     .string()
-    .min(1, { message: "Restaurant slug is required." })
+    .min(1, { message: "Slug is required." })
     .regex(/^[a-z0-9-]+$/, {
       message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
     }),
+  country: z.string().min(1, { message: "Country is required." }),
+  foodType: z.string().min(1, { message: "Food type is required." }),
 });
 
-// SubmitButton component to show loading state
 function SubmitButton() {
   const { pending } = useFormStatus();
-
   return (
     <Button type="submit" disabled={pending}>
       {pending ? "Saving..." : "Save Changes"}
@@ -50,10 +50,9 @@ function SubmitButton() {
   );
 }
 
-// EditRestaurantDialog component
 interface EditRestaurantDialogProps {
   restaurant: Restaurant;
-  updateRestaurantAction: (formData: FormData) => Promise<void>; // Server Action prop
+  updateRestaurantAction: (formData: FormData) => Promise<void>;
 }
 
 export function EditRestaurantDialog({
@@ -64,28 +63,29 @@ export function EditRestaurantDialog({
   const [formErrors, setFormErrors] = useState<{
     name?: string;
     slug?: string;
+    country?: string;
+    foodType?: string;
     general?: string;
   }>({});
 
-  // Function to handle form submission and validation
   const handleSubmit = async (formData: FormData) => {
-    setFormErrors({}); // Clear previous errors
+    setFormErrors({});
 
-    const id = formData.get("id") as string;
-    const name = formData.get("name") as string;
-    const slug = formData.get("slug") as string;
+    const values = {
+      id: formData.get("id") as string,
+      name: formData.get("name") as string,
+      slug: formData.get("slug") as string,
+      country: formData.get("country") as string,
+      foodType: formData.get("foodType") as string,
+    };
 
-    const validationResult = updateRestaurantSchema.safeParse({
-      id,
-      name,
-      slug,
-    });
+    const validation = updateRestaurantSchema.safeParse(values);
 
-    if (!validationResult.success) {
-      const errors: { name?: string; slug?: string } = {};
-      validationResult.error.errors.forEach((err) => {
-        if (err.path[0] === "name") errors.name = err.message;
-        if (err.path[0] === "slug") errors.slug = err.message;
+    if (!validation.success) {
+      const errors: typeof formErrors = {};
+      validation.error.errors.forEach((err) => {
+        const key = err.path[0] as keyof typeof formErrors;
+        errors[key] = err.message;
       });
       setFormErrors(errors);
       return;
@@ -93,9 +93,8 @@ export function EditRestaurantDialog({
 
     try {
       await updateRestaurantAction(formData);
-      setIsOpen(false); // Close dialog on success
+      setIsOpen(false);
     } catch (error) {
-      console.error("Error updating restaurant:", error);
       setFormErrors({
         general:
           error instanceof Error
@@ -116,12 +115,10 @@ export function EditRestaurantDialog({
         <DialogHeader>
           <DialogTitle>Edit Restaurant</DialogTitle>
           <DialogDescription>
-            Make changes to &quot;{restaurant.name}&quot; here. Click save when
-            you&apos;re done.
+            Make changes to "{restaurant.name}". Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit} className="grid gap-4 py-4">
-          {/* Hidden input for ID */}
           <input type="hidden" name="id" value={restaurant.id} />
 
           <div className="grid grid-cols-4 items-center gap-4">
@@ -141,6 +138,7 @@ export function EditRestaurantDialog({
               </p>
             )}
           </div>
+
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="slug" className="text-right">
               Slug
@@ -161,11 +159,49 @@ export function EditRestaurantDialog({
               Lowercase, alphanumeric, hyphens only.
             </p>
           </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="country" className="text-right">
+              Country
+            </Label>
+            <Input
+              id="country"
+              name="country"
+              defaultValue={restaurant.country}
+              className="col-span-3"
+              required
+            />
+            {formErrors.country && (
+              <p className="col-span-4 text-right text-sm text-red-500">
+                {formErrors.country}
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="foodType" className="text-right">
+              Food Type
+            </Label>
+            <Input
+              id="foodType"
+              name="foodType"
+              defaultValue={restaurant.foodType}
+              className="col-span-3"
+              required
+            />
+            {formErrors.foodType && (
+              <p className="col-span-4 text-right text-sm text-red-500">
+                {formErrors.foodType}
+              </p>
+            )}
+          </div>
+
           {formErrors.general && (
             <p className="col-span-4 text-center text-sm text-red-500">
               {formErrors.general}
             </p>
           )}
+
           <DialogFooter>
             <SubmitButton />
           </DialogFooter>
