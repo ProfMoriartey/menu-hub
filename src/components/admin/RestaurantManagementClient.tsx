@@ -43,10 +43,10 @@ interface Restaurant {
   id: string;
   name: string;
   slug: string;
-  address?: string;
-  country?: string;
-  foodType?: string;
-  isActive?: boolean;
+  address: string | null; // <--- CHANGED TO ALLOW NULL
+  country: string | null; // <--- You might need to change this one too if it can be null
+  foodType: string | null; // <--- You might need to change this one too if it can be null
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date | null;
 }
@@ -99,9 +99,9 @@ export function RestaurantManagementClient({
     return (
       restaurant.name.toLowerCase().includes(term) ||
       restaurant.slug.toLowerCase().includes(term) ||
-      restaurant.country?.toLowerCase().includes(term) ||
-      restaurant.foodType?.toLowerCase().includes(term) ||
-      restaurant.address?.toLowerCase().includes(term)
+      (restaurant.country?.toLowerCase().includes(term) ?? false) ||
+      (restaurant.foodType?.toLowerCase().includes(term) ?? false) ||
+      (restaurant.address?.toLowerCase().includes(term) ?? false)
     );
   });
 

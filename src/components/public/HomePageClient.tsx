@@ -1,9 +1,9 @@
 // src/components/public/HomePageClient.tsx
 "use client"; // This is a Client Component
 
-import { useState } from "react"; // Example: if search input were stateful
+// import { useState } from "react"; // Example: if search input were stateful
 import Link from "next/link";
-import Image from "next/image"; // Use Next.js Image component directly
+// import Image from "next/image"; // Use Next.js Image component directly
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import {
@@ -32,7 +32,7 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
   // const [searchTerm, setSearchTerm] = useState('');
 
   // Fallback image URL for onError
-  const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Logo`;
+  // const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Logo`;
 
   return (
     <>

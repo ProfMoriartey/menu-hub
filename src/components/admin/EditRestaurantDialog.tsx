@@ -22,10 +22,10 @@ interface Restaurant {
   id: string;
   name: string;
   slug: string;
-  country?: string;
-  foodType?: string;
-  address?: string;
-  isActive?: boolean;
+  address: string | null; // Make sure these are consistent
+  country: string | null; // Make sure these are consistent
+  foodType: string | null; // Make sure these are consistent
+  isActive: boolean; // Assuming this is always boolean, not null from DB, based on your Zod. If it can be null, make it boolean | null.
   createdAt: Date;
   updatedAt: Date | null;
 }
@@ -118,7 +118,7 @@ export function EditRestaurantDialog({
         <DialogHeader>
           <DialogTitle>Edit Restaurant</DialogTitle>
           <DialogDescription>
-            Update info for "{restaurant.name}".
+            Update info for &quot;{restaurant.name}&quot;.
           </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit} className="grid gap-4 py-4">
@@ -137,19 +137,19 @@ export function EditRestaurantDialog({
           )}
 
           <Label>Country</Label>
-          <Input name="country" defaultValue={restaurant.country} required />
+          <Input name="country" required />
           {formErrors.country && (
             <p className="text-sm text-red-500">{formErrors.country}</p>
           )}
 
           <Label>Food Type</Label>
-          <Input name="foodType" defaultValue={restaurant.foodType} required />
+          <Input name="foodType" required />
           {formErrors.foodType && (
             <p className="text-sm text-red-500">{formErrors.foodType}</p>
           )}
 
           <Label>Address</Label>
-          <Input name="address" defaultValue={restaurant.address || ""} />
+          <Input name="address" defaultValue={restaurant.address ?? ""} />
           {formErrors.address && (
             <p className="text-sm text-red-500">{formErrors.address}</p>
           )}
