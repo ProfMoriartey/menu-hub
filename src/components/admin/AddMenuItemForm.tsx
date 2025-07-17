@@ -1,4 +1,3 @@
-// src/components/admin/AddMenuItemForm.tsx
 "use client"; // This is a Client Component
 
 import { useState, useRef } from "react";
@@ -6,7 +5,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { Checkbox } from "~/components/ui/checkbox";
+import { Checkbox } from "~/components/ui/checkbox"; // Keep Checkbox for dietary labels
 import {
   Card,
   CardContent,
@@ -14,23 +13,36 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { UploadButton } from "~/utils/uploadthing"; // Your Uploadthing component
+import { UploadButton } from "~/utils/uploadthing";
 import { z } from "zod";
-import { useFormStatus } from "react-dom"; // For pending state of Server Action
-import Image from "next/image"; // NEW: Import Next.js Image component
-// REMOVED: import { ResponsiveImage } from "~/components/shared/ResponsiveImage";
+import { useFormStatus } from "react-dom";
+import Image from "next/image";
+
+// Import the DietaryLabel type from your shared types
+// Import the DietaryLabel type from your shared types
+import type { DietaryLabel } from "~/types/restaurant"; // Ensure this path is correct
+// Ensure this path is correct
+
+// Define the possible dietary labels (matching your Drizzle enum)
+const ALL_DIETARY_LABELS: DietaryLabel[] = [
+  "vegetarian",
+  "vegan",
+  "gluten-free",
+  "dairy-free",
+  "nut-free",
+];
 
 // Zod schema for adding a menu item (re-defined here for client-side validation)
 const createMenuItemSchema = z.object({
   name: z.string().min(1, { message: "Menu item name is required." }),
   description: z.string().min(1, { message: "Description is required." }),
-  price: z.preprocess(
-    (a) => parseFloat(z.string().parse(a)),
-    z.number().positive({ message: "Price must be a positive number." }),
-  ),
+  // Corrected price to be a string, matching Drizzle schema
+  price: z.string().min(1, { message: "Price is required." }),
   ingredients: z.string().min(1, { message: "Ingredients are required." }),
-  isVegetarian: z.boolean().optional(), // Now boolean directly from state
-  isGlutenFree: z.boolean().optional(), // Now boolean directly from state
+  // Changed to dietaryLabels array
+  dietaryLabels: z
+    .array(z.enum(ALL_DIETARY_LABELS as [string, ...string[]]))
+    .optional(),
   imageUrl: z
     .string()
     .url({ message: "Image URL is required and must be a valid URL." }),
@@ -62,31 +74,45 @@ export function AddMenuItemForm({
   addMenuItemAction,
 }: AddMenuItemFormProps) {
   const [imageUrl, setImageUrl] = useState<string>("");
-  const [isVegetarian, setIsVegetarian] = useState(false);
-  const [isGlutenFree, setIsGlutenFree] = useState(false);
+  // Changed to a single state for dietary labels (array of strings)
+  const [selectedDietaryLabels, setSelectedDietaryLabels] = useState<
+    DietaryLabel[]
+  >([]);
   const [formErrors, setFormErrors] = useState<z.ZodIssue[]>([]);
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  // State to manage the image source for Next.js Image component
   const [displayImageUrl, setDisplayImageUrl] = useState<string>("");
-  // Fallback image URL
   const fallbackImageUrl = `https://placehold.co/128x128/E0E0E0/333333?text=No+Image`;
+
+  // Function to handle checkbox changes for dietary labels
+  const handleDietaryLabelChange = (label: DietaryLabel, checked: boolean) => {
+    setSelectedDietaryLabels((prevLabels) => {
+      if (checked) {
+        return [...prevLabels, label];
+      } else {
+        return prevLabels.filter((l) => l !== label);
+      }
+    });
+  };
 
   const handleSubmit = async (formData: FormData) => {
     setFormErrors([]);
 
-    formData.set("isVegetarian", isVegetarian ? "on" : "");
-    formData.set("isGlutenFree", isGlutenFree ? "on" : "");
+    // Remove old boolean fields, add new dietaryLabels as JSON string
+    // formData.set("isVegetarian", isVegetarian ? "on" : ""); // REMOVED
+    // formData.set("isGlutenFree", isGlutenFree ? "on" : ""); // REMOVED
+    formData.set("dietaryLabels", JSON.stringify(selectedDietaryLabels)); // NEW
+
     formData.set("imageUrl", imageUrl);
 
     const validationResult = createMenuItemSchema.safeParse({
       name: formData.get("name"),
       description: formData.get("description"),
-      price: formData.get("price"),
+      price: formData.get("price"), // Price is now a string
       ingredients: formData.get("ingredients"),
-      isVegetarian: isVegetarian,
-      isGlutenFree: isGlutenFree,
+      // Pass the dietaryLabels array directly to Zod
+      dietaryLabels: selectedDietaryLabels, // NEW
       imageUrl: imageUrl,
       restaurantId: restaurantId,
       categoryId: categoryId,
@@ -100,10 +126,9 @@ export function AddMenuItemForm({
     try {
       await addMenuItemAction(formData);
       formRef.current?.reset();
-      setImageUrl(""); // Clear internal state
-      setDisplayImageUrl(""); // Clear display state
-      setIsVegetarian(false);
-      setIsGlutenFree(false);
+      setImageUrl("");
+      setDisplayImageUrl("");
+      setSelectedDietaryLabels([]); // Reset dietary labels state
       setFormErrors([]);
     } catch (error) {
       console.error("Error adding menu item:", error);
@@ -165,8 +190,7 @@ export function AddMenuItemForm({
             <Input
               id="price"
               name="price"
-              type="number"
-              step="0.01"
+              type="text" // Changed to text as per Drizzle schema
               placeholder="e.g., 12.99"
               required
             />
@@ -191,42 +215,47 @@ export function AddMenuItemForm({
             )}
           </div>
 
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="isVegetarian"
-                name="isVegetarian"
-                checked={isVegetarian}
-                onCheckedChange={(checked) => setIsVegetarian(!!checked)}
-              />
-              <Label htmlFor="isVegetarian">Vegetarian</Label>
+          {/* NEW: Dietary Labels Section */}
+          <div>
+            <Label>Dietary Labels</Label>
+            <div className="flex flex-wrap gap-4 py-2">
+              {ALL_DIETARY_LABELS.map((label) => (
+                <div key={label} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`dietary-${label}`}
+                    checked={selectedDietaryLabels.includes(label)}
+                    onCheckedChange={(checked) =>
+                      handleDietaryLabelChange(label, !!checked)
+                    }
+                  />
+                  <Label htmlFor={`dietary-${label}`}>
+                    {label.charAt(0).toUpperCase() +
+                      label.slice(1).replace(/-/g, " ")}{" "}
+                    {/* Capitalize and replace hyphens */}
+                  </Label>
+                </div>
+              ))}
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="isGlutenFree"
-                name="isGlutenFree"
-                checked={isGlutenFree}
-                onCheckedChange={(checked) => setIsGlutenFree(!!checked)}
-              />
-              <Label htmlFor="isGlutenFree">Gluten-Free</Label>
-            </div>
+            {formErrors.find((e) => e.path[0] === "dietaryLabels") && (
+              <p className="mt-1 text-sm text-red-500">
+                {formErrors.find((e) => e.path[0] === "dietaryLabels")?.message}
+              </p>
+            )}
           </div>
 
           <div>
             <Label htmlFor="imageUrl">Item Image</Label>
-            {/* Display uploaded image preview using Next.js Image */}
-            {displayImageUrl && ( // Use displayImageUrl for rendering
+            {displayImageUrl && (
               <div className="mb-2">
                 <Image
-                  src={displayImageUrl} // Use state for src
+                  src={displayImageUrl}
                   alt="Uploaded Preview"
                   width={128}
                   height={128}
                   className="rounded-md object-cover"
                   onError={(e) => {
-                    // onError is fine in Client Component
                     e.currentTarget.src = fallbackImageUrl;
-                    e.currentTarget.onerror = null; // Prevent infinite loop
+                    e.currentTarget.onerror = null;
                   }}
                 />
               </div>
@@ -235,8 +264,8 @@ export function AddMenuItemForm({
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 if (res && res.length > 0 && res[0]) {
-                  setImageUrl(res[0].url); // Update internal state for form submission
-                  setDisplayImageUrl(res[0].url); // Update state for image preview
+                  setImageUrl(res[0].url);
+                  setDisplayImageUrl(res[0].url);
                 } else {
                   setFormErrors([
                     {

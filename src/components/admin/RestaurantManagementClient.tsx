@@ -1,5 +1,6 @@
 "use client";
-import Image from "next/image.js";
+
+import Image from "next/image";
 import { useState, useRef } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -36,11 +37,13 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { EditRestaurantDialog } from "~/components/admin/EditRestaurantDialog";
-import { Switch } from "~/components/ui/switch"; // Ensure Switch is imported
-import { UploadButton, UploadDropzone } from "~/utils/uploadthing"; // Ensure UploadButton is imported
-import { XCircle } from "lucide-react"; // Ensure XCircle is imported
+import { Switch } from "~/components/ui/switch";
+import { UploadButton } from "~/utils/uploadthing";
 
-import type { Restaurant } from "~/types/restaurant";
+import { XCircle } from "lucide-react";
+
+import type { Restaurant } from "~/types/restaurant"; // IMPORTANT: Ensure this path is correct
+// IMPORTANT: Ensure this path is correct
 
 interface RestaurantManagementClientProps {
   initialRestaurants: Restaurant[];
@@ -57,31 +60,19 @@ const createRestaurantSchema = z.object({
     .regex(/^[a-z0-9-]+$/, {
       message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
     }),
-  country: z.string().min(1, { message: "Country is required." }), // Added message
-  foodType: z.string().min(1, { message: "Food type is required." }), // Added message
-  address: z.string().optional(),
+  country: z.string().min(1, { message: "Country is required." }),
+  foodType: z.string().min(1, { message: "Food type is required." }),
+  address: z.string().nullable().optional(), // Ensure consistency with shared type
   isActive: z
     .string()
     .optional()
     .transform((val) => val === "on"),
-  logoUrl: z.string().url().nullable().optional(), // Added for add form schema
-  galleryUrls: z
+  // NEW: Add isDisplayed to the schema
+  isDisplayed: z
     .string()
     .optional()
-    .transform((val) => {
-      if (!val) return null;
-      try {
-        const parsed: unknown = JSON.parse(val);
-        return Array.isArray(parsed) &&
-          parsed.every((item): item is string => typeof item === "string")
-          ? parsed
-          : null;
-      } catch {
-        return null;
-      }
-    })
-    .nullable()
-    .optional(),
+    .transform((val) => val === "on"),
+  logoUrl: z.string().url().nullable().optional(),
 });
 
 function SubmitButton() {
@@ -102,13 +93,13 @@ export function RestaurantManagementClient({
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const [isNewRestaurantActive, setIsNewRestaurantActive] = useState(true); // State for add form's isActive
+  const [isNewRestaurantActive, setIsNewRestaurantActive] = useState(true);
+  // NEW: State for isDisplayed in the add form
+  const [isNewRestaurantDisplayed, setIsNewRestaurantDisplayed] =
+    useState(true);
   const [newRestaurantLogoUrl, setNewRestaurantLogoUrl] = useState<
     string | null
-  >(null); // State for add form's logo
-  const [newRestaurantGalleryUrls, setNewRestaurantGalleryUrls] = useState<
-    string[]
-  >([]); // State for add form's gallery
+  >(null);
 
   const addFormRef = useRef<HTMLFormElement>(null);
 
@@ -126,32 +117,33 @@ export function RestaurantManagementClient({
   const handleAddSubmit = async (formData: FormData) => {
     setFormErrors({});
 
-    // Manually append isActive, logoUrl, and galleryUrls to formData for the add action
     formData.set("isActive", isNewRestaurantActive ? "on" : "");
+    // NEW: Set isDisplayed in formData
+    formData.set("isDisplayed", isNewRestaurantDisplayed ? "on" : "");
     formData.set("logoUrl", newRestaurantLogoUrl ?? "");
-    formData.set("galleryUrls", JSON.stringify(newRestaurantGalleryUrls));
 
     const values = {
       name: formData.get("name") as string,
       slug: formData.get("slug") as string,
-      country: formData.get("country") as string,
-      foodType: formData.get("foodType") as string,
-      address: formData.get("address") as string,
+      country: formData.get("country") as string | null,
+      foodType: formData.get("foodType") as string | null,
+      address: formData.get("address") as string | null,
       isActive: formData.get("isActive") as string,
+      // NEW: Get isDisplayed from formData
+      isDisplayed: formData.get("isDisplayed") as string | null,
       logoUrl: formData.get("logoUrl") as string | null,
-      galleryUrls: formData.get("galleryUrls") as string | null,
     };
 
     const result = createRestaurantSchema.safeParse(values);
 
     if (!result.success) {
       const errors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
+      result.error.errors.forEach((_e) => {
         const key =
-          Array.isArray(err.path) && typeof err.path[0] === "string"
-            ? err.path[0]
+          Array.isArray(_e.path) && typeof _e.path[0] === "string"
+            ? _e.path[0]
             : "general";
-        errors[key] = err.message;
+        errors[key] = _e.message;
       });
       setFormErrors(errors);
       return;
@@ -162,9 +154,10 @@ export function RestaurantManagementClient({
       setIsAddDialogOpen(false);
       addFormRef.current?.reset();
       setFormErrors({});
-      setIsNewRestaurantActive(true); // Reset switch state for next add
-      setNewRestaurantLogoUrl(null); // Reset logo URL for next add
-      setNewRestaurantGalleryUrls([]); // Reset gallery URLs for next add
+      setIsNewRestaurantActive(true);
+      // NEW: Reset isDisplayed state for next add
+      setIsNewRestaurantDisplayed(true);
+      setNewRestaurantLogoUrl(null);
     } catch (error) {
       setFormErrors({
         general: error instanceof Error ? error.message : "Add failed.",
@@ -187,8 +180,6 @@ export function RestaurantManagementClient({
             <Button className="w-full md:w-1/3">Add New Restaurant</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
-            {" "}
-            {/* Adjusted width for add dialog too */}
             <DialogHeader>
               <DialogTitle>Add New Restaurant</DialogTitle>
               <DialogDescription>
@@ -200,9 +191,7 @@ export function RestaurantManagementClient({
               action={handleAddSubmit}
               className="grid gap-4 py-4"
             >
-              {/* Two-column layout for add form */}
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {/* Left Column: Input Fields */}
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="name">Name</Label>
@@ -249,11 +238,19 @@ export function RestaurantManagementClient({
                     />
                     <Label htmlFor="isActive">Active</Label>
                   </div>
+                  {/* NEW: isDisplayed Switch */}
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="isDisplayed"
+                      name="isDisplayed"
+                      checked={isNewRestaurantDisplayed}
+                      onCheckedChange={setIsNewRestaurantDisplayed}
+                    />
+                    <Label htmlFor="isDisplayed">Display on Public Site</Label>
+                  </div>
                 </div>
 
-                {/* Right Column: Upload Buttons for Add Form */}
                 <div className="space-y-6">
-                  {/* Logo Upload Section for Add Form */}
                   <div>
                     <Label htmlFor="newLogoUrl">Restaurant Logo</Label>
                     {newRestaurantLogoUrl && (
@@ -261,8 +258,7 @@ export function RestaurantManagementClient({
                         <Image
                           src={newRestaurantLogoUrl}
                           alt="Logo Preview"
-                          fill
-                          className="object-cover"
+                          className="h-full w-full object-cover"
                         />
                         <Button
                           variant="destructive"
@@ -283,7 +279,6 @@ export function RestaurantManagementClient({
                       }}
                       onUploadError={(error: Error) => {
                         console.error(`ERROR! ${error.message}`);
-                        alert(`ERROR! ${error.message}`);
                       }}
                     />
                     {formErrors.logoUrl && (
@@ -292,66 +287,15 @@ export function RestaurantManagementClient({
                       </p>
                     )}
                   </div>
-
-                  {/* Gallery Images Upload Section for Add Form */}
-                  <div>
-                    <Label htmlFor="newGalleryUrls">Restaurant Gallery</Label>
-                    <div className="mb-2 grid grid-cols-3 gap-2">
-                      {newRestaurantGalleryUrls.map((url, index) => (
-                        <div
-                          key={index}
-                          className="relative h-24 w-full overflow-hidden rounded-md"
-                        >
-                          <Image
-                            src={url}
-                            alt={`Gallery ${index}`}
-                            fill
-                            className="object-cover"
-                          />
-                          <Button
-                            variant="destructive"
-                            size="icon"
-                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
-                            onClick={() =>
-                              setNewRestaurantGalleryUrls((prev) =>
-                                prev.filter((_, i) => i !== index),
-                              )
-                            }
-                          >
-                            <XCircle className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                    <UploadDropzone
-                      endpoint="galleryUploader"
-                      onClientUploadComplete={(res) => {
-                        if (res) {
-                          setNewRestaurantGalleryUrls((prev) => [
-                            ...prev,
-                            ...res.map((file) => file.url),
-                          ]);
-                        }
-                      }}
-                      onUploadError={(error: Error) => {
-                        console.error(`ERROR! ${error.message}`);
-                        alert(`ERROR! ${error.message}`);
-                      }}
-                    />
-                    {formErrors.galleryUrls && (
-                      <p className="text-sm text-red-500">
-                        {formErrors.galleryUrls}
-                      </p>
-                    )}
-                  </div>
                 </div>
-              </div>{" "}
-              {/* End of two-column grid for add form */}
+              </div>
+
               {formErrors.general && (
                 <p className="col-span-full mt-4 text-center text-sm text-red-500">
                   {formErrors.general}
                 </p>
               )}
+
               <DialogFooter className="col-span-full">
                 <SubmitButton />
               </DialogFooter>
@@ -375,14 +319,12 @@ export function RestaurantManagementClient({
               {filteredRestaurants.map((restaurant) => (
                 <Card key={restaurant.id} className="flex h-full flex-col">
                   <CardHeader className="flex-grow">
-                    {/* Display Logo here */}
                     {restaurant.logoUrl && (
-                      <div className="relative mb-2 h-24 w-24 overflow-hidden rounded-md">
+                      <div className="mb-2 h-24 w-24 overflow-hidden rounded-md">
                         <Image
                           src={restaurant.logoUrl}
                           alt={`${restaurant.name} Logo`}
-                          fill
-                          className="object-cover"
+                          className="h-full w-full object-cover"
                         />
                       </div>
                     )}

@@ -1,37 +1,24 @@
-// src/components/public/MenuDisplayClient.tsx
 "use client"; // This is a Client Component
 
 import { useState } from "react";
 import Link from "next/link";
-import { ResponsiveImage } from "~/components/shared/ResponsiveImage"; // Re-use our image component
+// REMOVED: import { ResponsiveImage } from "~/components/shared/ResponsiveImage"; // No longer needed
+import Image from "next/image"; // Import Next.js Image component
 import { cn } from "~/lib/utils"; // Shadcn utility for class merging (if you have it, otherwise use 'clsx')
 
-// Define types for the data structure passed from the Server Component
-interface MenuItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  ingredients: string;
-  isVegetarian: boolean;
-  isGlutenFree: boolean;
-  imageUrl: string;
-}
+// Import types from your shared types file
+// Import types from your shared types file
+import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant"; // Import MenuItem, Category, and DietaryLabel
+// Import MenuItem, Category, and DietaryLabel
 
-interface CategoryWithItems {
-  id: string;
-  name: string;
-  order: number;
-  menuItems: MenuItem[];
-}
-
+// Redefine RestaurantMenuData using the imported types
 interface RestaurantMenuData {
   restaurant: {
     id: string;
     name: string;
     slug: string;
   };
-  categories: CategoryWithItems[];
+  categories: (Category & { menuItems: MenuItem[] })[]; // Category with its nested menuItems
 }
 
 interface MenuDisplayClientProps {
@@ -40,11 +27,8 @@ interface MenuDisplayClientProps {
 
 export function MenuDisplayClient({ menuData }: MenuDisplayClientProps) {
   // State to manage the currently active category ID
-  // Initialize with the first category's ID if available, otherwise null
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(
     () => {
-      // Use a function for initial state to ensure it's only computed once
-      // Add a check that menuData.categories[0] actually exists before accessing .id
       if (menuData.categories.length > 0 && menuData.categories[0]) {
         return menuData.categories[0].id;
       }
@@ -56,6 +40,9 @@ export function MenuDisplayClient({ menuData }: MenuDisplayClientProps) {
   const activeCategory = menuData.categories.find(
     (cat) => cat.id === activeCategoryId,
   );
+
+  // Fallback image URL for when a menu item image is not available
+  const fallbackImageUrl = `https://placehold.co/120x120/E0E0E0/333333?text=No+Image`;
 
   return (
     <div className="space-y-8">
@@ -91,20 +78,18 @@ export function MenuDisplayClient({ menuData }: MenuDisplayClientProps) {
             </p>
           ) : (
             <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {" "}
-              {/* Responsive grid */}
               {activeCategory.menuItems.map((item) => (
                 <Link
                   key={item.id}
-                  href={`/${menuData.restaurant.slug}/item/${item.id}`} // Link to item detail page
+                  href={`/${menuData.restaurant.slug}/item/${item.id}`}
                   passHref
-                  className="group block" // Use group for hover effects on children
+                  className="group block"
                 >
                   <div className="flex cursor-pointer flex-col items-center space-y-4 rounded-lg bg-white p-4 shadow-md transition-shadow duration-200 hover:shadow-lg sm:flex-row sm:items-start sm:space-y-0 sm:space-x-4">
                     {/* Image on Right (for larger screens) / Top (for smaller screens) */}
                     <div className="order-2 flex-shrink-0 sm:order-2">
-                      <ResponsiveImage
-                        src={item.imageUrl}
+                      <Image // Use Next.js Image component
+                        src={item.imageUrl ?? fallbackImageUrl} // Use nullish coalescing
                         alt={item.name}
                         width={120}
                         height={120}
@@ -116,24 +101,28 @@ export function MenuDisplayClient({ menuData }: MenuDisplayClientProps) {
                       <h3 className="text-xl font-semibold text-gray-900 transition-colors duration-200 group-hover:text-blue-600">
                         {item.name}
                       </h3>
-                      <p className="mt-1 line-clamp-2 text-sm text-gray-600">
-                        {item.description}
-                      </p>
+                      {item.description && ( // Conditionally render description
+                        <p className="mt-1 line-clamp-2 text-sm text-gray-600">
+                          {item.description}
+                        </p>
+                      )}
                       <p className="mt-2 text-lg font-bold text-blue-700">
-                        ${item.price.toFixed(2)}
+                        ${item.price} {/* Price is now a string, no toFixed */}
                       </p>
-                      <div className="mt-2 flex justify-center space-x-2 sm:justify-start">
-                        {item.isVegetarian && (
-                          <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
-                            Veg
-                          </span>
-                        )}
-                        {item.isGlutenFree && (
-                          <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800">
-                            GF
-                          </span>
-                        )}
-                      </div>
+                      {/* NEW: Display Dietary Labels */}
+                      {item.dietaryLabels && item.dietaryLabels.length > 0 && (
+                        <div className="mt-2 flex flex-wrap justify-center gap-1 sm:justify-start">
+                          {item.dietaryLabels.map((label: DietaryLabel) => (
+                            <span
+                              key={label}
+                              className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-800"
+                            >
+                              {label.charAt(0).toUpperCase() +
+                                label.slice(1).replace(/-/g, " ")}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </Link>

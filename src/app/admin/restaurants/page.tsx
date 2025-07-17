@@ -1,10 +1,9 @@
 // app/admin/restaurants/page.tsx
-
 import { db } from "~/server/db";
-import { restaurants } from "~/server/db/schema";
+import { restaurants } from "~/server/db/schema"; // Ensure categories and menuItems are imported
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { z } from "zod"; // Keep Zod for server-side validation in Server Actions
+import { z } from "zod";
 
 // NEW IMPORT: RestaurantManagementClient
 import { RestaurantManagementClient } from "~/components/admin/RestaurantManagementClient";
@@ -19,30 +18,12 @@ const restaurantSchema = z.object({
     .regex(/^[a-z0-9-]+$/, {
       message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
     }),
-  address: z.string().optional(),
-  country: z.string().optional(),
-  foodType: z.string().optional(),
+  address: z.string().nullable().optional(),
+  country: z.string().nullable().optional(),
+  foodType: z.string().nullable().optional(),
   isActive: z.coerce.boolean().default(true),
+  isDisplayed: z.coerce.boolean().default(true),
   logoUrl: z.string().url().nullable().optional(),
-  galleryUrls: z
-    .string()
-    .optional()
-    .transform((val) => {
-      // Parse JSON string back to array, handle null/undefined/empty string
-      if (!val) return null;
-      try {
-        const parsed: unknown = JSON.parse(val);
-        // Ensure it's an array of strings
-        return Array.isArray(parsed) &&
-          parsed.every((item): item is string => typeof item === "string")
-          ? parsed
-          : null;
-      } catch {
-        return null;
-      }
-    })
-    .nullable()
-    .optional(),
 });
 
 // Server Action to add a new restaurant
@@ -50,14 +31,14 @@ async function addRestaurant(formData: FormData) {
   "use server";
 
   const rawData = {
-    name: formData.get("name"),
-    slug: formData.get("slug"),
-    address: formData.get("address"),
-    country: formData.get("country"),
-    foodType: formData.get("foodType"),
+    name: formData.get("name") as string | null,
+    slug: formData.get("slug") as string | null,
+    address: formData.get("address") as string | null,
+    country: formData.get("country") as string | null,
+    foodType: formData.get("foodType") as string | null,
     isActive: formData.get("isActive") === "on",
+    isDisplayed: formData.get("isDisplayed") === "on",
     logoUrl: formData.get("logoUrl") as string | null,
-    galleryUrls: formData.get("galleryUrls") as string | null,
   };
 
   const result = restaurantSchema.safeParse(rawData);
@@ -66,7 +47,7 @@ async function addRestaurant(formData: FormData) {
     console.error("Validation failed:", result.error.errors);
     throw new Error(
       "Invalid input: " +
-        result.error.errors.map((err) => err.message).join(", "),
+        result.error.errors.map((_e) => _e.message).join(", "),
     );
   }
 
@@ -77,8 +58,8 @@ async function addRestaurant(formData: FormData) {
     country,
     foodType,
     isActive,
+    isDisplayed,
     logoUrl,
-    galleryUrls,
   } = result.data;
 
   const existing = await db.query.restaurants.findFirst({
@@ -96,8 +77,8 @@ async function addRestaurant(formData: FormData) {
     country,
     foodType,
     isActive,
-    logoUrl, // Destructure new fields
-    galleryUrls, // Destructure new fields
+    isDisplayed,
+    logoUrl,
   });
 
   revalidatePath("/admin/restaurants");
@@ -121,15 +102,15 @@ async function updateRestaurant(formData: FormData) {
   "use server";
 
   const rawData = {
-    id: formData.get("id"),
-    name: formData.get("name"),
-    slug: formData.get("slug"),
-    address: formData.get("address"),
-    country: formData.get("country"),
-    foodType: formData.get("foodType"),
+    id: formData.get("id") as string | null,
+    name: formData.get("name") as string | null,
+    slug: formData.get("slug") as string | null,
+    address: formData.get("address") as string | null,
+    country: formData.get("country") as string | null,
+    foodType: formData.get("foodType") as string | null,
     isActive: formData.get("isActive") === "on",
+    isDisplayed: formData.get("isDisplayed") === "on",
     logoUrl: formData.get("logoUrl") as string | null,
-    galleryUrls: formData.get("galleryUrls") as string | null,
   };
 
   const result = restaurantSchema.safeParse(rawData);
@@ -138,7 +119,7 @@ async function updateRestaurant(formData: FormData) {
     console.error("Validation failed:", result.error.errors);
     throw new Error(
       "Invalid input: " +
-        result.error.errors.map((err) => err.message).join(", "),
+        result.error.errors.map((_e) => _e.message).join(", "),
     );
   }
 
@@ -150,13 +131,13 @@ async function updateRestaurant(formData: FormData) {
     country,
     foodType,
     isActive,
+    isDisplayed,
     logoUrl,
-    galleryUrls,
   } = result.data;
 
   const existing = await db.query.restaurants.findFirst({
-    where: (restaurant, { and, eq, ne }) =>
-      and(eq(restaurant.slug, slug), ne(restaurant.id, id!)),
+    where: (restaurant, { and, eq: drizzleEq, ne }) =>
+      and(drizzleEq(restaurant.slug, slug), ne(restaurant.id, id!)),
   });
 
   if (existing) {
@@ -172,8 +153,8 @@ async function updateRestaurant(formData: FormData) {
       country,
       foodType,
       isActive,
-      logoUrl, // Pass to Drizzle
-      galleryUrls, // Pass to Drizzle
+      isDisplayed,
+      logoUrl,
       updatedAt: new Date(),
     })
     .where(eq(restaurants.id, id!));
@@ -183,8 +164,16 @@ async function updateRestaurant(formData: FormData) {
 
 // Main Admin Restaurants Page Component (Server Component)
 export default async function AdminRestaurantsPage() {
-  // Fetch all restaurants from the database
+  // Fetch all restaurants from the database, including categories and menuItems
   const allRestaurants = await db.query.restaurants.findMany({
+    with: {
+      // <-- ADDED THIS 'with' CLAUSE
+      categories: {
+        with: {
+          menuItems: true,
+        },
+      },
+    },
     orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
   });
 

@@ -1,6 +1,11 @@
 // src/app/admin/restaurants/[restaurantId]/categories/[categoryId]/menu-items/page.tsx
-import { db } from "~/server/db"; // Assuming this path is correct for your Drizzle client
-import { menuItems, categories, restaurants } from "~/server/db/schema";
+import { db } from "~/server/db";
+import {
+  menuItems,
+  categories,
+  restaurants,
+  dietaryLabelEnum,
+} from "~/server/db/schema";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -18,7 +23,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { revalidatePath } from "next/cache";
-import { eq, and } from "drizzle-orm"; // 'and' is used, so keep it
+import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 import { notFound } from "next/navigation";
 import {
@@ -32,129 +37,73 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { Trash2 } from "lucide-react"; // Trash2 is used
-// Pencil is not directly used here, it's used in EditMenuItemDialog. Remove if linter complains.
-// import { Trash2, Pencil } from "lucide-react"; // Linter might complain about Pencil if not used directly
+import { Trash2 } from "lucide-react";
 import { AddMenuItemForm } from "~/components/admin/AddMenuItemForm";
-import { ResponsiveImage } from "~/components/shared/ResponsiveImage";
-
-// NEW IMPORT for Edit Menu Item Dialog
+import Image from "next/image";
 import { EditMenuItemDialog } from "~/components/admin/EditMenuItemDialog";
+import type { DietaryLabel } from "~/types/restaurant";
 
-// Define the props type for this page
-// FIX: Remove Promise from params and searchParams.
-// Next.js App Router passes plain objects, not Promises, to page components.
-// The error about "Promise<any>" is misleading and a symptom of a deeper type resolution issue in the build environment.
-// Using Readonly<Record<string, string>> for params is the most robust way to type it.
-interface PageProps {
-  params: Promise<{
-    restaurantId: string;
-    categoryId: string;
-  }>;
-  searchParams?: Promise<Record<string, string | string[] | undefined>>; // FIX: Use Record<string, ...>
-}
+const ALL_DIETARY_LABELS: DietaryLabel[] = dietaryLabelEnum.enumValues;
 
-// Zod schema for adding a menu item (remains here for server-side validation)
 const createMenuItemSchema = z.object({
-  name: z.string().min(1, { message: "Menu item name is required." }),
-  description: z.string().min(1, { message: "Description is required." }),
-  price: z.preprocess(
-    (a) => parseFloat(z.string().parse(a)),
-    z.number().positive({ message: "Price must be a positive number." }),
-  ),
-  ingredients: z.string().min(1, { message: "Ingredients are required." }),
-  isVegetarian: z
+  name: z.string().min(1),
+  description: z.string().nullable().optional(),
+  price: z.string().min(1),
+  ingredients: z.string().nullable().optional(),
+  dietaryLabels: z
     .string()
     .optional()
-    .transform((val) => val === "on"),
-  isGlutenFree: z
-    .string()
-    .optional()
-    .transform((val) => val === "on"),
-  imageUrl: z
-    .string()
-    .url({ message: "Image URL is required and must be a valid URL." }),
+    .transform((val) => {
+      if (!val) return null;
+      try {
+        const parsed = JSON.parse(val);
+        return Array.isArray(parsed) &&
+          parsed.every((item) =>
+            ALL_DIETARY_LABELS.includes(item as DietaryLabel),
+          )
+          ? parsed
+          : null;
+      } catch {
+        return null;
+      }
+    })
+    .nullable()
+    .optional(),
+  imageUrl: z.string().url().nullable().optional(),
   restaurantId: z.string().uuid(),
   categoryId: z.string().uuid(),
 });
 
-// Zod schema for updating a menu item (for server-side validation)
-const updateMenuItemSchema = z.object({
+const updateMenuItemSchema = createMenuItemSchema.extend({
   id: z.string().uuid(),
-  name: z.string().min(1, { message: "Menu item name is required." }),
-  description: z.string().min(1, { message: "Description is required." }),
-  price: z.preprocess(
-    (a) => parseFloat(z.string().parse(a)),
-    z.number().positive({ message: "Price must be a positive number." }),
-  ),
-  ingredients: z.string().min(1, { message: "Ingredients are required." }),
-  isVegetarian: z
-    .string()
-    .optional()
-    .transform((val) => val === "on"),
-  isGlutenFree: z
-    .string()
-    .optional()
-    .transform((val) => val === "on"),
-  imageUrl: z
-    .string()
-    .url({ message: "Image URL is required and must be a valid URL." }),
-  restaurantId: z.string().uuid(),
-  categoryId: z.string().uuid(),
 });
 
-// Server Action to add a new menu item (existing)
 async function addMenuItem(formData: FormData) {
   "use server";
 
-  const name = formData.get("name") as string;
-  const description = formData.get("description") as string;
-  const price = formData.get("price") as string;
-  const ingredients = formData.get("ingredients") as string;
-  const isVegetarian = formData.get("isVegetarian");
-  const isGlutenFree = formData.get("isGlutenFree");
-  const imageUrl = formData.get("imageUrl") as string;
-  const restaurantId = formData.get("restaurantId") as string;
-  const categoryId = formData.get("categoryId") as string;
+  const rawData = {
+    name: formData.get("name") as string | null,
+    description: formData.get("description") as string | null,
+    price: formData.get("price") as string | null,
+    ingredients: formData.get("ingredients") as string | null,
+    dietaryLabels: formData.get("dietaryLabels") as string | null,
+    imageUrl: formData.get("imageUrl") as string | null,
+    restaurantId: formData.get("restaurantId") as string,
+    categoryId: formData.get("categoryId") as string,
+  };
 
-  const validationResult = createMenuItemSchema.safeParse({
-    name,
-    description,
-    price,
-    ingredients,
-    isVegetarian,
-    isGlutenFree,
-    imageUrl,
-    restaurantId,
-    categoryId,
-  });
-
-  if (!validationResult.success) {
-    console.error(
-      "Server-side validation failed:",
-      validationResult.error.errors,
-    );
-    throw new Error(
-      "Server-side validation failed: " +
-        validationResult.error.errors.map((e) => e.message).join(", "),
-    );
+  const result = createMenuItemSchema.safeParse(rawData);
+  if (!result.success) {
+    console.error("Validation failed (addMenuItem):", result.error.errors);
+    throw new Error(result.error.errors.map((e) => e.message).join(", "));
   }
 
   try {
     await db.insert(menuItems).values({
-      name: validationResult.data.name,
-      description: validationResult.data.description,
-      price: validationResult.data.price,
-      ingredients: validationResult.data.ingredients,
-      isVegetarian: validationResult.data.isVegetarian,
-      isGlutenFree: validationResult.data.isGlutenFree,
-      imageUrl: validationResult.data.imageUrl,
-      restaurantId: validationResult.data.restaurantId,
-      categoryId: validationResult.data.categoryId,
+      ...result.data,
     });
-
     revalidatePath(
-      `/admin/restaurants/${restaurantId}/categories/${categoryId}/menu-items`,
+      `/admin/restaurants/${result.data.restaurantId}/categories/${result.data.categoryId}/menu-items`,
     );
   } catch (error) {
     console.error("Error adding menu item:", error);
@@ -164,62 +113,43 @@ async function addMenuItem(formData: FormData) {
   }
 }
 
-// NEW SERVER ACTION: Update a menu item
 async function updateMenuItem(formData: FormData) {
   "use server";
 
-  const id = formData.get("id") as string;
-  const name = formData.get("name") as string;
-  const description = formData.get("description") as string;
-  const price = formData.get("price") as string;
-  const ingredients = formData.get("ingredients") as string;
-  const isVegetarian = formData.get("isVegetarian");
-  const isGlutenFree = formData.get("isGlutenFree");
-  const imageUrl = formData.get("imageUrl") as string;
-  const restaurantId = formData.get("restaurantId") as string;
-  const categoryId = formData.get("categoryId") as string;
+  const rawData = {
+    id: formData.get("id") as string | null,
+    name: formData.get("name") as string | null,
+    description: formData.get("description") as string | null,
+    price: formData.get("price") as string | null,
+    ingredients: formData.get("ingredients") as string | null,
+    dietaryLabels: formData.get("dietaryLabels") as string | null,
+    imageUrl: formData.get("imageUrl") as string | null,
+    restaurantId: formData.get("restaurantId") as string,
+    categoryId: formData.get("categoryId") as string,
+  };
 
-  const validationResult = updateMenuItemSchema.safeParse({
-    id,
-    name,
-    description,
-    price,
-    ingredients,
-    isVegetarian,
-    isGlutenFree,
-    imageUrl,
-    restaurantId,
-    categoryId,
-  });
-
-  if (!validationResult.success) {
-    console.error(
-      "Server-side validation failed:",
-      validationResult.error.errors,
-    );
-    throw new Error(
-      "Server-side validation failed: " +
-        validationResult.error.errors.map((e) => e.message).join(", "),
-    );
+  const result = updateMenuItemSchema.safeParse(rawData);
+  if (!result.success) {
+    console.error("Validation failed (updateMenuItem):", result.error.errors);
+    throw new Error(result.error.errors.map((e) => e.message).join(", "));
   }
 
   try {
     await db
       .update(menuItems)
       .set({
-        name: validationResult.data.name,
-        description: validationResult.data.description,
-        price: validationResult.data.price,
-        ingredients: validationResult.data.ingredients,
-        isVegetarian: validationResult.data.isVegetarian,
-        isGlutenFree: validationResult.data.isGlutenFree,
-        imageUrl: validationResult.data.imageUrl,
-        updatedAt: new Date(), // Update timestamp
+        name: result.data.name,
+        description: result.data.description,
+        price: result.data.price,
+        ingredients: result.data.ingredients,
+        dietaryLabels: result.data.dietaryLabels,
+        imageUrl: result.data.imageUrl,
+        updatedAt: new Date(),
       })
-      .where(eq(menuItems.id, validationResult.data.id));
+      .where(eq(menuItems.id, result.data.id));
 
     revalidatePath(
-      `/admin/restaurants/${restaurantId}/categories/${categoryId}/menu-items`,
+      `/admin/restaurants/${result.data.restaurantId}/categories/${result.data.categoryId}/menu-items`,
     );
   } catch (error) {
     console.error("Error updating menu item:", error);
@@ -229,7 +159,6 @@ async function updateMenuItem(formData: FormData) {
   }
 }
 
-// Server Action to delete a menu item (existing)
 async function deleteMenuItem(
   menuItemId: string,
   restaurantId: string,
@@ -247,10 +176,12 @@ async function deleteMenuItem(
   }
 }
 
-// Main Menu Items Page Component (Server Component)
-// FIX: Remove 'await params' as params is already a plain object
-export default async function AdminMenuItemsPage({ params }: PageProps) {
-  const { restaurantId, categoryId } = await params; // FIX: No await here
+export default async function AdminMenuItemsPage({
+  params,
+}: {
+  params: Promise<{ restaurantId: string; categoryId: string }>;
+}) {
+  const { restaurantId, categoryId } = await params;
 
   const restaurantDetails = await db.query.restaurants.findFirst({
     where: eq(restaurants.id, restaurantId),
@@ -263,9 +194,7 @@ export default async function AdminMenuItemsPage({ params }: PageProps) {
     ),
   });
 
-  if (!restaurantDetails || !categoryDetails) {
-    notFound();
-  }
+  if (!restaurantDetails || !categoryDetails) notFound();
 
   const allMenuItems = await db.query.menuItems.findMany({
     where: and(
@@ -274,6 +203,8 @@ export default async function AdminMenuItemsPage({ params }: PageProps) {
     ),
     orderBy: (menuItems, { asc }) => [asc(menuItems.name)],
   });
+
+  const fallbackImageUrl = `https://placehold.co/64x64/E0E0E0/333333?text=No+Img`;
 
   return (
     <div className="space-y-8">
@@ -292,13 +223,11 @@ export default async function AdminMenuItemsPage({ params }: PageProps) {
         addMenuItemAction={addMenuItem}
       />
 
-      {/* List of Existing Menu Items */}
       <Card>
         <CardHeader>
           <CardTitle>Existing Menu Items</CardTitle>
           <CardDescription>
-            A list of all dishes in the &quot;{categoryDetails.name}&quot;
-            category. {/* FIX: Escaped quotes */}
+            A list of all dishes in the "{categoryDetails.name}" category.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -323,8 +252,8 @@ export default async function AdminMenuItemsPage({ params }: PageProps) {
                   {allMenuItems.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>
-                        <ResponsiveImage
-                          src={item.imageUrl}
+                        <Image
+                          src={item.imageUrl ?? fallbackImageUrl}
                           alt={item.name}
                           width={64}
                           height={64}
@@ -332,27 +261,29 @@ export default async function AdminMenuItemsPage({ params }: PageProps) {
                         />
                       </TableCell>
                       <TableCell className="font-medium">{item.name}</TableCell>
-                      <TableCell>${item.price.toFixed(2)}</TableCell>
+                      <TableCell>${item.price}</TableCell>
                       <TableCell>
-                        {item.isVegetarian && (
-                          <span className="mr-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
-                            Veg
-                          </span>
-                        )}
-                        {item.isGlutenFree && (
-                          <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800">
-                            GF
-                          </span>
+                        {item.dietaryLabels && item.dietaryLabels.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {item.dietaryLabels.map((label) => (
+                              <span
+                                key={label}
+                                className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-800"
+                              >
+                                {label.charAt(0).toUpperCase() +
+                                  label.slice(1).replace(/-/g, " ")}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-500">None</span>
                         )}
                       </TableCell>
                       <TableCell className="flex items-center justify-end space-x-2 text-right">
-                        {/* NEW: Edit Menu Item Dialog */}
                         <EditMenuItemDialog
                           menuItem={item}
                           updateMenuItemAction={updateMenuItem}
                         />
-
-                        {/* Delete Button with Confirmation Dialog */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button variant="destructive" size="icon">

@@ -10,8 +10,11 @@ import { HomePageClient } from "~/components/public/HomePageClient";
 export default async function HomePage() {
   // Fetch restaurants (this remains a Server-side operation)
   const allRestaurants = await db.query.restaurants.findMany({
-    limit: 6, // Limit to a few for the landing page
+    limit: 6,
     orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
+    with: {
+      categories: true, // This includes each restaurant's categories
+    },
   });
 
   return (

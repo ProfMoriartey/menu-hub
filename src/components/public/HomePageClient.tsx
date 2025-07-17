@@ -1,7 +1,8 @@
 "use client"; // This is a Client Component
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image"; // Import Next.js Image component
+import Image from "next/image";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import {
@@ -11,8 +12,22 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "~/components/ui/command";
 
-// Import the shared Restaurant interface for type consistency
+// Import the shared Restaurant interface (which now includes categories and menuItems)
+// Import the shared Restaurant interface (which now includes categories and menuItems)
 import type { Restaurant } from "~/types/restaurant";
 
 interface HomePageClientProps {
@@ -20,8 +35,53 @@ interface HomePageClientProps {
 }
 
 export function HomePageClient({ restaurants }: HomePageClientProps) {
-  // Fallback image URL for when a logo is not available
-  const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Logo`;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredResults, setFilteredResults] = useState<Restaurant[]>([]);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const fallbackImageUrl = `https://placehold.co/50x50/E0E0E0/333333?text=Logo`;
+
+  // Effect to filter restaurants based on search term
+  useEffect(() => {
+    if (searchTerm.length > 0) {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      const results = restaurants.filter((restaurant) => {
+        // Search by restaurant name
+        if (restaurant.name.toLowerCase().includes(lowerCaseSearchTerm)) {
+          return true;
+        }
+        // Search by country
+        if (restaurant.country?.toLowerCase().includes(lowerCaseSearchTerm)) {
+          return true;
+        }
+        // Search by food type
+        if (restaurant.foodType?.toLowerCase().includes(lowerCaseSearchTerm)) {
+          return true;
+        }
+        // Search by menu item name within categories using optional chaining
+        if (restaurant.categories) {
+          for (const category of restaurant.categories) {
+            // Use optional chaining for category.menuItems and menuItem.name
+            // The `?? false` at the end ensures the whole expression evaluates to a boolean
+            // for the `||` operator if any part is undefined/null.
+            if (
+              category?.menuItems?.some((menuItem) =>
+                menuItem?.name?.toLowerCase().includes(lowerCaseSearchTerm),
+              )
+            ) {
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+      setFilteredResults(results);
+      setIsPopoverOpen(results.length > 0);
+    } else {
+      setFilteredResults([]);
+      setIsPopoverOpen(false);
+    }
+  }, [searchTerm, restaurants]);
 
   return (
     <>
@@ -34,11 +94,63 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
           restaurants.
         </p>
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Input
-            type="text"
-            placeholder="Search for a restaurant or cuisine..."
-            className="w-full rounded-lg p-3 shadow-sm focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:w-80"
-          />
+          <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+            <PopoverTrigger asChild>
+              <Input
+                type="text"
+                placeholder="Search for a restaurant, cuisine, or menu item..."
+                className="w-full rounded-lg p-3 shadow-sm focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:w-80"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => searchTerm.length > 0 && setIsPopoverOpen(true)}
+              />
+            </PopoverTrigger>
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+              <Command>
+                <CommandInput
+                  placeholder="Search for a restaurant, cuisine, or menu item..."
+                  value={searchTerm}
+                  onValueChange={setSearchTerm}
+                  className="h-9"
+                />
+                <CommandList>
+                  <CommandEmpty>No results found.</CommandEmpty>
+                  <CommandGroup>
+                    {filteredResults.map((restaurant) => (
+                      <Link
+                        key={restaurant.id}
+                        href={`/${restaurant.slug}`}
+                        passHref
+                        onClick={() => setIsPopoverOpen(false)}
+                      >
+                        <CommandItem
+                          value={restaurant.name}
+                          className="flex cursor-pointer items-center gap-2"
+                        >
+                          <Image
+                            src={restaurant.logoUrl ?? fallbackImageUrl}
+                            alt={`${restaurant.name} Logo`}
+                            width={32}
+                            height={32}
+                            className="rounded-full object-cover"
+                          />
+                          <div>
+                            <p className="font-medium">{restaurant.name}</p>
+                            <p className="text-sm text-gray-500">
+                              {restaurant.foodType}
+                              {restaurant.country
+                                ? ` - ${restaurant.country}`
+                                : ""}
+                            </p>
+                          </div>
+                        </CommandItem>
+                      </Link>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
           <Button className="w-full rounded-lg bg-blue-600 px-6 py-3 text-white shadow-md transition-colors hover:bg-blue-700 sm:w-auto">
             Search Menus
           </Button>
@@ -62,17 +174,13 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
               <Link key={restaurant.id} href={`/${restaurant.slug}`} passHref>
                 <Card className="flex h-full cursor-pointer flex-col transition-shadow duration-300 hover:shadow-xl">
                   <CardHeader className="flex-grow">
-                    {/* Display Logo using Next.js Image component */}
                     <div className="mb-4 h-40 w-full overflow-hidden rounded-md">
                       <Image
-                        src={restaurant.logoUrl ?? fallbackImageUrl} // Use logoUrl or fallback
+                        src={restaurant.logoUrl ?? fallbackImageUrl}
                         alt={`${restaurant.name} Logo`}
-                        width={300} // Required for Next.js Image
-                        height={200} // Required for Next.js Image
+                        width={300}
+                        height={200}
                         className="h-full w-full object-cover"
-                        // onError is not typically used with Next/Image for fallbacks,
-                        // as the src prop should already handle the fallback URL.
-                        // If the URL itself is invalid, Next.js Image will show a broken image icon.
                       />
                     </div>
                     <CardTitle className="text-2xl">

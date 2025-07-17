@@ -5,18 +5,22 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 // NEW: Client Component for Category Navigation and Menu Display
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
+// Import shared types for clarity and consistency
+import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
 
 // Define the props type for this page - Updated for Next.js App Router
 interface PageProps {
   params: Promise<{
     restaurantSlug: string;
   }>;
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+  searchParams?: Promise<
+    Readonly<Record<string, string | string[] | undefined>>
+  >;
 }
 
 // Main Restaurant Menu Page Component (Server Component)
 export default async function RestaurantMenuPage({ params }: PageProps) {
-  const { restaurantSlug } = await params;
+  const { restaurantSlug } = await params; // params is already an object, no await needed
 
   // 1. Fetch Restaurant Details
   const restaurantDetails = await db.query.restaurants.findFirst({
@@ -40,8 +44,13 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
     },
   });
 
-  // Prepare data for the client component
-  const menuData = {
+  // Prepare data for the client component, ensuring types align with shared interfaces
+  const menuData: {
+    restaurant: Pick<Restaurant, "id" | "name" | "slug">; // Only pick necessary restaurant fields
+    categories: (Category & {
+      menuItems: MenuItem[];
+    })[];
+  } = {
     restaurant: {
       id: restaurantDetails.id,
       name: restaurantDetails.name,
@@ -51,15 +60,22 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
       id: cat.id,
       name: cat.name,
       order: cat.order,
+      restaurantId: cat.restaurantId, // Include required Category fields
+      createdAt: cat.createdAt, // Include required Category fields
+      updatedAt: cat.updatedAt, // Include required Category fields
       menuItems: cat.menuItems.map((item) => ({
         id: item.id,
         name: item.name,
-        description: item.description,
-        price: item.price,
-        ingredients: item.ingredients,
-        isVegetarian: item.isVegetarian,
-        isGlutenFree: item.isGlutenFree,
-        imageUrl: item.imageUrl,
+        description: item.description, // Now nullable
+        price: item.price, // Now string
+        ingredients: item.ingredients, // Now nullable
+        dietaryLabels: item.dietaryLabels, // <-- NEW: Include dietaryLabels
+        imageUrl: item.imageUrl, // Now nullable
+        // Include other fields from MenuItem interface if needed, e.g., createdAt, updatedAt
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+        restaurantId: item.restaurantId, // Required by MenuItem interface
+        categoryId: item.categoryId, // Required by MenuItem interface
       })),
     })),
   };

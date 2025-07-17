@@ -1,12 +1,18 @@
 // app/[restaurantSlug]/item/[itemId]/page.tsx
 import { db } from "~/server/db";
-import { menuItems } from "~/server/db/schema";
+import { menuItems } from "~/server/db/schema"; // Import dietaryLabelEnum
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { ResponsiveImage } from "~/components/shared/ResponsiveImage";
+// REMOVED: import { ResponsiveImage } from "~/components/shared/ResponsiveImage"; // No longer needed
+import Image from "next/image"; // Import Next.js Image
 import Link from "next/link";
-import { Button } from "~/components/ui/button"; // For a back button
-import { ChevronLeft } from "lucide-react"; // Back icon
+import { Button } from "~/components/ui/button";
+import { ChevronLeft } from "lucide-react";
+
+// Import shared types (especially MenuItem for clarity, though not strictly required for server component)
+// Import shared types (especially MenuItem for clarity, though not strictly required for server component)
+import type { DietaryLabel } from "~/types/restaurant"; // Import DietaryLabel for display logic
+// Import DietaryLabel for display logic
 
 // Define the props type for this page
 interface PageProps {
@@ -14,14 +20,17 @@ interface PageProps {
     restaurantSlug: string;
     itemId: string;
   }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>; // <--- Change here
+  searchParams?: Promise<
+    Readonly<Record<string, string | string[] | undefined>>
+  >;
 }
 
 // Main Menu Item Detail Page Component (Server Component)
 export default async function MenuItemDetailPage({ params }: PageProps) {
-  const { restaurantSlug, itemId } = await params;
+  const { restaurantSlug, itemId } = await params; // params is already an object, no await needed
 
   // Fetch the menu item details, including its associated restaurant and category
+  // Drizzle will automatically fetch dietaryLabels if defined in schema
   const itemDetails = await db.query.menuItems.findFirst({
     where: eq(menuItems.id, itemId),
     with: {
@@ -31,10 +40,12 @@ export default async function MenuItemDetailPage({ params }: PageProps) {
   });
 
   // Check if item exists AND if its slug matches the restaurantSlug in the URL
-  // This is a security/data integrity check to ensure the item belongs to the correct restaurant path
   if (!itemDetails || itemDetails.restaurant.slug !== restaurantSlug) {
     notFound(); // Show 404 if item doesn't exist or doesn't match the restaurant slug
   }
+
+  // Fallback image URL for display
+  const fallbackImageUrl = `https://placehold.co/800x600/E0E0E0/333333?text=No+Image`;
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 text-gray-800 sm:p-8">
@@ -48,8 +59,8 @@ export default async function MenuItemDetailPage({ params }: PageProps) {
 
         {/* Item Image */}
         <div className="relative mb-6 h-64 w-full overflow-hidden rounded-lg shadow-md sm:h-96">
-          <ResponsiveImage
-            src={itemDetails.imageUrl}
+          <Image // Use Next.js Image component
+            src={itemDetails.imageUrl ?? fallbackImageUrl} // Use nullish coalescing for fallback
             alt={itemDetails.name}
             width={800} // Larger width for detail page
             height={600} // Larger height for detail page
@@ -62,30 +73,40 @@ export default async function MenuItemDetailPage({ params }: PageProps) {
           {itemDetails.name}
         </h1>
         <p className="mb-4 text-2xl font-bold text-blue-700">
-          ${itemDetails.price.toFixed(2)}
+          ${itemDetails.price} {/* Price is now a string, no toFixed */}
         </p>
 
-        <p className="mb-4 text-lg text-gray-700">{itemDetails.description}</p>
+        {itemDetails.description && ( // Conditionally render description
+          <p className="mb-4 text-lg text-gray-700">
+            {itemDetails.description}
+          </p>
+        )}
 
-        <div className="mb-6">
-          <h3 className="mb-2 text-xl font-semibold text-gray-900">
-            Ingredients:
-          </h3>
-          <p className="text-gray-700">{itemDetails.ingredients}</p>
-        </div>
+        {itemDetails.ingredients && ( // Conditionally render ingredients
+          <div className="mb-6">
+            <h3 className="mb-2 text-xl font-semibold text-gray-900">
+              Ingredients:
+            </h3>
+            <p className="text-gray-700">{itemDetails.ingredients}</p>
+          </div>
+        )}
 
-        <div className="mb-6 flex space-x-3">
-          {itemDetails.isVegetarian && (
-            <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
-              Vegetarian
-            </span>
-          )}
-          {itemDetails.isGlutenFree && (
-            <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
-              Gluten-Free
-            </span>
-          )}
-        </div>
+        {/* NEW: Display Dietary Labels */}
+        {itemDetails.dietaryLabels && itemDetails.dietaryLabels.length > 0 && (
+          <div className="mb-6 flex flex-wrap gap-2">
+            <h3 className="sr-only">Dietary Labels:</h3>{" "}
+            {/* Screen reader only heading */}
+            {itemDetails.dietaryLabels.map((label: DietaryLabel) => (
+              <span
+                key={label}
+                className="rounded-full bg-gray-100 px-3 py-1 text-sm font-semibold text-gray-800"
+              >
+                {label.charAt(0).toUpperCase() +
+                  label.slice(1).replace(/-/g, " ")}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div className="mt-6 border-t border-gray-200 pt-4 text-sm text-gray-500">
           <p>Category: {itemDetails.category.name}</p>
