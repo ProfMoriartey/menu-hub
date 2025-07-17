@@ -1,5 +1,5 @@
 // src/components/admin/RestaurantManagementClient.tsx
-"use client"; // This is a Client Component
+"use client";
 
 import { useState, useRef } from "react";
 import { Button } from "~/components/ui/button";
@@ -21,10 +21,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import { useFormStatus } from "react-dom"; // For pending state of Server Action
+import { useFormStatus } from "react-dom";
 import { z } from "zod";
-import Link from "next/link"; // For linking to categories page
-import { Trash2, Pencil } from "lucide-react"; // Icons
+import Link from "next/link";
+import { Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,10 +36,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { EditRestaurantDialog } from "~/components/admin/EditRestaurantDialog"; // Re-use the edit dialog
-import { cn } from "~/lib/utils"; // For conditional class names
+import { EditRestaurantDialog } from "~/components/admin/EditRestaurantDialog";
+import { cn } from "~/lib/utils";
 
-// Define the shape of a restaurant for type safety
 interface Restaurant {
   id: string;
   name: string;
@@ -55,7 +54,6 @@ interface RestaurantManagementClientProps {
   updateRestaurantAction: (formData: FormData) => Promise<void>;
 }
 
-// Zod schema for form validation
 const createRestaurantSchema = z.object({
   name: z.string().min(1, { message: "Restaurant name is required." }),
   slug: z
@@ -117,9 +115,9 @@ export function RestaurantManagementClient({
 
     try {
       await addRestaurantAction(formData);
-      setIsAddDialogOpen(false); // Close dialog on success
-      addFormRef.current?.reset(); // Reset form
-      setFormErrors({}); // Clear errors
+      setIsAddDialogOpen(false);
+      addFormRef.current?.reset();
+      setFormErrors({});
     } catch (error) {
       console.error("Error adding restaurant:", error);
       setFormErrors({
@@ -131,19 +129,17 @@ export function RestaurantManagementClient({
 
   return (
     <div className="space-y-8">
-      {/* Search Bar and Add New Restaurant Button */}
       <div className="flex flex-col items-center gap-4 md:flex-row">
         <Input
           type="text"
           placeholder="Search restaurants by name or slug..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-grow md:w-2/3" // Takes 2/3 width on medium screens and up
+          className="flex-grow md:w-2/3"
         />
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full md:w-1/3">Add New Restaurant</Button>{" "}
-            {/* Takes 1/3 width */}
+            <Button className="w-full md:w-1/3">Add New Restaurant</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -159,26 +155,14 @@ export function RestaurantManagementClient({
             >
               <div>
                 <Label htmlFor="name">Restaurant Name</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="e.g., Pizza Palace"
-                  required
-                />
+                <Input id="name" name="name" type="text" required />
                 {formErrors.name && (
                   <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>
                 )}
               </div>
               <div>
                 <Label htmlFor="slug">URL Slug</Label>
-                <Input
-                  id="slug"
-                  name="slug"
-                  type="text"
-                  placeholder="e.g., pizza-palace (lowercase, hyphens only)"
-                  required
-                />
+                <Input id="slug" name="slug" type="text" required />
                 <p className="mt-1 text-sm text-gray-500">
                   This will be used in the URL: `/yourdomain.com/pizza-palace`
                 </p>
@@ -199,7 +183,6 @@ export function RestaurantManagementClient({
         </Dialog>
       </div>
 
-      {/* Grid of Existing Restaurants */}
       <Card>
         <CardHeader>
           <CardTitle>Existing Restaurants</CardTitle>
@@ -214,8 +197,6 @@ export function RestaurantManagementClient({
             </p>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {" "}
-              {/* Responsive grid */}
               {filteredRestaurants.map((restaurant) => (
                 <Card key={restaurant.id} className="flex h-full flex-col">
                   <CardHeader className="flex-grow">
@@ -229,11 +210,10 @@ export function RestaurantManagementClient({
                     </p>
                   </CardHeader>
                   <CardContent className="mt-auto flex justify-end space-x-2 p-4 pt-0">
-                    {" "}
-                    {/* Actions at bottom */}
                     <Link
                       href={`/admin/restaurants/${restaurant.id}/categories`}
                       passHref
+                      legacyBehavior
                     >
                       <Button variant="secondary" size="sm">
                         Categories
@@ -266,10 +246,9 @@ export function RestaurantManagementClient({
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction asChild>
                             <form
-                              action={async () => {
-                                // No 'use server' needed here, as it's calling a prop (Server Action)
-                                await deleteRestaurantAction(restaurant.id);
-                              }}
+                              action={async () =>
+                                await deleteRestaurantAction(restaurant.id)
+                              }
                             >
                               <Button variant="destructive" type="submit">
                                 Delete
