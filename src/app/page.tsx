@@ -1,5 +1,5 @@
 // app/page.tsx
-import Link from "next/link";
+
 import { db } from "~/server/db";
 // import { restaurants } from "~/server/db/schema";
 
@@ -20,11 +20,9 @@ export default async function HomePage() {
       <HomePageClient restaurants={allRestaurants} />
 
       <footer className="mt-auto w-full py-8 text-center text-sm text-gray-600">
-        <p>&copy; {new Date().getFullYear()} Vidakai. All rights reserved.</p>
-        <p className="mt-2">
-          <Link href="/admin" className="text-blue-600 hover:underline">
-            Admin Login
-          </Link>
+        <p>
+          &copy; {new Date().getFullYear()} Ahmed Alhusaini. All rights
+          reserved.
         </p>
       </footer>
     </div>

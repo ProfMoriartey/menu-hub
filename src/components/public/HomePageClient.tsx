@@ -1,9 +1,7 @@
-// src/components/public/HomePageClient.tsx
 "use client"; // This is a Client Component
 
-// import { useState } from "react"; // Example: if search input were stateful
 import Link from "next/link";
-// import Image from "next/image"; // Use Next.js Image component directly
+import Image from "next/image"; // Import Next.js Image component
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,25 +12,16 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-// Define the type for a Restaurant, matching your Drizzle schema output
-interface Restaurant {
-  id: string;
-  name: string;
-  slug: string;
-  createdAt: Date;
-  updatedAt: Date | null;
-}
+// Import the shared Restaurant interface for type consistency
+import type { Restaurant } from "~/types/restaurant";
 
 interface HomePageClientProps {
   restaurants: Restaurant[];
 }
 
 export function HomePageClient({ restaurants }: HomePageClientProps) {
-  // Example: If you wanted a client-side search input, its state would live here
-  // const [searchTerm, setSearchTerm] = useState('');
-
-  // Fallback image URL for onError
-  // const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Logo`;
+  // Fallback image URL for when a logo is not available
+  const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Logo`;
 
   return (
     <>
@@ -44,14 +33,11 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
           Your ultimate destination to explore delicious menus from local
           restaurants.
         </p>
-        {/* Optional: Search Bar (client-side interactive elements) */}
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Input
             type="text"
             placeholder="Search for a restaurant or cuisine..."
             className="w-full rounded-lg p-3 shadow-sm focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:w-80"
-            // value={searchTerm} // Example: if using useState
-            // onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Button className="w-full rounded-lg bg-blue-600 px-6 py-3 text-white shadow-md transition-colors hover:bg-blue-700 sm:w-auto">
             Search Menus
@@ -76,19 +62,19 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
               <Link key={restaurant.id} href={`/${restaurant.slug}`} passHref>
                 <Card className="flex h-full cursor-pointer flex-col transition-shadow duration-300 hover:shadow-xl">
                   <CardHeader className="flex-grow">
-                    {/* Use Next.js Image component directly here */}
-                    {/* <Image
-                      src={`https://placehold.co/300x200/E0E0E0/333333?text=${restaurant.name.split(" ")[0]}+Logo`}
-                      alt={`${restaurant.name} Logo`}
-                      width={300}
-                      height={200}
-                      className="mb-4 h-40 w-full rounded-md object-cover"
-                      onError={(e) => {
-                        // onError is fine in a Client Component
-                        e.currentTarget.src = fallbackImageUrl;
-                        e.currentTarget.onerror = null; // Prevent infinite loop
-                      }}
-                    /> */}
+                    {/* Display Logo using Next.js Image component */}
+                    <div className="mb-4 h-40 w-full overflow-hidden rounded-md">
+                      <Image
+                        src={restaurant.logoUrl ?? fallbackImageUrl} // Use logoUrl or fallback
+                        alt={`${restaurant.name} Logo`}
+                        width={300} // Required for Next.js Image
+                        height={200} // Required for Next.js Image
+                        className="h-full w-full object-cover"
+                        // onError is not typically used with Next/Image for fallbacks,
+                        // as the src prop should already handle the fallback URL.
+                        // If the URL itself is invalid, Next.js Image will show a broken image icon.
+                      />
+                    </div>
                     <CardTitle className="text-2xl">
                       {restaurant.name}
                     </CardTitle>

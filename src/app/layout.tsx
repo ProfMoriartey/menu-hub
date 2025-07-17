@@ -9,11 +9,11 @@ import { type Metadata } from "next";
 
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
+  // SignInButton,
+  // SignUpButton,
+  // SignedIn,
+  // SignedOut,
+  // UserButton,
 } from "@clerk/nextjs";
 import { Geist } from "next/font/google";
 
@@ -35,7 +35,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={`${geist.variable}`}>
         <body>
-          <header className="flex h-16 items-center justify-end gap-4 p-4">
+          {/* <header className="flex h-16 items-center justify-end gap-4 p-4">
             <SignedOut>
               <SignInButton />
               <SignUpButton>
@@ -47,7 +47,7 @@ export default function RootLayout({
             <SignedIn>
               <UserButton />
             </SignedIn>
-          </header>
+          </header> */}
           <NextSSRPlugin
             /**
              * The `extractRouterConfig` will extract **only** the route configs
