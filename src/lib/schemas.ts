@@ -43,9 +43,8 @@ export type CreateMenuItemData = z.infer<typeof createMenuItemSchema>;
 export type UpdateMenuItemData = z.infer<typeof updateMenuItemSchema>;
 
 
-// NEW: Restaurant Schema
 export const restaurantSchema = z.object({
-  id: z.string().uuid().optional(), // Optional for add, required for update
+  id: z.string().uuid().optional(),
   name: z.string().min(1, { message: "Restaurant name is required." }),
   slug: z
     .string()
@@ -56,9 +55,25 @@ export const restaurantSchema = z.object({
   address: z.string().nullable().optional(),
   country: z.string().nullable().optional(),
   foodType: z.string().nullable().optional(),
-  isActive: z.coerce.boolean().default(true), // Handles "on" string from FormData
-  isDisplayed: z.coerce.boolean().default(true), // Handles "on" string from FormData
+  isActive: z.coerce.boolean().default(true),
+  isDisplayed: z.coerce.boolean().default(true),
   logoUrl: z.string().url("Invalid URL format.").nullable().optional(),
 });
 
 export type RestaurantFormData = z.infer<typeof restaurantSchema>;
+
+
+// NEW: Category Schemas
+export const createCategorySchema = z.object({
+  name: z.string().min(1, { message: "Category name is required." }),
+  restaurantId: z.string().uuid("Invalid restaurant ID for category."),
+});
+
+export const updateCategorySchema = z.object({
+  id: z.string().uuid("Category ID is required for update."),
+  name: z.string().min(1, { message: "Category name is required." }),
+  restaurantId: z.string().uuid("Restaurant ID is required for category update validation."),
+});
+
+export type CreateCategoryFormData = z.infer<typeof createCategorySchema>;
+export type UpdateCategoryFormData = z.infer<typeof updateCategorySchema>;
