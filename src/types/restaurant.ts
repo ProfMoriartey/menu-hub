@@ -1,7 +1,7 @@
 // src/types/restaurant.ts
 
 export interface Restaurant {
-  categories: Category[];
+  categories: Category[]; // Remains the same, includes nested categories
   id: string;
   name: string;
   slug: string;
@@ -9,10 +9,17 @@ export interface Restaurant {
   country: string | null;
   foodType: string | null;
   isActive: boolean;
-  // NEW: Add isDisplayed
-  isDisplayed: boolean; // Assuming it's always a boolean due to default(false). If nullable in DB, use boolean | null.
+  isDisplayed: boolean;
   logoUrl: string | null;
-  
+
+  // --- NEW PROPERTIES ADDED HERE ---
+  currency: string; // Not nullable because you set a NOT NULL DEFAULT 'USD' in schema
+  phoneNumber: string | null; // Nullable as per schema
+  description: string | null; // Nullable as per schema
+  theme: string | null; // Nullable as per schema
+  typeOfEstablishment: string | null; // Nullable as per schema
+  // --- END NEW PROPERTIES ---
+
   createdAt: Date;
   updatedAt: Date | null;
 }
@@ -28,7 +35,7 @@ export interface Category {
   createdAt: Date;
   updatedAt: Date | null;
   // Add relations if you fetch them with categories
-  menuItems?: MenuItem[];
+  menuItems?: MenuItem[]; // Optional, as it might not always be included in the query
 }
 
 export type DietaryLabel = "vegetarian" | "vegan" | "gluten-free" | "dairy-free" | "nut-free";

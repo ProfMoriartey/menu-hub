@@ -42,6 +42,8 @@ export function EditRestaurantDialog({
 }: EditRestaurantDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  // Initialize states with existing restaurant data
   const [isRestaurantActive, setIsRestaurantActive] = useState(
     restaurant.isActive ?? true,
   );
@@ -52,13 +54,37 @@ export function EditRestaurantDialog({
     restaurant.logoUrl ?? null,
   );
 
+  // NEW STATES: Initialize with existing data, default to empty string for null/undefined
+  const [currentCurrency, setCurrentCurrency] = useState(
+    restaurant.currency ?? "",
+  );
+  const [currentPhoneNumber, setCurrentPhoneNumber] = useState(
+    restaurant.phoneNumber ?? "",
+  );
+  const [currentDescription, setCurrentDescription] = useState(
+    restaurant.description ?? "",
+  );
+  const [currentTheme, setCurrentTheme] = useState(restaurant.theme ?? "");
+  const [currentTypeOfEstablishment, setCurrentTypeOfEstablishment] = useState(
+    restaurant.typeOfEstablishment ?? "",
+  );
+
   const handleSubmit = async (formData: FormData) => {
     setFormErrors({});
 
+    // Set all boolean/nullable string states onto formData for server action
     formData.set("isActive", isRestaurantActive ? "on" : "");
     formData.set("isDisplayed", isRestaurantDisplayed ? "on" : "");
-    formData.set("logoUrl", logoPreviewUrl ?? "");
+    formData.set("logoUrl", logoPreviewUrl ?? ""); // Use the state URL, not default
+    // NEW: Set new field values onto formData
+    formData.set("currency", currentCurrency);
+    formData.set("phoneNumber", currentPhoneNumber);
+    formData.set("description", currentDescription);
+    formData.set("theme", currentTheme);
+    formData.set("typeOfEstablishment", currentTypeOfEstablishment);
 
+    // Create a 'values' object to pass to Zod for validation
+    // Ensure all fields from the schema are present, even if null
     const values = {
       id: formData.get("id") as string,
       name: formData.get("name") as string,
@@ -66,9 +92,15 @@ export function EditRestaurantDialog({
       country: formData.get("country") as string | null,
       foodType: formData.get("foodType") as string | null,
       address: formData.get("address") as string | null,
-      isActive: formData.get("isActive") as string,
-      isDisplayed: formData.get("isDisplayed") as string | null,
+      isActive: formData.get("isActive") as string, // Zod `coerce.boolean` expects string "on" or ""
+      isDisplayed: formData.get("isDisplayed") as string | null, // Zod expects string "on" or ""
       logoUrl: formData.get("logoUrl") as string | null,
+      // NEW: Include new field values for schema validation
+      currency: formData.get("currency") as string,
+      phoneNumber: formData.get("phoneNumber") as string | null,
+      description: formData.get("description") as string | null,
+      theme: formData.get("theme") as string | null,
+      typeOfEstablishment: formData.get("typeOfEstablishment") as string | null,
     };
 
     const result = restaurantSchema.safeParse(values);
@@ -114,7 +146,7 @@ export function EditRestaurantDialog({
         <form action={handleSubmit} className="grid gap-4 py-4">
           <input type="hidden" name="id" value={restaurant.id} />
 
-          {/* Use the shared RestaurantForm component */}
+          {/* Use the shared RestaurantForm component and pass all required props */}
           <RestaurantForm
             initialData={restaurant}
             formErrors={formErrors}
@@ -124,6 +156,17 @@ export function EditRestaurantDialog({
             currentIsActive={isRestaurantActive}
             currentIsDisplayed={isRestaurantDisplayed}
             currentLogoUrl={logoPreviewUrl}
+            // NEW: Pass new field states and handlers
+            currentCurrency={currentCurrency}
+            onCurrencyChange={setCurrentCurrency}
+            currentPhoneNumber={currentPhoneNumber}
+            onPhoneNumberChange={setCurrentPhoneNumber}
+            currentDescription={currentDescription}
+            onDescriptionChange={setCurrentDescription}
+            currentTheme={currentTheme}
+            onThemeChange={setCurrentTheme}
+            currentTypeOfEstablishment={currentTypeOfEstablishment}
+            onTypeOfEstablishmentChange={setCurrentTypeOfEstablishment}
           />
 
           {formErrors.general && (

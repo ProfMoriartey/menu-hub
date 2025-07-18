@@ -44,6 +44,16 @@ export function AddRestaurantForm({
     string | null
   >(null);
 
+  // NEW STATE VARIABLES FOR NEW FIELDS
+  const [newRestaurantCurrency, setNewRestaurantCurrency] = useState("USD"); // Default value
+  const [newRestaurantPhoneNumber, setNewRestaurantPhoneNumber] = useState("");
+  const [newRestaurantDescription, setNewRestaurantDescription] = useState("");
+  const [newRestaurantTheme, setNewRestaurantTheme] = useState("");
+  const [
+    newRestaurantTypeOfEstablishment,
+    setNewRestaurantTypeOfEstablishment,
+  ] = useState("");
+
   const addFormRef = useRef<HTMLFormElement>(null);
 
   const handleAddSubmit = async (formData: FormData) => {
@@ -52,6 +62,12 @@ export function AddRestaurantForm({
     formData.set("isActive", isNewRestaurantActive ? "on" : "");
     formData.set("isDisplayed", isNewRestaurantDisplayed ? "on" : "");
     formData.set("logoUrl", newRestaurantLogoUrl ?? "");
+    // NEW: Set new field values onto formData
+    formData.set("currency", newRestaurantCurrency);
+    formData.set("phoneNumber", newRestaurantPhoneNumber);
+    formData.set("description", newRestaurantDescription);
+    formData.set("theme", newRestaurantTheme);
+    formData.set("typeOfEstablishment", newRestaurantTypeOfEstablishment);
 
     const values = {
       name: formData.get("name") as string,
@@ -62,6 +78,12 @@ export function AddRestaurantForm({
       isActive: formData.get("isActive") as string,
       isDisplayed: formData.get("isDisplayed") as string | null,
       logoUrl: formData.get("logoUrl") as string | null,
+      // NEW: Include new field values for schema validation
+      currency: formData.get("currency") as string,
+      phoneNumber: formData.get("phoneNumber") as string | null,
+      description: formData.get("description") as string | null,
+      theme: formData.get("theme") as string | null,
+      typeOfEstablishment: formData.get("typeOfEstablishment") as string | null,
     };
 
     const result = restaurantSchema.safeParse(values);
@@ -87,6 +109,12 @@ export function AddRestaurantForm({
       setIsNewRestaurantActive(true);
       setIsNewRestaurantDisplayed(true);
       setNewRestaurantLogoUrl(null);
+      // NEW: Reset new field states
+      setNewRestaurantCurrency("USD");
+      setNewRestaurantPhoneNumber("");
+      setNewRestaurantDescription("");
+      setNewRestaurantTheme("");
+      setNewRestaurantTypeOfEstablishment("");
     } catch (error) {
       setFormErrors({
         general: error instanceof Error ? error.message : "Add failed.",
@@ -120,6 +148,17 @@ export function AddRestaurantForm({
             currentIsActive={isNewRestaurantActive}
             currentIsDisplayed={isNewRestaurantDisplayed}
             currentLogoUrl={newRestaurantLogoUrl}
+            // NEW: Pass new field states and handlers to RestaurantForm
+            currentCurrency={newRestaurantCurrency}
+            onCurrencyChange={setNewRestaurantCurrency}
+            currentPhoneNumber={newRestaurantPhoneNumber}
+            onPhoneNumberChange={setNewRestaurantPhoneNumber}
+            currentDescription={newRestaurantDescription}
+            onDescriptionChange={setNewRestaurantDescription}
+            currentTheme={newRestaurantTheme}
+            onThemeChange={setNewRestaurantTheme}
+            currentTypeOfEstablishment={newRestaurantTypeOfEstablishment}
+            onTypeOfEstablishmentChange={setNewRestaurantTypeOfEstablishment}
           />
 
           {formErrors.general && (

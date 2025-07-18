@@ -1,9 +1,9 @@
 // src/app/actions/restaurant.ts
-"use server"; // This directive must be at the very top of the file
+"use server";
 
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
-import { eq, and, ne } from "drizzle-orm"; // Import 'and' and 'ne' for update logic
+import { eq, and, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 // Import the schema and type from the shared schemas file
@@ -26,12 +26,27 @@ export async function addRestaurant(formData: FormData) {
     isActive: formData.get("isActive") === "on",
     isDisplayed: formData.get("isDisplayed") === "on",
     logoUrl: getStringValue(formData, "logoUrl"),
+    currency: getStringValue(formData, "currency"),
+    phoneNumber: getStringValue(formData, "phoneNumber"),
+    description: getStringValue(formData, "description"),
+    theme: getStringValue(formData, "theme"),
+    typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
   };
 
-  const result = restaurantSchema.safeParse(rawData);
+  const parsedRawData = {
+    ...rawData,
+    currency: rawData.currency ?? "USD", // Example default if not sent by form
+    isActive: rawData.isActive,
+    isDisplayed: rawData.isDisplayed,
+    name: rawData.name ?? "",
+    slug: rawData.slug ?? "",
+  };
+
+  const result = restaurantSchema.safeParse(parsedRawData);
 
   if (!result.success) {
-    console.error("Validation failed:", result.error.errors);
+    console.error("Validation failed (addRestaurant):", result.error.errors);
+    // Corrected line: Use _e.message
     throw new Error(
       "Invalid input: " +
         result.error.errors.map((_e) => _e.message).join(", "),
@@ -47,6 +62,11 @@ export async function addRestaurant(formData: FormData) {
     isActive,
     isDisplayed,
     logoUrl,
+    currency,
+    phoneNumber,
+    description,
+    theme,
+    typeOfEstablishment,
   } = result.data;
 
   const existing = await db.query.restaurants.findFirst({
@@ -66,12 +86,17 @@ export async function addRestaurant(formData: FormData) {
     isActive,
     isDisplayed,
     logoUrl,
+    currency,
+    phoneNumber,
+    description,
+    theme,
+    typeOfEstablishment,
   });
 
   revalidatePath("/admin/restaurants");
 }
 
-// Server Action to delete a restaurant
+// Server Action to delete a restaurant (no change needed)
 export async function deleteRestaurant(restaurantId: string) {
   try {
     await db.delete(restaurants).where(eq(restaurants.id, restaurantId));
@@ -94,12 +119,28 @@ export async function updateRestaurant(formData: FormData) {
     isActive: formData.get("isActive") === "on",
     isDisplayed: formData.get("isDisplayed") === "on",
     logoUrl: getStringValue(formData, "logoUrl"),
+    currency: getStringValue(formData, "currency"),
+    phoneNumber: getStringValue(formData, "phoneNumber"),
+    description: getStringValue(formData, "description"),
+    theme: getStringValue(formData, "theme"),
+    typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
   };
 
-  const result = restaurantSchema.safeParse(rawData);
+  const parsedRawData = {
+    ...rawData,
+    currency: rawData.currency ?? "USD",
+    isActive: rawData.isActive,
+    isDisplayed: rawData.isDisplayed,
+    name: rawData.name ?? "",
+    slug: rawData.slug ?? "",
+    id: rawData.id ?? "",
+  };
+
+  const result = restaurantSchema.safeParse(parsedRawData);
 
   if (!result.success) {
-    console.error("Validation failed:", result.error.errors);
+    console.error("Validation failed (updateRestaurant):", result.error.errors);
+    // Corrected line: Use _e.message
     throw new Error(
       "Invalid input: " +
         result.error.errors.map((_e) => _e.message).join(", "),
@@ -116,9 +157,13 @@ export async function updateRestaurant(formData: FormData) {
     isActive,
     isDisplayed,
     logoUrl,
+    currency,
+    phoneNumber,
+    description,
+    theme,
+    typeOfEstablishment,
   } = result.data;
 
-  // Ensure 'id' exists for update operation
   if (!id) {
     throw new Error("Restaurant ID is required for update.");
   }
@@ -143,6 +188,11 @@ export async function updateRestaurant(formData: FormData) {
       isActive,
       isDisplayed,
       logoUrl,
+      currency,
+      phoneNumber,
+      description,
+      theme,
+      typeOfEstablishment,
       updatedAt: new Date(),
     })
     .where(eq(restaurants.id, id));
