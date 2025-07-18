@@ -6,8 +6,8 @@ import { categories } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 
-// Import schemas from the shared schemas file
-import { createCategorySchema, updateCategorySchema } from "~/lib/schemas";
+// Import schemas from the shared schemas file (now without async exports)
+import { createCategorySchema, updateCategorySchema } from "~/lib/schemas"; // CORRECT IMPORT PATH
 
 // Server Action to add a new category
 export async function addCategory(formData: FormData) {
@@ -54,7 +54,7 @@ export async function updateCategory(formData: FormData) {
   if (!validationResult.success) {
     console.error("Validation failed (updateCategory):", validationResult.error.errors);
     throw new Error(
-      validationResult.error.errors.map((e) => e.message).join(", "),
+      validationResult.error.errors.map((_e) => _e.message).join(", "),
     );
   }
 

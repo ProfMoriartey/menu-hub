@@ -6,13 +6,13 @@ import { menuItems } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 
-// Import schemas and types from the new schemas file
+// Import schemas and types from the new menu-item-schemas file
 import {
   createMenuItemSchema,
   updateMenuItemSchema,
   type CreateMenuItemData,
   type UpdateMenuItemData,
-} from "~/lib/schemas"; // Adjusted import path
+} from "~/lib/menu-item-schemas"; // CHANGED IMPORT PATH
 
 // Helper to safely get string values from FormData
 const getStringValue = (formData: FormData, key: string): string | null => {
@@ -20,8 +20,12 @@ const getStringValue = (formData: FormData, key: string): string | null => {
   return typeof value === "string" ? value : null;
 };
 
-// Server Actions
+// ... (rest of addMenuItem, updateMenuItem, deleteMenuItem functions remain the same)
+// Ensure safeParseAsync is used where schema has async transform.
+// The code provided earlier for these functions already uses safeParseAsync, so no changes needed there.
+
 export async function addMenuItem(formData: FormData) {
+  // ... (existing code for addMenuItem)
   const rawData = {
     name: getStringValue(formData, "name"),
     description: getStringValue(formData, "description"),
@@ -33,13 +37,13 @@ export async function addMenuItem(formData: FormData) {
     categoryId: getStringValue(formData, "categoryId") ?? "",
   };
 
-  const result = await createMenuItemSchema.safeParseAsync(rawData); // Use safeParseAsync
+  const result = await createMenuItemSchema.safeParseAsync(rawData); // Keep safeParseAsync
   if (!result.success) {
     console.error("Validation failed (addMenuItem):", result.error.errors);
-    throw new Error(result.error.errors.map((e) => e.message).join(", "));
+    throw new Error(result.error.errors.map((_e) => _e.message).join(", "));
   }
 
-  const validatedData: CreateMenuItemData = result.data; // Explicitly type here if needed, but infer should work
+  const validatedData: CreateMenuItemData = result.data;
 
   try {
     await db.insert(menuItems).values({
@@ -57,6 +61,7 @@ export async function addMenuItem(formData: FormData) {
 }
 
 export async function updateMenuItem(formData: FormData) {
+  // ... (existing code for updateMenuItem)
   const rawData = {
     id: getStringValue(formData, "id"),
     name: getStringValue(formData, "name"),
@@ -69,13 +74,13 @@ export async function updateMenuItem(formData: FormData) {
     categoryId: getStringValue(formData, "categoryId") ?? "",
   };
 
-  const result = await updateMenuItemSchema.safeParseAsync(rawData); // Use safeParseAsync
+  const result = await updateMenuItemSchema.safeParseAsync(rawData); // Keep safeParseAsync
   if (!result.success) {
     console.error("Validation failed (updateMenuItem):", result.error.errors);
-    throw new Error(result.error.errors.map((e) => e.message).join(", "));
+    throw new Error(result.error.errors.map((_e) => _e.message).join(", "));
   }
 
-  const validatedData: UpdateMenuItemData = result.data; // Explicitly type here if needed
+  const validatedData: UpdateMenuItemData = result.data;
 
   try {
     await db
@@ -107,6 +112,7 @@ export async function deleteMenuItem(
   restaurantId: string,
   categoryId: string,
 ) {
+  // ... (existing code for deleteMenuItem)
   try {
     await db.delete(menuItems).where(eq(menuItems.id, menuItemId));
     revalidatePath(
