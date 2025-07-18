@@ -217,6 +217,8 @@ export function EditRestaurantDialog({
                 {logoPreviewUrl && (
                   <div className="relative mb-2 h-24 w-24 overflow-hidden rounded-md">
                     <Image
+                      width={250}
+                      height={250}
                       src={logoPreviewUrl}
                       alt="Logo Preview"
                       className="h-full w-full object-cover"

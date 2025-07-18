@@ -336,7 +336,14 @@ export function RestaurantManagementClient({
                     <CardDescription>Slug: {restaurant.slug}</CardDescription>
                     <p className="text-xs text-gray-500">
                       Created:{" "}
-                      {new Date(restaurant.createdAt).toLocaleDateString()}
+                      {new Date(restaurant.createdAt).toLocaleDateString(
+                        "en-GB",
+                        {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        },
+                      )}
                     </p>
                   </CardHeader>
                   <CardContent className="mt-auto flex justify-end space-x-2 p-4 pt-0">
