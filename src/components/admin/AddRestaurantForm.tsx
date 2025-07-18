@@ -1,7 +1,7 @@
-// src/components/admin/EditRestaurantDialog.tsx
+// src/components/admin/AddRestaurantForm.tsx
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -12,55 +12,48 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import { Pencil } from "lucide-react";
 import { useFormStatus } from "react-dom";
 
-// Import the shared schema
+// Import the schema from the shared schemas file
 import { restaurantSchema } from "~/lib/schemas";
 // Import the new shared form component
 import { RestaurantForm } from "~/components/admin/RestaurantForm";
 
-import type { Restaurant } from "~/types/restaurant";
+interface AddRestaurantFormProps {
+  addRestaurantAction: (formData: FormData) => Promise<void>;
+}
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? "Saving..." : "Save Changes"}
+      {pending ? "Adding..." : "Add Restaurant"}
     </Button>
   );
 }
 
-interface EditRestaurantDialogProps {
-  restaurant: Restaurant;
-  updateRestaurantAction: (formData: FormData) => Promise<void>;
-}
-
-export function EditRestaurantDialog({
-  restaurant,
-  updateRestaurantAction,
-}: EditRestaurantDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function AddRestaurantForm({
+  addRestaurantAction,
+}: AddRestaurantFormProps) {
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const [isRestaurantActive, setIsRestaurantActive] = useState(
-    restaurant.isActive ?? true,
-  );
-  const [isRestaurantDisplayed, setIsRestaurantDisplayed] = useState(
-    restaurant.isDisplayed ?? true,
-  );
-  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(
-    restaurant.logoUrl ?? null,
-  );
+  const [isNewRestaurantActive, setIsNewRestaurantActive] = useState(true);
+  const [isNewRestaurantDisplayed, setIsNewRestaurantDisplayed] =
+    useState(true);
+  const [newRestaurantLogoUrl, setNewRestaurantLogoUrl] = useState<
+    string | null
+  >(null);
 
-  const handleSubmit = async (formData: FormData) => {
+  const addFormRef = useRef<HTMLFormElement>(null);
+
+  const handleAddSubmit = async (formData: FormData) => {
     setFormErrors({});
 
-    formData.set("isActive", isRestaurantActive ? "on" : "");
-    formData.set("isDisplayed", isRestaurantDisplayed ? "on" : "");
-    formData.set("logoUrl", logoPreviewUrl ?? "");
+    formData.set("isActive", isNewRestaurantActive ? "on" : "");
+    formData.set("isDisplayed", isNewRestaurantDisplayed ? "on" : "");
+    formData.set("logoUrl", newRestaurantLogoUrl ?? "");
 
     const values = {
-      id: formData.get("id") as string,
       name: formData.get("name") as string,
       slug: formData.get("slug") as string,
       country: formData.get("country") as string | null,
@@ -87,43 +80,46 @@ export function EditRestaurantDialog({
     }
 
     try {
-      await updateRestaurantAction(formData);
-      setIsOpen(false);
+      await addRestaurantAction(formData);
+      setIsAddDialogOpen(false);
+      addFormRef.current?.reset();
+      setFormErrors({});
+      setIsNewRestaurantActive(true);
+      setIsNewRestaurantDisplayed(true);
+      setNewRestaurantLogoUrl(null);
     } catch (error) {
       setFormErrors({
-        general: error instanceof Error ? error.message : "Update failed.",
+        general: error instanceof Error ? error.message : "Add failed.",
       });
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="mr-2">
-          <Pencil className="mr-2 h-4 w-4" />
-          Edit
-        </Button>
+        <Button className="w-full md:w-1/3">Add New Restaurant</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Edit Restaurant</DialogTitle>
+          <DialogTitle>Add New Restaurant</DialogTitle>
           <DialogDescription>
-            Update info for &quot;{restaurant.name}&quot;.
+            Fill out the details below to create a new restaurant.
           </DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit} className="grid gap-4 py-4">
-          <input type="hidden" name="id" value={restaurant.id} />
-
+        <form
+          ref={addFormRef}
+          action={handleAddSubmit}
+          className="grid gap-4 py-4"
+        >
           {/* Use the shared RestaurantForm component */}
           <RestaurantForm
-            initialData={restaurant}
             formErrors={formErrors}
-            onLogoUrlChange={setLogoPreviewUrl}
-            onIsActiveChange={setIsRestaurantActive}
-            onIsDisplayedChange={setIsRestaurantDisplayed}
-            currentIsActive={isRestaurantActive}
-            currentIsDisplayed={isRestaurantDisplayed}
-            currentLogoUrl={logoPreviewUrl}
+            onLogoUrlChange={setNewRestaurantLogoUrl}
+            onIsActiveChange={setIsNewRestaurantActive}
+            onIsDisplayedChange={setIsNewRestaurantDisplayed}
+            currentIsActive={isNewRestaurantActive}
+            currentIsDisplayed={isNewRestaurantDisplayed}
+            currentLogoUrl={newRestaurantLogoUrl}
           />
 
           {formErrors.general && (

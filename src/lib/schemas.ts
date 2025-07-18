@@ -13,7 +13,7 @@ export const createMenuItemSchema = z.object({
   dietaryLabels: z
     .string()
     .optional()
-    .transform(async (val) => { // This transform needs to remain async because `safeParseAsync` is used inside it.
+    .transform(async (val) => {
       if (!val) return null;
 
       const dietaryLabelsArraySchema = z.array(
@@ -41,3 +41,24 @@ export const updateMenuItemSchema = createMenuItemSchema.extend({
 
 export type CreateMenuItemData = z.infer<typeof createMenuItemSchema>;
 export type UpdateMenuItemData = z.infer<typeof updateMenuItemSchema>;
+
+
+// NEW: Restaurant Schema
+export const restaurantSchema = z.object({
+  id: z.string().uuid().optional(), // Optional for add, required for update
+  name: z.string().min(1, { message: "Restaurant name is required." }),
+  slug: z
+    .string()
+    .min(1, { message: "Restaurant slug is required." })
+    .regex(/^[a-z0-9-]+$/, {
+      message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
+    }),
+  address: z.string().nullable().optional(),
+  country: z.string().nullable().optional(),
+  foodType: z.string().nullable().optional(),
+  isActive: z.coerce.boolean().default(true), // Handles "on" string from FormData
+  isDisplayed: z.coerce.boolean().default(true), // Handles "on" string from FormData
+  logoUrl: z.string().url("Invalid URL format.").nullable().optional(),
+});
+
+export type RestaurantFormData = z.infer<typeof restaurantSchema>;
