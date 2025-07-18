@@ -1,3 +1,4 @@
+// src/server/db/schema.ts
 import {
   pgTable,
   uuid,
@@ -7,8 +8,10 @@ import {
   jsonb,
   pgEnum,
   integer,
+  text, // IMPORTANT: Add 'text' import for longer string fields like description
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { sql } from "drizzle-orm"; // IMPORTANT: Add 'sql' import for defaultNow() or CURRENT_TIMESTAMP
 
 // Define ENUMs if you have them, e.g., for dietary labels
 export const dietaryLabelEnum = pgEnum("dietary_label", [
@@ -32,8 +35,17 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   isActive: boolean("is_active").default(true).notNull(),
   isDisplayed: boolean("is_displayed").default(false).notNull(), // Added isDisplayed
   logoUrl: varchar("logo_url", { length: 256 }),
+
+  // --- NEW FIELDS ADDED HERE ---
+  currency: varchar("currency", { length: 10 }).default("USD").notNull(), // Default to 'USD', cannot be null
+  phoneNumber: varchar("phone_number", { length: 50 }), // Nullable by default
+  description: text("description"), // Use 'text' for potentially long descriptions, nullable by default
+  theme: varchar("theme", { length: 50 }), // Nullable by default
+  typeOfEstablishment: varchar("type_of_establishment", { length: 100 }), // Nullable by default
+  // --- END NEW FIELDS ---
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(), // Or .default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()), if you prefer automatic update
 });
 
 // Define relations for restaurants
@@ -90,110 +102,3 @@ export const menuItemsRelations = relations(menuItems, ({ one }) => ({
     references: [restaurants.id],
   }),
 }));
-
-
-// // db/schema.ts
-
-// import { pgTableCreator, serial, text, timestamp, boolean, real, uuid } from 'drizzle-orm/pg-core';
-// import { relations, sql } from 'drizzle-orm';
-
-// /**
-//  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
-//  * database instance for multiple projects.
-//  *
-//  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
-//  */
-// export const createTable = pgTableCreator((name) => `menu-hub_${name}`);
-
-// // --- Restaurants Table ---
-// // This table stores information about each restaurant.
-// // Each restaurant will have a unique 'slug' for its URL path.
-// export const restaurants = createTable('restaurants', {
-//   id: uuid('id').defaultRandom().primaryKey(),
-//   name: text('name').notNull(),
-//   slug: text('slug').unique().notNull(),
-
-//   // New Fields
-//   logoUrl: text('logo_url'),                       // Uploadthing single image
-//   galleryUrls: text('gallery_urls').array(),       // Uploadthing multiple images
-//   address: text('address'),
-//   country: text('country').default("Not Set").notNull(),
-//   foodType: text('food_type').default("Not Set").notNull(),
-//   isActive: boolean('is_active').default(true).notNull(),
-
-//   createdAt: timestamp('created_at', { withTimezone: true })
-//     .default(sql`CURRENT_TIMESTAMP`).notNull(),
-
-//   updatedAt: timestamp('updated_at', { withTimezone: true })
-//     .default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()),
-// });
-
-// // old schema
-// // export const restaurants = createTable('restaurants', {
-// //   id: uuid('id').defaultRandom().primaryKey(), // Unique ID for the restaurant
-// //   name: text('name').notNull(),                 // Name of the restaurant
-// //   slug: text('slug').unique().notNull(),        // Unique slug for URL (e.g., 'pizza-palace')
-// //   createdAt: timestamp('created_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).notNull(), // Timestamp when the record was created
-// //   updatedAt: timestamp('updated_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()), // Timestamp when the record was last updated
-// // });
-
-// // Define relations for the restaurants table
-// // A restaurant can have many categories and many menu items
-// export const restaurantsRelations = relations(restaurants, ({ many }) => ({
-//   categories: many(categories),
-//   menuItems: many(menuItems),
-// }));
-
-// // --- Categories Table ---
-// // This table stores the main categories for menu items (e.g., Appetizers, Main Courses).
-// // Each category belongs to a specific restaurant.
-// export const categories = createTable('categories', {
-//   id: uuid('id').defaultRandom().primaryKey(), // Unique ID for the category
-//   restaurantId: uuid('restaurant_id').notNull().references(() => restaurants.id, { onDelete: 'cascade' }), // Foreign key to link to a restaurant
-//   name: text('name').notNull(),                 // Name of the category (e.g., 'Appetizers')
-//   order: serial('order').notNull(),             // Order for displaying categories (can be used for custom sorting)
-//   createdAt: timestamp('created_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).notNull(), // Timestamp when the record was created
-//   updatedAt: timestamp('updated_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()), // Timestamp when the record was last updated
-// });
-
-// // Define relations for the categories table
-// // A category belongs to one restaurant and can have many menu items
-// export const categoriesRelations = relations(categories, ({ one, many }) => ({
-//   restaurant: one(restaurants, {
-//     fields: [categories.restaurantId],
-//     references: [restaurants.id],
-//   }),
-//   menuItems: many(menuItems),
-// }));
-
-// // --- Menu Items Table ---
-// // This table stores individual menu items with all their details.
-// // Each menu item belongs to a specific category and restaurant.
-// export const menuItems = createTable('menu_items', {
-//   id: uuid('id').defaultRandom().primaryKey(), // Unique ID for the menu item
-//   restaurantId: uuid('restaurant_id').notNull().references(() => restaurants.id, { onDelete: 'cascade' }), // Foreign key to link to a restaurant (redundant but useful for direct queries)
-//   categoryId: uuid('category_id').notNull().references(() => categories.id, { onDelete: 'cascade' }), // Foreign key to link to a category
-//   name: text('name').notNull(),                 // Name of the menu item (e.g., 'Margherita Pizza')
-//   description: text('description').notNull(),   // Description of the item
-//   price: real('price').notNull(),               // Price of the item (using 'real' for floating point numbers)
-//   ingredients: text('ingredients').notNull(),   // Ingredients list (can be a comma-separated string or JSON string)
-//   isVegetarian: boolean('is_vegetarian').default(false).notNull(), // Dietary label: Vegetarian
-//   isGlutenFree: boolean('is_gluten_free').default(false).notNull(), // Dietary label: Gluten-Free
-//   imageUrl: text('image_url').notNull(),        // URL of the image from Uploadthing
-//   createdAt: timestamp('created_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).notNull(), // Timestamp when the record was created
-//   updatedAt: timestamp('updated_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()), // Timestamp when the record was last updated
-// });
-
-// // Define relations for the menuItems table
-// // A menu item belongs to one restaurant and one category
-// export const menuItemsRelations = relations(menuItems, ({ one }) => ({
-//   restaurant: one(restaurants, {
-//     fields: [menuItems.restaurantId],
-//     references: [restaurants.id],
-//   }),
-//   category: one(categories, {
-//     fields: [menuItems.categoryId],
-//     references: [categories.id],
-//   }),
-// }));
-
