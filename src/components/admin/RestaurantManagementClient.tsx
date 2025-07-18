@@ -256,6 +256,8 @@ export function RestaurantManagementClient({
                     {newRestaurantLogoUrl && (
                       <div className="relative mb-2 h-24 w-24 overflow-hidden rounded-md">
                         <Image
+                          width={250}
+                          height={250}
                           src={newRestaurantLogoUrl}
                           alt="Logo Preview"
                           className="h-full w-full object-cover"
@@ -322,6 +324,8 @@ export function RestaurantManagementClient({
                     {restaurant.logoUrl && (
                       <div className="mb-2 h-24 w-24 overflow-hidden rounded-md">
                         <Image
+                          width={250}
+                          height={250}
                           src={restaurant.logoUrl}
                           alt={`${restaurant.name} Logo`}
                           className="h-full w-full object-cover"

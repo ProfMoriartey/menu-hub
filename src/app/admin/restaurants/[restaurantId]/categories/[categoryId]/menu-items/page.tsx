@@ -55,14 +55,16 @@ const createMenuItemSchema = z.object({
     .optional()
     .transform((val) => {
       if (!val) return null;
+
+      // Use a nested Zod schema to safely parse the JSON
+      const dietaryLabelsArraySchema = z.array(
+        z.enum(ALL_DIETARY_LABELS as [DietaryLabel, ...DietaryLabel[]]),
+      );
+
       try {
-        const parsed = JSON.parse(val);
-        return Array.isArray(parsed) &&
-          parsed.every((item) =>
-            ALL_DIETARY_LABELS.includes(item as DietaryLabel),
-          )
-          ? parsed
-          : null;
+        const parsed: unknown = JSON.parse(val);
+        const result = dietaryLabelsArraySchema.safeParse(parsed);
+        return result.success ? result.data : null;
       } catch {
         return null;
       }
@@ -81,15 +83,20 @@ const updateMenuItemSchema = createMenuItemSchema.extend({
 async function addMenuItem(formData: FormData) {
   "use server";
 
+  const getStringValue = (key: string): string | null => {
+    const value = formData.get(key);
+    return typeof value === "string" ? value : null;
+  };
+
   const rawData = {
-    name: formData.get("name") as string | null,
-    description: formData.get("description") as string | null,
-    price: formData.get("price") as string | null,
-    ingredients: formData.get("ingredients") as string | null,
-    dietaryLabels: formData.get("dietaryLabels") as string | null,
-    imageUrl: formData.get("imageUrl") as string | null,
-    restaurantId: formData.get("restaurantId") as string,
-    categoryId: formData.get("categoryId") as string,
+    name: getStringValue("name"),
+    description: getStringValue("description"),
+    price: getStringValue("price"),
+    ingredients: getStringValue("ingredients"),
+    dietaryLabels: getStringValue("dietaryLabels"),
+    imageUrl: getStringValue("imageUrl"),
+    restaurantId: getStringValue("restaurantId") ?? "",
+    categoryId: getStringValue("categoryId") ?? "",
   };
 
   const result = createMenuItemSchema.safeParse(rawData);
@@ -98,12 +105,15 @@ async function addMenuItem(formData: FormData) {
     throw new Error(result.error.errors.map((e) => e.message).join(", "));
   }
 
+  // After this point, TypeScript knows result.data is of the type defined by createMenuItemSchema
+  const validatedData = result.data;
+
   try {
     await db.insert(menuItems).values({
-      ...result.data,
+      ...validatedData,
     });
     revalidatePath(
-      `/admin/restaurants/${result.data.restaurantId}/categories/${result.data.categoryId}/menu-items`,
+      `/admin/restaurants/${validatedData.restaurantId}/categories/${validatedData.categoryId}/menu-items`,
     );
   } catch (error) {
     console.error("Error adding menu item:", error);
@@ -116,16 +126,21 @@ async function addMenuItem(formData: FormData) {
 async function updateMenuItem(formData: FormData) {
   "use server";
 
+  const getStringValue = (key: string): string | null => {
+    const value = formData.get(key);
+    return typeof value === "string" ? value : null;
+  };
+
   const rawData = {
-    id: formData.get("id") as string | null,
-    name: formData.get("name") as string | null,
-    description: formData.get("description") as string | null,
-    price: formData.get("price") as string | null,
-    ingredients: formData.get("ingredients") as string | null,
-    dietaryLabels: formData.get("dietaryLabels") as string | null,
-    imageUrl: formData.get("imageUrl") as string | null,
-    restaurantId: formData.get("restaurantId") as string,
-    categoryId: formData.get("categoryId") as string,
+    id: getStringValue("id"),
+    name: getStringValue("name"),
+    description: getStringValue("description"),
+    price: getStringValue("price"),
+    ingredients: getStringValue("ingredients"),
+    dietaryLabels: getStringValue("dietaryLabels"),
+    imageUrl: getStringValue("imageUrl"),
+    restaurantId: getStringValue("restaurantId") ?? "",
+    categoryId: getStringValue("categoryId") ?? "",
   };
 
   const result = updateMenuItemSchema.safeParse(rawData);
@@ -158,7 +173,6 @@ async function updateMenuItem(formData: FormData) {
     );
   }
 }
-
 async function deleteMenuItem(
   menuItemId: string,
   restaurantId: string,
@@ -227,7 +241,8 @@ export default async function AdminMenuItemsPage({
         <CardHeader>
           <CardTitle>Existing Menu Items</CardTitle>
           <CardDescription>
-            A list of all dishes in the "{categoryDetails.name}" category.
+            A list of all dishes in the &quot;{categoryDetails.name}&quot;
+            category.
           </CardDescription>
         </CardHeader>
         <CardContent>
