@@ -1,9 +1,9 @@
-"use client"; // This is a Client Component
+//src/components/public/HomePageClient.tsx
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -26,8 +26,6 @@ import {
   CommandList,
 } from "~/components/ui/command";
 
-// Import the shared Restaurant interface (which now includes categories and menuItems)
-// Import the shared Restaurant interface (which now includes categories and menuItems)
 import type { Restaurant } from "~/types/restaurant";
 
 interface HomePageClientProps {
@@ -46,27 +44,32 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
     if (searchTerm.length > 0) {
       const lowerCaseSearchTerm = searchTerm.toLowerCase();
       const results = restaurants.filter((restaurant) => {
-        // Search by restaurant name
-        if (restaurant.name.toLowerCase().includes(lowerCaseSearchTerm)) {
+        const matchesSearch = (value: string | null | undefined): boolean => {
+          return value?.toLowerCase().includes(lowerCaseSearchTerm) ?? false;
+        };
+
+        // Search by restaurant name, slug, country, food type, or address
+        if (
+          matchesSearch(restaurant.name) ||
+          matchesSearch(restaurant.slug) ||
+          matchesSearch(restaurant.country) ||
+          matchesSearch(restaurant.foodType) ||
+          matchesSearch(restaurant.address)
+        ) {
           return true;
         }
-        // Search by country
-        if (restaurant.country?.toLowerCase().includes(lowerCaseSearchTerm)) {
-          return true;
-        }
-        // Search by food type
-        if (restaurant.foodType?.toLowerCase().includes(lowerCaseSearchTerm)) {
-          return true;
-        }
-        // Search by menu item name within categories using optional chaining
+
+        // Search by category name or menu item name
         if (restaurant.categories) {
           for (const category of restaurant.categories) {
-            // Use optional chaining for category.menuItems and menuItem.name
-            // The `?? false` at the end ensures the whole expression evaluates to a boolean
-            // for the `||` operator if any part is undefined/null.
+            // Search by category name
+            if (matchesSearch(category.name)) {
+              return true;
+            }
+            // Search by menu item name within category
             if (
-              category?.menuItems?.some((menuItem) =>
-                menuItem?.name?.toLowerCase().includes(lowerCaseSearchTerm),
+              category.menuItems?.some((menuItem) =>
+                matchesSearch(menuItem.name),
               )
             ) {
               return true;
@@ -76,7 +79,8 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
         return false;
       });
       setFilteredResults(results);
-      setIsPopoverOpen(results.length > 0);
+      // Only open popover if there are results or if the search term is present
+      setIsPopoverOpen(results.length > 0 || searchTerm.length > 0);
     } else {
       setFilteredResults([]);
       setIsPopoverOpen(false);
@@ -96,22 +100,26 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
             <PopoverTrigger asChild>
-              <Input
-                type="text"
-                placeholder="Search for a restaurant, cuisine, or menu item..."
-                className="w-full rounded-lg p-3 shadow-sm focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:w-80"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onFocus={() => searchTerm.length > 0 && setIsPopoverOpen(true)}
-              />
+              <Button
+                variant="outline"
+                className="w-full justify-start rounded-lg p-3 text-gray-500 shadow-sm sm:w-80"
+                onClick={() => setIsPopoverOpen(true)}
+              >
+                {searchTerm ||
+                  "Search for a restaurant, cuisine, or menu item..."}
+              </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
               <Command>
                 <CommandInput
                   placeholder="Search for a restaurant, cuisine, or menu item..."
                   value={searchTerm}
-                  onValueChange={setSearchTerm}
+                  onValueChange={(value) => {
+                    setSearchTerm(value);
+                    setIsPopoverOpen(true);
+                  }}
                   className="h-9"
+                  autoFocus
                 />
                 <CommandList>
                   <CommandEmpty>No results found.</CommandEmpty>
@@ -124,7 +132,15 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
                         onClick={() => setIsPopoverOpen(false)}
                       >
                         <CommandItem
-                          value={restaurant.name}
+                          // CONCATENATE ALL SEARCHABLE FIELDS INTO THE VALUE
+                          value={`${restaurant.name} ${restaurant.slug ?? ""} ${restaurant.country ?? ""} ${restaurant.foodType ?? ""} ${restaurant.address ?? ""} ${restaurant.categories?.map((cat) => cat.name).join(" ") ?? ""} ${
+                            restaurant.categories
+                              ?.flatMap((cat) =>
+                                cat.menuItems?.map((item) => item.name),
+                              )
+                              .filter(Boolean)
+                              .join(" ") ?? ""
+                          }`}
                           className="flex cursor-pointer items-center gap-2"
                         >
                           <Image

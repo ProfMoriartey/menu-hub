@@ -142,7 +142,7 @@ export function RestaurantForm({
                 className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
                 onClick={() => onLogoUrlChange(null)}
               >
-                <XCircle className="h-4 w-4" />
+                <XCircle className="h-7 w-7" />
               </Button>
             </div>
           )}

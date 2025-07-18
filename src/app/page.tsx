@@ -1,6 +1,7 @@
 // app/page.tsx
 
 import { db } from "~/server/db";
+// No need to import 'restaurants' schema directly here if using db.query.restaurants
 // import { restaurants } from "~/server/db/schema";
 
 // NEW: Import the HomePageClient component
@@ -13,7 +14,13 @@ export default async function HomePage() {
     limit: 6,
     orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
     with: {
-      categories: true, // This includes each restaurant's categories
+      categories: {
+        // Explicitly fetch categories
+        with: {
+          // And within categories, explicitly fetch menuItems
+          menuItems: true,
+        },
+      },
     },
   });
 
