@@ -11,7 +11,6 @@ import { HomePageClient } from "~/components/public/HomePageClient";
 export default async function HomePage() {
   // Fetch restaurants (this remains a Server-side operation)
   const allRestaurants = await db.query.restaurants.findMany({
-    limit: 6,
     orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
     with: {
       categories: {
