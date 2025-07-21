@@ -11,7 +11,6 @@ import {
   text, // IMPORTANT: Add 'text' import for longer string fields like description
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { sql } from "drizzle-orm"; // IMPORTANT: Add 'sql' import for defaultNow() or CURRENT_TIMESTAMP
 
 // Define ENUMs if you have them, e.g., for dietary labels
 export const dietaryLabelEnum = pgEnum("dietary_label", [

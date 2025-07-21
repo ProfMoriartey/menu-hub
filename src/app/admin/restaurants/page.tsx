@@ -1,7 +1,5 @@
 // app/admin/restaurants/page.tsx
 import { db } from "~/server/db";
-import { restaurants } from "~/server/db/schema";
-import { revalidatePath } from "next/cache";
 
 // NEW IMPORT: RestaurantManagementClient
 import { RestaurantManagementClient } from "~/components/admin/RestaurantManagementClient";

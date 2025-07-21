@@ -3,11 +3,11 @@
 
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
-import { eq, and, ne } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 // Import the schema and type from the shared schemas file
-import { restaurantSchema, type RestaurantFormData } from "~/lib/schemas";
+import { restaurantSchema,  } from "~/lib/schemas";
 
 // Helper to safely get string values from FormData
 const getStringValue = (formData: FormData, key: string): string | null => {

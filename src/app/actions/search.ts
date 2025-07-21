@@ -3,9 +3,9 @@
 
 import { db } from "~/server/db";
 // Ensure categories and menuItems are imported here for subqueries
-import { restaurants, categories, menuItems } from "~/server/db/schema";
+import { categories, menuItems } from "~/server/db/schema";
 // Import 'exists' and 'and' for complex subqueries
-import { eq, or, ilike, exists, and } from "drizzle-orm";
+import { eq, exists, and } from "drizzle-orm";
 import type { Restaurant } from "~/types/restaurant";
 
 // NEW SERVER ACTION: Search Restaurants from the database
