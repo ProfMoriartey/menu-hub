@@ -1,10 +1,11 @@
 //src/components/public/HomePageClient.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
+// No longer needed: import { Input } from "~/components/ui/input";
 import {
   Card,
   CardContent,
@@ -27,6 +28,7 @@ import {
 } from "~/components/ui/command";
 
 import type { Restaurant } from "~/types/restaurant";
+import { searchRestaurants } from "~/app/actions/search";
 
 interface HomePageClientProps {
   restaurants: Restaurant[];
@@ -34,58 +36,60 @@ interface HomePageClientProps {
 
 export function HomePageClient({ restaurants }: HomePageClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredResults, setFilteredResults] = useState<Restaurant[]>([]);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState<Restaurant[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false); // Controls popover visibility
+
+  // Removed: const [showSearchInput, setShowSearchInput] = useState(false); // No longer needed
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const fallbackImageUrl = `https://placehold.co/50x50/E0E0E0/333333?text=Logo`;
 
-  // Effect to filter restaurants based on search term
   useEffect(() => {
-    if (searchTerm.length > 0) {
-      const lowerCaseSearchTerm = searchTerm.toLowerCase();
-      const results = restaurants.filter((restaurant) => {
-        const matchesSearch = (value: string | null | undefined): boolean => {
-          return value?.toLowerCase().includes(lowerCaseSearchTerm) ?? false;
-        };
-
-        // Search by restaurant name, slug, country, food type, or address
-        if (
-          matchesSearch(restaurant.name) ||
-          matchesSearch(restaurant.slug) ||
-          matchesSearch(restaurant.country) ||
-          matchesSearch(restaurant.foodType) ||
-          matchesSearch(restaurant.address)
-        ) {
-          return true;
-        }
-
-        // Search by category name or menu item name
-        if (restaurant.categories) {
-          for (const category of restaurant.categories) {
-            // Search by category name
-            if (matchesSearch(category.name)) {
-              return true;
-            }
-            // Search by menu item name within category
-            if (
-              category.menuItems?.some((menuItem) =>
-                matchesSearch(menuItem.name),
-              )
-            ) {
-              return true;
-            }
-          }
-        }
-        return false;
-      });
-      setFilteredResults(results);
-      // Only open popover if there are results or if the search term is present
-      setIsPopoverOpen(results.length > 0 || searchTerm.length > 0);
-    } else {
-      setFilteredResults([]);
-      setIsPopoverOpen(false);
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
     }
-  }, [searchTerm, restaurants]);
+
+    if (searchTerm.length > 0) {
+      setIsSearching(true);
+      debounceRef.current = setTimeout(async () => {
+        try {
+          const results = await searchRestaurants(searchTerm);
+          setSearchResults(results);
+          // Keep popover open if there are results or search term exists
+          setIsPopoverOpen(true); // Always keep open if search term is active
+        } catch (error) {
+          console.error("Failed to fetch search results:", error);
+          setSearchResults([]);
+          setIsPopoverOpen(false);
+        } finally {
+          setIsSearching(false);
+        }
+      }, 300);
+    } else {
+      setSearchResults([]);
+      // If search term is empty, allow popover's onOpenChange to handle closing
+      setIsSearching(false);
+    }
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, [searchTerm]);
+
+  const restaurantsToDisplay =
+    searchTerm.length > 0 ? searchResults : restaurants;
+
+  // Handler for Popover's open/close state
+  const handlePopoverOpenChange = (newOpenState: boolean) => {
+    setIsPopoverOpen(newOpenState);
+    // If popover is closing and search term is not empty, clear it.
+    if (!newOpenState && searchTerm.length > 0) {
+      setSearchTerm(""); // Clear search term when popover closes
+    }
+  };
 
   return (
     <>
@@ -98,78 +102,83 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
           restaurants.
         </p>
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          {/* PopoverTrigger now directly wraps the Button */}
+          <Popover open={isPopoverOpen} onOpenChange={handlePopoverOpenChange}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full justify-start rounded-lg p-3 text-gray-500 shadow-sm sm:w-80"
-                onClick={() => setIsPopoverOpen(true)}
+                className="w-full justify-center rounded-lg p-3 text-gray-500 shadow-sm sm:w-80"
+                onClick={() => {
+                  setIsPopoverOpen(true); // Simply open the popover on button click
+                }}
               >
-                {searchTerm ||
-                  "Search for a restaurant, cuisine, or menu item..."}
+                Search Menus
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
               <Command>
+                {/* CommandInput is always inside the popover and handles all typing */}
                 <CommandInput
                   placeholder="Search for a restaurant, cuisine, or menu item..."
                   value={searchTerm}
-                  onValueChange={(value) => {
-                    setSearchTerm(value);
-                    setIsPopoverOpen(true);
-                  }}
+                  onValueChange={setSearchTerm}
                   className="h-9"
-                  autoFocus
+                  autoFocus // Auto-focus when popover opens
                 />
                 <CommandList>
-                  <CommandEmpty>No results found.</CommandEmpty>
-                  <CommandGroup>
-                    {filteredResults.map((restaurant) => (
-                      <Link
-                        key={restaurant.id}
-                        href={`/${restaurant.slug}`}
-                        passHref
-                        onClick={() => setIsPopoverOpen(false)}
-                      >
-                        <CommandItem
-                          // CONCATENATE ALL SEARCHABLE FIELDS INTO THE VALUE
-                          value={`${restaurant.name} ${restaurant.slug ?? ""} ${restaurant.country ?? ""} ${restaurant.foodType ?? ""} ${restaurant.address ?? ""} ${restaurant.categories?.map((cat) => cat.name).join(" ") ?? ""} ${
-                            restaurant.categories
-                              ?.flatMap((cat) =>
-                                cat.menuItems?.map((item) => item.name),
-                              )
-                              .filter(Boolean)
-                              .join(" ") ?? ""
-                          }`}
-                          className="flex cursor-pointer items-center gap-2"
+                  {isSearching ? (
+                    <CommandEmpty>Searching...</CommandEmpty>
+                  ) : restaurantsToDisplay.length === 0 &&
+                    searchTerm.length > 0 ? (
+                    <CommandEmpty>No results found.</CommandEmpty>
+                  ) : (
+                    <CommandGroup>
+                      {restaurantsToDisplay.map((restaurant) => (
+                        <Link
+                          key={restaurant.id}
+                          href={`/${restaurant.slug}`}
+                          passHref
+                          onClick={() => {
+                            setIsPopoverOpen(false); // Close popover on item click
+                            setSearchTerm(""); // Clear search term after selection
+                          }}
                         >
-                          <Image
-                            src={restaurant.logoUrl ?? fallbackImageUrl}
-                            alt={`${restaurant.name} Logo`}
-                            width={32}
-                            height={32}
-                            className="rounded-full object-cover"
-                          />
-                          <div>
-                            <p className="font-medium">{restaurant.name}</p>
-                            <p className="text-sm text-gray-500">
-                              {restaurant.foodType}
-                              {restaurant.country
-                                ? ` - ${restaurant.country}`
-                                : ""}
-                            </p>
-                          </div>
-                        </CommandItem>
-                      </Link>
-                    ))}
-                  </CommandGroup>
+                          <CommandItem
+                            value={`${restaurant.name} ${restaurant.slug ?? ""} ${restaurant.country ?? ""} ${restaurant.foodType ?? ""} ${restaurant.address ?? ""} ${restaurant.categories?.map((cat) => cat.name).join(" ") ?? ""} ${
+                              restaurant.categories
+                                ?.flatMap((cat) =>
+                                  cat.menuItems?.map((item) => item.name),
+                                )
+                                .filter(Boolean)
+                                .join(" ") ?? ""
+                            }`}
+                            className="flex cursor-pointer items-center gap-2"
+                          >
+                            <Image
+                              src={restaurant.logoUrl ?? fallbackImageUrl}
+                              alt={`${restaurant.name} Logo`}
+                              width={32}
+                              height={32}
+                              className="rounded-full object-cover"
+                            />
+                            <div>
+                              <p className="font-medium">{restaurant.name}</p>
+                              <p className="text-sm text-gray-500">
+                                {restaurant.foodType}
+                                {restaurant.country
+                                  ? ` - ${restaurant.country}`
+                                  : ""}
+                              </p>
+                            </div>
+                          </CommandItem>
+                        </Link>
+                      ))}
+                    </CommandGroup>
+                  )}
                 </CommandList>
               </Command>
             </PopoverContent>
           </Popover>
-          <Button className="w-full rounded-lg bg-blue-600 px-6 py-3 text-white shadow-md transition-colors hover:bg-blue-700 sm:w-auto">
-            Search Menus
-          </Button>
         </div>
       </header>
 
