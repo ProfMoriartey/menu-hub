@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
-// No longer needed: import { Input } from "~/components/ui/input";
 import {
   Card,
   CardContent,
@@ -38,9 +37,8 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Restaurant[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false); // Controls popover visibility
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-  // Removed: const [showSearchInput, setShowSearchInput] = useState(false); // No longer needed
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const fallbackImageUrl = `https://placehold.co/50x50/E0E0E0/333333?text=Logo`;
@@ -52,23 +50,25 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
 
     if (searchTerm.length > 0) {
       setIsSearching(true);
-      debounceRef.current = setTimeout(async () => {
-        try {
-          const results = await searchRestaurants(searchTerm);
-          setSearchResults(results);
-          // Keep popover open if there are results or search term exists
-          setIsPopoverOpen(true); // Always keep open if search term is active
-        } catch (error) {
-          console.error("Failed to fetch search results:", error);
-          setSearchResults([]);
-          setIsPopoverOpen(false);
-        } finally {
-          setIsSearching(false);
-        }
+      debounceRef.current = setTimeout(() => {
+        // Use 'void' operator on the IIFE invocation to suppress no-floating-promises
+        void (async () => {
+          // <-- CHANGE MADE HERE: Added 'void'
+          try {
+            const results = await searchRestaurants(searchTerm);
+            setSearchResults(results);
+            setIsPopoverOpen(true);
+          } catch (error) {
+            console.error("Failed to fetch search results:", error);
+            setSearchResults([]);
+            setIsPopoverOpen(false);
+          } finally {
+            setIsSearching(false);
+          }
+        })();
       }, 300);
     } else {
       setSearchResults([]);
-      // If search term is empty, allow popover's onOpenChange to handle closing
       setIsSearching(false);
     }
 
@@ -82,12 +82,10 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
   const restaurantsToDisplay =
     searchTerm.length > 0 ? searchResults : restaurants;
 
-  // Handler for Popover's open/close state
   const handlePopoverOpenChange = (newOpenState: boolean) => {
     setIsPopoverOpen(newOpenState);
-    // If popover is closing and search term is not empty, clear it.
     if (!newOpenState && searchTerm.length > 0) {
-      setSearchTerm(""); // Clear search term when popover closes
+      setSearchTerm("");
     }
   };
 
@@ -102,14 +100,13 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
           restaurants.
         </p>
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          {/* PopoverTrigger now directly wraps the Button */}
           <Popover open={isPopoverOpen} onOpenChange={handlePopoverOpenChange}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className="w-full justify-center rounded-lg p-3 text-gray-500 shadow-sm sm:w-80"
                 onClick={() => {
-                  setIsPopoverOpen(true); // Simply open the popover on button click
+                  setIsPopoverOpen(true);
                 }}
               >
                 Search Menus
@@ -117,13 +114,12 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
             </PopoverTrigger>
             <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
               <Command>
-                {/* CommandInput is always inside the popover and handles all typing */}
                 <CommandInput
                   placeholder="Search for a restaurant, cuisine, or menu item..."
                   value={searchTerm}
                   onValueChange={setSearchTerm}
                   className="h-9"
-                  autoFocus // Auto-focus when popover opens
+                  autoFocus
                 />
                 <CommandList>
                   {isSearching ? (
@@ -139,8 +135,8 @@ export function HomePageClient({ restaurants }: HomePageClientProps) {
                           href={`/${restaurant.slug}`}
                           passHref
                           onClick={() => {
-                            setIsPopoverOpen(false); // Close popover on item click
-                            setSearchTerm(""); // Clear search term after selection
+                            setIsPopoverOpen(false);
+                            setSearchTerm("");
                           }}
                         >
                           <CommandItem
