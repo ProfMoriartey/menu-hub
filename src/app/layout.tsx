@@ -16,7 +16,6 @@ import {
   // UserButton,
 } from "@clerk/nextjs";
 import { Geist } from "next/font/google";
-import { Navbar } from "~/components/shared/Navbar";
 import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
 
 export const metadata: Metadata = {

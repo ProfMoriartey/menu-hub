@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+// Removed: import { Input } from "~/components/ui/input"; // FIX: Removed unused Input import
 import {
   Card,
   CardContent,
@@ -29,7 +29,7 @@ import {
 
 import type { Restaurant } from "~/types/restaurant";
 import { searchRestaurants } from "~/app/actions/search";
-import { RestaurantCardSkeleton } from "~/components/shared/RestaurantCardSkeleton"; // NEW import
+import { RestaurantCardSkeleton } from "~/components/shared/RestaurantCardSkeleton";
 import { Skeleton } from "../ui/skeleton";
 
 interface RestaurantSearchAndGridProps {
@@ -118,12 +118,11 @@ export function RestaurantSearchAndGrid({
               />
               <CommandList>
                 {isSearching ? (
-                  // Skeletons in the popover while searching
                   <div className="space-y-2 p-2">
-                    {[...Array(3)].map(
+                    {Array.from({ length: 3 }).map(
                       (
                         _,
-                        i, // Display 3 skeleton items
+                        i, // FIX: Unsafe spread
                       ) => (
                         <div key={i} className="flex items-center gap-2">
                           <Skeleton className="h-8 w-8 rounded-full" />
@@ -137,7 +136,10 @@ export function RestaurantSearchAndGrid({
                   </div>
                 ) : restaurantsToDisplayInGrid.length === 0 &&
                   searchTerm.length > 0 ? (
-                  <CommandEmpty>No results found.</CommandEmpty>
+                  // FIX: Unescaped entities
+                  <CommandEmpty>
+                    No results found for &quot;{searchTerm}&quot;.
+                  </CommandEmpty>
                 ) : (
                   <CommandGroup>
                     {restaurantsToDisplayInGrid.map((restaurant) => (
@@ -192,12 +194,12 @@ export function RestaurantSearchAndGrid({
         <h2 className="mb-10 text-center text-4xl font-bold text-gray-900">
           All Restaurants
         </h2>
-        {isSearching && searchTerm.length > 0 ? ( // Display skeletons for the grid when actively searching
+        {isSearching && searchTerm.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map(
+            {Array.from({ length: 6 }).map(
               (
                 _,
-                i, // Display 6 skeleton cards
+                i, // FIX: Unsafe spread
               ) => (
                 <RestaurantCardSkeleton key={i} />
               ),
@@ -213,7 +215,7 @@ export function RestaurantSearchAndGrid({
           </div>
         ) : restaurantsToDisplayInGrid.length === 0 && searchTerm.length > 0 ? (
           <div className="text-center text-gray-500">
-            <p>No results found for "{searchTerm}".</p>
+            <p>No results found for &quot;{searchTerm}&quot;.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">

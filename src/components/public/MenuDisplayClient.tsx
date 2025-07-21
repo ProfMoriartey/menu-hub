@@ -7,7 +7,7 @@ import Image from "next/image";
 import { cn } from "~/lib/utils";
 
 import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
-import { MenuItemCardSkeleton } from "~/components/shared/MenuItemCardSkeleton"; // NEW import
+import { MenuItemCardSkeleton } from "~/components/shared/MenuItemCardSkeleton";
 
 interface RestaurantMenuData {
   restaurant: {
@@ -68,20 +68,18 @@ export function MenuDisplayClient({ menuData }: MenuDisplayClientProps) {
           <h2 className="mt-4 mb-2 text-3xl font-semibold text-gray-900">
             {activeCategory.name}
           </h2>
-          {menuData.restaurant.description && ( // Restaurant description here
+          {menuData.restaurant.description && (
             <p className="mb-4 text-lg leading-relaxed text-gray-700">
               {menuData.restaurant.description}
             </p>
           )}
 
           {activeCategory.menuItems.length === 0 ? (
-            // Display skeleton cards if no items, or a "no items" message
-            // For now, let's show skeletons if no items, to show dynamic loading potential
             <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {[...Array(3)].map(
+              {Array.from({ length: 3 }).map(
                 (
                   _,
-                  i, // Display 3 skeleton cards
+                  i, // FIX APPLIED HERE
                 ) => (
                   <MenuItemCardSkeleton key={i} />
                 ),
