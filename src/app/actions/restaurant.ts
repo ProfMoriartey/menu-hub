@@ -94,6 +94,7 @@ export async function addRestaurant(formData: FormData) {
   });
 
   revalidatePath("/admin/restaurants");
+  revalidatePath("/");
 }
 
 // Server Action to delete a restaurant (no change needed)
@@ -101,6 +102,7 @@ export async function deleteRestaurant(restaurantId: string) {
   try {
     await db.delete(restaurants).where(eq(restaurants.id, restaurantId));
     revalidatePath("/admin/restaurants");
+    revalidatePath("/");
   } catch (error) {
     console.error("Error deleting restaurant:", error);
     throw new Error("Failed to delete restaurant.");
@@ -198,4 +200,5 @@ export async function updateRestaurant(formData: FormData) {
     .where(eq(restaurants.id, id));
 
   revalidatePath("/admin/restaurants");
+  revalidatePath("/");
 }
