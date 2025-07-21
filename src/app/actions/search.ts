@@ -1,9 +1,11 @@
 // src/app/actions/search.ts
-"use server"; // This directive must be at the very top of the file
+"use server";
 
 import { db } from "~/server/db";
+// Ensure categories and menuItems are imported here for subqueries
 import { restaurants, categories, menuItems } from "~/server/db/schema";
-import { eq, or, ilike } from "drizzle-orm";
+// Import 'exists' and 'and' for complex subqueries
+import { eq, or, ilike, exists, and } from "drizzle-orm";
 import type { Restaurant } from "~/types/restaurant";
 
 // NEW SERVER ACTION: Search Restaurants from the database
@@ -18,12 +20,34 @@ export async function searchRestaurants(searchTerm: string): Promise<Restaurant[
     const results = await db.query.restaurants.findMany({
       where: (restaurant, { or: drizzleOr, ilike: drizzleIlike }) =>
         drizzleOr(
+          // Primary restaurant fields
           drizzleIlike(restaurant.name, lowerCaseSearchTerm),
           drizzleIlike(restaurant.slug, lowerCaseSearchTerm),
           drizzleIlike(restaurant.country, lowerCaseSearchTerm),
           drizzleIlike(restaurant.foodType, lowerCaseSearchTerm),
           drizzleIlike(restaurant.address, lowerCaseSearchTerm),
+
+          // Search within categories (by name)
+          exists(
+            db.select().from(categories).where(
+              and(
+                eq(categories.restaurantId, restaurant.id), // Link category to current restaurant
+                drizzleIlike(categories.name, lowerCaseSearchTerm) // Search category name
+              )
+            )
+          ),
+
+          // Search within menu items (by name)
+          exists(
+            db.select().from(menuItems).where(
+              and(
+                eq(menuItems.restaurantId, restaurant.id), // Link menu item to current restaurant
+                drizzleIlike(menuItems.name, lowerCaseSearchTerm) // Search menu item name
+              )
+            )
+          )
         ),
+      // Still fetch categories and menu items for popover display purposes
       with: {
         categories: {
           with: {
@@ -33,39 +57,11 @@ export async function searchRestaurants(searchTerm: string): Promise<Restaurant[
       },
     });
 
-    // Post-process to filter by nested categories/menuItems if not already handled by top-level ilike
-    const finalResults = results.filter(restaurant => {
-      // Check if primary fields already matched
-      if (
-        (restaurant.name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (restaurant.slug?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (restaurant.country?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (restaurant.foodType?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (restaurant.address?.toLowerCase().includes(searchTerm.toLowerCase()))
-      ) {
-        return true;
-      }
+    // The post-processing filter `finalResults` is now redundant because the Drizzle query
+    // directly fetches only the matching restaurants based on all criteria.
+    // We can directly return `results`.
 
-      // Check categories and menu items
-      if (restaurant.categories) {
-        for (const category of restaurant.categories) {
-          if (category.name?.toLowerCase().includes(searchTerm.toLowerCase())) {
-            return true;
-          }
-          if (category.menuItems?.some(menuItem =>
-              menuItem.name?.toLowerCase().includes(searchTerm.toLowerCase())
-          )) {
-            return true;
-          }
-        }
-      }
-      return false;
-    });
-
-    // Ensure only unique restaurants are returned (though `findMany` should prevent duplicates if the initial query is well-formed)
-    // Using Set for uniqueness is a client-side safeguard if the query might return non-distinct restaurants.
-    // For this specific Drizzle `findMany`, it's usually not necessary as it returns distinct primary records.
-    return finalResults;
+    return results;
 
   } catch (error) {
     console.error("Error searching restaurants:", error);
