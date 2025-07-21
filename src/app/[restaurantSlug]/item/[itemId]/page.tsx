@@ -73,7 +73,7 @@ export default async function MenuItemDetailPage({ params }: PageProps) {
           {itemDetails.name}
         </h1>
         <p className="mb-4 text-2xl font-bold text-blue-700">
-          ${itemDetails.price} {/* Price is now a string, no toFixed */}
+          {itemDetails.price} {itemDetails.restaurant.currency}
         </p>
 
         {itemDetails.description && ( // Conditionally render description

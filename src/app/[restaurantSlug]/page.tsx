@@ -9,6 +9,7 @@ import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
 interface PageProps {
   params: Promise<{
     restaurantSlug: string;
+    itemId: string;
   }>;
   searchParams?: Promise<
     Readonly<Record<string, string | string[] | undefined>>
@@ -37,10 +38,13 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
     },
   });
 
-  // Prepare data for the client component, ensuring types align with shared interfaces
   const menuData: {
-    // UPDATED TYPE: Include 'currency' here
-    restaurant: Pick<Restaurant, "id" | "name" | "slug" | "currency">;
+    // Keep 'description' in Pick type and object if you still need it in MenuDisplayClient
+    // Otherwise, you can remove it from here if only displayed in this header
+    restaurant: Pick<
+      Restaurant,
+      "id" | "name" | "slug" | "currency" | "description"
+    >;
     categories: (Category & {
       menuItems: MenuItem[];
     })[];
@@ -49,8 +53,8 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
       id: restaurantDetails.id,
       name: restaurantDetails.name,
       slug: restaurantDetails.slug,
-      // NEW: Pass the currency from restaurantDetails
       currency: restaurantDetails.currency,
+      description: restaurantDetails.description, // Keep passing if MenuDisplayClient uses it elsewhere
     },
     categories: categoriesWithMenuItems.map((cat) => ({
       id: cat.id,
@@ -81,7 +85,16 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
         <h1 className="text-4xl font-bold text-gray-900">
           {restaurantDetails.name}
         </h1>
-        <p className="mt-2 text-lg text-gray-600">Browse our delicious menu</p>
+        {/* NEW: Conditionally display restaurant's description */}
+        {restaurantDetails.description ? (
+          <p className="mt-2 text-lg text-gray-600">
+            {restaurantDetails.description}
+          </p>
+        ) : (
+          <p className="mt-2 text-lg text-gray-600">
+            Browse our delicious menu
+          </p>
+        )}
       </header>
 
       <main className="container mx-auto px-4 py-8">
