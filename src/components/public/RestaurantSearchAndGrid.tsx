@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import {
   Card,
   CardContent,
@@ -28,10 +29,11 @@ import {
 
 import type { Restaurant } from "~/types/restaurant";
 import { searchRestaurants } from "~/app/actions/search";
+import { RestaurantCardSkeleton } from "~/components/shared/RestaurantCardSkeleton"; // NEW import
+import { Skeleton } from "../ui/skeleton";
 
-// Renamed interface and component
 interface RestaurantSearchAndGridProps {
-  initialRestaurants: Restaurant[]; // Renamed prop to clarify it's initial data
+  initialRestaurants: Restaurant[];
 }
 
 export function RestaurantSearchAndGrid({
@@ -80,23 +82,19 @@ export function RestaurantSearchAndGrid({
     };
   }, [searchTerm]);
 
-  // Determine which list of restaurants to display
   const restaurantsToDisplayInGrid =
     searchTerm.length > 0 ? searchResults : initialRestaurants;
 
-  // Handler for Popover's open/close state
   const handlePopoverOpenChange = (newOpenState: boolean) => {
     setIsPopoverOpen(newOpenState);
     if (!newOpenState && searchTerm.length > 0) {
-      setSearchTerm(""); // Clear search term when popover closes on blur, if it had content
+      setSearchTerm("");
     }
   };
 
   return (
     <>
       <div className="mb-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-        {" "}
-        {/* Added mb-8 for spacing */}
         <Popover open={isPopoverOpen} onOpenChange={handlePopoverOpenChange}>
           <PopoverTrigger asChild>
             <Button
@@ -120,7 +118,23 @@ export function RestaurantSearchAndGrid({
               />
               <CommandList>
                 {isSearching ? (
-                  <CommandEmpty>Searching...</CommandEmpty>
+                  // Skeletons in the popover while searching
+                  <div className="space-y-2 p-2">
+                    {[...Array(3)].map(
+                      (
+                        _,
+                        i, // Display 3 skeleton items
+                      ) => (
+                        <div key={i} className="flex items-center gap-2">
+                          <Skeleton className="h-8 w-8 rounded-full" />
+                          <div className="flex-1 space-y-1">
+                            <Skeleton className="h-4 w-3/4" />
+                            <Skeleton className="h-3 w-1/2" />
+                          </div>
+                        </div>
+                      ),
+                    )}
+                  </div>
                 ) : restaurantsToDisplayInGrid.length === 0 &&
                   searchTerm.length > 0 ? (
                   <CommandEmpty>No results found.</CommandEmpty>
@@ -173,21 +187,33 @@ export function RestaurantSearchAndGrid({
           </PopoverContent>
         </Popover>
       </div>
-      {/* Moved Header content from here */}
 
       <section className="mx-auto w-full max-w-6xl px-4 py-12">
         <h2 className="mb-10 text-center text-4xl font-bold text-gray-900">
           All Restaurants
-        </h2>{" "}
-        {/* Updated heading */}
-        {restaurantsToDisplayInGrid.length === 0 ? (
+        </h2>
+        {isSearching && searchTerm.length > 0 ? ( // Display skeletons for the grid when actively searching
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {[...Array(6)].map(
+              (
+                _,
+                i, // Display 6 skeleton cards
+              ) => (
+                <RestaurantCardSkeleton key={i} />
+              ),
+            )}
+          </div>
+        ) : restaurantsToDisplayInGrid.length === 0 &&
+          searchTerm.length === 0 ? (
           <div className="text-center text-gray-500">
             <p>No restaurants found.</p>
-            {searchTerm.length === 0 && ( // Only show admin message if not actively searching
-              <p className="mt-2">
-                If you are the admin, please add restaurants via the dashboard.
-              </p>
-            )}
+            <p className="mt-2">
+              If you are the admin, please add restaurants via the dashboard.
+            </p>
+          </div>
+        ) : restaurantsToDisplayInGrid.length === 0 && searchTerm.length > 0 ? (
+          <div className="text-center text-gray-500">
+            <p>No results found for "{searchTerm}".</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">

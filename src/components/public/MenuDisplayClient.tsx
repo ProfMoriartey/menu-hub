@@ -1,5 +1,5 @@
 // src/components/public/MenuDisplayClient.tsx
-"use client"; // This is a Client Component
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -7,14 +7,15 @@ import Image from "next/image";
 import { cn } from "~/lib/utils";
 
 import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
+import { MenuItemCardSkeleton } from "~/components/shared/MenuItemCardSkeleton"; // NEW import
 
-// Redefine RestaurantMenuData using the imported types
 interface RestaurantMenuData {
   restaurant: {
     id: string;
     name: string;
     slug: string;
-    currency: string; // NEW: Add currency property here
+    currency: string;
+    description: string | null;
   };
   categories: (Category & { menuItems: MenuItem[] })[];
 }
@@ -67,10 +68,28 @@ export function MenuDisplayClient({ menuData }: MenuDisplayClientProps) {
           <h2 className="mt-4 mb-2 text-3xl font-semibold text-gray-900">
             {activeCategory.name}
           </h2>
-          {activeCategory.menuItems.length === 0 ? (
-            <p className="text-center text-gray-500">
-              No items in this category yet.
+          {menuData.restaurant.description && ( // Restaurant description here
+            <p className="mb-4 text-lg leading-relaxed text-gray-700">
+              {menuData.restaurant.description}
             </p>
+          )}
+
+          {activeCategory.menuItems.length === 0 ? (
+            // Display skeleton cards if no items, or a "no items" message
+            // For now, let's show skeletons if no items, to show dynamic loading potential
+            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {[...Array(3)].map(
+                (
+                  _,
+                  i, // Display 3 skeleton cards
+                ) => (
+                  <MenuItemCardSkeleton key={i} />
+                ),
+              )}
+              <p className="col-span-full mt-4 text-center text-gray-500">
+                No items in this category yet.
+              </p>
+            </div>
           ) : (
             <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {activeCategory.menuItems.map((item) => (
@@ -81,7 +100,6 @@ export function MenuDisplayClient({ menuData }: MenuDisplayClientProps) {
                   className="group block"
                 >
                   <div className="flex cursor-pointer flex-row items-start space-x-4 rounded-lg bg-white p-4 shadow-md transition-shadow duration-200 hover:shadow-lg">
-                    {/* Name, Description, Price on Left (order-first) */}
                     <div className="order-first flex-grow text-left">
                       <h3 className="text-xl font-semibold text-gray-900 transition-colors duration-200 group-hover:text-blue-600">
                         {item.name}
@@ -105,12 +123,10 @@ export function MenuDisplayClient({ menuData }: MenuDisplayClientProps) {
                         </div>
                       )}
                       <p className="mt-2 text-lg font-bold text-blue-700">
-                        {item.price} {menuData.restaurant.currency}{" "}
-                        {/* The line that caused the error */}
+                        {item.price} {menuData.restaurant.currency}
                       </p>
                     </div>
 
-                    {/* Image on Right (order-last) */}
                     <div className="order-last flex-shrink-0">
                       <Image
                         src={item.imageUrl ?? fallbackImageUrl}
