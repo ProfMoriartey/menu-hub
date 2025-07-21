@@ -68,22 +68,18 @@ export function MenuDisplayClient({ menuData }: MenuDisplayClientProps) {
           <h2 className="mt-4 mb-2 text-3xl font-semibold text-gray-900">
             {activeCategory.name}
           </h2>
-          {menuData.restaurant.description && (
-            <p className="mb-4 text-lg leading-relaxed text-gray-700">
+          {/* REMOVED: Conditional rendering for restaurant's description */}
+          {/* {menuData.restaurant.description && (
+            <p className="mb-4 text-lg text-gray-700 leading-relaxed">
               {menuData.restaurant.description}
             </p>
-          )}
+          )} */}
 
           {activeCategory.menuItems.length === 0 ? (
             <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 3 }).map(
-                (
-                  _,
-                  i, // FIX APPLIED HERE
-                ) => (
-                  <MenuItemCardSkeleton key={i} />
-                ),
-              )}
+              {Array.from({ length: 3 }).map((_, i) => (
+                <MenuItemCardSkeleton key={i} />
+              ))}
               <p className="col-span-full mt-4 text-center text-gray-500">
                 No items in this category yet.
               </p>
