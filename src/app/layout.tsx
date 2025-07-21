@@ -17,6 +17,7 @@ import {
 } from "@clerk/nextjs";
 import { Geist } from "next/font/google";
 import { Navbar } from "~/components/shared/Navbar";
+import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
 
 export const metadata: Metadata = {
   title: "Menu Hub",
@@ -45,8 +46,7 @@ export default function RootLayout({
              */
             routerConfig={extractRouterConfig(ourFileRouter)}
           />
-          <Navbar />
-          {children}
+          <LayoutWrapper>{children}</LayoutWrapper>
         </body>
       </html>
     </ClerkProvider>
