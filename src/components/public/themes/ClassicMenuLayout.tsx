@@ -43,7 +43,7 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
   return (
     <div className="space-y-8">
       {/* Category Navigation (Top Bar) */}
-      <nav className="scrollbar-hide sticky top-0 z-10 overflow-x-auto rounded-lg bg-white px-4 py-3 whitespace-nowrap shadow-md">
+      <nav className="scrollbar-hide bg-card sticky top-0 z-10 overflow-x-auto rounded-lg px-4 py-3 whitespace-nowrap shadow-md">
         <div className="flex space-x-4">
           {menuData.categories.map((category) => (
             <button
@@ -52,8 +52,8 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
               className={cn(
                 "rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200",
                 activeCategoryId === category.id
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200",
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground",
               )}
             >
               {category.name}
@@ -65,7 +65,7 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
       {/* Menu Items Display */}
       {activeCategory ? (
         <div className="grid gap-6">
-          <h2 className="mt-4 mb-2 text-3xl font-semibold text-gray-900">
+          <h2 className="text-foreground mt-4 mb-2 text-3xl font-semibold">
             {activeCategory.name}
           </h2>
           {activeCategory.menuItems.length === 0 ? (
@@ -73,7 +73,7 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
               {Array.from({ length: 3 }).map((_, i) => (
                 <MenuItemCardSkeleton key={i} />
               ))}
-              <p className="col-span-full mt-4 text-center text-gray-500">
+              <p className="text-muted-foreground col-span-full mt-4 text-center">
                 No items in this category yet.
               </p>
             </div>
@@ -86,13 +86,14 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
                   passHref
                   className="group block"
                 >
-                  <div className="flex cursor-pointer flex-row items-start space-x-4 rounded-lg bg-white p-4 shadow-md transition-shadow duration-200 hover:shadow-lg">
+                  <div className="bg-card flex cursor-pointer flex-row items-start space-x-4 rounded-lg p-4 shadow-md transition-shadow duration-200 hover:shadow-lg">
                     <div className="order-first flex-grow text-left">
-                      <h3 className="text-xl font-semibold text-gray-900 transition-colors duration-200 group-hover:text-blue-600">
+                      <h3 className="text-foreground group-hover:text-primary text-xl font-semibold transition-colors duration-200">
                         {item.name}
                       </h3>
                       {item.description && (
-                        <p className="mt-1 line-clamp-2 text-sm text-gray-600">
+                        // FIXED: Corrected comment syntax within JSX
+                        <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
                           {item.description}
                         </p>
                       )}
@@ -101,7 +102,7 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
                           {item.dietaryLabels.map((label: DietaryLabel) => (
                             <span
                               key={label}
-                              className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-800"
+                              className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold"
                             >
                               {label.charAt(0).toUpperCase() +
                                 label.slice(1).replace(/-/g, " ")}
@@ -109,7 +110,7 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
                           ))}
                         </div>
                       )}
-                      <p className="mt-2 text-lg font-bold text-blue-700">
+                      <p className="text-primary mt-2 text-lg font-bold">
                         {item.price} {menuData.restaurant.currency}
                       </p>
                     </div>
@@ -130,7 +131,7 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
           )}
         </div>
       ) : (
-        <p className="py-10 text-center text-gray-500">
+        <p className="text-muted-foreground py-10 text-center">
           Select a category to view menu items.
         </p>
       )}
