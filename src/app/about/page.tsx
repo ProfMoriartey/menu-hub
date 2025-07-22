@@ -81,9 +81,10 @@ export default function AboutUsPage() {
             <span className="text-foreground font-semibold">
               For Restaurant Owners:
             </span>{" "}
-            A powerful admin dashboard to manage your restaurant's profile, menu
-            categories, and individual menu items. Upload images, set prices,
-            and update dietary information with ease.
+            A powerful admin dashboard to manage your restaurant&apos;s profile,
+            menu categories, and individual menu items. Upload images, set
+            prices, and update dietary information with ease.{" "}
+            {/* FIXED: restaurant's */}
           </motion.li>
           <motion.li
             initial={{ opacity: 0, x: -20 }}
@@ -94,7 +95,8 @@ export default function AboutUsPage() {
               Customizable Themes:
             </span>{" "}
             Restaurants can choose from various display themes to match their
-            brand's unique style, ensuring a personalized customer experience.
+            brand&apos;s unique style, ensuring a personalized customer
+            experience. {/* FIXED: brand's */}
           </motion.li>
           <motion.li
             initial={{ opacity: 0, x: -20 }}
@@ -113,7 +115,7 @@ export default function AboutUsPage() {
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.6 }} // Adjusted delay
+          transition={{ duration: 0.6, delay: 1.6 }}
           className="text-foreground mb-4 text-3xl font-bold"
         >
           Our Commitment
@@ -124,11 +126,7 @@ export default function AboutUsPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.8, duration: 0.5 }}
           >
-            {" "}
-            {/* Adjusted delay */}
-            <span className="text-foreground font-semibold">
-              Simplicity:
-            </span>{" "}
+            <span className="text-foreground font-semibold">Simplicity:</span>{" "}
             We strive to make online menu management and discovery as
             straightforward as possible.
           </motion.li>
@@ -137,11 +135,7 @@ export default function AboutUsPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.9, duration: 0.5 }}
           >
-            {" "}
-            {/* Adjusted delay */}
-            <span className="text-foreground font-semibold">
-              Innovation:
-            </span>{" "}
+            <span className="text-foreground font-semibold">Innovation:</span>{" "}
             We continuously improve our platform with new features and
             technologies.
           </motion.li>
@@ -150,8 +144,6 @@ export default function AboutUsPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 2.0, duration: 0.5 }}
           >
-            {" "}
-            {/* Adjusted delay */}
             <span className="text-foreground font-semibold">
               User Experience:
             </span>{" "}
@@ -163,11 +155,7 @@ export default function AboutUsPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 2.1, duration: 0.5 }}
           >
-            {" "}
-            {/* Adjusted delay */}
-            <span className="text-foreground font-semibold">
-              Reliability:
-            </span>{" "}
+            <span className="text-foreground font-semibold">Reliability:</span>{" "}
             Built on a robust stack, Menu Hub offers consistent performance.
           </motion.li>
         </ul>
@@ -176,7 +164,7 @@ export default function AboutUsPage() {
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 2.2 }} // Adjusted delay
+          transition={{ duration: 0.6, delay: 2.2 }}
           className="text-foreground mb-4 text-3xl font-bold"
         >
           Get Started
@@ -184,11 +172,12 @@ export default function AboutUsPage() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 2.4 }} // Adjusted delay
+          transition={{ duration: 0.6, delay: 2.4 }}
           className="text-muted-foreground mb-4 text-lg leading-relaxed"
         >
-          Ready to streamline your restaurant's online presence or discover your
-          next favorite meal? Explore Menu Hub today!
+          Ready to streamline your restaurant&apos;s online presence or discover
+          your next favorite meal? Explore Menu Hub today!{" "}
+          {/* FIXED: restaurant's */}
         </motion.p>
         <div className="space-y-2 text-lg">
           <motion.p
@@ -196,16 +185,21 @@ export default function AboutUsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.6, duration: 0.5 }}
           >
-            {" "}
-            {/* Adjusted delay */}
             <span className="text-foreground font-semibold">
               Explore Restaurants:
             </span>{" "}
-            <Link
-              href="/restaurants"
-              className="text-accent-foreground hover:underline"
-            >
+            <Link href="/restaurants" className="text-accent hover:underline">
               Browse All Menus
+            </Link>
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 2.7, duration: 0.5 }}
+          >
+            <span className="text-foreground font-semibold">For Owners:</span>{" "}
+            <Link href="/admin" className="text-accent hover:underline">
+              Access Admin Dashboard
             </Link>
           </motion.p>
         </div>

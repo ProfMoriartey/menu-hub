@@ -3,11 +3,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { cn } from "~/lib/utils";
+
 import { motion } from "framer-motion"; // ADDED: Import motion
 
 import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
-import { MenuItemCardSkeleton } from "~/components/shared/MenuItemCardSkeleton";
 
 // Import Shadcn UI Accordion components
 import {

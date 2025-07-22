@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { cn } from "~/lib/utils";
+
 import { ChevronLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { motion } from "framer-motion"; // ADDED: Import motion

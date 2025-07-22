@@ -8,12 +8,10 @@ import { Switch } from "~/components/ui/switch";
 import { UploadButton } from "~/utils/uploadthing";
 import { XCircle } from "lucide-react";
 import { Textarea } from "~/components/ui/textarea";
-import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
 // Import types for restaurant data and form errors
 import type { Restaurant } from "~/types/restaurant";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator"; // Potentially useful for spacing, if you have it
 
 interface RestaurantFormProps {
   initialData?: Restaurant;

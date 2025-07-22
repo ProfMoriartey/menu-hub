@@ -2,7 +2,6 @@
 "use client"; // ADDED: Ensure this is a client component for Framer Motion
 
 import Link from "next/link";
-import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 import { motion } from "framer-motion"; // ADDED: Import motion
 
