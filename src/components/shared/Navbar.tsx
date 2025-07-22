@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "~/lib/utils";
-import { ThemeToggle } from "~/components/shared/ThemeToggle"; // ADDED: Import ThemeToggle
+import { ThemeToggle } from "~/components/shared/ThemeToggle";
+import { motion, AnimatePresence } from "framer-motion"; // ADDED: Import motion and AnimatePresence
 
 export function Navbar() {
   const pathname = usePathname();
@@ -19,8 +20,27 @@ export function Navbar() {
     { name: "About Us", href: "/about" },
   ];
 
+  // Variants for menu animation
+  const navItemVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0 },
+    hover: { scale: 1.05, color: "var(--color-primary)" }, // Use CSS variable for hover color
+  };
+
+  const mobileMenuVariants = {
+    hidden: { opacity: 0, y: -100 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -100 },
+  };
+
   return (
-    <nav className="bg-card sticky top-0 z-50 w-full p-4 shadow-md">
+    // ADDED: motion.nav for a subtle slide-down and fade-in effect
+    <motion.nav
+      initial={{ opacity: 0, y: -20 }} // Starts invisible and slightly above
+      animate={{ opacity: 1, y: 0 }} // Animates to visible and original position
+      transition={{ duration: 0.5 }} // Smooth animation
+      className="bg-card sticky top-0 z-50 w-full p-4 shadow-md"
+    >
       <div className="container mx-auto flex items-center justify-between">
         {/* Left Side: Website Logo (linked to Home) */}
         <Link href="/" className="flex items-center space-x-2">
@@ -29,26 +49,32 @@ export function Navbar() {
 
         {/* Right Side: Desktop Navigation Links and Theme Toggle */}
         <div className="flex items-center space-x-6">
-          {" "}
-          {/* Changed from hidden md:flex to just flex */}
-          {/* Desktop Navigation Links (still hidden on small screens) */}
+          {/* Desktop Navigation Links */}
           <div className="hidden items-center space-x-6 md:flex">
-            {navLinks.map((link) => (
-              <Link
+            {navLinks.map((link, index) => (
+              <motion.a // CHANGED: Link to motion.a for hover/tap effects
                 key={link.name}
                 href={link.href}
+                variants={navItemVariants} // Apply variants
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+                transition={{ delay: index * 0.05, duration: 0.3 }} // Staggered delay
                 className={cn(
-                  "hover:text-primary text-lg font-medium transition-colors",
+                  "text-lg font-medium transition-colors", // transition-colors is still useful for Tailwind's direct color changes
                   pathname === link.href ? "text-primary" : "text-foreground",
+                  "cursor-pointer", // Ensure cursor is pointer
                 )}
               >
                 {link.name}
-              </Link>
+              </motion.a>
             ))}
           </div>
-          {/* Theme Toggle (visible on all screens) */}
-          <ThemeToggle /> {/* ADDED: Theme Toggle here */}
-          {/* Mobile Menu Button (Hamburger) - only visible on small screens */}
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
+          {/* Mobile Menu Button (Hamburger) */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -67,33 +93,52 @@ export function Navbar() {
       </div>
 
       {/* Mobile Menu Dropdown/Overlay */}
-      {isMobileMenuOpen && (
-        <div className="animate-fade-in-down bg-background fixed inset-0 z-40 flex flex-col items-center justify-center space-y-8 py-10 md:hidden">
-          <button
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="text-foreground hover:text-primary focus:ring-primary absolute top-4 right-4 rounded-md p-2 focus:ring-2 focus:outline-none"
-            aria-label="Close mobile menu"
+      {/* ADDED: AnimatePresence for exit animations */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            variants={mobileMenuVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit" // ADDED: exit state for AnimatePresence
+            transition={{ duration: 0.3 }}
+            className="bg-background fixed inset-0 z-40 flex flex-col items-center justify-center space-y-8 py-10 md:hidden"
           >
-            <X className="h-8 w-8" />
-          </button>
-
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
+            <button
               onClick={() => setIsMobileMenuOpen(false)}
-              className={cn(
-                "hover:text-primary text-3xl font-semibold transition-colors",
-                pathname === link.href ? "text-primary" : "text-foreground",
-              )}
+              className="text-foreground hover:text-primary focus:ring-primary absolute top-4 right-4 rounded-md p-2 focus:ring-2 focus:outline-none"
+              aria-label="Close mobile menu"
             >
-              {link.name}
-            </Link>
-          ))}
-          {/* Optionally, you could also add the ThemeToggle inside the mobile menu */}
-          <ThemeToggle />
-        </div>
-      )}
-    </nav>
+              <X className="h-8 w-8" />
+            </button>
+
+            {navLinks.map(
+              (
+                link,
+                index, // ADDED: index for staggered animation
+              ) => (
+                <motion.a // CHANGED: Link to motion.a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variants={navItemVariants} // Use same variants
+                  initial="hidden"
+                  animate="visible"
+                  whileHover="hover"
+                  transition={{ delay: index * 0.05 + 0.2, duration: 0.3 }} // Staggered delay + slight overall delay for mobile links
+                  className={cn(
+                    "text-3xl font-semibold transition-colors",
+                    pathname === link.href ? "text-primary" : "text-foreground",
+                    "cursor-pointer",
+                  )}
+                >
+                  {link.name}
+                </motion.a>
+              ),
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
 }

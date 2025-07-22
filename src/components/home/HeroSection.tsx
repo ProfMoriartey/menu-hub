@@ -1,42 +1,59 @@
 // src/components/home/HeroSection.tsx
+"use client"; // ADDED: Ensure this is a client component for Framer Motion
+
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils"; // ADDED: Import cn utility
+import { motion } from "framer-motion"; // ADDED: Import motion
 
 export function HeroSection() {
   return (
-    // UPDATED: Use bg-primary for the background, text-primary-foreground for text
-    // The gradient will be replaced by a solid primary color that changes with the theme.
-    // If you need a themed gradient, we'd add new CSS variables to globals.css.
-    <section
+    // UPDATED: motion.section for fade-in effect on mount, and semantic colors
+    <motion.section
+      initial={{ opacity: 0, y: 50 }} // Starts invisible and slightly below
+      animate={{ opacity: 1, y: 0 }} // Animates to visible and original position
+      transition={{ duration: 0.8 }} // Smooth transition
       className={cn(
         "flex min-h-[calc(100vh-80px)] items-center justify-center p-8",
-        "bg-primary text-primary-foreground",
+        "bg-primary text-primary-foreground", // Replaced gradient with semantic primary color
       )}
     >
       <div className="max-w-4xl text-center">
-        <h1 className="mb-6 text-6xl leading-tight font-extrabold">
+        {/* ADDED: motion.h1 for subtle heading animation */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }} // Staggered delay
+          className="mb-6 text-6xl leading-tight font-extrabold"
+        >
           Discover Your Next{" "}
           {/* UPDATED: Use text-accent for the highlight text */}
           <span className="text-accent">Favorite Meal</span>
-        </h1>
-        {/* UPDATED: Use text-primary-foreground (already set by parent) or adjust if needed */}
-        <p className="mb-8 text-xl opacity-90">
+        </motion.h1>
+        {/* ADDED: motion.p for subtle paragraph animation */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }} // Staggered delay
+          className="mb-8 text-xl opacity-90"
+        >
           Explore diverse menus from local restaurants, find culinary
           inspiration, and enjoy seamless dining experiences.
-        </p>
+        </motion.p>
         <Link href="/restaurants" passHref>
-          {/* UPDATED: Button colors to be semantic */}
-          <Button
+          {/* ADDED: motion.button for hover and tap effects, and semantic colors */}
+          <motion.button
+            whileHover={{ scale: 1.05 }} // Scale up on hover
+            whileTap={{ scale: 0.95 }} // Scale down slightly on tap
             className={cn(
-              "rounded-full px-10 py-5 text-lg font-semibold shadow-lg transition-transform hover:scale-105",
-              "bg-primary-foreground text-primary hover:bg-muted", // Button background from primary-foreground, text from primary
+              "rounded-full px-10 py-5 text-lg font-semibold shadow-lg transition-transform",
+              "bg-primary-foreground text-primary hover:bg-muted", // Semantic button colors
             )}
           >
             Start Exploring
-          </Button>
+          </motion.button>
         </Link>
       </div>
-    </section>
+    </motion.section>
   );
 }
