@@ -8,10 +8,12 @@ import { Switch } from "~/components/ui/switch";
 import { UploadButton } from "~/utils/uploadthing";
 import { XCircle } from "lucide-react";
 import { Textarea } from "~/components/ui/textarea";
+import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
 // Import types for restaurant data and form errors
 import type { Restaurant } from "~/types/restaurant";
 import { Button } from "../ui/button";
+import { Separator } from "../ui/separator"; // Potentially useful for spacing, if you have it
 
 interface RestaurantFormProps {
   initialData?: Restaurant;
@@ -56,7 +58,6 @@ export function RestaurantForm({
   currentTypeOfEstablishment,
 }: RestaurantFormProps) {
   return (
-    // The outer grid already exists and sets up two columns for medium screens and larger
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {/* LEFT COLUMN: Name, Slug, Country, Food Type, Address, Currency, Phone Number */}
       <div className="space-y-4">
@@ -154,8 +155,6 @@ export function RestaurantForm({
 
       {/* RIGHT COLUMN: Description, Theme, Type of Establishment, Switches, Logo Upload */}
       <div className="space-y-4">
-        {" "}
-        {/* Changed to space-y-4 for consistent spacing */}
         <div>
           <Label htmlFor="description">Description</Label>
           <Textarea
@@ -169,18 +168,28 @@ export function RestaurantForm({
             <p className="text-sm text-red-500">{formErrors.description}</p>
           )}
         </div>
+        {/* START OF THEME INPUT CHANGES */}
         <div>
           <Label htmlFor="theme">Theme</Label>
-          <Input
-            id="theme"
-            name="theme"
-            value={currentTheme}
-            onChange={(e) => onThemeChange(e.target.value)}
-          />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
+            <Input
+              id="theme"
+              name="theme"
+              value={currentTheme}
+              onChange={(e) => onThemeChange(e.target.value)}
+              className="flex-grow" // Allows input to take available space
+            />
+            {/* Theme Suggestions */}
+            <p className="text-muted-foreground mt-1 text-sm sm:mt-0">
+              **Suggestions:** classic, sidebar-list, accordion-card,
+              category-cards-image-dominant
+            </p>
+          </div>
           {formErrors.theme && (
             <p className="text-sm text-red-500">{formErrors.theme}</p>
           )}
         </div>
+        {/* END OF THEME INPUT CHANGES */}
         <div>
           <Label htmlFor="typeOfEstablishment">Type of Establishment</Label>
           <Input
@@ -216,8 +225,6 @@ export function RestaurantForm({
         </div>
         {/* Logo Upload Section */}
         <div className="space-y-2 pt-2">
-          {" "}
-          {/* Added pt-2 for spacing from switches */}
           <Label htmlFor="logoUrl">Restaurant Logo</Label>
           {currentLogoUrl && (
             <div className="relative mb-2 h-24 w-24 overflow-hidden rounded-md">

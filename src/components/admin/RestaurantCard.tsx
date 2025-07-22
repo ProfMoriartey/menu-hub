@@ -12,9 +12,10 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { EditRestaurantDialog } from "~/components/admin/EditRestaurantDialog";
-import { DeleteRestaurantDialog } from "~/components/admin/DeleteRestaurantDialog"; // Import the new delete dialog
+import { DeleteRestaurantDialog } from "~/components/admin/DeleteRestaurantDialog";
+import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
-import type { Restaurant } from "~/types/restaurant"; // Ensure this path is correct
+import type { Restaurant } from "~/types/restaurant";
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
@@ -28,7 +29,12 @@ export function RestaurantCard({
   updateRestaurantAction,
 }: RestaurantCardProps) {
   return (
-    <Card className="flex h-full flex-col">
+    // UPDATED: Card uses semantic background, text, and border colors
+    <Card
+      className={cn(
+        "bg-card text-foreground border-border flex h-full flex-col border",
+      )}
+    >
       <CardHeader className="flex-grow">
         {restaurant.logoUrl && (
           <div className="mb-2 h-24 w-24 overflow-hidden rounded-md">
@@ -41,9 +47,13 @@ export function RestaurantCard({
             />
           </div>
         )}
-        <CardTitle>{restaurant.name}</CardTitle>
-        <CardDescription>Slug: {restaurant.slug}</CardDescription>
-        <p className="text-xs text-gray-500">
+        {/* UPDATED: CardTitle and CardDescription use semantic text colors */}
+        <CardTitle className="text-foreground">{restaurant.name}</CardTitle>
+        <CardDescription className="text-muted-foreground">
+          Slug: {restaurant.slug}
+        </CardDescription>
+        {/* UPDATED: Timestamp text uses semantic muted-foreground color */}
+        <p className="text-muted-foreground text-xs">
           Created:{" "}
           {new Date(restaurant.createdAt).toLocaleDateString("tr-TR", {
             year: "numeric",
@@ -54,6 +64,7 @@ export function RestaurantCard({
       </CardHeader>
       <CardContent className="mt-auto flex justify-end space-x-2 p-4 pt-0">
         <Link href={`/admin/restaurants/${restaurant.id}/categories`}>
+          {/* Button with secondary variant should pick up theme colors */}
           <Button variant="secondary" size="sm">
             Categories
           </Button>

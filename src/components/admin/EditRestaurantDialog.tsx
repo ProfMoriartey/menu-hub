@@ -14,6 +14,7 @@ import {
 } from "~/components/ui/dialog";
 import { Pencil } from "lucide-react";
 import { useFormStatus } from "react-dom";
+import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
 // Import the shared schema
 import { restaurantSchema } from "~/lib/schemas";
@@ -25,7 +26,12 @@ import type { Restaurant } from "~/types/restaurant";
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    // UPDATED: Submit Button uses semantic colors
+    <Button
+      type="submit"
+      disabled={pending}
+      className={cn("bg-primary text-primary-foreground hover:bg-primary/90")}
+    >
       {pending ? "Saving..." : "Save Changes"}
     </Button>
   );
@@ -131,13 +137,25 @@ export function EditRestaurantDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="mr-2">
+        {/* UPDATED: Trigger Button uses semantic colors */}
+        <Button
+          variant="outline"
+          size="sm"
+          className={cn(
+            "mr-2",
+            "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground", // Outline variant often uses secondary colors
+          )}
+        >
           <Pencil className="mr-2 h-4 w-4" />
           Edit
         </Button>
       </DialogTrigger>
+      {/* DialogContent and its children (Header, Title, Description, Footer)
+          typically inherit their colors from Shadcn's default styling, which
+          should be based on your globals.css variables (bg-popover, text-popover-foreground, etc.). */}
       <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
         <DialogHeader>
+          {/* DialogTitle and DialogDescription should pick up text-popover-foreground */}
           <DialogTitle>Edit Restaurant</DialogTitle>
           <DialogDescription>
             Update info for &quot;{restaurant.name}&quot;.
@@ -146,7 +164,6 @@ export function EditRestaurantDialog({
         <form action={handleSubmit} className="grid gap-4 py-4">
           <input type="hidden" name="id" value={restaurant.id} />
 
-          {/* Use the shared RestaurantForm component and pass all required props */}
           <RestaurantForm
             initialData={restaurant}
             formErrors={formErrors}
@@ -156,7 +173,6 @@ export function EditRestaurantDialog({
             currentIsActive={isRestaurantActive}
             currentIsDisplayed={isRestaurantDisplayed}
             currentLogoUrl={logoPreviewUrl}
-            // NEW: Pass new field states and handlers
             currentCurrency={currentCurrency}
             onCurrencyChange={setCurrentCurrency}
             currentPhoneNumber={currentPhoneNumber}
@@ -170,7 +186,8 @@ export function EditRestaurantDialog({
           />
 
           {formErrors.general && (
-            <p className="col-span-full mt-4 text-center text-sm text-red-500">
+            // UPDATED: Error message uses semantic destructive color
+            <p className="text-destructive col-span-full mt-4 text-center text-sm">
               {formErrors.general}
             </p>
           )}

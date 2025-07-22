@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
 // Import new components
 import { AddRestaurantForm } from "~/components/admin/AddRestaurantForm";
@@ -46,30 +47,36 @@ export function RestaurantManagementClient({
   return (
     <div className="space-y-8">
       <div className="flex flex-col items-center gap-4 md:flex-row">
+        {/* Input component usually handles its own theming via Shadcn defaults */}
         <Input
           type="text"
           placeholder="Search by name, slug, country, type, or address..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-grow md:w-2/3"
+          className="flex-grow md:w-2/3" // Placeholder text color is typically handled by Shadcn's Input default style.
         />
-        {/* Use the new AddRestaurantForm component */}
         <AddRestaurantForm addRestaurantAction={addRestaurantAction} />
       </div>
 
-      <Card>
+      {/* UPDATED: Card uses semantic background, text, and border colors */}
+      <Card className={cn("bg-card text-foreground border-border border")}>
         <CardHeader>
-          <CardTitle>Existing Restaurants</CardTitle>
-          <CardDescription>
+          {/* UPDATED: CardTitle and CardDescription use semantic text colors */}
+          <CardTitle className="text-foreground">
+            Existing Restaurants
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">
             A list of all restaurants currently in your database.
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* UPDATED: No results found message uses semantic text color */}
           {filteredRestaurants.length === 0 ? (
-            <p className="text-center text-gray-500">No results found.</p>
+            <p className="text-muted-foreground text-center">
+              No results found.
+            </p>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {/* Map over filtered restaurants and render RestaurantCard for each */}
               {filteredRestaurants.map((restaurant) => (
                 <RestaurantCard
                   key={restaurant.id}

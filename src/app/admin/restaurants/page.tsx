@@ -1,19 +1,14 @@
 // app/admin/restaurants/page.tsx
 import { db } from "~/server/db";
-
-// NEW IMPORT: RestaurantManagementClient
 import { RestaurantManagementClient } from "~/components/admin/RestaurantManagementClient";
-
-// Import Server Actions from the new file
 import {
   addRestaurant,
   deleteRestaurant,
   updateRestaurant,
 } from "~/app/actions/restaurant";
+import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
-// Main Admin Restaurants Page Component (Server Component)
 export default async function AdminRestaurantsPage() {
-  // Fetch all restaurants from the database, including categories and menuItems
   const allRestaurants = await db.query.restaurants.findMany({
     with: {
       categories: {
@@ -26,9 +21,13 @@ export default async function AdminRestaurantsPage() {
   });
 
   return (
+    // The parent div in layout.tsx already sets bg-background and text-foreground.
+    // This div needs to ensure its own text color is semantic.
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Manage Restaurants</h1>
-      {/* Render the Client Component and pass data and Server Actions */}
+      {/* UPDATED: Use text-foreground for the heading */}
+      <h1 className={cn("text-3xl font-bold", "text-foreground")}>
+        Manage Restaurants
+      </h1>
       <RestaurantManagementClient
         initialRestaurants={allRestaurants}
         addRestaurantAction={addRestaurant}

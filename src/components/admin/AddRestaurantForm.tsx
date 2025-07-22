@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { useFormStatus } from "react-dom";
+import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
 // Import the schema from the shared schemas file
 import { restaurantSchema } from "~/lib/schemas";
@@ -26,7 +27,12 @@ interface AddRestaurantFormProps {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    // UPDATED: Submit Button uses semantic colors
+    <Button
+      type="submit"
+      disabled={pending}
+      className={cn("bg-primary text-primary-foreground hover:bg-primary/90")}
+    >
       {pending ? "Adding..." : "Add Restaurant"}
     </Button>
   );
@@ -125,10 +131,23 @@ export function AddRestaurantForm({
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full md:w-1/3">Add New Restaurant</Button>
+        {/* UPDATED: Trigger Button uses semantic colors */}
+        <Button
+          className={cn(
+            "w-full md:w-1/3",
+            "bg-primary text-primary-foreground hover:bg-primary/90",
+          )}
+        >
+          Add New Restaurant
+        </Button>
       </DialogTrigger>
+      {/* DialogContent and its children (Header, Title, Description, Footer)
+          typically inherit their colors from Shadcn's default styling, which
+          should be based on your globals.css variables (bg-popover, text-popover-foreground, etc.).
+          If specific elements within these are not themed, they might need explicit class updates. */}
       <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
         <DialogHeader>
+          {/* DialogTitle and DialogDescription should pick up text-popover-foreground */}
           <DialogTitle>Add New Restaurant</DialogTitle>
           <DialogDescription>
             Fill out the details below to create a new restaurant.
@@ -139,7 +158,6 @@ export function AddRestaurantForm({
           action={handleAddSubmit}
           className="grid gap-4 py-4"
         >
-          {/* Use the shared RestaurantForm component */}
           <RestaurantForm
             formErrors={formErrors}
             onLogoUrlChange={setNewRestaurantLogoUrl}
@@ -148,7 +166,6 @@ export function AddRestaurantForm({
             currentIsActive={isNewRestaurantActive}
             currentIsDisplayed={isNewRestaurantDisplayed}
             currentLogoUrl={newRestaurantLogoUrl}
-            // NEW: Pass new field states and handlers to RestaurantForm
             currentCurrency={newRestaurantCurrency}
             onCurrencyChange={setNewRestaurantCurrency}
             currentPhoneNumber={newRestaurantPhoneNumber}
@@ -162,7 +179,8 @@ export function AddRestaurantForm({
           />
 
           {formErrors.general && (
-            <p className="col-span-full mt-4 text-center text-sm text-red-500">
+            // UPDATED: Error message uses semantic destructive color
+            <p className="text-destructive col-span-full mt-4 text-center text-sm">
               {formErrors.general}
             </p>
           )}
