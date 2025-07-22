@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
-// Removed: import { Input } from "~/components/ui/input"; // FIX: Removed unused Input import
 import {
   Card,
   CardContent,
@@ -26,6 +25,7 @@ import {
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
+import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
 import type { Restaurant } from "~/types/restaurant";
 import { searchRestaurants } from "~/app/actions/search";
@@ -99,7 +99,11 @@ export function RestaurantSearchAndGrid({
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="w-full justify-center rounded-lg p-3 text-gray-500 shadow-sm sm:w-80"
+              // UPDATED: Semantic colors for search button
+              className={cn(
+                "w-full justify-center rounded-lg p-3 shadow-sm sm:w-80",
+                "bg-background text-foreground border-input hover:bg-accent hover:text-accent-foreground",
+              )}
               onClick={() => {
                 setIsPopoverOpen(true);
               }}
@@ -107,7 +111,9 @@ export function RestaurantSearchAndGrid({
               Search Restaurants
             </Button>
           </PopoverTrigger>
+          {/* PopoverContent itself usually inherits theme from Shadcn defaults (bg-popover, etc.) */}
           <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+            {/* Command components also usually inherit theme from Shadcn defaults (bg-card, text-foreground, etc.) */}
             <Command>
               <CommandInput
                 placeholder="Search for a restaurant, cuisine, or menu item..."
@@ -119,24 +125,18 @@ export function RestaurantSearchAndGrid({
               <CommandList>
                 {isSearching ? (
                   <div className="space-y-2 p-2">
-                    {Array.from({ length: 3 }).map(
-                      (
-                        _,
-                        i, // FIX: Unsafe spread
-                      ) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <Skeleton className="h-8 w-8 rounded-full" />
-                          <div className="flex-1 space-y-1">
-                            <Skeleton className="h-4 w-3/4" />
-                            <Skeleton className="h-3 w-1/2" />
-                          </div>
+                    {Array.from({ length: 3 }).map((_, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <Skeleton className="h-8 w-8 rounded-full" />
+                        <div className="flex-1 space-y-1">
+                          <Skeleton className="h-4 w-3/4" />
+                          <Skeleton className="h-3 w-1/2" />
                         </div>
-                      ),
-                    )}
+                      </div>
+                    ))}
                   </div>
                 ) : restaurantsToDisplayInGrid.length === 0 &&
                   searchTerm.length > 0 ? (
-                  // FIX: Unescaped entities
                   <CommandEmpty>
                     No results found for &quot;{searchTerm}&quot;.
                   </CommandEmpty>
@@ -161,7 +161,8 @@ export function RestaurantSearchAndGrid({
                               .filter(Boolean)
                               .join(" ") ?? ""
                           }`}
-                          className="flex cursor-pointer items-center gap-2"
+                          // CommandItem usually has theme-aware styles, just ensure text is foreground
+                          className="text-foreground flex cursor-pointer items-center gap-2"
                         >
                           <Image
                             src={restaurant.logoUrl ?? fallbackImageUrl}
@@ -172,7 +173,8 @@ export function RestaurantSearchAndGrid({
                           />
                           <div>
                             <p className="font-medium">{restaurant.name}</p>
-                            <p className="text-sm text-gray-500">
+                            {/* UPDATED: Use text-muted-foreground for description */}
+                            <p className="text-muted-foreground text-sm">
                               {restaurant.foodType}
                               {restaurant.country
                                 ? ` - ${restaurant.country}`
@@ -191,37 +193,41 @@ export function RestaurantSearchAndGrid({
       </div>
 
       <section className="mx-auto w-full max-w-6xl px-4 py-12">
-        <h2 className="mb-10 text-center text-4xl font-bold text-gray-900">
+        {/* UPDATED: Use text-foreground for heading */}
+        <h2 className="text-foreground mb-10 text-center text-4xl font-bold">
           All Restaurants
         </h2>
         {isSearching && searchTerm.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map(
-              (
-                _,
-                i, // FIX: Unsafe spread
-              ) => (
-                <RestaurantCardSkeleton key={i} />
-              ),
-            )}
+            {Array.from({ length: 6 }).map((_, i) => (
+              <RestaurantCardSkeleton key={i} />
+            ))}
           </div>
         ) : restaurantsToDisplayInGrid.length === 0 &&
           searchTerm.length === 0 ? (
-          <div className="text-center text-gray-500">
+          // UPDATED: Use text-muted-foreground for messages
+          <div className="text-muted-foreground text-center">
             <p>No restaurants found.</p>
             <p className="mt-2">
               If you are the admin, please add restaurants via the dashboard.
             </p>
           </div>
         ) : restaurantsToDisplayInGrid.length === 0 && searchTerm.length > 0 ? (
-          <div className="text-center text-gray-500">
+          // UPDATED: Use text-muted-foreground for messages
+          <div className="text-muted-foreground text-center">
             <p>No results found for &quot;{searchTerm}&quot;.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {restaurantsToDisplayInGrid.map((restaurant) => (
               <Link key={restaurant.id} href={`/${restaurant.slug}`} passHref>
-                <Card className="flex h-full cursor-pointer flex-col transition-shadow duration-300 hover:shadow-xl">
+                {/* UPDATED: Card uses semantic colors */}
+                <Card
+                  className={cn(
+                    "flex h-full cursor-pointer flex-col transition-shadow duration-300 hover:shadow-xl",
+                    "bg-card text-foreground border-border border", // Ensure card itself is themed
+                  )}
+                >
                   <CardHeader className="flex-grow">
                     <div className="mb-4 h-40 w-full overflow-hidden rounded-md">
                       <Image
@@ -232,14 +238,16 @@ export function RestaurantSearchAndGrid({
                         className="h-full w-full object-cover"
                       />
                     </div>
-                    <CardTitle className="text-2xl">
+                    {/* UPDATED: CardTitle and CardDescription also semantic */}
+                    <CardTitle className="text-foreground text-2xl">
                       {restaurant.name}
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-muted-foreground">
                       Explore their delicious menu.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="mt-auto">
+                    {/* Button with outline variant should pick up theme colors */}
                     <Button variant="outline" className="w-full">
                       View Menu
                     </Button>

@@ -1,13 +1,9 @@
 // src/app/restaurants/page.tsx
 import { db } from "~/server/db";
-
-// Import the new client component
 import { RestaurantSearchAndGrid } from "~/components/public/RestaurantSearchAndGrid";
-// Import shared types if needed for clarity in this file, though infer from Drizzle is usually sufficient
+import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
 export default async function RestaurantsPage() {
-  // Fetch ALL restaurants with their categories and menu items
-  // This is the data that will be passed as 'initialRestaurants' to the client component
   const allRestaurants = await db.query.restaurants.findMany({
     orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
     with: {
@@ -20,17 +16,19 @@ export default async function RestaurantsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 text-gray-800">
+    // UPDATED: Use bg-background and text-foreground for the main container
+    <div className={cn("min-h-screen p-8", "bg-background text-foreground")}>
       <header className="mx-auto max-w-4xl px-4 py-12 text-center">
-        <h1 className="mb-4 text-5xl leading-tight font-extrabold text-gray-900">
+        {/* UPDATED: Use text-foreground for the heading */}
+        <h1 className="text-foreground mb-4 text-5xl leading-tight font-extrabold">
           Discover Restaurants
         </h1>
-        <p className="mb-8 text-xl text-gray-700">
+        {/* UPDATED: Use text-muted-foreground for the paragraph */}
+        <p className="text-muted-foreground mb-8 text-xl">
           Search and explore all restaurants available on Menu Hub.
         </p>
       </header>
 
-      {/* Render the client component with all fetched data */}
       <main className="container mx-auto px-4 py-8">
         <RestaurantSearchAndGrid initialRestaurants={allRestaurants} />
       </main>

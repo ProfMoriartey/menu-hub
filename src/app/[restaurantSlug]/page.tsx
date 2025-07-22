@@ -6,8 +6,12 @@ import { notFound } from "next/navigation";
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
 import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
 import Link from "next/link";
-import { Button } from "~/components/ui/button"; // Still needed if used elsewhere, otherwise remove
+// Removed Button import if not used elsewhere in this specific file,
+// as the ThemeToggle uses its own Button.
+// import { Button } from "~/components/ui/button";
 import Image from "next/image";
+import { cn } from "~/lib/utils";
+import { ThemeToggle } from "~/components/shared/ThemeToggle"; // ADDED: Import ThemeToggle
 
 interface PageProps {
   params: Promise<{
@@ -25,7 +29,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
   const restaurantDetails = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
     with: {
-      categories: true, // Required by Restaurant type
+      categories: true,
     },
   });
 
@@ -83,11 +87,13 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
     })),
   };
 
-  const fallbackLogoUrl = `https://placehold.co/100x100/E0E0E0/333333?text=Logo`; // Fallback for restaurant logo
+  const fallbackLogoUrl = `https://placehold.co/100x100/E0E0E0/333333?text=Logo`;
+
+  const themeClass = `theme-${restaurantDetails.theme || "default"}`;
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800">
-      <header className="bg-white p-4 shadow-sm">
+    <div className={cn("min-h-screen", themeClass)}>
+      <header className="bg-card p-4 shadow-sm">
         <div className="container mx-auto flex flex-col items-center sm:flex-row sm:items-start sm:justify-between sm:space-x-4">
           {/* Leftmost Block: Restaurant Logo - NOW A LINK TO ABOUT PAGE */}
           {restaurantDetails.logoUrl && (
@@ -96,7 +102,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
               passHref
               className="mb-4 flex-shrink-0 sm:mr-4 sm:mb-0"
             >
-              <div className="relative h-24 w-24 cursor-pointer overflow-hidden rounded-lg border border-gray-200 shadow-sm transition-shadow hover:shadow-md">
+              <div className="border-border relative h-24 w-24 cursor-pointer overflow-hidden rounded-lg border shadow-sm transition-shadow hover:shadow-md">
                 <Image
                   src={restaurantDetails.logoUrl}
                   alt={`${restaurantDetails.name} Logo`}
@@ -110,36 +116,38 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
 
           {/* Middle Block: Restaurant Name and Description (flex-grow to take available space) */}
           <div className="mb-4 flex-grow text-center sm:mb-0 sm:text-left">
-            <h1 className="text-4xl font-bold text-gray-900">
+            <h1 className="text-foreground text-4xl font-bold">
               {restaurantDetails.name}
             </h1>
             {restaurantDetails.description ? (
-              <p className="mt-2 text-lg text-gray-600">
+              <p className="text-muted-foreground mt-2 text-lg">
                 {restaurantDetails.description}
               </p>
             ) : (
-              <p className="mt-2 text-lg text-gray-600">
+              <p className="text-muted-foreground mt-2 text-lg">
                 Browse our delicious menu
               </p>
             )}
           </div>
 
-          {/* Rightmost Block: Removed About Restaurant Button */}
-          {/* This div is now empty or can be removed if not needed for layout */}
+          {/* Rightmost Block: Theme Toggle Button */}
           <div className="flex-shrink-0 sm:self-center">
-            {/* Previously held the About Restaurant Button */}
+            <ThemeToggle /> {/* ADDED: Theme Toggle Button */}
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
         {menuData.categories.length === 0 ? (
-          <div className="py-10 text-center text-gray-500">
+          <div className="text-muted-foreground py-10 text-center">
             <p>No menu items available for this restaurant yet.</p>
             <p>Please check back later!</p>
           </div>
         ) : (
-          <MenuDisplayClient menuData={menuData} />
+          <MenuDisplayClient
+            menuData={menuData}
+            theme={restaurantDetails.theme || "default"}
+          />
         )}
       </main>
     </div>

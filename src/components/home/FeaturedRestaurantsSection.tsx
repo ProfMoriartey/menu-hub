@@ -9,10 +9,11 @@ import {
   CardTitle,
   CardDescription,
 } from "~/components/ui/card";
-import type { Restaurant } from "~/types/restaurant"; // Import Restaurant type
+import type { Restaurant } from "~/types/restaurant";
+import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 
 interface FeaturedRestaurantsSectionProps {
-  restaurants: Restaurant[]; // Receive restaurants as a prop
+  restaurants: Restaurant[];
 }
 
 export function FeaturedRestaurantsSection({
@@ -21,20 +22,29 @@ export function FeaturedRestaurantsSection({
   const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Image`;
 
   return (
-    <section className="bg-gray-100 py-16">
+    // UPDATED: Use bg-secondary for the section background
+    <section className="bg-secondary py-16">
       <div className="container mx-auto max-w-6xl px-4">
-        <h2 className="mb-10 text-center text-4xl font-bold text-gray-900">
+        {/* UPDATED: Use text-foreground for the heading */}
+        <h2 className="text-foreground mb-10 text-center text-4xl font-bold">
           Featured Restaurants
         </h2>
         {restaurants.length === 0 ? (
-          <div className="py-10 text-center text-gray-500">
+          // UPDATED: Use text-muted-foreground for text
+          <div className="text-muted-foreground py-10 text-center">
             <p>No featured restaurants available at the moment.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {restaurants.map((restaurant) => (
               <Link key={restaurant.id} href={`/${restaurant.slug}`} passHref>
-                <Card className="flex h-full cursor-pointer flex-col transition-shadow duration-300 hover:shadow-xl">
+                {/* UPDATED: Card uses bg-card, text-foreground, and border-border */}
+                <Card
+                  className={cn(
+                    "flex h-full cursor-pointer flex-col transition-shadow duration-300 hover:shadow-xl",
+                    "bg-card text-foreground border-border border",
+                  )}
+                >
                   <CardHeader className="flex-grow">
                     <div className="mb-4 h-40 w-full overflow-hidden rounded-md">
                       <Image
@@ -45,15 +55,17 @@ export function FeaturedRestaurantsSection({
                         className="h-full w-full object-cover"
                       />
                     </div>
-                    <CardTitle className="text-2xl">
+                    {/* CardTitle and CardDescription should inherit or be explicitly themed if defaults aren't enough */}
+                    <CardTitle className="text-foreground text-2xl">
                       {restaurant.name}
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-muted-foreground">
                       {restaurant.foodType}{" "}
                       {restaurant.country && ` - ${restaurant.country}`}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="mt-auto">
+                    {/* Button with outline variant. Assuming it picks up theme colors from shadcn defaults. */}
                     <Button variant="outline" className="w-full">
                       View Menu
                     </Button>
@@ -65,7 +77,13 @@ export function FeaturedRestaurantsSection({
         )}
         <div className="mt-12 text-center">
           <Link href="/restaurants" passHref>
-            <Button className="rounded-full bg-blue-600 px-8 py-3 text-lg text-white shadow-md transition-colors hover:bg-blue-700">
+            {/* UPDATED: Button uses bg-primary and text-primary-foreground */}
+            <Button
+              className={cn(
+                "rounded-full px-8 py-3 text-lg shadow-md transition-colors",
+                "bg-primary text-primary-foreground hover:bg-primary/90", // Adjusted hover for a slight shade change
+              )}
+            >
               View All Restaurants
             </Button>
           </Link>
