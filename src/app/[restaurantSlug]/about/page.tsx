@@ -1,8 +1,9 @@
 // src/app/[restaurantSlug]/about/page.tsx
+
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
-import { notFound } from "next/navigation";
+import { notFound } from "next/navigation"; // Keep this for actual "slug not found" cases
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
@@ -28,10 +29,14 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
       },
     });
 
-  // FIX: Use optional chaining for a more concise check
-  // If restaurantDetails is null/undefined OR restaurantDetails.isDisplayed is false
-  if (!restaurantDetails?.isDisplayed) {
-    // This line combines the checks
+  // --- REMOVE THIS BLOCK ---
+  // if (!restaurantDetails?.isDisplayed) {
+  //   notFound();
+  // }
+  // --- END REMOVE BLOCK ---
+
+  // Keep this check for cases where the slug genuinely doesn't exist in the DB
+  if (!restaurantDetails) {
     notFound();
   }
 
