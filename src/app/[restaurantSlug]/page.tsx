@@ -8,6 +8,7 @@ import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "~/lib/utils";
+import { ThemeToggle } from "~/components/shared/ThemeToggle"; // Keep this import
 
 interface PageProps {
   params: Promise<{
@@ -85,10 +86,16 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
 
   const fallbackLogoUrl = `https://placehold.co/100x100/E0E0E0/333333?text=Logo`;
 
-  const themeClass = `theme-${restaurantDetails.theme ?? "default"}`; // CHANGED: || to ??
+  const themeClass = `theme-${restaurantDetails.theme ?? "default"}`;
 
   return (
-    <div className={cn("min-h-screen", themeClass)}>
+    // Make the main div relative for absolute positioning of the mobile toggle
+    <div className={cn("relative min-h-screen", themeClass)}>
+      {/* Mobile Format: Theme Toggle in the top right corner (hidden on MD screens and up) */}
+      <div className="absolute top-4 right-4 z-50 md:hidden">
+        <ThemeToggle />
+      </div>
+
       <header className="bg-card p-4 shadow-sm">
         <div className="container mx-auto flex flex-col items-center sm:flex-row sm:items-start sm:justify-between sm:space-x-4">
           {/* Leftmost Block: Restaurant Logo - NOW A LINK TO ABOUT PAGE */}
@@ -110,7 +117,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
             </Link>
           )}
 
-          {/* Middle Block: Restaurant Name and Description (flex-grow to take available space) */}
+          {/* Middle Block: Restaurant Name and Description */}
           <div className="mb-4 flex-grow text-center sm:mb-0 sm:text-left">
             <h1 className="text-foreground text-4xl font-bold">
               {restaurantDetails.name}
@@ -126,9 +133,9 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
             )}
           </div>
 
-          {/* Rightmost Block: Theme Toggle Button */}
-          <div className="flex-shrink-0 sm:self-center">
-            {/* ThemeToggle removed from here as per previous step if it's in Navbar */}
+          {/* PC Format: Theme Toggle in the Header on the right side (hidden on small screens) */}
+          <div className="hidden flex-shrink-0 sm:self-center md:block">
+            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -143,7 +150,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
           <MenuDisplayClient
             menuData={menuData}
             theme={restaurantDetails.theme ?? "default"}
-          /> // CHANGED: || to ??
+          />
         )}
       </main>
     </div>
