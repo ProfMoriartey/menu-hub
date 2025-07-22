@@ -4,7 +4,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { cn } from "~/lib/utils";
 import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
 import { ChevronLeft } from "lucide-react"; // Needed for back button
 import { Button } from "~/components/ui/button"; // Needed for back button
@@ -17,7 +16,7 @@ interface RestaurantMenuData {
     currency: string;
     description: string | null;
   };
-  categories: (Category & { menuItems: MenuItem[] })[]; // This type is correct here
+  categories: (Category & { menuItems: MenuItem[] })[];
 }
 
 interface CategoryCardsImageDominantLayoutProps {
@@ -31,13 +30,11 @@ export function CategoryCardsImageDominantLayout({
     null,
   );
 
-  const fallbackImageUrl = `https://placehold.co/400x300/E0E0E0/333333?text=No+Image`; // Larger fallback for dominant images
+  const fallbackImageUrl = `https://placehold.co/400x300/E0E0E0/333333?text=No+Image`;
 
   if (selectedCategory) {
-    // --- Start of Fix ---
-    // Ensure menuItems is not undefined before accessing it
-    const itemsToDisplay = selectedCategory.menuItems || [];
-    // --- End of Fix ---
+    // CHANGED: || to ??
+    const itemsToDisplay = selectedCategory.menuItems ?? [];
 
     // Display Menu Items for the selected category
     return (
@@ -54,14 +51,12 @@ export function CategoryCardsImageDominantLayout({
           {selectedCategory.name}
         </h2>
 
-        {/* Use itemsToDisplay.length */}
         {itemsToDisplay.length === 0 ? (
           <div className="text-muted-foreground py-10 text-center">
             <p>No items in this category yet.</p>
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-            {/* Use itemsToDisplay.map */}
             {itemsToDisplay.map((item) => (
               <Link
                 key={item.id}
@@ -139,8 +134,8 @@ export function CategoryCardsImageDominantLayout({
                 {category.name}
               </h3>
               <p className="text-muted-foreground">
-                {/* Add a nullish coalescing operator here too */}
-                {category.menuItems?.length || 0} items
+                {/* CHANGED: || to ?? */}
+                {category.menuItems?.length ?? 0} items
               </p>
             </div>
           ))}

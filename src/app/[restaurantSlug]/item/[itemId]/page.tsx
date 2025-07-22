@@ -3,25 +3,21 @@ import { db } from "~/server/db";
 import { menuItems } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "~/components/ui/button";
-import { ChevronLeft } from "lucide-react";
-import { MenuItemDisplayClient } from "~/components/public/MenuItemDisplayClient"; // Import the new client component
 
-import type { DietaryLabel } from "~/types/restaurant"; // Still needed if you use it directly here, otherwise remove
+import { MenuItemDisplayClient } from "~/components/public/MenuItemDisplayClient";
 
 interface PageProps {
-  params: {
-    // Removed Promise as params is already an object
+  params: Promise<{
     restaurantSlug: string;
     itemId: string;
-  };
-  searchParams?: Readonly<Record<string, string | string[] | undefined>>; // Removed Promise
+  }>;
+  searchParams?: Promise<
+    Readonly<Record<string, string | string[] | undefined>>
+  >;
 }
 
 export default async function MenuItemDetailPage({ params }: PageProps) {
-  const { restaurantSlug, itemId } = params; // No await needed
+  const { restaurantSlug, itemId } = await params;
 
   const itemDetails = await db.query.menuItems.findFirst({
     where: eq(menuItems.id, itemId),
@@ -35,13 +31,11 @@ export default async function MenuItemDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  // Pass all necessary item details and the restaurant's theme to the client component
-  // Ensure 'theme' is available from restaurantDetails if it's in your schema
   return (
     <MenuItemDisplayClient
       item={itemDetails}
       restaurantSlug={restaurantSlug}
-      theme={itemDetails.restaurant.theme || "default"} // Assuming theme is on the restaurant object
+      theme={itemDetails.restaurant.theme ?? "default"} // CHANGED: || to ??
     />
   );
 }

@@ -6,12 +6,8 @@ import { notFound } from "next/navigation";
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
 import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
 import Link from "next/link";
-// Removed Button import if not used elsewhere in this specific file,
-// as the ThemeToggle uses its own Button.
-// import { Button } from "~/components/ui/button";
 import Image from "next/image";
 import { cn } from "~/lib/utils";
-import { ThemeToggle } from "~/components/shared/ThemeToggle"; // ADDED: Import ThemeToggle
 
 interface PageProps {
   params: Promise<{
@@ -89,7 +85,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
 
   const fallbackLogoUrl = `https://placehold.co/100x100/E0E0E0/333333?text=Logo`;
 
-  const themeClass = `theme-${restaurantDetails.theme || "default"}`;
+  const themeClass = `theme-${restaurantDetails.theme ?? "default"}`; // CHANGED: || to ??
 
   return (
     <div className={cn("min-h-screen", themeClass)}>
@@ -132,7 +128,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
 
           {/* Rightmost Block: Theme Toggle Button */}
           <div className="flex-shrink-0 sm:self-center">
-            <ThemeToggle /> {/* ADDED: Theme Toggle Button */}
+            {/* ThemeToggle removed from here as per previous step if it's in Navbar */}
           </div>
         </div>
       </header>
@@ -146,8 +142,8 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
         ) : (
           <MenuDisplayClient
             menuData={menuData}
-            theme={restaurantDetails.theme || "default"}
-          />
+            theme={restaurantDetails.theme ?? "default"}
+          /> // CHANGED: || to ??
         )}
       </main>
     </div>

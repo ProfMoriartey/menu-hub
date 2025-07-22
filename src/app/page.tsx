@@ -8,7 +8,6 @@ import { AboutHomeSection } from "~/components/home/AboutHomeSection";
 import { FeaturedRestaurantsSection } from "~/components/home/FeaturedRestaurantsSection";
 import { ThemesHomeSection } from "~/components/home/ThemesHomeSection";
 import { ContactHomeSection } from "~/components/home/ContactHomeSection";
-import { ThemeToggle } from "~/components/shared/ThemeToggle"; // ADDED: Import ThemeToggle
 import { cn } from "~/lib/utils"; // ADDED: Import cn utility (if not already there)
 
 export default async function HomePage() {
@@ -32,9 +31,9 @@ export default async function HomePage() {
       className={cn("bg-background text-foreground flex min-h-screen flex-col")}
     >
       {/* ADDED: A simple header for the toggle, or place it in an existing layout component */}
-      <header className="fixed top-4 right-4 z-50">
+      {/* <header className="fixed top-4 right-4 z-50">
         <ThemeToggle />
-      </header>
+      </header> */}
 
       <HeroSection />
       <AboutHomeSection />
