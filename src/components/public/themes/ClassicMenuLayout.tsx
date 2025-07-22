@@ -4,7 +4,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { cn } from "~/lib/utils"; // Assuming this path is correct
+import { cn } from "~/lib/utils";
+import { motion } from "framer-motion"; // Import motion
 
 import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
 import { MenuItemCardSkeleton } from "~/components/shared/MenuItemCardSkeleton";
@@ -79,53 +80,61 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
             </div>
           ) : (
             <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {activeCategory.menuItems.map((item) => (
-                <Link
+              {activeCategory.menuItems.map((item, index) => (
+                <motion.div
                   key={item.id}
-                  href={`/${menuData.restaurant.slug}/item/${item.id}`}
-                  passHref
-                  className="group block"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  whileHover={{ scale: 1.03 }}
+                  className="block h-full" // UPDATED: Added h-full here
                 >
-                  <div className="bg-card flex cursor-pointer flex-row items-start space-x-4 rounded-lg p-4 shadow-md transition-shadow duration-200 hover:shadow-lg">
-                    <div className="order-first flex-grow text-left">
-                      <h3 className="text-foreground group-hover:text-primary text-xl font-semibold transition-colors duration-200">
-                        {item.name}
-                      </h3>
-                      {item.description && (
-                        // FIXED: Corrected comment syntax within JSX
-                        <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
-                          {item.description}
+                  <Link
+                    href={`/${menuData.restaurant.slug}/item/${item.id}`}
+                    passHref
+                    className="group block h-full" // UPDATED: Kept block and h-full for the Link
+                  >
+                    <div className="bg-card flex cursor-pointer flex-row items-start space-x-4 rounded-lg p-4 shadow-md transition-shadow duration-200 hover:shadow-lg">
+                      <div className="order-first flex-grow text-left">
+                        <h3 className="text-foreground group-hover:text-primary text-xl font-semibold transition-colors duration-200">
+                          {item.name}
+                        </h3>
+                        {item.description && (
+                          <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
+                            {item.description}
+                          </p>
+                        )}
+                        {item.dietaryLabels &&
+                          item.dietaryLabels.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {item.dietaryLabels.map((label: DietaryLabel) => (
+                                <span
+                                  key={label}
+                                  className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold"
+                                >
+                                  {label.charAt(0).toUpperCase() +
+                                    label.slice(1).replace(/-/g, " ")}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        <p className="text-primary mt-2 text-lg font-bold">
+                          {item.price} {menuData.restaurant.currency}
                         </p>
-                      )}
-                      {item.dietaryLabels && item.dietaryLabels.length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {item.dietaryLabels.map((label: DietaryLabel) => (
-                            <span
-                              key={label}
-                              className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold"
-                            >
-                              {label.charAt(0).toUpperCase() +
-                                label.slice(1).replace(/-/g, " ")}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      <p className="text-primary mt-2 text-lg font-bold">
-                        {item.price} {menuData.restaurant.currency}
-                      </p>
-                    </div>
+                      </div>
 
-                    <div className="order-last flex-shrink-0">
-                      <Image
-                        src={item.imageUrl ?? fallbackImageUrl}
-                        alt={item.name}
-                        width={120}
-                        height={120}
-                        className="h-24 w-24 rounded-md object-cover transition-transform duration-220 group-hover:scale-105 sm:h-32 sm:w-32"
-                      />
+                      <div className="order-last flex-shrink-0">
+                        <Image
+                          src={item.imageUrl ?? fallbackImageUrl}
+                          alt={item.name}
+                          width={120}
+                          height={120}
+                          className="h-24 w-24 rounded-md object-cover transition-transform duration-220 group-hover:scale-105 sm:h-32 sm:w-32"
+                        />
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </motion.div>
               ))}
             </div>
           )}

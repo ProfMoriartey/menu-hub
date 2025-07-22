@@ -25,19 +25,27 @@ import {
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
-import { cn } from "~/lib/utils"; // ADDED: Import cn utility
+import { cn } from "~/lib/utils";
+import { motion } from "framer-motion"; // Keep this import
 
 import type { Restaurant } from "~/types/restaurant";
 import { searchRestaurants } from "~/app/actions/search";
 import { RestaurantCardSkeleton } from "~/components/shared/RestaurantCardSkeleton";
 import { Skeleton } from "../ui/skeleton";
+// REMOVED: import { AddRestaurantForm } from "../admin/AddRestaurantForm"; // REMOVED ADMIN COMPONENT
+// REMOVED: import { RestaurantCard } from "../admin/RestaurantCard"; // REMOVED ADMIN COMPONENT
+
+// ADDED: Import the NEW public-facing RestaurantCard
+import { PublicRestaurantCard } from "~/components/public/RestaurantCard";
 
 interface RestaurantSearchAndGridProps {
   initialRestaurants: Restaurant[];
+  // REMOVED: addRestaurantAction, deleteRestaurantAction, updateRestaurantAction props
 }
 
 export function RestaurantSearchAndGrid({
   initialRestaurants,
+  // REMOVED: Destructure admin-related props here
 }: RestaurantSearchAndGridProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Restaurant[]>([]);
@@ -94,12 +102,14 @@ export function RestaurantSearchAndGrid({
 
   return (
     <>
-      <div className="mb-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+      {/* REMOVED: motion.div wrapper around the control div if AddRestaurantForm is removed from here */}
+      <div // Reverted to normal div, if AddRestaurantForm is removed
+        className="mb-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
+      >
         <Popover open={isPopoverOpen} onOpenChange={handlePopoverOpenChange}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              // UPDATED: Semantic colors for search button
               className={cn(
                 "w-full justify-center rounded-lg p-3 shadow-sm sm:w-80",
                 "bg-background text-foreground border-input hover:bg-accent hover:text-accent-foreground",
@@ -111,9 +121,7 @@ export function RestaurantSearchAndGrid({
               Search Restaurants
             </Button>
           </PopoverTrigger>
-          {/* PopoverContent itself usually inherits theme from Shadcn defaults (bg-popover, etc.) */}
           <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
-            {/* Command components also usually inherit theme from Shadcn defaults (bg-card, text-foreground, etc.) */}
             <Command>
               <CommandInput
                 placeholder="Search for a restaurant, cuisine, or menu item..."
@@ -161,7 +169,6 @@ export function RestaurantSearchAndGrid({
                               .filter(Boolean)
                               .join(" ") ?? ""
                           }`}
-                          // CommandItem usually has theme-aware styles, just ensure text is foreground
                           className="text-foreground flex cursor-pointer items-center gap-2"
                         >
                           <Image
@@ -173,7 +180,6 @@ export function RestaurantSearchAndGrid({
                           />
                           <div>
                             <p className="font-medium">{restaurant.name}</p>
-                            {/* UPDATED: Use text-muted-foreground for description */}
                             <p className="text-muted-foreground text-sm">
                               {restaurant.foodType}
                               {restaurant.country
@@ -190,10 +196,11 @@ export function RestaurantSearchAndGrid({
             </Command>
           </PopoverContent>
         </Popover>
+        {/* REMOVED: AddRestaurantForm from here */}
+        {/* <AddRestaurantForm addRestaurantAction={addRestaurantAction} /> */}
       </div>
 
       <section className="mx-auto w-full max-w-6xl px-4 py-12">
-        {/* UPDATED: Use text-foreground for heading */}
         <h2 className="text-foreground mb-10 text-center text-4xl font-bold">
           All Restaurants
         </h2>
@@ -205,7 +212,6 @@ export function RestaurantSearchAndGrid({
           </div>
         ) : restaurantsToDisplayInGrid.length === 0 &&
           searchTerm.length === 0 ? (
-          // UPDATED: Use text-muted-foreground for messages
           <div className="text-muted-foreground text-center">
             <p>No restaurants found.</p>
             <p className="mt-2">
@@ -213,47 +219,23 @@ export function RestaurantSearchAndGrid({
             </p>
           </div>
         ) : restaurantsToDisplayInGrid.length === 0 && searchTerm.length > 0 ? (
-          // UPDATED: Use text-muted-foreground for messages
           <div className="text-muted-foreground text-center">
             <p>No results found for &quot;{searchTerm}&quot;.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {restaurantsToDisplayInGrid.map((restaurant) => (
-              <Link key={restaurant.id} href={`/${restaurant.slug}`} passHref>
-                {/* UPDATED: Card uses semantic colors */}
-                <Card
-                  className={cn(
-                    "flex h-full cursor-pointer flex-col transition-shadow duration-300 hover:shadow-xl",
-                    "bg-card text-foreground border-border border", // Ensure card itself is themed
-                  )}
-                >
-                  <CardHeader className="flex-grow">
-                    <div className="mb-4 h-40 w-full overflow-hidden rounded-md">
-                      <Image
-                        src={restaurant.logoUrl ?? fallbackImageUrl}
-                        alt={`${restaurant.name} Logo`}
-                        width={300}
-                        height={200}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    {/* UPDATED: CardTitle and CardDescription also semantic */}
-                    <CardTitle className="text-foreground text-2xl">
-                      {restaurant.name}
-                    </CardTitle>
-                    <CardDescription className="text-muted-foreground">
-                      Explore their delicious menu.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="mt-auto">
-                    {/* Button with outline variant should pick up theme colors */}
-                    <Button variant="outline" className="w-full">
-                      View Menu
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Link>
+            {restaurantsToDisplayInGrid.map((restaurant, index) => (
+              <motion.div // Keep motion.div wrapper for animation
+                key={restaurant.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                whileHover={{ scale: 1.03 }}
+                className="block h-full"
+              >
+                {/* CHANGED: Use the NEW PublicRestaurantCard */}
+                <PublicRestaurantCard restaurant={restaurant} />
+              </motion.div>
             ))}
           </div>
         )}
