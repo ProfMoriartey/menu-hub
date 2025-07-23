@@ -2,9 +2,9 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ClerkProvider, UserButton } from "@clerk/nextjs";
-import Link from "next/link";
+import Link from "next/link"; // Keep Link if you'll use it in a top bar or elsewhere
 import { cn } from "~/lib/utils";
-import { ThemeToggle } from "~/components/shared/ThemeToggle"; // ADDED: Import ThemeToggle
+import { ThemeToggle } from "~/components/shared/ThemeToggle";
 
 export default async function AdminDashboardLayout({
   children,
@@ -20,43 +20,40 @@ export default async function AdminDashboardLayout({
 
   return (
     <ClerkProvider>
-      <div className={cn("flex min-h-screen", "bg-background")}>
-        {/* Admin Sidebar/Navigation */}
-        <aside
-          className={cn(
-            "flex w-64 flex-col p-4",
-            "bg-sidebar text-sidebar-foreground",
-          )}
-        >
-          <h2 className="mb-6 text-2xl font-bold">Admin Dashboard</h2>
-          <nav className="flex-grow">
-            <ul>
-              <li className="mb-2">
+      {/* Main container, now without flex to accommodate sidebar */}
+      <div className={cn("min-h-screen", "bg-background")}>
+        {/* Top Navigation Bar for Admin - NEW */}
+        <header className="bg-card text-card-foreground flex items-center justify-between p-4 shadow-sm">
+          <h2 className="text-2xl font-bold">Admin Dashboard</h2>
+          <nav>
+            <ul className="flex space-x-4">
+              <li>
                 <Link
                   href="/admin/restaurants"
                   className={cn(
-                    "block rounded p-2",
-                    "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                    "rounded p-2",
+                    "hover:bg-accent hover:text-accent-foreground",
                   )}
                 >
                   Restaurants
                 </Link>
               </li>
+              {/* Add more admin navigation links here if needed */}
             </ul>
           </nav>
-          <div className="mt-auto p-2">
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <UserButton afterSignOutUrl="/" />
           </div>
-        </aside>
+        </header>
 
-        {/* Main Content Area */}
-        {/* UPDATED: Make main relative for absolute positioning of toggle */}
-        <main className={cn("relative flex-1", "text-foreground")}>
-          {/* ADDED: Theme Toggle in the top right corner of the main content area */}
-          <div className="absolute top-4 right-4 z-50">
+        {/* Main Content Area - now takes full width */}
+        <main className={cn("relative w-full", "text-foreground")}>
+          {/* The ThemeToggle is now in the header, so remove its absolute positioning here */}
+          {/* <div className="absolute top-4 right-4 z-50">
             <ThemeToggle />
-          </div>
-          {/* Wrap children in a div with padding, as main itself is no longer directly padded */}
+          </div> */}
+          {/* Wrap children in a div with padding */}
           <div className="p-8">{children}</div>
         </main>
       </div>

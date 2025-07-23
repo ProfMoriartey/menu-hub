@@ -3,16 +3,13 @@ import { db } from "~/server/db";
 import { categories, restaurants } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
+import Link from "next/link"; // Import Link
+import { Button } from "~/components/ui/button"; // Import Button
+import { ChevronLeft } from "lucide-react"; // Import the back arrow icon
 
 // Import new components
 import { AddCategoryForm } from "~/components/admin/AddCategoryForm";
 import { CategoriesTable } from "~/components/admin/CategoriesTable";
-
-// Import Server Actions for categories (only if needed directly in this server component)
-// In this case, they are passed down to client components, so they are imported implicitly
-// via those components or explicitly if the server page itself needs to call them.
-// For example, if you wanted to directly call `addCategory` from this server component, you'd import it.
-// Here, we're passing it to `AddCategoryForm`, which will import it.
 
 // Main Categories Page Component (Server Component)
 export default async function AdminCategoriesPage({
@@ -38,18 +35,24 @@ export default async function AdminCategoriesPage({
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4">
+      {" "}
+      {/* Added padding to the main div */}
+      {/* Back Button to Restaurants Page */}
+      <Link href="/admin/restaurants" passHref>
+        <Button variant="outline" className="flex items-center">
+          <ChevronLeft className="mr-2 h-4 w-4" /> Back to Restaurants
+        </Button>
+      </Link>
       <h1 className="text-3xl font-bold">
         Manage Categories for {restaurantDetails.name}
       </h1>
       <p className="text-lg text-gray-600">Restaurant ID: {restaurantId}</p>
-
       {/* Use the new AddCategoryForm component */}
       <AddCategoryForm
         restaurantId={restaurantId}
         restaurantName={restaurantDetails.name}
       />
-
       {/* Use the new CategoriesTable component */}
       <CategoriesTable
         allCategories={allCategories}

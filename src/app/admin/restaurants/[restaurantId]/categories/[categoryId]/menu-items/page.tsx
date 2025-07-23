@@ -12,6 +12,9 @@ import { eq, and } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { AddMenuItemForm } from "~/components/admin/AddMenuItemForm";
 import { MenuItemsTable } from "~/components/admin/MenuItemsTable"; // Import the new component
+import Link from "next/link"; // Import Link
+import { Button } from "~/components/ui/button"; // Import Button
+import { ChevronLeft } from "lucide-react"; // Import the back arrow icon
 
 // Import your server actions (still needed for AddMenuItemForm)
 import { addMenuItem } from "~/app/actions/menu-item";
@@ -45,7 +48,15 @@ export default async function AdminMenuItemsPage({
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4">
+      {" "}
+      {/* Added padding to the main div for consistency */}
+      {/* Back Button to Categories Page */}
+      <Link href={`/admin/restaurants/${restaurantId}/categories`} passHref>
+        <Button variant="outline" className="flex items-center">
+          <ChevronLeft className="mr-2 h-4 w-4" /> Back to Categories
+        </Button>
+      </Link>
       <h1 className="text-3xl font-bold">
         Manage Menu Items for {categoryDetails.name}
       </h1>
@@ -53,14 +64,12 @@ export default async function AdminMenuItemsPage({
         Restaurant: {restaurantDetails.name} (ID: {restaurantId}) <br />
         Category: {categoryDetails.name} (ID: {categoryId})
       </p>
-
       <AddMenuItemForm
         restaurantId={restaurantId}
         categoryId={categoryId}
         categoryName={categoryDetails.name}
         addMenuItemAction={addMenuItem}
       />
-
       <Card>
         <CardHeader>
           <CardTitle>Existing Menu Items</CardTitle>
@@ -70,7 +79,6 @@ export default async function AdminMenuItemsPage({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* Use the new MenuItemsTable component */}
           <MenuItemsTable
             menuItems={allMenuItems}
             restaurantId={restaurantId}
