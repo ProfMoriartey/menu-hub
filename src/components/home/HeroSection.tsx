@@ -27,7 +27,7 @@ export function HeroSection() {
         >
           Discover Your Next{" "}
           {/* UPDATED: Use text-accent for the highlight text */}
-          <span className="text-accent">Favorite Meal</span>
+          <span className="text-attention">Favorite Meal</span>
         </motion.h1>
         {/* ADDED: motion.p for subtle paragraph animation */}
         <motion.p

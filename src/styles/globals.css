@@ -27,6 +27,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-attention: var(--attention); /* NEW: Add attention color here */
   --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -62,6 +63,8 @@
   --primary-foreground: oklch(98.43% 0.003 247.86); /* Near white for text on primary */
   --accent: oklch(63.09% 0.129 65.4); /* amber-600: #D97706 */
   --accent-foreground: oklch(98.43% 0.003 247.86); /* Near white for text on accent */
+
+  --attention: oklch(38.6% 0.065 65.4); /* NEW: #7B3F00 - muted terracotta brown/red */
 
   --secondary: oklch(90.72% 0.051 68.34); /* orange-200: #FDBA74 - for secondary elements */
   --secondary-foreground: oklch(25.99% 0.026 82.52); /* stone-700 for text on secondary */
@@ -104,6 +107,8 @@
   --primary-foreground: oklch(14.86% 0.022 84.72); /* stone-900 for text on primary */
   --accent: oklch(80.52% 0.177 82.8); /* amber-400 */
   --accent-foreground: oklch(14.86% 0.022 84.72); /* stone-900 */
+
+  --attention: oklch(60% 0.1 65.4); /* NEW: #BF6D00 - brighter muted terracotta for dark theme */
 
   --secondary: oklch(35.03% 0.033 84.81); /* stone-600: #57534E - Darker neutral for secondary elements */
   --secondary-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */

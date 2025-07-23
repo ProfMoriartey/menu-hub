@@ -43,14 +43,17 @@ export function ContactHomeSection() {
             Email:{" "}
             <a
               href="mailto:contact@menuhub.com"
-              className="text-accent hover:underline"
+              className="text-attention hover:underline"
             >
               ahmed.a.alhusiani@gmail.com
             </a>
           </p>
           <p>
             Phone:{" "}
-            <a href="tel:+1234567890" className="text-accent hover:underline">
+            <a
+              href="tel:+1234567890"
+              className="text-attention hover:underline"
+            >
               +90 553 156 5053
             </a>
           </p>
