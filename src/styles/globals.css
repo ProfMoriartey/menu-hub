@@ -27,7 +27,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-attention: var(--attention); /* NEW: Add attention color here */
+  --color-attention: var(--attention);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
