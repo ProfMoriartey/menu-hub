@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "~/components/ui/button"; // Assuming you want a button here
+import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,21 +13,23 @@ import {
 } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
-import type { Restaurant } from "~/types/restaurant"; // Import Restaurant type
+import type { Restaurant } from "~/types/restaurant";
 import { motion } from "framer-motion";
 
 interface PublicRestaurantCardProps {
   restaurant: Restaurant;
+  isFullWidthDisplay?: boolean; // ADDED: New optional prop
 }
 
 export function PublicRestaurantCard({
   restaurant,
+  isFullWidthDisplay = false, // ADDED: Default to false
 }: PublicRestaurantCardProps) {
   const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Image`;
 
   return (
     <Link key={restaurant.id} href={`/${restaurant.slug}`} passHref>
-      <motion.div // Added motion.div for animation consistency
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -38,19 +40,20 @@ export function PublicRestaurantCard({
           className={cn(
             "flex h-full cursor-pointer flex-col transition-shadow duration-300 hover:shadow-xl",
             "bg-card text-foreground border-border border",
+            isFullWidthDisplay && // ADDED: Conditional min-width
+              "min-w-[350px] sm:min-w-[400px] md:min-w-[450px] lg:min-w-[500px]",
           )}
         >
           <CardHeader className="flex-grow">
-            <div className="mb-4 h-40 w-full overflow-hidden rounded-md">
+            <div className="relative mb-4 h-40 w-full overflow-hidden rounded-md">
               <Image
                 src={restaurant.logoUrl ?? fallbackImageUrl}
                 alt={`${restaurant.name} Logo`}
-                width={300}
-                height={200}
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
-            <CardTitle className="text-foreground text-2xl">
+            <CardTitle className="text-foreground mb-2 text-2xl">
               {restaurant.name}
             </CardTitle>
             <CardDescription className="text-muted-foreground">
