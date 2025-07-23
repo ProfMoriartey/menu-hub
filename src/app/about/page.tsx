@@ -192,16 +192,6 @@ export default function AboutUsPage() {
               Browse All Menus
             </Link>
           </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.7, duration: 0.5 }}
-          >
-            <span className="text-foreground font-semibold">For Owners:</span>{" "}
-            <Link href="/admin" className="text-accent hover:underline">
-              Access Admin Dashboard
-            </Link>
-          </motion.p>
         </div>
       </motion.div>
     </div>
