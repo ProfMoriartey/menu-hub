@@ -50,7 +50,7 @@ export function ClassicThemeSection({
   reverseLayout,
 }: ClassicThemeSectionProps) {
   const [activeCategory, setActiveCategory] = useState(
-    mockCategories[0]?.id || "",
+    mockCategories[0]?.id ?? "",
   );
 
   const sectionVariants = {
