@@ -5,39 +5,13 @@ import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { PublicRestaurantCard } from "~/components/public/RestaurantCard";
 import type { Restaurant } from "~/types/restaurant";
-import { useState } from "react";
+// REMOVED: import { useState } from "react"; // Not needed here anymore
+// ADDED: Import the new ClassicThemeExample component
+import { ClassicThemeExample } from "~/components/themes/ClassicThemeExample";
 
-// Mock data for categories and items (remains the same)
-const mockCategories = [
-  { id: "appetizers", name: "Appetizers" },
-  { id: "main-courses", name: "Main Courses" },
-  { id: "desserts", name: "Desserts" },
-  { id: "drinks", name: "Drinks" },
-];
-
-const mockItems = {
-  appetizers: [
-    { id: "a1", name: "Spring Rolls" },
-    { id: "a2", name: "Garlic Bread" },
-    { id: "a3", name: "Tomato Bruschetta" },
-  ],
-  "main-courses": [
-    { id: "m1", name: "Grilled Salmon" },
-    { id: "m2", name: "Steak Frites" },
-    { id: "m3", name: "Veggie Burger" },
-    { id: "m4", name: "Chicken Alfredo" },
-  ],
-  desserts: [
-    { id: "d1", name: "Cheesecake" },
-    { id: "d2", name: "Chocolate Lava Cake" },
-  ],
-  drinks: [
-    { id: "dr1", name: "Iced Tea" },
-    { id: "dr2", name: "Lemonade" },
-    { id: "dr3", name: "Coffee" },
-    { id: "dr4", name: "Orange Juice" },
-  ],
-};
+// REMOVED: Mock data for categories and items (moved to ClassicThemeExample.tsx)
+// const mockCategories = [...];
+// const mockItems = {...};
 
 // Interface definition for component props (remains the same)
 interface ClassicThemeSectionProps {
@@ -49,9 +23,10 @@ export function ClassicThemeSection({
   restaurant,
   reverseLayout,
 }: ClassicThemeSectionProps) {
-  const [activeCategory, setActiveCategory] = useState(
-    mockCategories[0]?.id ?? "",
-  );
+  // REMOVED: activeCategory state (moved to ClassicThemeExample.tsx)
+  // const [activeCategory, setActiveCategory] = useState(
+  //   mockCategories[0]?.id ?? "",
+  // );
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -118,53 +93,11 @@ export function ClassicThemeSection({
       >
         {/* Left column content: Example */}
         <div className="w-full flex-1 space-y-4 md:flex-shrink md:flex-grow">
-          <div className="mb-8">
-            <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Example:
-            </h3>
-            <div className="border-border bg-background rounded-lg border p-4">
-              <div className="mb-4 flex space-x-2 overflow-x-auto">
-                {mockCategories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => setActiveCategory(category.id)}
-                    className={cn(
-                      "rounded-full px-3 py-1 text-sm transition-colors",
-                      activeCategory === category.id
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-                    )}
-                  >
-                    {category.name}
-                  </button>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {mockItems[activeCategory as keyof typeof mockItems]?.map(
-                  (item) => (
-                    <div
-                      key={item.id}
-                      className="border-border bg-card rounded-md border p-2"
-                    >
-                      {item.name}
-                    </div>
-                  ),
-                )}
-                {mockItems[activeCategory as keyof typeof mockItems]?.length ===
-                  0 && (
-                  <p className="text-muted-foreground col-span-2 text-center">
-                    No items in this category.
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-          {/* REMOVED: How it looks: from here */}
+          <ClassicThemeExample /> {/* ADDED: Render the new component here */}
         </div>
 
         {/* Right column content: How it looks + Restaurant Card */}
         <div className="flex w-full flex-col items-center md:w-[450px] md:flex-shrink-0 md:flex-grow-0 lg:w-[500px] xl:w-[550px]">
-          {/* ADDED: How it looks: here */}
           <motion.h3
             variants={itemVariants}
             transition={{ delay: 0.4 }}

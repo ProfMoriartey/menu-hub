@@ -5,11 +5,13 @@ import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { PublicRestaurantCard } from "~/components/public/RestaurantCard";
 import type { Restaurant } from "~/types/restaurant";
-import Image from "next/image";
+// REMOVED: import Image from "next/image"; // No longer needed here
+// ADDED: Import the new CategoryCardsImageDominantThemeExample component
+import { CategoryCardsImageDominantThemeExample } from "~/components/themes/CategoryCardsImageDominantThemeExample";
 
 interface CategoryCardsImageDominantThemeSectionProps {
   restaurant: Restaurant | null;
-  reverseLayout: boolean; // ADDED: New prop
+  reverseLayout: boolean;
 }
 
 export function CategoryCardsImageDominantThemeSection({
@@ -52,7 +54,7 @@ export function CategoryCardsImageDominantThemeSection({
     <motion.section
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: true, amount: 0.1 }} // Adjusted viewport amount
       variants={sectionVariants}
       transition={{ duration: 0.8 }}
       className={cn("rounded-lg p-6 shadow-lg", "bg-card")}
@@ -74,41 +76,20 @@ export function CategoryCardsImageDominantThemeSection({
         experience.
       </motion.p>
 
-      {/* ADDED: Conditional flex-row-reverse for layout */}
       <div
         className={cn(
           "flex flex-col items-center gap-8 md:flex-row",
           reverseLayout ? "md:flex-row-reverse" : "",
         )}
       >
-        {/* Content Block (Example + How it looks) */}
-        <div className="w-full flex-1 space-y-4">
-          <div className="mb-8">
-            <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Example:
-            </h3>
-            <div className="border-border bg-background rounded-lg border p-4">
-              <div className="mb-4 grid grid-cols-2 gap-4">
-                <div className="bg-primary text-primary-foreground rounded-md p-3 text-center">
-                  Category X
-                </div>
-                <div className="bg-secondary text-secondary-foreground rounded-md p-3 text-center">
-                  Category Y
-                </div>
-              </div>
-              <div className="bg-card border-border relative h-32 w-full overflow-hidden rounded-md border">
-                <Image
-                  src="https://placehold.co/400x300/E0E0E0/333333?text=Item+Image"
-                  alt="Example Item"
-                  fill
-                  style={{ objectFit: "cover" }}
-                />
-                <span className="absolute bottom-2 left-2 text-sm font-bold text-white">
-                  Dish Name
-                </span>
-              </div>
-            </div>
-          </div>
+        {/* Left column content: Example */}
+        <div className="w-full flex-1 space-y-4 md:flex-shrink md:flex-grow">
+          <CategoryCardsImageDominantThemeExample />{" "}
+          {/* Render the new component here */}
+        </div>
+
+        {/* Right column content: How it looks + Restaurant Card */}
+        <div className="flex w-full flex-col items-center md:w-[450px] md:flex-shrink-0 md:flex-grow-0 lg:w-[500px] xl:w-[550px]">
           <motion.h3
             variants={itemVariants}
             transition={{ delay: 0.4 }}
@@ -116,19 +97,16 @@ export function CategoryCardsImageDominantThemeSection({
           >
             How it looks:
           </motion.h3>
-        </div>
-
-        {/* Restaurant Card Block */}
-        <div className="flex w-full flex-1 justify-center">
           {restaurant ? (
             <PublicRestaurantCard
               restaurant={{
                 ...restaurantToDisplay,
                 theme: "category-cards-image-dominant",
               }}
+              isFullWidthDisplay={true}
             />
           ) : (
-            <p className="text-muted-foreground border-border bg-background mx-auto w-full max-w-sm rounded-lg border p-4 text-center">
+            <p className="border-border bg-background text-muted-foreground mx-auto w-full max-w-sm rounded-lg border p-4 text-center">
               No restaurant found with &aposcategory-cards-image-dominant&apos
               theme to display.
             </p>
