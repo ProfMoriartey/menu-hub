@@ -43,8 +43,9 @@ export function ThemesHomeSection() {
           transition={{ delay: 0.3 }}
           className="text-muted-foreground mx-auto mb-10 max-w-2xl text-lg leading-relaxed"
         >
-          Discover unique layouts designed to elevate your restaurant's digital
-          menu. Below are a couple of popular examples to inspire your choice.
+          Discover unique layouts designed to elevate your restaurant&aposs
+          digital menu. Below are a couple of popular examples to inspire your
+          choice.
         </motion.p>
 
         <div className="mb-12 flex flex-col justify-center gap-8 md:flex-row">
