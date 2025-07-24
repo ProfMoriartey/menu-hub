@@ -28,7 +28,7 @@ export default async function RestaurantsPage() {
           Discover Restaurants
         </h1>
         <p className="text-muted-foreground mb-8 text-xl">
-          Search and explore all restaurants available on Menu Hub.
+          Search and explore all restaurants available on Menupedia.
         </p>
       </header>
 

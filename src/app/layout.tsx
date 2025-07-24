@@ -20,7 +20,7 @@ import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
 import { ThemeProvider } from "~/context/ThemeContext";
 
 export const metadata: Metadata = {
-  title: "Menu Hub",
+  title: "Menupedia",
   description: "Your destination for the world's greatest menus",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };

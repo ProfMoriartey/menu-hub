@@ -21,7 +21,7 @@ export function AboutHomeSection() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-foreground mb-6 text-4xl font-bold"
         >
-          About Menu Hub
+          About Menupedia
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -29,7 +29,7 @@ export function AboutHomeSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-muted-foreground mb-8 text-lg leading-relaxed"
         >
-          Menu Hub is your go-to platform for discovering local eateries and
+          Menupedia is your go-to platform for discovering local eateries and
           their delightful menus. We connect food lovers with a wide array of
           culinary experiences, making it easier to find exactly what you crave.
           Our mission is to simplify your dining choices and highlight the best

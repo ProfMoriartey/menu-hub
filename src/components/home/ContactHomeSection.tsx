@@ -42,7 +42,7 @@ export function ContactHomeSection() {
           <p>
             Email:{" "}
             <a
-              href="mailto:contact@menuhub.com"
+              href="mailto:ahmed.a.alhusaini@gmail.com"
               className="text-attention hover:underline"
             >
               ahmed.a.alhusiani@gmail.com

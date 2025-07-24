@@ -44,7 +44,7 @@ export function Navbar() {
       <div className="container mx-auto flex items-center justify-between">
         {/* Left Side: Website Logo (linked to Home) */}
         <Link href="/" className="flex items-center space-x-2">
-          <span className="text-primary text-2xl font-bold">Menu Hub</span>
+          <span className="text-primary text-2xl font-bold">Menupedia</span>
         </Link>
 
         {/* Right Side: Desktop Navigation Links and Theme Toggle */}

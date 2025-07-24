@@ -28,7 +28,7 @@ export default function AboutUsPage() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-foreground mb-6 text-center text-4xl font-bold"
         >
-          About Menu Hub
+          About Menupedia
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -36,7 +36,7 @@ export default function AboutUsPage() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-muted-foreground mb-8 text-lg leading-relaxed"
         >
-          Menu Hub is your ultimate online platform for discovering and
+          Menupedia is your ultimate online platform for discovering and
           exploring local restaurants and their diverse culinary offerings. We
           connect food lovers with a wide array of dining experiences, making it
           easier than ever to find exactly what you crave. Our mission is to
@@ -59,8 +59,8 @@ export default function AboutUsPage() {
           transition={{ duration: 0.6, delay: 1.0 }}
           className="text-muted-foreground mb-6 text-lg leading-relaxed"
         >
-          Menu Hub provides a seamless experience for both diners and restaurant
-          owners.
+          Menupedia provides a seamless experience for both diners and
+          restaurant owners.
         </motion.p>
         <ul className="text-muted-foreground mb-8 list-disc space-y-2 pl-5 text-lg">
           <motion.li
@@ -156,7 +156,7 @@ export default function AboutUsPage() {
             transition={{ delay: 2.1, duration: 0.5 }}
           >
             <span className="text-foreground font-semibold">Reliability:</span>{" "}
-            Built on a robust stack, Menu Hub offers consistent performance.
+            Built on a robust stack, Menupedia offers consistent performance.
           </motion.li>
         </ul>
         <div className="border-border my-8 border-t"></div> {/* Separator */}
@@ -176,7 +176,7 @@ export default function AboutUsPage() {
           className="text-muted-foreground mb-4 text-lg leading-relaxed"
         >
           Ready to streamline your restaurant&apos;s online presence or discover
-          your next favorite meal? Explore Menu Hub today!{" "}
+          your next favorite meal? Explore Menupedia today!{" "}
           {/* FIXED: restaurant's */}
         </motion.p>
         <div className="space-y-2 text-lg">
