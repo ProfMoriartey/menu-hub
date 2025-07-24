@@ -6,6 +6,9 @@ import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 // import Image from "next/image"; // REMOVED: No longer using next/image for the SVG
 import CoffeeDoodle from "~/components/svg/CoffeeDoodle"; // ADDED: Import your SVG component
+import GroovySittingDoodle from "../svg/GroovySittingDoodle";
+import SittingDoodle from "../svg/SittingDoodle";
+import ZombieingDoodle from "../svg/ZombieingDoodle";
 
 export function HeroSection() {
   return (
@@ -59,7 +62,7 @@ export function HeroSection() {
         className="mt-8 w-full max-w-sm lg:mt-0 lg:max-w-lg"
       >
         {/* UPDATED: Use your custom SVG component */}
-        <CoffeeDoodle className="text-background h-auto w-full" />{" "}
+        <GroovySittingDoodle className="text-background h-auto w-full" />{" "}
         {/* ADDED: text-attention to color the SVG */}
       </motion.div>
     </motion.section>
