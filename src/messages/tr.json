@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "title": {
+      "main": "Yeni Favori Yemeğini",
+      "highlight": "Keşfet"
+    },
+    "description": "Yerel restoranların çeşitli menülerini keşfet, ilham al ve sorunsuz bir yemek deneyimi yaşa.",
+    "cta": "Keşfetmeye Başla"
+  },
+  "about": {
+    "title": "Menupedia Hakkında Daha Fazlasını Keşfet",
+    "description": "Menupedia, yerel restoranları ve onların lezzetli menülerini keşfetmek için önde gelen çevrim içi platformdur. Tutkulu yemek severleri çeşitli mutfak deneyimleriyle buluşturur, ne aradığınızı kolayca bulmanızı sağlar. Amacımız yemek seçimini kolaylaştırmak, yerel işletmeleri desteklemek ve yerel gastronominin en iyilerini sergilemektir.",
+    "cta": "Menupedia Hakkında Daha Fazlası"
+  },
+  "featured": {
+    "title": "Öne Çıkan Restoranlar",
+    "empty": "Şu anda öne çıkan restoran bulunmamaktadır.",
+    "button": {
+      "single": "Menüyü Görüntüle",
+      "all": "Tüm Restoranları Gör"
+    }
+  },
+  "themes": {
+    "title": "Neden Menupedia?",
+    "description": "Menupedia, restoran menülerinin yönetimini ve keşfini kolaylaştırır. İşletmelere sezgisel araçlar, kullanıcılar için ise zengin ve kolay kullanımlı bir deneyim sunar. Yerel gastronomiye odaklanarak hem topluluğunuzu destekler hem de çeşitli mutfak seçeneklerini keşfedersiniz. Sorunsuz entegrasyon ve dinamik tema seçenekleriyle dijital menüleri etkileyici ve zahmetsiz hale getiriyoruz.",
+    "previewTitle": "Dijital Menülerimizi Harekete Geçmiş Haliyle Görün",
+    "example": {
+      "classic": "Klasik Düzen",
+      "accordion": "Akordeon Kart Düzeni"
+    },
+    "cta": "Tüm Özellikleri Keşfet"
+  },
+  "contact": {
+    "title": "İletişime Geçin",
+    "description": "Sorularınız mı var veya desteğe mi ihtiyacınız var? Bizimle iletişime geçin!",
+    "emailLabel": "E-posta",
+    "phoneLabel": "Telefon"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "title": {
+      "main": "Discover Your Next",
+      "highlight": "Favorite Meal"
+    },
+    "description": "Explore diverse menus from local restaurants, find culinary inspiration, and enjoy seamless dining experiences.",
+    "cta": "Start Exploring"
+  },
+  "about": {
+    "title": "Discover More About Menupedia",
+    "description": "Menupedia is your premier online destination for exploring local eateries and their delightful menus. We connect passionate food lovers with a diverse array of culinary experiences, making it effortless to find exactly what you crave. Our core mission is to simplify your dining choices, champion local businesses, and showcase the very best of local gastronomy.",
+    "cta": "Learn More About Menupedia"
+  },
+  "featured": {
+    "title": "Featured Restaurants",
+    "empty": "No featured restaurants available at the moment.",
+    "button": {
+      "single": "View Menu",
+      "all": "View All Restaurants"
+    }
+  },
+  "themes": {
+    "title": "Why Choose Menupedia?",
+    "description": "Menupedia simplifies restaurant menu management and discovery. We offer intuitive tools for businesses and a rich, user-friendly experience for diners. Our focus on local gastronomy means you support your community while exploring diverse culinary options. With seamless integration and dynamic display themes, we make digital menus engaging and effortless.",
+    "previewTitle": "See Our Digital Menus in Action",
+    "example": {
+      "classic": "Classic Layout",
+      "accordion": "Accordion Card Layout"
+    },
+    "cta": "Explore All Features"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "description": "Have questions or need support? Reach out to us!",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone"
+  }
+}
