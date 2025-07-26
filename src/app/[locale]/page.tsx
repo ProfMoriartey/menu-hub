@@ -40,7 +40,6 @@ export default async function HomePage() {
       </header> */}
 
       <HeroSection />
-      <h1>{t("title.main")}</h1>
       <AboutHomeSection />
       <FeaturedRestaurantsSection restaurants={featuredRestaurants} />
       <ThemesHomeSection />

@@ -4,11 +4,14 @@
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
-// import Image from "next/image"; // REMOVED: No longer using next/image for the SVG
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 import GroovySittingDoodle from "../svg/GroovySittingDoodle";
 
 export function HeroSection() {
+  // Initialize translations for the 'hero' namespace
+  const t = useTranslations("hero");
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 50 }}
@@ -27,8 +30,9 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-6 text-6xl leading-tight font-extrabold"
         >
-          Discover Your Next{" "}
-          <span className="text-attention">Favorite Meal</span>
+          {/* Use translated values for title.main and title.highlight */}
+          {t("title.main")}{" "}
+          <span className="text-attention">{t("title.highlight")}</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -36,8 +40,8 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mb-8 text-xl opacity-90"
         >
-          Explore diverse menus from local restaurants, find culinary
-          inspiration, and enjoy seamless dining experiences.
+          {/* Use translated value for description */}
+          {t("description")}
         </motion.p>
         <Link href="/restaurants" passHref>
           <motion.button
@@ -48,7 +52,8 @@ export function HeroSection() {
               "bg-primary-foreground text-primary hover:bg-muted",
             )}
           >
-            Start Exploring
+            {/* Use translated value for cta button */}
+            {t("cta")}
           </motion.button>
         </Link>
       </div>
@@ -59,9 +64,7 @@ export function HeroSection() {
         transition={{ duration: 0.8, delay: 0.6 }}
         className="mt-8 w-full max-w-sm lg:mt-0 lg:max-w-lg"
       >
-        {/* UPDATED: Use your custom SVG component */}
-        <GroovySittingDoodle className="text-background h-auto w-full" />{" "}
-        {/* ADDED: text-attention to color the SVG */}
+        <GroovySittingDoodle className="text-background h-auto w-full" />
       </motion.div>
     </motion.section>
   );

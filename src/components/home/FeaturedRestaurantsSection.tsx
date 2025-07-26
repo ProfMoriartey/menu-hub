@@ -14,6 +14,7 @@ import {
 import type { Restaurant } from "~/types/restaurant";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion"; // ADDED: Import motion
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 interface FeaturedRestaurantsSectionProps {
   restaurants: Restaurant[];
@@ -22,6 +23,8 @@ interface FeaturedRestaurantsSectionProps {
 export function FeaturedRestaurantsSection({
   restaurants,
 }: FeaturedRestaurantsSectionProps) {
+  // Initialize translations for the 'featured' namespace
+  const t = useTranslations("featured");
   const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Image`;
 
   return (
@@ -35,12 +38,12 @@ export function FeaturedRestaurantsSection({
       <div className="container mx-auto max-w-6xl px-4">
         {/* UPDATED: Use text-foreground for the heading */}
         <h2 className="text-foreground mb-10 text-center text-4xl font-bold">
-          Featured Restaurants
+          {t("title")} {/* Use translated value for title */}
         </h2>
         {restaurants.length === 0 ? (
           // UPDATED: Use text-muted-foreground for text
           <div className="text-muted-foreground py-10 text-center">
-            <p>No featured restaurants available at the moment.</p>
+            <p>{t("empty")}</p> {/* Use translated value for empty message */}
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -83,7 +86,8 @@ export function FeaturedRestaurantsSection({
                     <CardContent className="mt-auto">
                       {/* Button with outline variant should pick up theme colors */}
                       <Button variant="outline" className="w-full">
-                        View Menu
+                        {t("button.single")}{" "}
+                        {/* Use translated value for single button */}
                       </Button>
                     </CardContent>
                   </Card>
@@ -103,7 +107,7 @@ export function FeaturedRestaurantsSection({
                 "bg-primary text-primary-foreground hover:bg-primary/90",
               )}
             >
-              View All Restaurants
+              {t("button.all")} {/* Use translated value for all button */}
             </motion.button>
           </Link>
         </div>

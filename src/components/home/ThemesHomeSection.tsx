@@ -7,10 +7,14 @@ import { motion } from "framer-motion";
 import { Button } from "~/components/ui/button";
 import { ClassicThemeExample } from "~/components/themes/ClassicThemeExample";
 import { AccordionCardThemeExample } from "~/components/themes/AccordionCardThemeExample";
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 import SittingDoodle from "../svg/SittingDoodle";
 
 export function ThemesHomeSection() {
+  // Initialize translations for the 'themes' namespace
+  const t = useTranslations("themes");
+
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
@@ -33,7 +37,6 @@ export function ThemesHomeSection() {
       <div className="container mx-auto max-w-6xl px-4">
         {/* Top Row: Why Us Text and SVG (side-by-side) */}
         <div className="mb-12 flex flex-col items-center justify-center gap-8 lg:flex-row">
-          {" "}
           {/* MODIFIED: Flex container for text and SVG */}
           {/* Why Us Text */}
           <div className="w-full text-center lg:w-1/2 lg:text-left">
@@ -42,19 +45,14 @@ export function ThemesHomeSection() {
               transition={{ delay: 0.2 }}
               className="text-foreground mb-4 text-4xl font-bold"
             >
-              Why Choose Menupedia?
+              {t("title")} {/* Use translated value for title */}
             </motion.h2>
             <motion.p
               variants={itemVariants}
               transition={{ delay: 0.3 }}
               className="text-muted-foreground mx-auto text-lg leading-relaxed lg:mx-0"
             >
-              Menupedia simplifies restaurant menu management and discovery. We
-              offer intuitive tools for businesses and a rich, user-friendly
-              experience for diners. Our focus on local gastronomy means you
-              support your community while exploring diverse culinary options.
-              With seamless integration and dynamic display themes, we make
-              digital menus engaging and effortless.
+              {t("description")} {/* Use translated value for description */}
             </motion.p>
           </div>
           {/* CoffeeDoodle SVG */}
@@ -75,17 +73,15 @@ export function ThemesHomeSection() {
 
         {/* Bottom Section: Interactive Examples */}
         <div className="flex flex-col items-center">
-          {" "}
           {/* Centering content below */}
           <motion.h3
             variants={itemVariants}
             transition={{ delay: 0.4 }}
             className="text-foreground mb-4 text-center text-3xl font-bold"
           >
-            See Our Digital Menus in Action
+            {t("previewTitle")} {/* Use translated value for previewTitle */}
           </motion.h3>
           <div className="mb-12 flex w-full flex-col justify-center gap-8 md:flex-row">
-            {" "}
             {/* MODIFIED: Examples now below, in a row on md+ */}
             {/* Classic Theme Example */}
             <motion.div
@@ -94,7 +90,8 @@ export function ThemesHomeSection() {
               className="flex w-full flex-col items-center md:w-1/2"
             >
               <h4 className="text-foreground mb-4 text-xl font-semibold">
-                Classic Layout
+                {t("example.classic")}{" "}
+                {/* Use translated value for example.classic */}
               </h4>
               <ClassicThemeExample />
             </motion.div>
@@ -105,7 +102,8 @@ export function ThemesHomeSection() {
               className="flex w-full flex-col items-center md:w-1/2"
             >
               <h4 className="text-foreground mb-4 text-xl font-semibold">
-                Accordion Card Layout
+                {t("example.accordion")}{" "}
+                {/* Use translated value for example.accordion */}
               </h4>
               <AccordionCardThemeExample />
             </motion.div>
@@ -123,7 +121,7 @@ export function ThemesHomeSection() {
                   "bg-primary text-primary-foreground hover:bg-primary/90",
                 )}
               >
-                Explore All Features
+                {t("cta")} {/* Use translated value for cta */}
               </Button>
             </Link>
           </motion.div>

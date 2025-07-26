@@ -4,8 +4,12 @@
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import ZombieingDoodle from "../svg/ZombieingDoodle";
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 export function ContactHomeSection() {
+  // Initialize translations for the 'contact' namespace
+  const t = useTranslations("contact");
+
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
@@ -26,7 +30,6 @@ export function ContactHomeSection() {
       className={cn("py-16", "bg-primary text-primary-foreground")}
     >
       <div className="container mx-auto flex max-w-6xl flex-col items-center justify-center gap-12 px-4 lg:flex-row">
-        {" "}
         {/* MODIFIED: Added flex layout classes */}
         {/* Left Column: CoffeeDoodle SVG */}
         <motion.div
@@ -44,21 +47,20 @@ export function ContactHomeSection() {
         </motion.div>
         {/* Right Column: Contact Information */}
         <div className="order-1 w-full text-center lg:order-2 lg:w-1/2 lg:text-left">
-          {" "}
           {/* Sets text to right on large screens */}
           <motion.h2
             variants={itemVariants}
             transition={{ delay: 0.4 }} // Staggered animation
             className="mb-4 text-4xl font-bold"
           >
-            Get in Touch
+            {t("title")} {/* Use translated value for title */}
           </motion.h2>
           <motion.p
             variants={itemVariants}
             transition={{ delay: 0.5 }} // Staggered animation
             className="mb-8 text-lg leading-relaxed opacity-90"
           >
-            Have questions or need support? Reach out to us!
+            {t("description")} {/* Use translated value for description */}
           </motion.p>
           <motion.div
             variants={itemVariants}
@@ -66,7 +68,7 @@ export function ContactHomeSection() {
             className="space-y-4 text-xl"
           >
             <p>
-              Email:{" "}
+              {t("emailLabel")}: {/* Use translated value for email label */}
               <a
                 href="mailto:ahmed.a.alhusaini@gmail.com"
                 className="text-attention hover:underline"
@@ -75,7 +77,7 @@ export function ContactHomeSection() {
               </a>
             </p>
             <p>
-              Phone:{" "}
+              {t("phoneLabel")}: {/* Use translated value for phone label */}
               <a
                 href="tel:+905531565053" // Corrected href for phone number
                 className="text-attention hover:underline"
