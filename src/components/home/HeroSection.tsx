@@ -5,10 +5,8 @@ import Link from "next/link";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 // import Image from "next/image"; // REMOVED: No longer using next/image for the SVG
-import CoffeeDoodle from "~/components/svg/CoffeeDoodle"; // ADDED: Import your SVG component
+
 import GroovySittingDoodle from "../svg/GroovySittingDoodle";
-import SittingDoodle from "../svg/SittingDoodle";
-import ZombieingDoodle from "../svg/ZombieingDoodle";
 
 export function HeroSection() {
   return (

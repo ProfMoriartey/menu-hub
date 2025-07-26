@@ -8,7 +8,6 @@ import { Button } from "~/components/ui/button";
 import { ClassicThemeExample } from "~/components/themes/ClassicThemeExample";
 import { AccordionCardThemeExample } from "~/components/themes/AccordionCardThemeExample";
 
-import ZombieingDoodle from "../svg/ZombieingDoodle";
 import SittingDoodle from "../svg/SittingDoodle";
 
 export function ThemesHomeSection() {
