@@ -2,18 +2,23 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "~/i18n/navigation";
+import { useState, useTransition } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations } from "next-intl"; // Import useTranslations
+import { useTranslations, useLocale } from "next-intl"; // CHANGED: Import useLocale
 
 export function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const currentLocale = useLocale(); // ADDED: Get current locale using useLocale
+  const [isPending, startTransition] = useTransition();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const t = useTranslations("navbar"); // Initialize translations for the 'navbar' namespace
+  const t = useTranslations("navbar");
+
+  const locales = ["en", "tr", "ar"];
 
   const navLinks = [
     { name: t("home"), href: "/" },
@@ -22,11 +27,10 @@ export function Navbar() {
     { name: t("aboutUs"), href: "/about" },
   ];
 
-  // Variants for menu animation
   const navItemVariants = {
     hidden: { opacity: 0, y: -10 },
     visible: { opacity: 1, y: 0 },
-    hover: { scale: 1.05, color: "var(--color-primary)" }, // Use CSS variable for hover color
+    hover: { scale: 1.05, color: "var(--color-primary)" },
   };
 
   const mobileMenuVariants = {
@@ -35,12 +39,18 @@ export function Navbar() {
     exit: { opacity: 0, y: -100 },
   };
 
+  const handleLocaleChange = (newLocale: string) => {
+    startTransition(() => {
+      // The router.replace method correctly uses the provided locale option
+      router.replace(pathname, { locale: newLocale });
+    });
+  };
+
   return (
-    // ADDED: motion.nav for a subtle slide-down and fade-in effect
     <motion.nav
-      initial={{ opacity: 0, y: -20 }} // Starts invisible and slightly above
-      animate={{ opacity: 1, y: 0 }} // Animates to visible and original position
-      transition={{ duration: 0.5 }} // Smooth animation
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
       className="bg-card sticky top-0 z-50 w-full p-4 shadow-md"
     >
       <div className="container mx-auto flex items-center justify-between">
@@ -49,28 +59,52 @@ export function Navbar() {
           <span className="text-primary text-2xl font-bold">Menupedia</span>
         </Link>
 
-        {/* Right Side: Desktop Navigation Links and Theme Toggle */}
-        <div className="flex items-center space-x-6">
+        {/* Right Side: Desktop Navigation Links, Language Toggle, and Theme Toggle */}
+        <div className="flex items-center space-x-4 md:space-x-6">
           {/* Desktop Navigation Links */}
           <div className="hidden items-center space-x-6 md:flex">
             {navLinks.map((link, index) => (
-              <motion.a // CHANGED: Link to motion.a for hover/tap effects
+              <motion.a
                 key={link.name}
                 href={link.href}
-                variants={navItemVariants} // Apply variants
+                variants={navItemVariants}
                 initial="hidden"
                 animate="visible"
                 whileHover="hover"
-                transition={{ delay: index * 0.05, duration: 0.3 }} // Staggered delay
+                transition={{ delay: index * 0.05, duration: 0.3 }}
                 className={cn(
-                  "text-lg font-medium transition-colors", // transition-colors is still useful for Tailwind's direct color changes
+                  "text-lg font-medium transition-colors",
                   pathname === link.href ? "text-primary" : "text-foreground",
-                  "cursor-pointer", // Ensure cursor is pointer
+                  "cursor-pointer",
                 )}
               >
                 {link.name}
               </motion.a>
             ))}
+          </div>
+
+          {/* Language Toggle */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="language-select" className="sr-only">
+              {t("language")}
+            </label>
+            <select
+              id="language-select"
+              defaultValue={currentLocale} // CHANGED: Use currentLocale here
+              onChange={(e) => handleLocaleChange(e.target.value)}
+              disabled={isPending}
+              className={cn(
+                "bg-card text-foreground border-input rounded-md border px-2 py-1",
+                "focus:ring-primary focus:border-primary focus:outline-none",
+                "cursor-pointer",
+              )}
+            >
+              {locales.map((locale) => (
+                <option key={locale} value={locale}>
+                  {locale.toUpperCase()}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Theme Toggle */}
@@ -95,14 +129,13 @@ export function Navbar() {
       </div>
 
       {/* Mobile Menu Dropdown/Overlay */}
-      {/* ADDED: AnimatePresence for exit animations */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             variants={mobileMenuVariants}
             initial="hidden"
             animate="visible"
-            exit="exit" // ADDED: exit state for AnimatePresence
+            exit="exit"
             transition={{ duration: 0.3 }}
             className="bg-background fixed inset-0 z-40 flex flex-col items-center justify-center space-y-8 py-10 md:hidden"
           >
@@ -114,30 +147,51 @@ export function Navbar() {
               <X className="h-8 w-8" />
             </button>
 
-            {navLinks.map(
-              (
-                link,
-                index, // ADDED: index for staggered animation
-              ) => (
-                <motion.a // CHANGED: Link to motion.a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  variants={navItemVariants} // Use same variants
-                  initial="hidden"
-                  animate="visible"
-                  whileHover="hover"
-                  transition={{ delay: index * 0.05 + 0.2, duration: 0.3 }} // Staggered delay + slight overall delay for mobile links
-                  className={cn(
-                    "text-3xl font-semibold transition-colors",
-                    pathname === link.href ? "text-primary" : "text-foreground",
-                    "cursor-pointer",
-                  )}
-                >
-                  {link.name}
-                </motion.a>
-              ),
-            )}
+            {navLinks.map((link, index) => (
+              <motion.a
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                variants={navItemVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+                transition={{ delay: index * 0.05 + 0.2, duration: 0.3 }}
+                className={cn(
+                  "text-3xl font-semibold transition-colors",
+                  pathname === link.href ? "text-primary" : "text-foreground",
+                  "cursor-pointer",
+                )}
+              >
+                {link.name}
+              </motion.a>
+            ))}
+
+            {/* Language Toggle in Mobile Menu */}
+            <div className="mt-8 flex items-center gap-2">
+              <label htmlFor="mobile-language-select" className="sr-only">
+                {t("language")}
+              </label>
+              <select
+                id="mobile-language-select"
+                defaultValue={currentLocale} // CHANGED: Use currentLocale here
+                onChange={(e) => handleLocaleChange(e.target.value)}
+                disabled={isPending}
+                className={cn(
+                  "bg-card text-foreground border-input rounded-md border px-4 py-2 text-xl",
+                  "focus:ring-primary focus:border-primary focus:outline-none",
+                  "cursor-pointer",
+                )}
+              >
+                {locales.map((locale) => (
+                  <option key={locale} value={locale}>
+                    {locale.toUpperCase()}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Theme Toggle in Mobile Menu */}
+            <ThemeToggle />
           </motion.div>
         )}
       </AnimatePresence>

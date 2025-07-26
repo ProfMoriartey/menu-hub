@@ -1,141 +1,142 @@
 {
   "hero": {
     "title": {
-      "main": "اكتشف وجبتك",
-      "highlight": "المفضلة التالية"
+      "main": "Yeni Favori",
+      "highlight": "Yemeğinizi Keşfedin"
     },
-    "description": "استكشف قوائم الطعام المتنوعة من المطاعم المحلية، واعثر على الإلهام الطهوي، واستمتع بتجارب طعام سلسة.",
-    "cta": "ابدأ الاستكشاف"
+    "description": "Yerel restoranlardan çeşitli menüleri keşfedin, mutfak ilhamı bulun ve sorunsuz yemek deneyimlerinin tadını çıkarın.",
+    "cta": "Keşfetmeye Başla"
   },
   "about": {
-    "title": "اكتشف المزيد عن مينوبيديا",
-    "description": "مينوبيديا هي وجهتك النهائية عبر الإنترنت لاستكشاف المطاعم المحلية وقوائمها الشهية. نربط محبي الطعام المتحمسين بمجموعة متنوعة من التجارب الطهوية، مما يجعل العثور على ما تشتهيه أمرًا سهلاً. مهمتنا الأساسية هي تبسيط خياراتك الغذائية، ودعم الشركات المحلية، وعرض أفضل ما في فن الطهو المحلي.",
-    "cta": "تعرف على المزيد حول مينوبيديا"
+    "title": "Menupedia Hakkında Daha Fazla Bilgi Edinin",
+    "description": "Menupedia, yerel eatery'leri ve lezzetli menülerini keşfetmek için birincil çevrimiçi varış noktanızdır. Tutkulu yemek severleri çeşitli mutfak deneyimleriyle buluşturuyor, ne aradığınızı zahmetsizce bulmanızı sağlıyoruz. Temel misyonumuz, yemek seçimlerinizi basitleştirmek, yerel işletmeleri desteklemek ve yerel gastronominin en iyilerini sergilemektir.",
+    "cta": "Menupedia Hakkında Daha Fazla Bilgi Edinin"
   },
   "featured": {
-    "title": "المطاعم المميزة",
-    "empty": "لا توجد مطاعم مميزة متاحة في الوقت الحالي.",
+    "title": "Öne Çıkan Restoranlar",
+    "empty": "Şu anda öne çıkan restoran bulunmamaktadır.",
     "button": {
-      "single": "عرض القائمة",
-      "all": "عرض جميع المطاعم"
+      "single": "Menüyü Görüntüle",
+      "all": "Tüm Restoranları Görüntüle"
     }
   },
   "themes": {
-    "title": "لماذا تختار مينوبيديا؟",
-    "description": "مينوبيديا تبسّط إدارة قوائم المطاعم واكتشافها. نقدم أدوات بديهية للشركات وتجربة غنية وسهلة الاستخدام لرواد المطاعم. تركيزنا على فن الطهو المحلي يعني أنك تدعم مجتمعك أثناء استكشاف خيارات طهي متنوعة. بفضل التكامل السلس وثيمات العرض الديناميكية، نجعل القوائم الرقمية جذابة وسهلة.",
-    "previewTitle": "شاهد قوائمنا الرقمية قيد العمل",
+    "title": "Neden Menupedia'yı Seçmelisiniz?",
+    "description": "Menupedia, restoran menü yönetimini ve keşfini basitleştirir. İşletmeler için sezgisel araçlar ve yemek yiyenler için zengin, kullanıcı dostu bir deneyim sunuyoruz. Yerel gastronomiye odaklanmamız, çeşitli mutfak seçeneklerini keşfederken topluluğunuzu desteklemeniz anlamına gelir. Sorunsuz entegrasyon ve dinamik görüntü temalarıyla dijital menüleri çekici ve zahmetsiz hale getiriyoruz.",
+    "previewTitle": "Dijital Menülerimizi Uygulamada Görün",
     "example": {
-      "classic": "التصميم الكلاسيكي",
-      "accordion": "تصميم بطاقة الأكورديون"
+      "classic": "Klasik Düzen",
+      "accordion": "Akordeon Kart Düzeni"
     },
-    "cta": "استكشف جميع الميزات"
+    "cta": "Tüm Özellikleri Keşfet"
   },
   "contact": {
-    "title": "تواصل معنا",
-    "description": "هل لديك أسئلة أو تحتاج إلى دعم؟ تواصل معنا!",
-    "emailLabel": "البريد الإلكتروني",
-    "phoneLabel": "الهاتف"
+    "title": "Bize Ulaşın",
+    "description": "Sorularınız mı var veya desteğe mi ihtiyacınız var? Bize ulaşın!",
+    "emailLabel": "E-posta",
+    "phoneLabel": "Telefon"
   },
   "messages": {
-    "title": "رسائلك",
-    "empty": "لا توجد رسائل بعد. ابدأ محادثة!",
-    "noChatSelected": "اختر محادثة لعرض الرسائل.",
-    "chatInputPlaceholder": "اكتب رسالتك...",
-    "sendButton": "إرسال",
-    "messageSent": "تم إرسال الرسالة!",
-    "errorSendingMessage": "فشل إرسال الرسالة.",
-    "loadingMessages": "جارٍ تحميل الرسائل...",
-    "errorLoadingMessages": "فشل تحميل الرسائل."
+    "title": "Mesajlarınız",
+    "empty": "Henüz mesaj yok. Bir sohbet başlatın!",
+    "noChatSelected": "Mesajları görüntülemek için bir sohbet seçin.",
+    "chatInputPlaceholder": "Mesajınızı yazın...",
+    "sendButton": "Gönder",
+    "messageSent": "Mesaj gönderildi!",
+    "errorSendingMessage": "Mesaj gönderilemedi.",
+    "loadingMessages": "Mesajlar yükleniyor...",
+    "errorLoadingMessages": "Mesajlar yüklenemedi."
   },
   "aboutPage": {
-    "mainTitle": "عن مينوبيديا",
-    "mainDescription": "مينوبيديا هي منصتك النهائية عبر الإنترنت لاكتشاف واستكشاف المطاعم المحلية وعروضها الطهوية المتنوعة. نحن نربط عشاق الطعام بمجموعة واسعة من تجارب تناول الطعام، مما يسهل أكثر من أي وقت مضى العثور على ما تشتهيه بالضبط. مهمتنا هي تبسيط خياراتك الغذائية وتسليط الضوء على أفضل ما في فن الطهو المحلي، كل ذلك في مكان واحد مناسب.",
-    "whatWeOfferTitle": "ما نقدمه",
-    "whatWeOfferDescription": "توفر مينوبيديا تجربة سلسة لكل من رواد المطاعم وأصحاب المطاعم.",
+    "mainTitle": "Menupedia Hakkında",
+    "mainDescription": "Menupedia, yerel restoranları ve çeşitli mutfak tekliflerini keşfetmek için nihai çevrimiçi platformunuzdur. Yemek severleri geniş bir yemek deneyimi yelpazesiyle buluşturarak, tam olarak ne istediğinizi bulmayı her zamankinden daha kolay hale getiriyoruz. Misyonumuz, yemek seçimlerinizi basitleştirmek ve yerel gastronominin en iyilerini tek bir uygun yerde vurgulamaktır.",
+    "whatWeOfferTitle": "Sunduklarımız",
+    "whatWeOfferDescription": "Menupedia, hem yemek yiyenler hem de restoran sahipleri için sorunsuz bir deneyim sunar.",
     "forDiners": {
-      "title": "لرواد المطاعم:",
-      "description": "سهولة الوصول إلى قوائم المطاعم المخصصة، والأطباق المصنفة، ومعلومات مفصلة عن العناصر (بما في ذلك المكونات وملصقات الحمية)، وصور جميلة. اكتشف مفضلات جديدة بسهولة."
+      "title": "Yemek Yiyenler İçin:",
+      "description": "Özel restoran menülerine, kategorize edilmiş yemeklere, detaylı ürün bilgilerine (içerikler ve diyet etiketleri dahil) ve güzel görsellere kolay erişim. Yeni favorileri zahmetsizce keşfedin."
     },
     "forRestaurantOwners": {
-      "title": "لأصحاب المطاعم:",
-      "description": "لوحة تحكم إدارية قوية لإدارة ملف تعريف مطعمك، وفئات القائمة، وعناصر القائمة الفردية. قم بتحميل الصور، وتحديد الأسعار، وتحديث معلومات الحمية بسهولة."
+      "title": "Restoran Sahipleri İçin:",
+      "description": "Restoranınızın profilini, menü kategorilerini ve bireysel menü öğelerini yönetmek için güçlü bir yönetici panosu. Kolayca resim yükleyin, fiyatları ayarlayın ve diyet bilgilerini güncelleyin."
     },
     "customizableThemes": {
-      "title": "ثيمات قابلة للتخصيص:",
-      "description": "يمكن للمطاعم الاختيار من بين ثيمات عرض متنوعة لتتناسب مع أسلوب علامتها التجارية الفريد، مما يضمن تجربة عملاء مخصصة."
+      "title": "Özelleştirilebilir Temalar:",
+      "description": "Restoranlar, markalarının benzersiz tarzına uyacak çeşitli görüntü temaları arasından seçim yaparak kişiselleştirilmiş bir müşteri deneyimi sağlayabilir."
     },
     "optimizedForAllDevices": {
-      "title": "محسن لجميع الأجهزة:",
-      "description": "تم تصميم منصتنا لتوفير تجربة مشاهدة وتصفح مثالية على كل من الهواتف المحمولة وأجهزة الكمبيوتر المكتبية."
+      "title": "Tüm Cihazlar İçin Optimize Edildi:",
+      "description": "Platformumuz, hem cep telefonlarında hem de masaüstü bilgisayarlarda optimum görüntüleme ve gezinme deneyimi sağlamak üzere tasarlanmıştır."
     },
-    "ourCommitmentTitle": "التزامنا",
+    "ourCommitmentTitle": "Taahhüdümüz",
     "simplicity": {
-      "title": "البساطة:",
-      "description": "نسعى جاهدين لجعل إدارة القوائم واكتشافها عبر الإنترنت أمرًا بسيطًا قدر الإمكان."
+      "title": "Basitlik:",
+      "description": "Çevrimiçi menü yönetimini ve keşfini olabildiğince basit hale getirmeye çalışıyoruz."
     },
     "innovation": {
-      "title": "الابتكار:",
-      "description": "نعمل باستمرار على تحسين منصتنا بميزات وتقنيات جديدة."
+      "title": "İnovasyon:",
+      "description": "Platformumuzu yeni özellikler ve teknolojilerle sürekli geliştiriyoruz."
     },
     "userExperience": {
-      "title": "تجربة المستخدم:",
-      "description": "نحن نعطي الأولوية للتصميم البديهي لكل من أصحاب المطاعم وعملائهم."
+      "title": "Kullanıcı Deneyimi:",
+      "description": "Hem restoran sahipleri hem de müşterileri için sezgisel tasarımı önceliklendiriyoruz."
     },
     "reliability": {
-      "title": "الموثوقية:",
-      "description": "تم بناء مينوبيديا على حزمة تقنية قوية، مما يوفر أداءً ثابتًا."
+      "title": "Güvenilirlik:",
+      "description": "Sağlam bir yığın üzerine kurulu olan Menupedia, tutarlı performans sunar."
     },
-    "getStartedTitle": "ابدأ",
-    "getStartedDescription": "هل أنت مستعد لتبسيط وجود مطعمك عبر الإنترنت أو اكتشاف وجبتك المفضلة التالية؟ استكشف مينوبيديا اليوم!",
+    "getStartedTitle": "Başlayın",
+    "getStartedDescription": "Restoranınızın çevrimiçi varlığını düzene sokmaya veya bir sonraki favori yemeğinizi keşfetmeye hazır mısınız? Menupedia'yı bugün keşfedin!",
     "exploreRestaurants": {
-      "title": "استكشف المطاعم:",
-      "linkText": "تصفح جميع القوائم"
+      "title": "Restoranları Keşfet:",
+      "linkText": "Tüm Menülere Göz At"
     }
   },
   "restaurantsPage": {
-    "mainTitle": "اكتشف المطاعم",
-    "description": "ابحث واستكشف جميع المطاعم المتاحة على مينوبيديا.",
-    "searchButton": "البحث عن المطاعم",
-    "searchPlaceholder": "ابحث عن مطعم، مطبخ، أو صنف...",
-    "noResultsFound": "لم يتم العثور على نتائج لـ \"{searchTerm}\".",
-    "allRestaurantsTitle": "جميع المطاعم",
-    "noRestaurantsFound": "لم يتم العثور على مطاعم.",
-    "adminPrompt": "إذا كنت المسؤول، يرجى إضافة مطاعم عبر لوحة التحكم."
+    "mainTitle": "Restoranları Keşfet",
+    "description": "Menupedia'da bulunan tüm restoranları arayın ve keşfedin.",
+    "searchButton": "Restoran Ara",
+    "searchPlaceholder": "Restoran, mutfak veya menü öğesi ara...",
+    "noResultsFound": "\"{searchTerm}\" için sonuç bulunamadı.",
+    "allRestaurantsTitle": "Tüm Restoranlar",
+    "noRestaurantsFound": "Restoran bulunamadı.",
+    "adminPrompt": "Eğer yöneticisiyseniz, lütfen panodan restoran ekleyin."
   },
   "themesPage": {
-    "mainTitle": "استكشف سمات القائمة",
-    "description": "اكتشف الطرق المختلفة التي يمكن أن تتألق بها قائمة مطعمك. يقدم كل سمة تجربة بصرية فريدة.",
+    "mainTitle": "Menü Temalarını Keşfet",
+    "description": "Restoranınızın menüsünün parlayabileceği farklı yolları keşfedin. Her tema benzersiz bir görsel deneyim sunar.",
     "sections": {
       "classic": {
-        "title": "التصميم الكلاسيكي",
-        "description": "تصميم خالد وسهل التنقل. يتميز بفئات علوية بارزة وشبكة قائمة واضحة من عمودين. مثالي للقوائم الواسعة.",
-        "howItLooks": "كيف يبدو:",
-        "noRestaurantFound": "لم يتم العثور على مطعم بالسمة 'classic' للعرض."
+        "title": "Klasik Düzen",
+        "description": "Zamana meydan okuyan, gezinmesi kolay bir düzen. Belirgin üst kategorilere ve net iki sütunlu menü ızgarasına sahiptir. Geniş menüler için idealdir.",
+        "howItLooks": "Nasıl görünüyor:",
+        "noRestaurantFound": "Görüntülenecek 'klasik' temalı restoran bulunamadı."
       },
       "sidebarList": {
-        "title": "تصميم قائمة الشريط الجانبي",
-        "description": "يتميز بشريط جانبي عمودي نظيف للتنقل بين الفئات، مع عرض عناصر القائمة بتنسيق قائمة من عمود واحد.",
-        "howItLooks": "كيف يبدو:",
-        "noRestaurantFound": "لم يتم العثور على مطعم بالسمة 'sidebar-list' للعرض."
+        "title": "Kenar Çubuğu Liste Düzeni",
+        "description": "Kategori navigasyonu için temiz bir dikey kenar çubuğu ve tek sütunlu liste formatında görüntülenen menü öğeleri içerir.",
+        "howItLooks": "Nasıl görünüyor:",
+        "noRestaurantFound": "Görüntülenecek 'kenar çubuğu liste' temalı restoran bulunamadı."
       },
       "accordionCard": {
-        "title": "تصميم بطاقة الأكورديون",
-        "description": "ينظم فئات القائمة في أقسام أكورديون قابلة للتوسيع/الطي، ويكشف عن عناصر القائمة المعروضة كبطاقات مميزة.",
-        "howItLooks": "كيف يبدو:",
-        "noRestaurantFound": "لم يتم العثور على مطعم بالسمة 'accordion-card' للعرض."
+        "title": "Akordeon Kart Düzeni",
+        "description": "Menü kategorilerini genişletilebilir/daraltılabilir akordeon bölümlerine göre düzenler, menü öğelerini ayrı kartlar olarak gösterir.",
+        "howItLooks": "Nasıl görünüyor:",
+        "noRestaurantFound": "Görüntülenecek 'akordeon kart' temalı restoran bulunamadı."
       },
       "categoryCardsImageDominant": {
-        "title": "تصميم بطاقات الفئة مع الصور البارزة",
-        "description": "يقدم الفئات كبطاقات بارزة قابلة للنقر. عند الاختيار، يتم عرض عناصر القائمة بصور أكبر وأكثر بروزًا لتجربة بصرية غنية.",
-        "howItLooks": "كيف يبدو:",
-        "noRestaurantFound": "لم يتم العثور على مطعم بالسمة 'category-cards-image-dominant' للعرض."
+        "title": "Kategori Kartları Görsel Odaklı Düzen",
+        "description": "Kategorileri belirgin tıklanabilir kartlar olarak sunar. Seçim üzerine, menü öğeleri görsel olarak zengin bir deneyim için daha büyük, baskın görsellerle görüntülenir.",
+        "howItLooks": "Nasıl görünüyor:",
+        "noRestaurantFound": "Görüntülenecek 'kategori kartları görsel odaklı' temalı restoran bulunamadı."
       }
     }
   },
   "navbar": {
-    "home": "الرئيسية",
-    "restaurants": "المطاعم",
-    "themes": "الثيمات",
-    "aboutUs": "عنا"
+    "home": "Ana Sayfa",
+    "restaurants": "Restoranlar",
+    "themes": "Temalar",
+    "aboutUs": "Hakkımızda",
+    "language": "Dil"
   }
 }
