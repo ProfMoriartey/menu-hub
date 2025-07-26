@@ -1,39 +1,141 @@
 {
   "hero": {
     "title": {
-      "main": "Yeni Favori Yemeğini",
-      "highlight": "Keşfet"
+      "main": "اكتشف وجبتك",
+      "highlight": "المفضلة التالية"
     },
-    "description": "Yerel restoranların çeşitli menülerini keşfet, ilham al ve sorunsuz bir yemek deneyimi yaşa.",
-    "cta": "Keşfetmeye Başla"
+    "description": "استكشف قوائم الطعام المتنوعة من المطاعم المحلية، واعثر على الإلهام الطهوي، واستمتع بتجارب طعام سلسة.",
+    "cta": "ابدأ الاستكشاف"
   },
   "about": {
-    "title": "Menupedia Hakkında Daha Fazlasını Keşfet",
-    "description": "Menupedia, yerel restoranları ve onların lezzetli menülerini keşfetmek için önde gelen çevrim içi platformdur. Tutkulu yemek severleri çeşitli mutfak deneyimleriyle buluşturur, ne aradığınızı kolayca bulmanızı sağlar. Amacımız yemek seçimini kolaylaştırmak, yerel işletmeleri desteklemek ve yerel gastronominin en iyilerini sergilemektir.",
-    "cta": "Menupedia Hakkında Daha Fazlası"
+    "title": "اكتشف المزيد عن مينوبيديا",
+    "description": "مينوبيديا هي وجهتك النهائية عبر الإنترنت لاستكشاف المطاعم المحلية وقوائمها الشهية. نربط محبي الطعام المتحمسين بمجموعة متنوعة من التجارب الطهوية، مما يجعل العثور على ما تشتهيه أمرًا سهلاً. مهمتنا الأساسية هي تبسيط خياراتك الغذائية، ودعم الشركات المحلية، وعرض أفضل ما في فن الطهو المحلي.",
+    "cta": "تعرف على المزيد حول مينوبيديا"
   },
   "featured": {
-    "title": "Öne Çıkan Restoranlar",
-    "empty": "Şu anda öne çıkan restoran bulunmamaktadır.",
+    "title": "المطاعم المميزة",
+    "empty": "لا توجد مطاعم مميزة متاحة في الوقت الحالي.",
     "button": {
-      "single": "Menüyü Görüntüle",
-      "all": "Tüm Restoranları Gör"
+      "single": "عرض القائمة",
+      "all": "عرض جميع المطاعم"
     }
   },
   "themes": {
-    "title": "Neden Menupedia?",
-    "description": "Menupedia, restoran menülerinin yönetimini ve keşfini kolaylaştırır. İşletmelere sezgisel araçlar, kullanıcılar için ise zengin ve kolay kullanımlı bir deneyim sunar. Yerel gastronomiye odaklanarak hem topluluğunuzu destekler hem de çeşitli mutfak seçeneklerini keşfedersiniz. Sorunsuz entegrasyon ve dinamik tema seçenekleriyle dijital menüleri etkileyici ve zahmetsiz hale getiriyoruz.",
-    "previewTitle": "Dijital Menülerimizi Harekete Geçmiş Haliyle Görün",
+    "title": "لماذا تختار مينوبيديا؟",
+    "description": "مينوبيديا تبسّط إدارة قوائم المطاعم واكتشافها. نقدم أدوات بديهية للشركات وتجربة غنية وسهلة الاستخدام لرواد المطاعم. تركيزنا على فن الطهو المحلي يعني أنك تدعم مجتمعك أثناء استكشاف خيارات طهي متنوعة. بفضل التكامل السلس وثيمات العرض الديناميكية، نجعل القوائم الرقمية جذابة وسهلة.",
+    "previewTitle": "شاهد قوائمنا الرقمية قيد العمل",
     "example": {
-      "classic": "Klasik Düzen",
-      "accordion": "Akordeon Kart Düzeni"
+      "classic": "التصميم الكلاسيكي",
+      "accordion": "تصميم بطاقة الأكورديون"
     },
-    "cta": "Tüm Özellikleri Keşfet"
+    "cta": "استكشف جميع الميزات"
   },
   "contact": {
-    "title": "İletişime Geçin",
-    "description": "Sorularınız mı var veya desteğe mi ihtiyacınız var? Bizimle iletişime geçin!",
-    "emailLabel": "E-posta",
-    "phoneLabel": "Telefon"
+    "title": "تواصل معنا",
+    "description": "هل لديك أسئلة أو تحتاج إلى دعم؟ تواصل معنا!",
+    "emailLabel": "البريد الإلكتروني",
+    "phoneLabel": "الهاتف"
+  },
+  "messages": {
+    "title": "رسائلك",
+    "empty": "لا توجد رسائل بعد. ابدأ محادثة!",
+    "noChatSelected": "اختر محادثة لعرض الرسائل.",
+    "chatInputPlaceholder": "اكتب رسالتك...",
+    "sendButton": "إرسال",
+    "messageSent": "تم إرسال الرسالة!",
+    "errorSendingMessage": "فشل إرسال الرسالة.",
+    "loadingMessages": "جارٍ تحميل الرسائل...",
+    "errorLoadingMessages": "فشل تحميل الرسائل."
+  },
+  "aboutPage": {
+    "mainTitle": "عن مينوبيديا",
+    "mainDescription": "مينوبيديا هي منصتك النهائية عبر الإنترنت لاكتشاف واستكشاف المطاعم المحلية وعروضها الطهوية المتنوعة. نحن نربط عشاق الطعام بمجموعة واسعة من تجارب تناول الطعام، مما يسهل أكثر من أي وقت مضى العثور على ما تشتهيه بالضبط. مهمتنا هي تبسيط خياراتك الغذائية وتسليط الضوء على أفضل ما في فن الطهو المحلي، كل ذلك في مكان واحد مناسب.",
+    "whatWeOfferTitle": "ما نقدمه",
+    "whatWeOfferDescription": "توفر مينوبيديا تجربة سلسة لكل من رواد المطاعم وأصحاب المطاعم.",
+    "forDiners": {
+      "title": "لرواد المطاعم:",
+      "description": "سهولة الوصول إلى قوائم المطاعم المخصصة، والأطباق المصنفة، ومعلومات مفصلة عن العناصر (بما في ذلك المكونات وملصقات الحمية)، وصور جميلة. اكتشف مفضلات جديدة بسهولة."
+    },
+    "forRestaurantOwners": {
+      "title": "لأصحاب المطاعم:",
+      "description": "لوحة تحكم إدارية قوية لإدارة ملف تعريف مطعمك، وفئات القائمة، وعناصر القائمة الفردية. قم بتحميل الصور، وتحديد الأسعار، وتحديث معلومات الحمية بسهولة."
+    },
+    "customizableThemes": {
+      "title": "ثيمات قابلة للتخصيص:",
+      "description": "يمكن للمطاعم الاختيار من بين ثيمات عرض متنوعة لتتناسب مع أسلوب علامتها التجارية الفريد، مما يضمن تجربة عملاء مخصصة."
+    },
+    "optimizedForAllDevices": {
+      "title": "محسن لجميع الأجهزة:",
+      "description": "تم تصميم منصتنا لتوفير تجربة مشاهدة وتصفح مثالية على كل من الهواتف المحمولة وأجهزة الكمبيوتر المكتبية."
+    },
+    "ourCommitmentTitle": "التزامنا",
+    "simplicity": {
+      "title": "البساطة:",
+      "description": "نسعى جاهدين لجعل إدارة القوائم واكتشافها عبر الإنترنت أمرًا بسيطًا قدر الإمكان."
+    },
+    "innovation": {
+      "title": "الابتكار:",
+      "description": "نعمل باستمرار على تحسين منصتنا بميزات وتقنيات جديدة."
+    },
+    "userExperience": {
+      "title": "تجربة المستخدم:",
+      "description": "نحن نعطي الأولوية للتصميم البديهي لكل من أصحاب المطاعم وعملائهم."
+    },
+    "reliability": {
+      "title": "الموثوقية:",
+      "description": "تم بناء مينوبيديا على حزمة تقنية قوية، مما يوفر أداءً ثابتًا."
+    },
+    "getStartedTitle": "ابدأ",
+    "getStartedDescription": "هل أنت مستعد لتبسيط وجود مطعمك عبر الإنترنت أو اكتشاف وجبتك المفضلة التالية؟ استكشف مينوبيديا اليوم!",
+    "exploreRestaurants": {
+      "title": "استكشف المطاعم:",
+      "linkText": "تصفح جميع القوائم"
+    }
+  },
+  "restaurantsPage": {
+    "mainTitle": "اكتشف المطاعم",
+    "description": "ابحث واستكشف جميع المطاعم المتاحة على مينوبيديا.",
+    "searchButton": "البحث عن المطاعم",
+    "searchPlaceholder": "ابحث عن مطعم، مطبخ، أو صنف...",
+    "noResultsFound": "لم يتم العثور على نتائج لـ \"{searchTerm}\".",
+    "allRestaurantsTitle": "جميع المطاعم",
+    "noRestaurantsFound": "لم يتم العثور على مطاعم.",
+    "adminPrompt": "إذا كنت المسؤول، يرجى إضافة مطاعم عبر لوحة التحكم."
+  },
+  "themesPage": {
+    "mainTitle": "استكشف سمات القائمة",
+    "description": "اكتشف الطرق المختلفة التي يمكن أن تتألق بها قائمة مطعمك. يقدم كل سمة تجربة بصرية فريدة.",
+    "sections": {
+      "classic": {
+        "title": "التصميم الكلاسيكي",
+        "description": "تصميم خالد وسهل التنقل. يتميز بفئات علوية بارزة وشبكة قائمة واضحة من عمودين. مثالي للقوائم الواسعة.",
+        "howItLooks": "كيف يبدو:",
+        "noRestaurantFound": "لم يتم العثور على مطعم بالسمة 'classic' للعرض."
+      },
+      "sidebarList": {
+        "title": "تصميم قائمة الشريط الجانبي",
+        "description": "يتميز بشريط جانبي عمودي نظيف للتنقل بين الفئات، مع عرض عناصر القائمة بتنسيق قائمة من عمود واحد.",
+        "howItLooks": "كيف يبدو:",
+        "noRestaurantFound": "لم يتم العثور على مطعم بالسمة 'sidebar-list' للعرض."
+      },
+      "accordionCard": {
+        "title": "تصميم بطاقة الأكورديون",
+        "description": "ينظم فئات القائمة في أقسام أكورديون قابلة للتوسيع/الطي، ويكشف عن عناصر القائمة المعروضة كبطاقات مميزة.",
+        "howItLooks": "كيف يبدو:",
+        "noRestaurantFound": "لم يتم العثور على مطعم بالسمة 'accordion-card' للعرض."
+      },
+      "categoryCardsImageDominant": {
+        "title": "تصميم بطاقات الفئة مع الصور البارزة",
+        "description": "يقدم الفئات كبطاقات بارزة قابلة للنقر. عند الاختيار، يتم عرض عناصر القائمة بصور أكبر وأكثر بروزًا لتجربة بصرية غنية.",
+        "howItLooks": "كيف يبدو:",
+        "noRestaurantFound": "لم يتم العثور على مطعم بالسمة 'category-cards-image-dominant' للعرض."
+      }
+    }
+  },
+  "navbar": {
+    "home": "الرئيسية",
+    "restaurants": "المطاعم",
+    "themes": "الثيمات",
+    "aboutUs": "عنا"
   }
 }

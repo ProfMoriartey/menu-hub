@@ -7,17 +7,19 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
-import { motion, AnimatePresence } from "framer-motion"; // ADDED: Import motion and AnimatePresence
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 export function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const t = useTranslations("navbar"); // Initialize translations for the 'navbar' namespace
 
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Restaurants", href: "/restaurants" },
-    { name: "Themes", href: "/themes" },
-    { name: "About Us", href: "/about" },
+    { name: t("home"), href: "/" },
+    { name: t("restaurants"), href: "/restaurants" },
+    { name: t("themes"), href: "/themes" },
+    { name: t("aboutUs"), href: "/about" },
   ];
 
   // Variants for menu animation

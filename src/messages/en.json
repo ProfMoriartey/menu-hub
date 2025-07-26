@@ -35,5 +35,107 @@
     "description": "Have questions or need support? Reach out to us!",
     "emailLabel": "Email",
     "phoneLabel": "Phone"
+  },
+  "messages": {
+    "title": "Your Messages",
+    "empty": "No messages yet. Start a conversation!",
+    "noChatSelected": "Select a chat to view messages.",
+    "chatInputPlaceholder": "Type your message...",
+    "sendButton": "Send",
+    "messageSent": "Message sent!",
+    "errorSendingMessage": "Failed to send message.",
+    "loadingMessages": "Loading messages...",
+    "errorLoadingMessages": "Failed to load messages."
+  },
+  "aboutPage": {
+    "mainTitle": "About Menupedia",
+    "mainDescription": "Menupedia is your ultimate online platform for discovering and exploring local restaurants and their diverse culinary offerings. We connect food lovers with a wide array of dining experiences, making it easier than ever to find exactly what you crave. Our mission is to simplify your dining choices and highlight the best of local gastronomy, all in one convenient place.",
+    "whatWeOfferTitle": "What We Offer",
+    "whatWeOfferDescription": "Menupedia provides a seamless experience for both diners and restaurant owners.",
+    "forDiners": {
+      "title": "For Diners:",
+      "description": "Easy access to dedicated restaurant menus, categorized dishes, detailed item information (including ingredients and dietary labels), and beautiful imagery. Discover new favorites effortlessly."
+    },
+    "forRestaurantOwners": {
+      "title": "For Restaurant Owners:",
+      "description": "A powerful admin dashboard to manage your restaurant's profile, menu categories, and individual menu items. Upload images, set prices, and update dietary information with ease."
+    },
+    "customizableThemes": {
+      "title": "Customizable Themes:",
+      "description": "Restaurants can choose from various display themes to match their brand's unique style, ensuring a personalized customer experience."
+    },
+    "optimizedForAllDevices": {
+      "title": "Optimized for All Devices:",
+      "description": "Our platform is designed to provide an optimal viewing and Browse experience on both mobile phones and desktop computers."
+    },
+    "ourCommitmentTitle": "Our Commitment",
+    "simplicity": {
+      "title": "Simplicity:",
+      "description": "We strive to make online menu management and discovery as straightforward as possible."
+    },
+    "innovation": {
+      "title": "Innovation:",
+      "description": "We continuously improve our platform with new features and technologies."
+    },
+    "userExperience": {
+      "title": "User Experience:",
+      "description": "We prioritize intuitive design for both restaurant owners and their customers."
+    },
+    "reliability": {
+      "title": "Reliability:",
+      "description": "Built on a robust stack, Menupedia offers consistent performance."
+    },
+    "getStartedTitle": "Get Started",
+    "getStartedDescription": "Ready to streamline your restaurant's online presence or discover your next favorite meal? Explore Menupedia today!",
+    "exploreRestaurants": {
+      "title": "Explore Restaurants:",
+      "linkText": "Browse All Menus"
+    }
+  },
+  "restaurantsPage": {
+    "mainTitle": "Discover Restaurants",
+    "description": "Search and explore all restaurants available on Menupedia.",
+    "searchButton": "Search Restaurants",
+    "searchPlaceholder": "Search for a restaurant, cuisine, or menu item...",
+    "noResultsFound": "No results found for \"{searchTerm}\".",
+    "allRestaurantsTitle": "All Restaurants",
+    "noRestaurantsFound": "No restaurants found.",
+    "adminPrompt": "If you are the admin, please add restaurants via the dashboard."
+  },
+  "themesPage": {
+    "mainTitle": "Explore Menu Themes",
+    "description": "Discover the different ways your restaurant's menu can shine. Each theme offers a unique visual experience.",
+    "sections": {
+      "classic": {
+        "title": "Classic Layout",
+        "description": "A timeless, easy-to-navigate layout. It features prominent top categories and a clear two-column menu grid. Ideal for broad menus.",
+        "howItLooks": "How it looks:",
+        "noRestaurantFound": "No restaurant found with 'classic' theme to display."
+      },
+      "sidebarList": {
+        "title": "Sidebar List Layout",
+        "description": "Features a clean vertical sidebar for category navigation, with menu items displayed in a single-column list format.",
+        "howItLooks": "How it looks:",
+        "noRestaurantFound": "No restaurant found with 'sidebar-list' theme to display."
+      },
+      "accordionCard": {
+        "title": "Accordion Card Layout",
+        "description": "Organizes menu categories into expandable/collapsible accordion sections, revealing menu items displayed as distinct cards.",
+        "howItLooks": "How it looks:",
+        "noRestaurantFound": "No restaurant found with 'accordion-card' theme to display."
+      },
+      "categoryCardsImageDominant": {
+        "title": "Category Cards Image Dominant Layout",
+        "description": "Presents categories as prominent clickable cards. Upon selection, menu items are displayed with larger, dominant images for a visually rich experience.",
+        "howItLooks": "How it looks:",
+        "noRestaurantFound": "No restaurant found with 'category-cards-image-dominant' theme to display."
+      }
+    }
+  },
+  "navbar": {
+    "home": "Home",
+    "restaurants": "Restaurants",
+    "themes": "Themes",
+    "aboutUs": "About Us"
   }
 }

@@ -2,8 +2,11 @@
 "use client"; // REQUIRED: This is a client component
 
 import { motion } from "framer-motion"; // Import motion for animations
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 export function ThemesHeader() {
+  const t = useTranslations("themesPage"); // Initialize translations for the 'themesPage' namespace
+
   // Animation variants for header elements
   const headerItemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -19,7 +22,7 @@ export function ThemesHeader() {
         transition={{ duration: 0.6, delay: 0.2 }}
         className="text-foreground mb-4 text-5xl leading-tight font-extrabold"
       >
-        Explore Menu Themes
+        {t("mainTitle")}
       </motion.h1>
       <motion.p
         initial="hidden"
@@ -28,8 +31,7 @@ export function ThemesHeader() {
         transition={{ duration: 0.6, delay: 0.4 }}
         className="text-muted-foreground mb-8 text-xl"
       >
-        Discover the different ways your restaurant&apos;s menu can shine. Each
-        theme offers a unique visual experience.
+        {t("description")}
       </motion.p>
     </header>
   );

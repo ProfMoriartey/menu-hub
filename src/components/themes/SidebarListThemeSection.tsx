@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { PublicRestaurantCard } from "~/components/public/RestaurantCard";
 import type { Restaurant } from "~/types/restaurant";
 import { SidebarListThemeExample } from "~/components/themes/SidebarListThemeExample";
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 interface SidebarListThemeSectionProps {
   restaurant: Restaurant | null;
@@ -16,6 +17,8 @@ export function SidebarListThemeSection({
   restaurant,
   reverseLayout,
 }: SidebarListThemeSectionProps) {
+  const t = useTranslations("themesPage.sections.sidebarList"); // Initialize translations for the 'themesPage.sections.sidebarList' namespace
+
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
@@ -62,15 +65,14 @@ export function SidebarListThemeSection({
         transition={{ delay: 0.2 }}
         className="text-foreground mb-4 text-3xl font-bold"
       >
-        Sidebar List Layout
+        {t("title")}
       </motion.h2>
       <motion.p
         variants={itemVariants}
         transition={{ delay: 0.3 }}
         className="text-muted-foreground mb-6 text-lg"
       >
-        Features a clean vertical sidebar for category navigation, with menu
-        items displayed in a single-column list format.
+        {t("description")}
       </motion.p>
 
       <div
@@ -89,7 +91,7 @@ export function SidebarListThemeSection({
             transition={{ delay: 0.4 }}
             className="text-foreground mb-4 text-xl font-semibold"
           >
-            How it looks:
+            {t("howItLooks")}
           </motion.h3>
           {restaurant ? (
             <PublicRestaurantCard
@@ -98,7 +100,7 @@ export function SidebarListThemeSection({
             />
           ) : (
             <p className="border-border bg-background text-muted-foreground mx-auto w-full max-w-sm rounded-lg border p-4 text-center">
-              No restaurant found with &apossidebar-list&apos theme to display.
+              {t("noRestaurantFound")}
             </p>
           )}
         </div>

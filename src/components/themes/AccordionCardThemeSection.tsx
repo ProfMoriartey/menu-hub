@@ -5,9 +5,8 @@ import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { PublicRestaurantCard } from "~/components/public/RestaurantCard";
 import type { Restaurant } from "~/types/restaurant";
-// REMOVED: import { useState } from "react";
-// ADDED: Import the new AccordionCardThemeExample component
 import { AccordionCardThemeExample } from "~/components/themes/AccordionCardThemeExample";
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 interface AccordionCardThemeSectionProps {
   restaurant: Restaurant | null;
@@ -18,6 +17,8 @@ export function AccordionCardThemeSection({
   restaurant,
   reverseLayout,
 }: AccordionCardThemeSectionProps) {
+  const t = useTranslations("themesPage.sections.accordionCard"); // Initialize translations for the 'themesPage.sections.accordionCard' namespace
+
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
@@ -64,15 +65,14 @@ export function AccordionCardThemeSection({
         transition={{ delay: 0.2 }}
         className="text-foreground mb-4 text-3xl font-bold"
       >
-        Accordion Card Layout
+        {t("title")}
       </motion.h2>
       <motion.p
         variants={itemVariants}
         transition={{ delay: 0.3 }}
         className="text-muted-foreground mb-6 text-lg"
       >
-        Organizes menu categories into expandable/collapsible accordion
-        sections, revealing menu items displayed as distinct cards.
+        {t("description")}
       </motion.p>
 
       <div
@@ -93,7 +93,7 @@ export function AccordionCardThemeSection({
             transition={{ delay: 0.4 }}
             className="text-foreground mb-4 text-xl font-semibold"
           >
-            How it looks:
+            {t("howItLooks")}
           </motion.h3>
           {restaurant ? (
             <PublicRestaurantCard
@@ -102,8 +102,7 @@ export function AccordionCardThemeSection({
             />
           ) : (
             <p className="border-border bg-background text-muted-foreground mx-auto w-full max-w-sm rounded-lg border p-4 text-center">
-              No restaurant found with &aposaccordion-card&apos theme to
-              display.
+              {t("noRestaurantFound")}
             </p>
           )}
         </div>

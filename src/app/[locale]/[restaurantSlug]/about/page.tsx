@@ -54,7 +54,7 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
               "bg-background text-foreground border-border hover:bg-accent hover:text-accent-foreground",
             )}
           >
-            <ChevronLeft className="mr-2 h-4 w-4" /> Back to Menu
+            <ChevronLeft className="mr-2 h-4 w-4" />
           </Button>
         </Link>
 

@@ -51,7 +51,7 @@ export function CategoryCardsImageDominantLayout({
             className="bg-background text-foreground border-border mb-6 flex items-center"
             onClick={() => setSelectedCategory(null)}
           >
-            <ChevronLeft className="mr-2 h-4 w-4" /> Back to Categories
+            <ChevronLeft className="mr-2 h-4 w-4" />
           </Button>
         </motion.div>
 
@@ -138,9 +138,6 @@ export function CategoryCardsImageDominantLayout({
   // Display Category Cards
   return (
     <div className="space-y-6">
-      <h2 className="text-foreground mb-4 text-3xl font-semibold">
-        Explore Categories
-      </h2>
       {menuData.categories.length === 0 ? (
         <div className="text-muted-foreground py-10 text-center">
           <p>No categories available for this restaurant yet.</p>

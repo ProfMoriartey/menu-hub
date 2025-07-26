@@ -45,9 +45,6 @@ export function SidebarListLayout({ menuData }: SidebarListLayoutProps) {
     <div className="flex flex-col space-y-8 md:flex-row md:space-y-0 md:space-x-8">
       {/* Category Navigation (Vertical Sidebar) */}
       <nav className="bg-card w-full flex-shrink-0 overflow-y-auto rounded-lg p-4 shadow-md md:w-64">
-        <h2 className="text-foreground mb-4 text-xl font-semibold">
-          Categories
-        </h2>
         <ul className="space-y-2">
           {menuData.categories.map(
             (

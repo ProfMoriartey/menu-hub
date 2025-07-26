@@ -5,13 +5,8 @@ import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { PublicRestaurantCard } from "~/components/public/RestaurantCard";
 import type { Restaurant } from "~/types/restaurant";
-// REMOVED: import { useState } from "react"; // Not needed here anymore
-// ADDED: Import the new ClassicThemeExample component
 import { ClassicThemeExample } from "~/components/themes/ClassicThemeExample";
-
-// REMOVED: Mock data for categories and items (moved to ClassicThemeExample.tsx)
-// const mockCategories = [...];
-// const mockItems = {...};
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 // Interface definition for component props (remains the same)
 interface ClassicThemeSectionProps {
@@ -23,10 +18,7 @@ export function ClassicThemeSection({
   restaurant,
   reverseLayout,
 }: ClassicThemeSectionProps) {
-  // REMOVED: activeCategory state (moved to ClassicThemeExample.tsx)
-  // const [activeCategory, setActiveCategory] = useState(
-  //   mockCategories[0]?.id ?? "",
-  // );
+  const t = useTranslations("themesPage.sections.classic"); // Initialize translations for the 'themesPage.sections.classic' namespace
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -74,15 +66,14 @@ export function ClassicThemeSection({
         transition={{ delay: 0.2 }}
         className="text-foreground mb-4 text-3xl font-bold"
       >
-        Classic Layout
+        {t("title")}
       </motion.h2>
       <motion.p
         variants={itemVariants}
         transition={{ delay: 0.3 }}
         className="text-muted-foreground mb-6 text-lg"
       >
-        A timeless, easy-to-navigate layout. It features prominent top
-        categories and a clear two-column menu grid. Ideal for broad menus.
+        {t("description")}
       </motion.p>
 
       <div
@@ -93,7 +84,7 @@ export function ClassicThemeSection({
       >
         {/* Left column content: Example */}
         <div className="w-full flex-1 space-y-4 md:flex-shrink md:flex-grow">
-          <ClassicThemeExample /> {/* ADDED: Render the new component here */}
+          <ClassicThemeExample />
         </div>
 
         {/* Right column content: How it looks + Restaurant Card */}
@@ -103,7 +94,7 @@ export function ClassicThemeSection({
             transition={{ delay: 0.4 }}
             className="text-foreground mb-4 text-xl font-semibold"
           >
-            How it looks:
+            {t("howItLooks")}
           </motion.h3>
           {restaurant ? (
             <PublicRestaurantCard
@@ -112,7 +103,7 @@ export function ClassicThemeSection({
             />
           ) : (
             <p className="border-border bg-background text-muted-foreground mx-auto w-full max-w-sm rounded-lg border p-4 text-center">
-              No restaurant found with &aposclassic&apos theme to display.
+              {t("noRestaurantFound")}
             </p>
           )}
         </div>

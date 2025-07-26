@@ -5,9 +5,8 @@ import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { PublicRestaurantCard } from "~/components/public/RestaurantCard";
 import type { Restaurant } from "~/types/restaurant";
-// REMOVED: import Image from "next/image"; // No longer needed here
-// ADDED: Import the new CategoryCardsImageDominantThemeExample component
 import { CategoryCardsImageDominantThemeExample } from "~/components/themes/CategoryCardsImageDominantThemeExample";
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 interface CategoryCardsImageDominantThemeSectionProps {
   restaurant: Restaurant | null;
@@ -18,6 +17,8 @@ export function CategoryCardsImageDominantThemeSection({
   restaurant,
   reverseLayout,
 }: CategoryCardsImageDominantThemeSectionProps) {
+  const t = useTranslations("themesPage.sections.categoryCardsImageDominant"); // Initialize translations
+
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
@@ -64,16 +65,14 @@ export function CategoryCardsImageDominantThemeSection({
         transition={{ delay: 0.2 }}
         className="text-foreground mb-4 text-3xl font-bold"
       >
-        Category Cards Image Dominant Layout
+        {t("title")}
       </motion.h2>
       <motion.p
         variants={itemVariants}
         transition={{ delay: 0.3 }}
         className="text-muted-foreground mb-6 text-lg"
       >
-        Presents categories as prominent clickable cards. Upon selection, menu
-        items are displayed with larger, dominant images for a visually rich
-        experience.
+        {t("description")}
       </motion.p>
 
       <div
@@ -84,8 +83,7 @@ export function CategoryCardsImageDominantThemeSection({
       >
         {/* Left column content: Example */}
         <div className="w-full flex-1 space-y-4 md:flex-shrink md:flex-grow">
-          <CategoryCardsImageDominantThemeExample />{" "}
-          {/* Render the new component here */}
+          <CategoryCardsImageDominantThemeExample />
         </div>
 
         {/* Right column content: How it looks + Restaurant Card */}
@@ -95,7 +93,7 @@ export function CategoryCardsImageDominantThemeSection({
             transition={{ delay: 0.4 }}
             className="text-foreground mb-4 text-xl font-semibold"
           >
-            How it looks:
+            {t("howItLooks")}
           </motion.h3>
           {restaurant ? (
             <PublicRestaurantCard
@@ -107,8 +105,7 @@ export function CategoryCardsImageDominantThemeSection({
             />
           ) : (
             <p className="border-border bg-background text-muted-foreground mx-auto w-full max-w-sm rounded-lg border p-4 text-center">
-              No restaurant found with &aposcategory-cards-image-dominant&apos
-              theme to display.
+              {t("noRestaurantFound")}
             </p>
           )}
         </div>
