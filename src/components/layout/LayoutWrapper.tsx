@@ -13,7 +13,20 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
   const pathname = usePathname();
 
   // Define paths where the Navbar SHOULD be visible
-  const publicNavbarPaths = ["/", "/restaurants", "/themes", "/about"];
+  const publicNavbarPaths = [
+    "/ar",
+    "/en",
+    "/tr",
+    "/en/restaurants",
+    "/en/themes",
+    "/en/about",
+    "/tr/restaurants",
+    "/tr/themes",
+    "/tr/about",
+    "/ar/restaurants",
+    "/ar/themes",
+    "/ar/about",
+  ];
 
   // Check if the current path starts with any of the admin or menu display patterns
   const isPublicNavbarVisible = publicNavbarPaths.includes(pathname);
