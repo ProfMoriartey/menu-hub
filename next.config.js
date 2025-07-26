@@ -4,12 +4,11 @@
  */
 import "./src/env.js";
 
-/** @type {import("next").NextConfig} */
-const config = {
-    images: {domains: [
-      'utfs.io', 
-      'placehold.co',]
-  },
-};
+import createNextIntlPlugin from "next-intl/plugin";
 
-export default config;
+const withNextIntl = createNextIntlPlugin();
+
+/** @type {import('next').NextConfig} */
+const nextConfig = { images: { domains: ["utfs.io", "placehold.co"] } };
+
+export default withNextIntl(nextConfig);

@@ -9,10 +9,14 @@ import { FeaturedRestaurantsSection } from "~/components/home/FeaturedRestaurant
 import { ThemesHomeSection } from "~/components/home/ThemesHomeSection";
 import { ContactHomeSection } from "~/components/home/ContactHomeSection";
 import { cn } from "~/lib/utils"; // ADDED: Import cn utility (if not already there)
+import { getTranslations } from "next-intl/server";
+import { Link } from "~/i18n/navigation";
 
 export default async function HomePage() {
   // Fetch 6 featured restaurants for the "Restaurants Section"
   // Filter by isDisplayed: true
+  const t = await getTranslations("hero");
+
   const featuredRestaurants: Restaurant[] = await db.query.restaurants.findMany(
     {
       where: (restaurant, { eq }) => eq(restaurant.isDisplayed, true),
@@ -36,6 +40,7 @@ export default async function HomePage() {
       </header> */}
 
       <HeroSection />
+      <h1>{t("title.main")}</h1>
       <AboutHomeSection />
       <FeaturedRestaurantsSection restaurants={featuredRestaurants} />
       <ThemesHomeSection />
