@@ -3,36 +3,37 @@
 
 import { useState } from "react";
 import { cn } from "~/lib/utils";
-import { motion, AnimatePresence } from "framer-motion"; // Import AnimatePresence
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl"; // ADDED: Import useTranslations
 
-// Mock data for categories and items for the accordion card theme
+// Mock data now uses translation keys for names and descriptions
 const mockCategories = [
-  { id: "coffee", name: "Coffee Drinks" },
-  { id: "pastries", name: "Fresh Pastries" },
-  { id: "sandwiches", name: "Light Bites" },
+  { id: "coffee", key: "coffee" },
+  { id: "pastries", key: "pastries" },
+  { id: "sandwiches", key: "sandwiches" },
 ];
 
 const mockItems = {
   coffee: [
-    { id: "c1", name: "Espresso", desc: "Strong, rich shot." },
-    { id: "c2", name: "Latte", desc: "Espresso with steamed milk." },
-    {
-      id: "c3",
-      name: "Cappuccino",
-      desc: "Equal parts espresso, steamed milk, foam.",
-    },
+    { id: "c1", key: "c1" },
+    { id: "c2", key: "c2" },
+    { id: "c3", key: "c3" },
   ],
   pastries: [
-    { id: "p1", name: "Croissant", desc: "Flaky, buttery perfection." },
-    { id: "p2", name: "Muffin", desc: "Blueberry or chocolate chip." },
+    { id: "p1", key: "p1" },
+    { id: "p2", key: "p2" },
   ],
   sandwiches: [
-    { id: "s1", name: "BLT", desc: "Bacon, lettuce, tomato." },
-    { id: "s2", name: "Veggie Wrap", desc: "Fresh vegetables, hummus." },
+    { id: "s1", key: "s1" },
+    { id: "s2", key: "s2" },
   ],
 };
 
 export function AccordionCardThemeExample() {
+  const t = useTranslations("accordionCardThemeExample"); // Translations for general strings
+  const tCategories = useTranslations("accordionCardThemeExample.categories"); // Translations for category names
+  const tItems = useTranslations("accordionCardThemeExample.items"); // Translations for item names and descriptions
+
   const [expandedCategory, setExpandedCategory] = useState<string | null>(
     mockCategories[0]?.id ?? null,
   );
@@ -58,7 +59,9 @@ export function AccordionCardThemeExample() {
 
   return (
     <div className="mb-8">
-      <h3 className="text-foreground mb-2 text-xl font-semibold">Example:</h3>
+      <h3 className="text-foreground mb-2 text-xl font-semibold">
+        {t("exampleTitle")}
+      </h3>
       <div className="border-border bg-background rounded-lg border p-4">
         {mockCategories.map((category) => (
           <div key={category.id} className="mb-2 last:mb-0">
@@ -71,7 +74,7 @@ export function AccordionCardThemeExample() {
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
               )}
             >
-              <span>{category.name}</span>
+              <span>{tCategories(category.key)}</span>
               <span>{expandedCategory === category.id ? "▲" : "▼"}</span>
             </button>
             <AnimatePresence>
@@ -81,7 +84,7 @@ export function AccordionCardThemeExample() {
                   animate="visible"
                   exit="exit"
                   variants={itemGridVariants}
-                  className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2" // Use grid for cards
+                  className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2"
                 >
                   {mockItems[category.id as keyof typeof mockItems]?.length >
                   0 ? (
@@ -93,17 +96,17 @@ export function AccordionCardThemeExample() {
                           className="border-border bg-card rounded-md border p-3"
                         >
                           <h4 className="text-foreground font-semibold">
-                            {item.name}
+                            {tItems(`${item.key}.name`)}
                           </h4>
                           <p className="text-muted-foreground text-sm">
-                            {item.desc}
+                            {tItems(`${item.key}.desc`)}
                           </p>
                         </motion.div>
                       ),
                     )
                   ) : (
                     <p className="text-muted-foreground col-span-full text-center">
-                      No items in this category.
+                      {t("noItemsMessage")}
                     </p>
                   )}
                 </motion.div>

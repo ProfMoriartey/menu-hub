@@ -1,20 +1,20 @@
 {
   "hero": {
     "title": {
-      "main": "Descubre Tu Próxima",
+      "main": "Descubre tu Próxima",
       "highlight": "Comida Favorita"
     },
-    "description": "Explora menús diversos de restaurantes locales, encuentra inspiración culinaria y disfruta de experiencias gastronómicas sin problemas.",
+    "description": "Explora diversos menús de restaurantes locales, encuentra inspiración culinaria y disfruta de experiencias gastronómicas sin interrupciones.",
     "cta": "Empezar a Explorar"
   },
   "about": {
     "title": "Descubre Más Sobre Menupedia",
-    "description": "Menupedia es tu destino online principal para explorar restaurantes locales y sus deliciosos menús. Conectamos a los amantes de la comida apasionados con una diversa gama de experiencias culinarias, haciendo que sea fácil encontrar exactamente lo que se te antoja. Nuestra misión principal es simplificar tus opciones gastronómicas, apoyar a los negocios locales y mostrar lo mejor de la gastronomía local.",
-    "cta": "Saber Más Sobre Menupedia"
+    "description": "Menupedia es tu destino principal en línea para explorar restaurantes locales y sus deliciosos menús. Conectamos a los amantes de la comida apasionados con una amplia gama de experiencias culinarias, haciendo que sea fácil encontrar exactamente lo que anhelas. Nuestra misión principal es simplificar tus elecciones gastronómicas, apoyar a los negocios locales y mostrar lo mejor de la gastronomía local.",
+    "cta": "Aprende Más Sobre Menupedia"
   },
   "featured": {
     "title": "Restaurantes Destacados",
-    "empty": "No hay restaurantes destacados disponibles en este momento.",
+    "empty": "No hay restaurantes destacados disponibles por el momento.",
     "button": {
       "single": "Ver Menú",
       "all": "Ver Todos los Restaurantes"
@@ -22,18 +22,20 @@
   },
   "themes": {
     "title": "¿Por Qué Elegir Menupedia?",
-    "description": "Menupedia simplifica la gestión y el descubrimiento del menú de un restaurante. Ofrecemos herramientas intuitivas para empresas y una experiencia rica y fácil de usar para los comensales. Nuestro enfoque en la gastronomía local significa que apoyas a tu comunidad mientras exploras diversas opciones culinarias. Con una integración perfecta y temas de visualización dinámicos, hacemos que los menús digitales sean atractivos y sin esfuerzo.",
-    "previewTitle": "Ve Nuestros Menús Digitales en Acción",
+    "description": "Menupedia simplifica la gestión y el descubrimiento de menús de restaurantes. Ofrecemos herramientas intuitivas para empresas y una experiencia rica y fácil de usar para los comensales. Nuestro enfoque en la gastronomía local significa que apoyas a tu comunidad mientras exploras diversas opciones culinarias. Con una integración perfecta y temas de visualización dinámicos, hacemos que los menús digitales sean atractivos y sin esfuerzo.",
+    "previewTitle": "Ver Nuestros Menús Digitales en Acción",
     "example": {
       "classic": "Diseño Clásico",
-      "accordion": "Diseño de Tarjetas Acordeón"
+      "accordion": "Diseño de Tarjeta de Acordeón",
+      "sidebarList": "Diseño de Lista en Barra Lateral",
+      "categoryCardsImageDominant": "Diseño de Tarjetas de Categorías con Imagen Dominante"
     },
     "cta": "Explorar Todas las Características"
   },
   "contact": {
     "title": "Ponte en Contacto",
-    "description": "¿Tienes preguntas o necesitas ayuda? ¡Contáctanos!",
-    "emailLabel": "Correo electrónico",
+    "description": "¿Tienes preguntas o necesitas soporte? ¡Contáctanos!",
+    "emailLabel": "Correo Electrónico",
     "phoneLabel": "Teléfono"
   },
   "messages": {
@@ -43,22 +45,20 @@
     "chatInputPlaceholder": "Escribe tu mensaje...",
     "sendButton": "Enviar",
     "messageSent": "¡Mensaje enviado!",
-    "errorSendingMessage": "Error al enviar el mensaje.",
-    "loadingMessages": "Cargando mensajes...",
-    "errorLoadingMessages": "Error al cargar mensajes."
+    "errorSendingMessage": "No se pudo enviar el mensaje."
   },
   "aboutPage": {
     "mainTitle": "Acerca de Menupedia",
-    "mainDescription": "Menupedia es tu plataforma online definitiva para descubrir y explorar restaurantes locales y sus diversas ofertas culinarias. Conectamos a los amantes de la comida con una amplia gama de experiencias gastronómicas, haciendo que sea más fácil que nunca encontrar exactamente lo que se te antoja. Nuestra misión es simplificar tus opciones gastronómicas y resaltar lo mejor de la gastronomía local, todo en un lugar conveniente.",
-    "whatWeOfferTitle": "Qué Ofrecemos",
-    "whatWeOfferDescription": "Menupedia proporciona una experiencia fluida tanto para comensales como para propietarios de restaurantes.",
+    "mainDescription": "Menupedia es tu plataforma en línea definitiva para descubrir y explorar restaurantes locales y sus diversas ofertas culinarias. Conectamos a los amantes de la comida con una amplia gama de experiencias gastronómicas, haciendo que sea más fácil que nunca encontrar exactamente lo que anhelas. Nuestra misión es simplificar tus elecciones gastronómicas y resaltar lo mejor de la gastronomía local, todo en un lugar conveniente.",
+    "whatWeOfferTitle": "Lo Que Ofrecemos",
+    "whatWeOfferDescription": "Menupedia ofrece una experiencia perfecta tanto para los comensales como para los propietarios de restaurantes.",
     "forDiners": {
       "title": "Para Comensales:",
-      "description": "Acceso fácil a menús de restaurantes dedicados, platos categorizados, información detallada de los elementos (incluyendo ingredientes y etiquetas dietéticas) y hermosas imágenes. Descubre nuevos favoritos sin esfuerzo."
+      "description": "Acceso fácil a menús de restaurantes dedicados, platos categorizados, información detallada de los artículos (incluyendo ingredientes y etiquetas dietéticas), e imágenes hermosas. Descubre nuevos favoritos sin esfuerzo."
     },
     "forRestaurantOwners": {
       "title": "Para Propietarios de Restaurantes:",
-      "description": "Un potente panel de administración para gestionar el perfil de tu restaurante, las categorías del menú y los elementos individuales del menú. Sube imágenes, establece precios y actualiza la información dietética con facilidad."
+      "description": "Un potente panel de administración para gestionar el perfil de tu restaurante, las categorías de menú y los elementos de menú individuales. Sube imágenes, establece precios y actualiza la información dietética con facilidad."
     },
     "customizableThemes": {
       "title": "Temas Personalizables:",
@@ -66,27 +66,27 @@
     },
     "optimizedForAllDevices": {
       "title": "Optimizado para Todos los Dispositivos:",
-      "description": "Nuestra plataforma está diseñada para proporcionar una experiencia óptima de visualización y navegación tanto en teléfonos móviles como en ordenadores de escritorio."
+      "description": "Nuestra plataforma está diseñada para proporcionar una experiencia de visualización y navegación óptima tanto en teléfonos móviles como en ordenadores de escritorio."
     },
     "ourCommitmentTitle": "Nuestro Compromiso",
     "simplicity": {
       "title": "Simplicidad:",
-      "description": "Nos esforzamos por hacer que la gestión y el descubrimiento de menús online sean lo más sencillos posible."
+      "description": "Nos esforzamos por hacer que la gestión y el descubrimiento de menús en línea sean lo más sencillos posible."
     },
     "innovation": {
       "title": "Innovación:",
       "description": "Mejoramos continuamente nuestra plataforma con nuevas características y tecnologías."
     },
     "userExperience": {
-      "title": "Experiencia del Usuario:",
+      "title": "Experiencia de Usuario:",
       "description": "Priorizamos el diseño intuitivo tanto para los propietarios de restaurantes como para sus clientes."
     },
     "reliability": {
       "title": "Fiabilidad:",
-      "description": "Construida sobre una pila robusta, Menupedia ofrece un rendimiento consistente."
+      "description": "Construido sobre una pila robusta, Menupedia ofrece un rendimiento consistente."
     },
-    "getStartedTitle": "Comenzar",
-    "getStartedDescription": "¿Listo para optimizar la presencia online de tu restaurante o descubrir tu próxima comida favorita? ¡Explora Menupedia hoy mismo!",
+    "getStartedTitle": "Empieza",
+    "getStartedDescription": "¿Listo para optimizar la presencia en línea de tu restaurante o descubrir tu próxima comida favorita? ¡Explora Menupedia hoy mismo!",
     "exploreRestaurants": {
       "title": "Explorar Restaurantes:",
       "linkText": "Explorar Todos los Menús"
@@ -96,11 +96,11 @@
     "mainTitle": "Descubre Restaurantes",
     "description": "Busca y explora todos los restaurantes disponibles en Menupedia.",
     "searchButton": "Buscar Restaurantes",
-    "searchPlaceholder": "Busca un restaurante, cocina o artículo del menú...",
+    "searchPlaceholder": "Busca un restaurante, tipo de cocina o artículo del menú...",
     "noResultsFound": "No se encontraron resultados para \"{searchTerm}\".",
     "allRestaurantsTitle": "Todos los Restaurantes",
     "noRestaurantsFound": "No se encontraron restaurantes.",
-    "adminPrompt": "Si eres el administrador, por favor añade restaurantes a través del panel."
+    "adminPrompt": "Si eres el administrador, por favor, añade restaurantes a través del panel."
   },
   "themesPage": {
     "mainTitle": "Explorar Temas de Menú",
@@ -108,27 +108,27 @@
     "sections": {
       "classic": {
         "title": "Diseño Clásico",
-        "description": "Un diseño atemporal y fácil de navegar. Presenta categorías principales prominentes y una clara cuadrícula de menú de dos columnas. Ideal para menús amplios.",
+        "description": "Un diseño atemporal y fácil de navegar. Presenta categorías superiores prominentes y una clara cuadrícula de menú de dos columnas. Ideal para menús amplios.",
         "howItLooks": "Así es como se ve:",
         "noRestaurantFound": "No se encontró ningún restaurante con el tema 'clásico' para mostrar."
       },
       "sidebarList": {
-        "title": "Diseño de Lista Lateral",
-        "description": "Presenta una barra lateral vertical limpia para la navegación por categorías, con los elementos del menú mostrados en un formato de lista de una sola columna.",
+        "title": "Diseño de Lista en Barra Lateral",
+        "description": "Cuenta con una barra lateral vertical limpia para la navegación por categorías, con los elementos del menú mostrados en formato de lista de una sola columna.",
         "howItLooks": "Así es como se ve:",
-        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'lista-lateral' para mostrar."
+        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'lista en barra lateral' para mostrar."
       },
       "accordionCard": {
-        "title": "Diseño de Tarjetas Acordeón",
-        "description": "Organiza las categorías del menú en secciones de acordeón expandibles/colapsables, revelando los elementos del menú mostrados como tarjetas distintas.",
+        "title": "Diseño de Tarjeta de Acordeón",
+        "description": "Organiza las categorías del menú en secciones de acordeón expandibles/colapsables, revelando elementos del menú mostrados como tarjetas distintas.",
         "howItLooks": "Así es como se ve:",
-        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'tarjetas-acordeón' para mostrar."
+        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'tarjeta de acordeón' para mostrar."
       },
       "categoryCardsImageDominant": {
-        "title": "Diseño de Tarjetas de Categoría con Imagen Dominante",
-        "description": "Presenta las categorías como tarjetas prominentes y clicables. Al seleccionarlas, los elementos del menú se muestran con imágenes más grandes y dominantes para una experiencia visualmente rica.",
+        "title": "Diseño de Tarjetas de Categorías con Imagen Dominante",
+        "description": "Presenta las categorías como tarjetas prominentes y cliqueables. Al seleccionarlas, los elementos del menú se muestran con imágenes más grandes y dominantes para una experiencia visualmente rica.",
         "howItLooks": "Así es como se ve:",
-        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'tarjetas-de-categoría-imagen-dominante' para mostrar."
+        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'tarjetas de categorías con imagen dominante' para mostrar."
       }
     }
   },
@@ -136,10 +136,138 @@
     "home": "Inicio",
     "restaurants": "Restaurantes",
     "themes": "Temas",
-    "aboutUs": "Sobre Nosotros",
+    "aboutUs": "Acerca de Nosotros",
     "language": "Idioma"
   },
   "restaurantCard": {
     "viewMenu": "Ver Menú"
+  },
+  "restaurantMenuPage": {
+    "browseMenuDefault": "Explora nuestro delicioso menú",
+    "noMenuItemsAvailable": "Aún no hay elementos de menú disponibles para este restaurante.",
+    "checkBackLater": "¡Por favor, vuelve a comprobarlo más tarde!"
+  },
+  "menuItemDetailPage": {
+    "pageTitle": "Detalles del Artículo del Menú",
+    "backToMenu": "Volver al Menú",
+    "priceLabel": "Precio",
+    "ingredientsLabel": "Ingredientes",
+    "dietaryLabels": "Información Dietética"
+  },
+  "restaurantProfilePage": {
+    "backToMenu": "Volver al Menú",
+    "foodTypeLabel": "Tipo de Comida:",
+    "establishmentTypeLabel": "Tipo de Establecimiento:",
+    "phoneLabel": "Teléfono:",
+    "addressLabel": "Dirección:",
+    "countryLabel": "País:"
+  },
+  "classicThemeExample": {
+    "exampleTitle": "Ejemplo:",
+    "noItemsMessage": "No hay elementos en esta categoría.",
+    "categories": {
+      "appetizers": "Entrantes",
+      "mainCourses": "Platos Principales",
+      "desserts": "Postres",
+      "drinks": "Bebidas"
+    },
+    "items": {
+      "a1": "Rollitos de Primavera",
+      "a2": "Pan de Ajo",
+      "a3": "Bruschetta de Tomate",
+      "m1": "Salmón a la Plancha",
+      "m2": "Bistec con Patatas Fritas",
+      "m3": "Hamburguesa Vegetariana",
+      "m4": "Pollo Alfredo",
+      "d1": "Tarta de Queso",
+      "d2": "Coulant de Chocolate",
+      "dr1": "Té Helado",
+      "dr2": "Limonada",
+      "dr3": "Café",
+      "dr4": "Zumo de Naranja"
+    }
+  },
+  "accordionCardThemeExample": {
+    "exampleTitle": "Ejemplo:",
+    "noItemsMessage": "No hay elementos en esta categoría.",
+    "categories": {
+      "coffee": "Bebidas de Café",
+      "pastries": "Bollería Fresca",
+      "sandwiches": "Bocadillos Ligeros"
+    },
+    "items": {
+      "c1": {
+        "name": "Espresso",
+        "desc": "Un shot fuerte y rico."
+      },
+      "c2": {
+        "name": "Latte",
+        "desc": "Espresso con leche vaporizada."
+      },
+      "c3": {
+        "name": "Cappuccino",
+        "desc": "Partes iguales de espresso, leche vaporizada y espuma."
+      },
+      "p1": {
+        "name": "Cruasán",
+        "desc": "Perfección hojaldrada y con mantequilla."
+      },
+      "p2": {
+        "name": "Muffin",
+        "desc": "De arándanos o chispas de chocolate."
+      },
+      "s1": {
+        "name": "BLT",
+        "desc": "Tocino, lechuga, tomate."
+      },
+      "s2": {
+        "name": "Wrap Vegetariano",
+        "desc": "Vegetales frescos, hummus."
+      }
+    }
+  },
+  "sidebarListThemeExample": {
+    "exampleTitle": "Ejemplo:",
+    "noItemsMessage": "No hay elementos en esta categoría.",
+    "categories": {
+      "appetizers": "Entrantes",
+      "mainCourses": "Platos Principales",
+      "desserts": "Postres",
+      "drinks": "Bebidas"
+    },
+    "items": {
+      "a1": "Sopa del Día",
+      "a2": "Ensalada de la Casa",
+      "m1": "Pasta Primavera",
+      "m2": "Pollo a la Plancha",
+      "m3": "Curry de Verduras",
+      "d1": "Tarta de Chocolate",
+      "dr1": "Zumo de Naranja Natural",
+      "dr2": "Agua con Gas"
+    }
+  },
+  "categoryCardsImageDominantThemeExample": {
+    "exampleTitle": "Ejemplo:",
+    "selectCategoryMessage": "Selecciona una categoría para ver un elemento de ejemplo.",
+    "categories": {
+      "appetizers": "Entrantes",
+      "mainCourses": "Platos Principales",
+      "desserts": "Postres",
+      "drinks": "Bebidas"
+    },
+    "items": {
+      "frenchFries": {
+        "name": "Patatas Fritas"
+      },
+      "deliciousBowl": {
+        "name": "Tazón Delicioso"
+      },
+      "lemonCheesecake": {
+        "name": "Tarta de Queso de Limón"
+      },
+      "cocaCola": {
+        "name": "Coca Cola"
+      }
+    }
   }
 }

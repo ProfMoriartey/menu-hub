@@ -1,15 +1,15 @@
 {
   "hero": {
     "title": {
-      "main": "Yeni Favori",
-      "highlight": "Yemeğinizi Keşfedin"
+      "main": "Bir Sonraki",
+      "highlight": "Favori Yemeğinizi Keşfedin"
     },
-    "description": "Yerel restoranlardan çeşitli menüleri keşfedin, mutfak ilhamı bulun ve sorunsuz yemek deneyimlerinin tadını çıkarın.",
+    "description": "Yerel restoranların çeşitli menülerini keşfedin, mutfak ilhamı bulun ve sorunsuz yemek deneyimlerinin tadını çıkarın.",
     "cta": "Keşfetmeye Başla"
   },
   "about": {
     "title": "Menupedia Hakkında Daha Fazla Bilgi Edinin",
-    "description": "Menupedia, yerel eatery'leri ve lezzetli menülerini keşfetmek için birincil çevrimiçi varış noktanızdır. Tutkulu yemek severleri çeşitli mutfak deneyimleriyle buluşturuyor, ne aradığınızı zahmetsizce bulmanızı sağlıyoruz. Temel misyonumuz, yemek seçimlerinizi basitleştirmek, yerel işletmeleri desteklemek ve yerel gastronominin en iyilerini sergilemektir.",
+    "description": "Menupedia, yerel restoranları ve lezzetli menülerini keşfetmek için önde gelen çevrimiçi adresinizdir. Tutkulu yemek severleri çeşitli mutfak deneyimleriyle buluşturarak tam olarak istediğiniz şeyi bulmayı zahmetsiz hale getiriyoruz. Temel misyonumuz, yemek seçiminizi basitleştirmek, yerel işletmeleri desteklemek ve yerel gastronomiyi en iyi şekilde sergilemektir.",
     "cta": "Menupedia Hakkında Daha Fazla Bilgi Edinin"
   },
   "featured": {
@@ -22,11 +22,13 @@
   },
   "themes": {
     "title": "Neden Menupedia'yı Seçmelisiniz?",
-    "description": "Menupedia, restoran menü yönetimini ve keşfini basitleştirir. İşletmeler için sezgisel araçlar ve yemek yiyenler için zengin, kullanıcı dostu bir deneyim sunuyoruz. Yerel gastronomiye odaklanmamız, çeşitli mutfak seçeneklerini keşfederken topluluğunuzu desteklemeniz anlamına gelir. Sorunsuz entegrasyon ve dinamik görüntü temalarıyla dijital menüleri çekici ve zahmetsiz hale getiriyoruz.",
-    "previewTitle": "Dijital Menülerimizi Uygulamada Görün",
+    "description": "Menupedia, restoran menüsü yönetimini ve keşfini basitleştirir. İşletmeler için sezgisel araçlar ve yemek yiyenler için zengin, kullanıcı dostu bir deneyim sunuyoruz. Yerel gastronomiye odaklanmamız, çeşitli mutfak seçeneklerini keşfederken topluluğunuzu desteklemeniz anlamına gelir. Sorunsuz entegrasyon ve dinamik görüntü temalarıyla dijital menüleri ilgi çekici ve zahmetsiz hale getiriyoruz.",
+    "previewTitle": "Dijital Menülerimizi Çalışırken Görün",
     "example": {
       "classic": "Klasik Düzen",
-      "accordion": "Akordeon Kart Düzeni"
+      "accordion": "Akordeon Kart Düzeni",
+      "sidebarList": "Yan Menü Listesi Düzeni",
+      "categoryCardsImageDominant": "Kategori Kartları Resim Odaklı Düzen"
     },
     "cta": "Tüm Özellikleri Keşfet"
   },
@@ -38,40 +40,38 @@
   },
   "messages": {
     "title": "Mesajlarınız",
-    "empty": "Henüz mesaj yok. Bir sohbet başlatın!",
+    "empty": "Henüz mesaj yok. Bir konuşma başlatın!",
     "noChatSelected": "Mesajları görüntülemek için bir sohbet seçin.",
     "chatInputPlaceholder": "Mesajınızı yazın...",
     "sendButton": "Gönder",
     "messageSent": "Mesaj gönderildi!",
-    "errorSendingMessage": "Mesaj gönderilemedi.",
-    "loadingMessages": "Mesajlar yükleniyor...",
-    "errorLoadingMessages": "Mesajlar yüklenemedi."
+    "errorSendingMessage": "Mesaj gönderilemedi."
   },
   "aboutPage": {
     "mainTitle": "Menupedia Hakkında",
-    "mainDescription": "Menupedia, yerel restoranları ve çeşitli mutfak tekliflerini keşfetmek için nihai çevrimiçi platformunuzdur. Yemek severleri geniş bir yemek deneyimi yelpazesiyle buluşturarak, tam olarak ne istediğinizi bulmayı her zamankinden daha kolay hale getiriyoruz. Misyonumuz, yemek seçimlerinizi basitleştirmek ve yerel gastronominin en iyilerini tek bir uygun yerde vurgulamaktır.",
+    "mainDescription": "Menupedia, yerel restoranları ve onların çeşitli mutfak lezzetlerini keşfetmek için nihai çevrimiçi platformunuzdur. Yemek severleri geniş bir yemek deneyimi yelpazesiyle buluşturarak tam olarak canınızın çektiğini bulmanızı her zamankinden daha kolay hale getiriyoruz. Misyonumuz, yemek seçimlerinizi basitleştirmek ve yerel gastronomiyi en iyi şekilde tek bir uygun yerde vurgulamaktır.",
     "whatWeOfferTitle": "Sunduklarımız",
     "whatWeOfferDescription": "Menupedia, hem yemek yiyenler hem de restoran sahipleri için sorunsuz bir deneyim sunar.",
     "forDiners": {
       "title": "Yemek Yiyenler İçin:",
-      "description": "Özel restoran menülerine, kategorize edilmiş yemeklere, detaylı ürün bilgilerine (içerikler ve diyet etiketleri dahil) ve güzel görsellere kolay erişim. Yeni favorileri zahmetsizce keşfedin."
+      "description": "Özel restoran menülerine, kategorize edilmiş yemeklere, detaylı ürün bilgilerine (içerikler ve diyet etiketleri dahil) ve güzel görsellere kolay erişim. Zahmetsizce yeni favoriler keşfedin."
     },
     "forRestaurantOwners": {
       "title": "Restoran Sahipleri İçin:",
-      "description": "Restoranınızın profilini, menü kategorilerini ve bireysel menü öğelerini yönetmek için güçlü bir yönetici panosu. Kolayca resim yükleyin, fiyatları ayarlayın ve diyet bilgilerini güncelleyin."
+      "description": "Restoranınızın profilini, menü kategorilerini ve bireysel menü öğelerini yönetmek için güçlü bir yönetici paneli. Görselleri kolayca yükleyin, fiyatları belirleyin ve diyet bilgilerini güncelleyin."
     },
     "customizableThemes": {
       "title": "Özelleştirilebilir Temalar:",
-      "description": "Restoranlar, markalarının benzersiz tarzına uyacak çeşitli görüntü temaları arasından seçim yaparak kişiselleştirilmiş bir müşteri deneyimi sağlayabilir."
+      "description": "Restoranlar, markalarının benzersiz tarzına uygun çeşitli görüntü temalarından seçim yapabilir ve kişiselleştirilmiş bir müşteri deneyimi sağlayabilir."
     },
     "optimizedForAllDevices": {
       "title": "Tüm Cihazlar İçin Optimize Edildi:",
-      "description": "Platformumuz, hem cep telefonlarında hem de masaüstü bilgisayarlarda optimum görüntüleme ve gezinme deneyimi sağlamak üzere tasarlanmıştır."
+      "description": "Platformumuz, hem cep telefonlarında hem de masaüstü bilgisayarlarda optimum görüntüleme ve tarama deneyimi sağlamak üzere tasarlanmıştır."
     },
     "ourCommitmentTitle": "Taahhüdümüz",
     "simplicity": {
       "title": "Basitlik:",
-      "description": "Çevrimiçi menü yönetimini ve keşfini olabildiğince basit hale getirmeye çalışıyoruz."
+      "description": "Çevrimiçi menü yönetimini ve keşfini mümkün olduğunca basit hale getirmeye çalışıyoruz."
     },
     "innovation": {
       "title": "İnovasyon:",
@@ -83,10 +83,10 @@
     },
     "reliability": {
       "title": "Güvenilirlik:",
-      "description": "Sağlam bir yığın üzerine kurulu olan Menupedia, tutarlı performans sunar."
+      "description": "Sağlam bir teknoloji yığını üzerine inşa edilen Menupedia, tutarlı performans sunar."
     },
     "getStartedTitle": "Başlayın",
-    "getStartedDescription": "Restoranınızın çevrimiçi varlığını düzene sokmaya veya bir sonraki favori yemeğinizi keşfetmeye hazır mısınız? Menupedia'yı bugün keşfedin!",
+    "getStartedDescription": "Restoranınızın çevrimiçi varlığını kolaylaştırmaya veya bir sonraki favori yemeğinizi keşfetmeye hazır mısınız? Menupedia'yı bugün keşfedin!",
     "exploreRestaurants": {
       "title": "Restoranları Keşfet:",
       "linkText": "Tüm Menülere Göz At"
@@ -96,11 +96,11 @@
     "mainTitle": "Restoranları Keşfet",
     "description": "Menupedia'da bulunan tüm restoranları arayın ve keşfedin.",
     "searchButton": "Restoran Ara",
-    "searchPlaceholder": "Restoran, mutfak veya menü öğesi ara...",
+    "searchPlaceholder": "Bir restoran, mutfak veya menü öğesi arayın...",
     "noResultsFound": "\"{searchTerm}\" için sonuç bulunamadı.",
     "allRestaurantsTitle": "Tüm Restoranlar",
     "noRestaurantsFound": "Restoran bulunamadı.",
-    "adminPrompt": "Eğer yöneticisiyseniz, lütfen panodan restoran ekleyin."
+    "adminPrompt": "Yönetici iseniz, lütfen panodan restoran ekleyin."
   },
   "themesPage": {
     "mainTitle": "Menü Temalarını Keşfet",
@@ -108,27 +108,27 @@
     "sections": {
       "classic": {
         "title": "Klasik Düzen",
-        "description": "Zamana meydan okuyan, gezinmesi kolay bir düzen. Belirgin üst kategorilere ve net iki sütunlu menü ızgarasına sahiptir. Geniş menüler için idealdir.",
-        "howItLooks": "Nasıl görünüyor:",
-        "noRestaurantFound": "Görüntülenecek 'klasik' temalı restoran bulunamadı."
+        "description": "Zamansız, gezinmesi kolay bir düzen. Öne çıkan üst kategoriler ve net bir iki sütunlu menü ızgarası içerir. Geniş menüler için idealdir.",
+        "howItLooks": "Nasıl Görünüyor:",
+        "noRestaurantFound": "'Klasik' tema ile görüntülenecek restoran bulunamadı."
       },
       "sidebarList": {
-        "title": "Kenar Çubuğu Liste Düzeni",
-        "description": "Kategori navigasyonu için temiz bir dikey kenar çubuğu ve tek sütunlu liste formatında görüntülenen menü öğeleri içerir.",
-        "howItLooks": "Nasıl görünüyor:",
-        "noRestaurantFound": "Görüntülenecek 'kenar çubuğu liste' temalı restoran bulunamadı."
+        "title": "Yan Menü Listesi Düzeni",
+        "description": "Kategori navigasyonu için temiz bir dikey yan menü ve tek sütunlu liste formatında görüntülenen menü öğeleri içerir.",
+        "howItLooks": "Nasıl Görünüyor:",
+        "noRestaurantFound": "'Yan Menü Listesi' tema ile görüntülenecek restoran bulunamadı."
       },
       "accordionCard": {
         "title": "Akordeon Kart Düzeni",
-        "description": "Menü kategorilerini genişletilebilir/daraltılabilir akordeon bölümlerine göre düzenler, menü öğelerini ayrı kartlar olarak gösterir.",
-        "howItLooks": "Nasıl görünüyor:",
-        "noRestaurantFound": "Görüntülenecek 'akordeon kart' temalı restoran bulunamadı."
+        "description": "Menü kategorilerini genişletilebilir/daraltılabilir akordeon bölümlerine ayırır ve menü öğelerini ayrı kartlar olarak görüntüler.",
+        "howItLooks": "Nasıl Görünüyor:",
+        "noRestaurantFound": "'Akordeon Kart' tema ile görüntülenecek restoran bulunamadı."
       },
       "categoryCardsImageDominant": {
-        "title": "Kategori Kartları Görsel Odaklı Düzen",
-        "description": "Kategorileri belirgin tıklanabilir kartlar olarak sunar. Seçim üzerine, menü öğeleri görsel olarak zengin bir deneyim için daha büyük, baskın görsellerle görüntülenir.",
-        "howItLooks": "Nasıl görünüyor:",
-        "noRestaurantFound": "Görüntülenecek 'kategori kartları görsel odaklı' temalı restoran bulunamadı."
+        "title": "Kategori Kartları Resim Odaklı Düzen",
+        "description": "Kategorileri belirgin tıklanabilir kartlar olarak sunar. Seçildiğinde, menü öğeleri görsel olarak zengin bir deneyim için daha büyük, baskın görsellerle görüntülenir.",
+        "howItLooks": "Nasıl Görünüyor:",
+        "noRestaurantFound": "'Kategori Kartları Resim Odaklı' tema ile görüntülenecek restoran bulunamadı."
       }
     }
   },
@@ -140,6 +140,134 @@
     "language": "Dil"
   },
   "restaurantCard": {
-    "viewMenu": "Menu keşfet"
+    "viewMenu": "Menüyü Görüntüle"
+  },
+  "restaurantMenuPage": {
+    "browseMenuDefault": "Lezzetli menümüzü inceleyin",
+    "noMenuItemsAvailable": "Bu restoran için henüz menü öğesi bulunmamaktadır.",
+    "checkBackLater": "Lütfen daha sonra tekrar kontrol edin!"
+  },
+  "menuItemDetailPage": {
+    "pageTitle": "Menü Öğesi Detayları",
+    "backToMenu": "Menüye Geri Dön",
+    "priceLabel": "Fiyat",
+    "ingredientsLabel": "İçerikler",
+    "dietaryLabels": "Diyet Bilgileri"
+  },
+  "restaurantProfilePage": {
+    "backToMenu": "Menüye Geri Dön",
+    "foodTypeLabel": "Yemek Türü:",
+    "establishmentTypeLabel": "Kuruluş Türü:",
+    "phoneLabel": "Telefon:",
+    "addressLabel": "Adres:",
+    "countryLabel": "Ülke:"
+  },
+  "classicThemeExample": {
+    "exampleTitle": "Örnek:",
+    "noItemsMessage": "Bu kategoride öğe bulunmamaktadır.",
+    "categories": {
+      "appetizers": "Mezeler",
+      "mainCourses": "Ana Yemekler",
+      "desserts": "Tatlılar",
+      "drinks": "İçecekler"
+    },
+    "items": {
+      "a1": "Bahar Böreği",
+      "a2": "Sarımsaklı Ekmek",
+      "a3": "Domates Bruschetta",
+      "m1": "Izgara Somon",
+      "m2": "Frites ile Biftek",
+      "m3": "Sebzeli Burger",
+      "m4": "Tavuk Alfredo",
+      "d1": "Cheesecake",
+      "d2": "Çikolatalı Lava Kek",
+      "dr1": "Buzlu Çay",
+      "dr2": "Limonata",
+      "dr3": "Kahve",
+      "dr4": "Portakal Suyu"
+    }
+  },
+  "accordionCardThemeExample": {
+    "exampleTitle": "Örnek:",
+    "noItemsMessage": "Bu kategoride öğe bulunmamaktadır.",
+    "categories": {
+      "coffee": "Kahve İçecekleri",
+      "pastries": "Taze Hamur İşleri",
+      "sandwiches": "Hafif Atıştırmalıklar"
+    },
+    "items": {
+      "c1": {
+        "name": "Espresso",
+        "desc": "Güçlü, zengin bir shot."
+      },
+      "c2": {
+        "name": "Latte",
+        "desc": "Buharda sütlü espresso."
+      },
+      "c3": {
+        "name": "Cappuccino",
+        "desc": "Eşit oranda espresso, buharda süt, köpük."
+      },
+      "p1": {
+        "name": "Kruvasan",
+        "desc": "Kat kat, tereyağlı mükemmellik."
+      },
+      "p2": {
+        "name": "Muffin",
+        "desc": "Yaban mersinli veya çikolatalı."
+      },
+      "s1": {
+        "name": "BLT",
+        "desc": "Pastırma, marul, domates."
+      },
+      "s2": {
+        "name": "Sebzeli Dürüm",
+        "desc": "Taze sebzeler, humus."
+      }
+    }
+  },
+  "sidebarListThemeExample": {
+    "exampleTitle": "Örnek:",
+    "noItemsMessage": "Bu kategoride öğe bulunmamaktadır.",
+    "categories": {
+      "appetizers": "Mezeler",
+      "mainCourses": "Ana Yemekler",
+      "desserts": "Tatlılar",
+      "drinks": "İçecekler"
+    },
+    "items": {
+      "a1": "Günün Çorbası",
+      "a2": "Ev Salatası",
+      "m1": "Makarna Primavera",
+      "m2": "Izgara Tavuk",
+      "m3": "Sebzeli Köri",
+      "d1": "Çikolatalı Kek",
+      "dr1": "Taze Portakal Suyu",
+      "dr2": "Maden Suyu"
+    }
+  },
+  "categoryCardsImageDominantThemeExample": {
+    "exampleTitle": "Örnek:",
+    "selectCategoryMessage": "Bir örnek öğe görmek için bir kategori seçin.",
+    "categories": {
+      "appetizers": "Mezeler",
+      "mainCourses": "Ana Yemekler",
+      "desserts": "Tatlılar",
+      "drinks": "İçecekler"
+    },
+    "items": {
+      "frenchFries": {
+        "name": "Patates Kızartması"
+      },
+      "deliciousBowl": {
+        "name": "Lezzetli Kase"
+      },
+      "lemonCheesecake": {
+        "name": "Limonlu Cheesecake"
+      },
+      "cocaCola": {
+        "name": "Coca Cola"
+      }
+    }
   }
 }

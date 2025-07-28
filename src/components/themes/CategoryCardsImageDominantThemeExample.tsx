@@ -4,66 +4,95 @@
 import { useState } from "react";
 import { cn } from "~/lib/utils";
 import Image from "next/image";
+import { useTranslations } from "next-intl"; // ADDED: Import useTranslations
 
-// Mock data for categories and their representative items
+// Mock data now uses translation keys for names and includes image paths
 const mockCategories = [
   {
     id: "appetizers",
-    name: "Appetizers",
-    item: {
-      name: "French Fries",
-      image: "/french-fries.jpg",
-    },
+    key: "appetizers",
+    itemKey: "frenchFries", // Key to look up in tItems
   },
   {
     id: "main-courses",
-    name: "Main Courses",
-    item: {
-      name: "Delicious Bowl",
-      image: "/bowl.png",
-    },
+    key: "mainCourses",
+    itemKey: "deliciousBowl",
   },
   {
     id: "desserts",
-    name: "Desserts",
-    item: {
-      name: "Lemon Cheesecake",
-      image: "/Limon-cheesecake.jpg",
-    },
+    key: "desserts",
+    itemKey: "lemonCheesecake",
   },
   {
     id: "drinks",
-    name: "Drinks",
-    item: {
-      name: "Coca Cola",
-      image: "/cocacola.jpg",
-    },
+    key: "drinks",
+    itemKey: "cocaCola",
   },
 ];
 
+// Actual item data with image paths - these are NOT translated
+const allMockItems = {
+  frenchFries: { image: "/french-fries.jpg" },
+  deliciousBowl: { image: "/bowl.png" },
+  lemonCheesecake: { image: "/Limon-cheesecake.jpg" },
+  cocaCola: { image: "/cocacola.jpg" },
+};
+
 export function CategoryCardsImageDominantThemeExample() {
-  const [activeCategoryItem, setActiveCategoryItem] = useState(
-    mockCategories[0]?.item ?? null, // Changed from: mockCategories.length > 0 ? mockCategories[0].item : null,
+  const t = useTranslations("categoryCardsImageDominantThemeExample"); // General translations
+  const tCategories = useTranslations(
+    "categoryCardsImageDominantThemeExample.categories",
+  ); // Category name translations
+  const tItems = useTranslations(
+    "categoryCardsImageDominantThemeExample.items",
+  ); // Item name translations
+
+  // Safely get the initial category to avoid 'undefined' access
+  const initialCategory =
+    mockCategories.length > 0 ? mockCategories[0] : undefined;
+
+  // State to hold the currently active item's translated name and image path
+  const [activeCategoryItem, setActiveCategoryItem] = useState<{
+    name: string;
+    image: string;
+  } | null>(
+    initialCategory // Use the safely retrieved initialCategory
+      ? {
+          name: tItems(`${initialCategory.itemKey}.name`),
+          image:
+            allMockItems[initialCategory.itemKey as keyof typeof allMockItems]
+              .image,
+        }
+      : null,
   );
 
   return (
     <div className="mb-8">
-      <h3 className="text-foreground mb-2 text-xl font-semibold">Example:</h3>
+      <h3 className="text-foreground mb-2 text-xl font-semibold">
+        {t("exampleTitle")}
+      </h3>
       <div className="border-border bg-background rounded-lg border p-4">
         {/* Category Cards */}
         <div className="mb-4 grid grid-cols-2 gap-4">
           {mockCategories.map((category) => (
             <button
               key={category.id}
-              onClick={() => setActiveCategoryItem(category.item)}
+              onClick={() =>
+                setActiveCategoryItem({
+                  name: tItems(`${category.itemKey}.name`),
+                  image:
+                    allMockItems[category.itemKey as keyof typeof allMockItems]
+                      .image,
+                })
+              }
               className={cn(
                 "rounded-md p-3 text-center transition-colors",
-                activeCategoryItem?.name === category.item.name
+                activeCategoryItem?.name === tItems(`${category.itemKey}.name`) // Compare translated names
                   ? "bg-primary text-primary-foreground"
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
               )}
             >
-              {category.name}
+              {tCategories(category.key)}
             </button>
           ))}
         </div>
@@ -83,7 +112,7 @@ export function CategoryCardsImageDominantThemeExample() {
           </div>
         ) : (
           <p className="text-muted-foreground text-center">
-            Select a category to see an example item.
+            {t("selectCategoryMessage")}
           </p>
         )}
       </div>

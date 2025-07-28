@@ -1,4 +1,4 @@
-// src/app/[restaurantSlug]/about/page.tsx
+// app/[restaurantSlug]/about/page.tsx
 
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
@@ -8,18 +8,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { ChevronLeft, MapPin, Phone, Globe, Info, Tag } from "lucide-react";
-import { cn } from "~/lib/utils"; // Import cn utility
+import { cn } from "~/lib/utils";
+import { getTranslations } from "next-intl/server"; // ADDED: Import getTranslations
 
 import type { Restaurant } from "~/types/restaurant";
 
 interface PageProps {
-  params: Promise<{
+  params: {
     restaurantSlug: string;
-  }>;
+  };
 }
 
 export default async function RestaurantProfilePage({ params }: PageProps) {
-  const { restaurantSlug } = await params;
+  const { restaurantSlug } = params; // Changed from await params for clarity
+
+  // ADDED: Fetch translations for this page
+  const t = await getTranslations("restaurantProfilePage");
 
   const restaurantDetails: Restaurant | undefined =
     await db.query.restaurants.findFirst({
@@ -55,6 +59,7 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
             )}
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
+            {t("backToMenu")} {/* UPDATED: Use translation */}
           </Button>
         </Link>
 
@@ -69,7 +74,7 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
             <Image
               src={restaurantDetails.logoUrl ?? fallbackLogoUrl}
               alt={`${restaurantDetails.name} Logo`}
-              layout="fill"
+              fill
               objectFit="cover"
             />
           </div>
@@ -77,7 +82,6 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
             {restaurantDetails.name}
           </h1>
           {restaurantDetails.description && (
-            // FIX START: Ensure no stray curly braces here, and comments are correct JSX comments
             <p className="text-muted-foreground max-w-2xl text-center text-lg">
               {restaurantDetails.description}
             </p>
@@ -93,7 +97,9 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
               <div className="flex items-center space-x-3">
                 <Tag className="text-primary h-6 w-6" />
                 <p>
-                  <span className="font-semibold">Food Type:</span>{" "}
+                  <span className="font-semibold">
+                    {t("foodTypeLabel")} {/* UPDATED: Use translation */}
+                  </span>{" "}
                   {restaurantDetails.foodType}
                 </p>
               </div>
@@ -104,7 +110,10 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
               <div className="flex items-center space-x-3">
                 <Info className="text-primary h-6 w-6" />
                 <p>
-                  <span className="font-semibold">Establishment Type:</span>{" "}
+                  <span className="font-semibold">
+                    {t("establishmentTypeLabel")}{" "}
+                    {/* UPDATED: Use translation */}
+                  </span>{" "}
                   {restaurantDetails.typeOfEstablishment}
                 </p>
               </div>
@@ -115,7 +124,9 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
               <div className="flex items-center space-x-3">
                 <Phone className="text-primary h-6 w-6" />
                 <p>
-                  <span className="font-semibold">Phone:</span>{" "}
+                  <span className="font-semibold">
+                    {t("phoneLabel")} {/* UPDATED: Use translation */}
+                  </span>{" "}
                   {restaurantDetails.phoneNumber}
                 </p>
               </div>
@@ -129,7 +140,9 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
               <div className="flex items-center space-x-3">
                 <MapPin className="text-primary h-6 w-6" />
                 <p>
-                  <span className="font-semibold">Address:</span>{" "}
+                  <span className="font-semibold">
+                    {t("addressLabel")} {/* UPDATED: Use translation */}
+                  </span>{" "}
                   {restaurantDetails.address}
                 </p>
               </div>
@@ -140,7 +153,9 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
               <div className="flex items-center space-x-3">
                 <Globe className="text-primary h-6 w-6" />
                 <p>
-                  <span className="font-semibold">Country:</span>{" "}
+                  <span className="font-semibold">
+                    {t("countryLabel")} {/* UPDATED: Use translation */}
+                  </span>{" "}
                   {restaurantDetails.country}
                 </p>
               </div>

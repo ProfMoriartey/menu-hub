@@ -8,20 +8,22 @@ import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "~/lib/utils";
-import { ThemeToggle } from "~/components/shared/ThemeToggle"; // Keep this import
+import { ThemeToggle } from "~/components/shared/ThemeToggle";
+import { getTranslations } from "next-intl/server"; // ADDED: Import getTranslations
 
 interface PageProps {
-  params: Promise<{
+  params: {
     restaurantSlug: string;
-    itemId: string;
-  }>;
-  searchParams?: Promise<
-    Readonly<Record<string, string | string[] | undefined>>
-  >;
+    itemId?: string; // Changed from Promise to direct string for clarity in params
+  };
+  searchParams?: Readonly<Record<string, string | string[] | undefined>>; // Changed from Promise for clarity
 }
 
 export default async function RestaurantMenuPage({ params }: PageProps) {
-  const { restaurantSlug } = await params;
+  const { restaurantSlug } = params;
+
+  // ADDED: Fetch translations for this page
+  const t = await getTranslations("restaurantMenuPage");
 
   const restaurantDetails = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
@@ -109,7 +111,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
                 <Image
                   src={restaurantDetails.logoUrl}
                   alt={`${restaurantDetails.name} Logo`}
-                  layout="fill"
+                  fill
                   objectFit="cover"
                   className="rounded-lg"
                 />
@@ -127,8 +129,9 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
                 {restaurantDetails.description}
               </p>
             ) : (
+              // UPDATED: Use translation for default description
               <p className="text-muted-foreground mt-2 text-lg">
-                Browse our delicious menu
+                {t("browseMenuDefault")}
               </p>
             )}
           </div>
@@ -143,8 +146,9 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
       <main className="container mx-auto px-4 py-8">
         {menuData.categories.length === 0 ? (
           <div className="text-muted-foreground py-10 text-center">
-            <p>No menu items available for this restaurant yet.</p>
-            <p>Please check back later!</p>
+            {/* UPDATED: Use translations for empty menu messages */}
+            <p>{t("noMenuItemsAvailable")}</p>
+            <p>{t("checkBackLater")}</p>
           </div>
         ) : (
           <MenuDisplayClient

@@ -26,7 +26,9 @@
     "previewTitle": "See Our Digital Menus in Action",
     "example": {
       "classic": "Classic Layout",
-      "accordion": "Accordion Card Layout"
+      "accordion": "Accordion Card Layout",
+      "sidebarList": "Sidebar List Layout",
+      "categoryCardsImageDominant": "Category Cards Image Dominant Layout"
     },
     "cta": "Explore All Features"
   },
@@ -43,9 +45,7 @@
     "chatInputPlaceholder": "Type your message...",
     "sendButton": "Send",
     "messageSent": "Message sent!",
-    "errorSendingMessage": "Failed to send message.",
-    "loadingMessages": "Loading messages...",
-    "errorLoadingMessages": "Failed to load messages."
+    "errorSendingMessage": "Failed to send message."
   },
   "aboutPage": {
     "mainTitle": "About Menupedia",
@@ -141,5 +141,133 @@
   },
   "restaurantCard": {
     "viewMenu": "View Menu"
+  },
+  "restaurantMenuPage": {
+    "browseMenuDefault": "Browse our delicious menu",
+    "noMenuItemsAvailable": "No menu items available for this restaurant yet.",
+    "checkBackLater": "Please check back later!"
+  },
+  "menuItemDetailPage": {
+    "pageTitle": "Menu Item Details",
+    "backToMenu": "Back to Menu",
+    "priceLabel": "Price",
+    "ingredientsLabel": "Ingredients",
+    "dietaryLabels": "Dietary Information"
+  },
+  "restaurantProfilePage": {
+    "backToMenu": "Back to Menu",
+    "foodTypeLabel": "Food Type:",
+    "establishmentTypeLabel": "Establishment Type:",
+    "phoneLabel": "Phone:",
+    "addressLabel": "Address:",
+    "countryLabel": "Country:"
+  },
+  "classicThemeExample": {
+    "exampleTitle": "Example:",
+    "noItemsMessage": "No items in this category.",
+    "categories": {
+      "appetizers": "Appetizers",
+      "mainCourses": "Main Courses",
+      "desserts": "Desserts",
+      "drinks": "Drinks"
+    },
+    "items": {
+      "a1": "Spring Rolls",
+      "a2": "Garlic Bread",
+      "a3": "Tomato Bruschetta",
+      "m1": "Grilled Salmon",
+      "m2": "Steak Frites",
+      "m3": "Veggie Burger",
+      "m4": "Chicken Alfredo",
+      "d1": "Cheesecake",
+      "d2": "Chocolate Lava Cake",
+      "dr1": "Iced Tea",
+      "dr2": "Lemonade",
+      "dr3": "Coffee",
+      "dr4": "Orange Juice"
+    }
+  },
+  "accordionCardThemeExample": {
+    "exampleTitle": "Example:",
+    "noItemsMessage": "No items in this category.",
+    "categories": {
+      "coffee": "Coffee Drinks",
+      "pastries": "Fresh Pastries",
+      "sandwiches": "Light Bites"
+    },
+    "items": {
+      "c1": {
+        "name": "Espresso",
+        "desc": "Strong, rich shot."
+      },
+      "c2": {
+        "name": "Latte",
+        "desc": "Espresso with steamed milk."
+      },
+      "c3": {
+        "name": "Cappuccino",
+        "desc": "Equal parts espresso, steamed milk, foam."
+      },
+      "p1": {
+        "name": "Croissant",
+        "desc": "Flaky, buttery perfection."
+      },
+      "p2": {
+        "name": "Muffin",
+        "desc": "Blueberry or chocolate chip."
+      },
+      "s1": {
+        "name": "BLT",
+        "desc": "Bacon, lettuce, tomato."
+      },
+      "s2": {
+        "name": "Veggie Wrap",
+        "desc": "Fresh vegetables, hummus."
+      }
+    }
+  },
+  "sidebarListThemeExample": {
+    "exampleTitle": "Example:",
+    "noItemsMessage": "No items in this category.",
+    "categories": {
+      "appetizers": "Appetizers",
+      "mainCourses": "Main Courses",
+      "desserts": "Desserts",
+      "drinks": "Drinks"
+    },
+    "items": {
+      "a1": "Soup of the Day",
+      "a2": "House Salad",
+      "m1": "Pasta Primavera",
+      "m2": "Grilled Chicken",
+      "m3": "Vegetable Curry",
+      "d1": "Chocolate Cake",
+      "dr1": "Fresh Orange Juice",
+      "dr2": "Sparkling Water"
+    }
+  },
+  "categoryCardsImageDominantThemeExample": {
+    "exampleTitle": "Example:",
+    "selectCategoryMessage": "Select a category to see an example item.",
+    "categories": {
+      "appetizers": "Appetizers",
+      "mainCourses": "Main Courses",
+      "desserts": "Desserts",
+      "drinks": "Drinks"
+    },
+    "items": {
+      "frenchFries": {
+        "name": "French Fries"
+      },
+      "deliciousBowl": {
+        "name": "Delicious Bowl"
+      },
+      "lemonCheesecake": {
+        "name": "Lemon Cheesecake"
+      },
+      "cocaCola": {
+        "name": "Coca Cola"
+      }
+    }
   }
 }

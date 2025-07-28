@@ -2,48 +2,55 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "~/lib/utils"; // Assuming cn is needed for styling
+import { cn } from "~/lib/utils";
+import { useTranslations } from "next-intl"; // ADDED: Import useTranslations
 
-// Mock data for categories and items
+// Mock data now uses translation keys for names
 const mockCategories = [
-  { id: "appetizers", name: "Appetizers" },
-  { id: "main-courses", name: "Main Courses" },
-  { id: "desserts", name: "Desserts" },
-  { id: "drinks", name: "Drinks" },
+  { id: "appetizers", key: "appetizers" },
+  { id: "main-courses", key: "mainCourses" },
+  { id: "desserts", key: "desserts" },
+  { id: "drinks", key: "drinks" },
 ];
 
 const mockItems = {
   appetizers: [
-    { id: "a1", name: "Spring Rolls" },
-    { id: "a2", name: "Garlic Bread" },
-    { id: "a3", name: "Tomato Bruschetta" },
+    { id: "a1", key: "a1" },
+    { id: "a2", key: "a2" },
+    { id: "a3", key: "a3" },
   ],
   "main-courses": [
-    { id: "m1", name: "Grilled Salmon" },
-    { id: "m2", name: "Steak Frites" },
-    { id: "m3", name: "Veggie Burger" },
-    { id: "m4", name: "Chicken Alfredo" },
+    { id: "m1", key: "m1" },
+    { id: "m2", key: "m2" },
+    { id: "m3", key: "m3" },
+    { id: "m4", key: "m4" },
   ],
   desserts: [
-    { id: "d1", name: "Cheesecake" },
-    { id: "d2", name: "Chocolate Lava Cake" },
+    { id: "d1", key: "d1" },
+    { id: "d2", key: "d2" },
   ],
   drinks: [
-    { id: "dr1", name: "Iced Tea" },
-    { id: "dr2", name: "Lemonade" },
-    { id: "dr3", name: "Coffee" },
-    { id: "dr4", name: "Orange Juice" },
+    { id: "dr1", key: "dr1" },
+    { id: "dr2", key: "dr2" },
+    { id: "dr3", key: "dr3" },
+    { id: "dr4", key: "dr4" },
   ],
 };
 
 export function ClassicThemeExample() {
+  const t = useTranslations("classicThemeExample"); // Translations for general strings
+  const tCategories = useTranslations("classicThemeExample.categories"); // Translations for category names
+  const tItems = useTranslations("classicThemeExample.items"); // Translations for item names
+
   const [activeCategory, setActiveCategory] = useState(
     mockCategories[0]?.id ?? "",
   );
 
   return (
     <div className="mb-8">
-      <h3 className="text-foreground mb-2 text-xl font-semibold">Example:</h3>
+      <h3 className="text-foreground mb-2 text-xl font-semibold">
+        {t("exampleTitle")}
+      </h3>
       <div className="border-border bg-background rounded-lg border p-4">
         <div className="mb-4 flex space-x-2 overflow-x-auto">
           {mockCategories.map((category) => (
@@ -57,7 +64,7 @@ export function ClassicThemeExample() {
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
               )}
             >
-              {category.name}
+              {tCategories(category.key)}
             </button>
           ))}
         </div>
@@ -67,13 +74,13 @@ export function ClassicThemeExample() {
               key={item.id}
               className="border-border bg-card rounded-md border p-2"
             >
-              {item.name}
+              {tItems(item.key)}
             </div>
           ))}
           {mockItems[activeCategory as keyof typeof mockItems]?.length ===
             0 && (
             <p className="text-muted-foreground col-span-2 text-center">
-              No items in this category.
+              {t("noItemsMessage")}
             </p>
           )}
         </div>

@@ -3,40 +3,47 @@
 
 import { useState } from "react";
 import { cn } from "~/lib/utils";
+import { useTranslations } from "next-intl"; // ADDED: Import useTranslations
 
-// Mock data for categories and items for the sidebar list theme
+// Mock data now uses translation keys for names
 const mockCategories = [
-  { id: "appetizers", name: "Appetizers" },
-  { id: "main-courses", name: "Main Courses" },
-  { id: "desserts", name: "Desserts" },
-  { id: "drinks", name: "Drinks" },
+  { id: "appetizers", key: "appetizers" },
+  { id: "main-courses", key: "mainCourses" },
+  { id: "desserts", key: "desserts" },
+  { id: "drinks", key: "drinks" },
 ];
 
 const mockItems = {
   appetizers: [
-    { id: "a1", name: "Soup of the Day" },
-    { id: "a2", name: "House Salad" },
+    { id: "a1", key: "a1" },
+    { id: "a2", key: "a2" },
   ],
   "main-courses": [
-    { id: "m1", name: "Pasta Primavera" },
-    { id: "m2", name: "Grilled Chicken" },
-    { id: "m3", name: "Vegetable Curry" },
+    { id: "m1", key: "m1" },
+    { id: "m2", key: "m2" },
+    { id: "m3", key: "m3" },
   ],
-  desserts: [{ id: "d1", name: "Chocolate Cake" }],
+  desserts: [{ id: "d1", key: "d1" }],
   drinks: [
-    { id: "dr1", name: "Fresh Orange Juice" },
-    { id: "dr2", name: "Sparkling Water" },
+    { id: "dr1", key: "dr1" },
+    { id: "dr2", key: "dr2" },
   ],
 };
 
 export function SidebarListThemeExample() {
+  const t = useTranslations("sidebarListThemeExample"); // Translations for general strings
+  const tCategories = useTranslations("sidebarListThemeExample.categories"); // Translations for category names
+  const tItems = useTranslations("sidebarListThemeExample.items"); // Translations for item names
+
   const [activeCategory, setActiveCategory] = useState(
     mockCategories[0]?.id ?? "",
   );
 
   return (
     <div className="mb-8">
-      <h3 className="text-foreground mb-2 text-xl font-semibold">Example:</h3>
+      <h3 className="text-foreground mb-2 text-xl font-semibold">
+        {t("exampleTitle")}
+      </h3>
       <div className="border-border bg-background flex rounded-lg border p-4">
         {/* Sidebar for categories */}
         <div className="border-border w-1/3 border-r pr-4">
@@ -51,7 +58,7 @@ export function SidebarListThemeExample() {
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
               )}
             >
-              {category.name}
+              {tCategories(category.key)}
             </button>
           ))}
         </div>
@@ -63,12 +70,12 @@ export function SidebarListThemeExample() {
                 key={item.id}
                 className="border-border bg-card mb-2 rounded-md border p-2"
               >
-                {item.name}
+                {tItems(item.key)}
               </div>
             ))
           ) : (
             <p className="text-muted-foreground text-center">
-              No items in this category.
+              {t("noItemsMessage")}
             </p>
           )}
         </div>
