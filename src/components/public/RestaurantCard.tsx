@@ -1,4 +1,7 @@
 // src/components/public/RestaurantCard.tsx
+// This is a Client Component.
+// It displays a single restaurant card and handles interactive elements like links.
+
 "use client";
 
 import Link from "next/link";
@@ -16,6 +19,9 @@ import { cn } from "~/lib/utils";
 import type { Restaurant } from "~/types/restaurant";
 import { motion } from "framer-motion";
 
+// ADDED: Import useTranslations from next-intl
+import { useTranslations } from "next-intl";
+
 interface PublicRestaurantCardProps {
   restaurant: Restaurant;
   isFullWidthDisplay?: boolean; // ADDED: New optional prop
@@ -25,6 +31,9 @@ export function PublicRestaurantCard({
   restaurant,
   isFullWidthDisplay = false, // ADDED: Default to false
 }: PublicRestaurantCardProps) {
+  // ADDED: Initialize translations for the "restaurantCard" namespace
+  const t = useTranslations("restaurantCard");
+
   const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Image`;
 
   return (
@@ -63,7 +72,8 @@ export function PublicRestaurantCard({
           </CardHeader>
           <CardContent className="mt-auto">
             <Button variant="outline" className="w-full">
-              View Menu
+              {/* UPDATED: Use translation for "View Menu" button */}
+              {t("viewMenu")}
             </Button>
           </CardContent>
         </Card>

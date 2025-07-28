@@ -138,5 +138,8 @@
     "themes": "القوالب",
     "aboutUs": "عنا",
     "language": "اللغة"
+  },
+  "restaurantCard": {
+    "viewMenu": "استكشف المنيو"
   }
 }

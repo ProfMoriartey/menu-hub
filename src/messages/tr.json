@@ -138,5 +138,8 @@
     "themes": "Temalar",
     "aboutUs": "Hakkımızda",
     "language": "Dil"
+  },
+  "restaurantCard": {
+    "viewMenu": "Menu keşfet"
   }
 }

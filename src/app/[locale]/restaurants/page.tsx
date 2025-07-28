@@ -1,15 +1,19 @@
-// app/restaurants/page.tsx
+// app/[locale]/restaurants/page.tsx
+// This is a Server Component.
+// It handles data fetching and passes initial data to client components.
+
 import { db } from "~/server/db";
 import { RestaurantSearchAndGrid } from "~/components/public/RestaurantSearchAndGrid";
 import { cn } from "~/lib/utils";
-// REMOVED: Import Server Actions (no longer passed to public component)
-// import {
-//   addRestaurant,
-//   deleteRestaurant,
-//   updateRestaurant,
-// } from "~/app/actions/restaurant";
+// ADDED: Import getTranslations for server components
+import { getTranslations } from "next-intl/server";
 
 export default async function RestaurantsPage() {
+  // ADDED: Initialize translations for the "restaurantsPage" namespace
+  const t = await getTranslations("restaurantsPage");
+
+  // Fetch all restaurants on the server.
+  // This operation happens once when the page is requested.
   const allRestaurants = await db.query.restaurants.findMany({
     with: {
       categories: {
@@ -24,16 +28,17 @@ export default async function RestaurantsPage() {
   return (
     <div className={cn("min-h-screen p-8", "bg-background text-foreground")}>
       <header className="mx-auto max-w-4xl px-4 py-12 text-center">
+        {/* UPDATED: Use translation for main title */}
         <h1 className="text-foreground mb-4 text-5xl leading-tight font-extrabold">
-          Discover Restaurants
+          {t("mainTitle")}
         </h1>
-        <p className="text-muted-foreground mb-8 text-xl">
-          Search and explore all restaurants available on Menupedia.
-        </p>
+        {/* UPDATED: Use translation for description */}
+        <p className="text-muted-foreground mb-8 text-xl">{t("description")}</p>
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* REMOVED: Passing Server Actions as props */}
+        {/* Pass the server-fetched data to the client component. */}
+        {/* The client component will handle client-side filtering and rendering. */}
         <RestaurantSearchAndGrid initialRestaurants={allRestaurants} />
       </main>
     </div>

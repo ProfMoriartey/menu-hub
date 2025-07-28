@@ -138,5 +138,8 @@
     "themes": "Themes",
     "aboutUs": "About Us",
     "language": "Language"
+  },
+  "restaurantCard": {
+    "viewMenu": "View Menu"
   }
 }
