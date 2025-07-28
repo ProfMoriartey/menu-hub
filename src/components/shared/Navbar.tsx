@@ -62,7 +62,7 @@ export function Navbar() {
             alt="Menupedia Logo"
             width={240} // Increased width (e.g., 180 -> 240)
             height={64} // Increased height (e.g., 48 -> 64)
-            className="h-8 w-auto md:h-16" // Adjusted Tailwind class to h-16 (64px)
+            className="h-8 w-auto md:h-12" // Adjusted Tailwind class to h-16 (64px)
           />
         </Link>
 
