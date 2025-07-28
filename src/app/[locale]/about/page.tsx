@@ -5,6 +5,7 @@ import { cn } from "~/lib/utils";
 import { motion } from "framer-motion"; // Import motion for animations
 import Link from "next/link"; // For the contact links
 import { useTranslations } from "next-intl"; // Import useTranslations
+import SittingDoodle from "~/components/svg/SittingDoodle"; // Import your SittingDoodle SVG component
 
 export default function AboutUsPage() {
   const t = useTranslations("aboutPage"); // Initialize translations for the 'aboutPage' namespace
@@ -34,7 +35,7 @@ export default function AboutUsPage() {
           "bg-card",
         )}
       >
-        {/* Section: About Menupedia */}
+        {/* Original About Menupedia Section - now without the doodle */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -164,36 +165,57 @@ export default function AboutUsPage() {
           </motion.li>
         </ul>
         <div className="border-border my-8 border-t"></div> {/* Separator */}
-        {/* Section: Get Started */}
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 2.2 }}
-          className="text-foreground mb-4 text-3xl font-bold"
-        >
-          {t("getStartedTitle")}
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 2.4 }}
-          className="text-muted-foreground mb-4 text-lg leading-relaxed"
-        >
-          {t("getStartedDescription")}
-        </motion.p>
-        <div className="space-y-2 text-lg">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.6, duration: 0.5 }}
+        {/* Section: Get Started - Now with SittingDoodle */}
+        {/* New flex container for the "Get Started" section content and SVG */}
+        <div className="flex flex-col items-center justify-center text-center md:flex-row md:items-center md:justify-between md:text-left">
+          {/* Get Started text content (appears above doodle for mobile) */}
+          <div className="flex-1 md:mr-8">
+            {" "}
+            {/* Added mr-8 for spacing on desktop */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 2.2 }} // Adjusted delay
+              className="text-foreground mb-4 text-3xl font-bold"
+            >
+              {t("getStartedTitle")}
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 2.4 }} // Adjusted delay
+              className="text-muted-foreground mb-4 text-lg leading-relaxed"
+            >
+              {t("getStartedDescription")}
+            </motion.p>
+            <div className="space-y-2 text-lg">
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2.6, duration: 0.5 }} // Adjusted delay
+              >
+                <span className="text-foreground font-semibold">
+                  {t("exploreRestaurants.title")}
+                </span>{" "}
+                <Link
+                  href="/restaurants"
+                  className="text-accent hover:underline"
+                >
+                  {t("exploreRestaurants.linkText")}
+                </Link>
+              </motion.p>
+            </div>
+          </div>
+
+          {/* SVG Doodle (appears on top for mobile due to order) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }} // Animation for doodle
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 2.8 }} // Adjusted delay
+            className="mb-8 flex-shrink-0 md:mb-0" // Spacing below doodle on mobile
           >
-            <span className="text-foreground font-semibold">
-              {t("exploreRestaurants.title")}
-            </span>{" "}
-            <Link href="/restaurants" className="text-accent hover:underline">
-              {t("exploreRestaurants.linkText")}
-            </Link>
-          </motion.p>
+            <SittingDoodle className="h-48 w-48 sm:h-64 sm:w-64 md:h-80 md:w-80" />
+          </motion.div>
         </div>
       </motion.div>
     </div>

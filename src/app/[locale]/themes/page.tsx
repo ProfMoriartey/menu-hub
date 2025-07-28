@@ -12,8 +12,7 @@ import { SidebarListThemeSection } from "~/components/themes/SidebarListThemeSec
 import { AccordionCardThemeSection } from "~/components/themes/AccordionCardThemeSection";
 import { CategoryCardsImageDominantThemeSection } from "~/components/themes/CategoryCardsImageDominantThemeSection";
 
-// REMOVED: import { motion } from "framer-motion"; // No longer needed here
-// ADDED: Import the new ThemesHeader client component
+// ADDED: Import the ThemesHeader client component
 import { ThemesHeader } from "~/components/themes/ThemesHeader";
 
 export default async function ThemesPage() {
@@ -43,17 +42,11 @@ export default async function ThemesPage() {
       with: { categories: true },
     });
 
-  // REMOVED: headerItemVariants as they are now in ThemesHeader.tsx
-  // const headerItemVariants = {
-  //   hidden: { opacity: 0, y: 20 },
-  //   visible: { opacity: 1, y: 0 },
-  // };
-
   return (
-    <div
-      className={cn("min-h-screen p-4 sm:p-8", "bg-background text-foreground")}
-    >
-      {/* RENDERED: The new ThemesHeader client component */}
+    // The main page container now has a multi-color background gradient
+    // transitioning through various theme colors.
+    <div>
+      {/* RENDERED: The ThemesHeader client component */}
       <ThemesHeader />
 
       <main className="container mx-auto space-y-16 px-4 py-8">
