@@ -1,0 +1,145 @@
+{
+  "hero": {
+    "title": {
+      "main": "Descubre Tu Próxima",
+      "highlight": "Comida Favorita"
+    },
+    "description": "Explora menús diversos de restaurantes locales, encuentra inspiración culinaria y disfruta de experiencias gastronómicas sin problemas.",
+    "cta": "Empezar a Explorar"
+  },
+  "about": {
+    "title": "Descubre Más Sobre Menupedia",
+    "description": "Menupedia es tu destino online principal para explorar restaurantes locales y sus deliciosos menús. Conectamos a los amantes de la comida apasionados con una diversa gama de experiencias culinarias, haciendo que sea fácil encontrar exactamente lo que se te antoja. Nuestra misión principal es simplificar tus opciones gastronómicas, apoyar a los negocios locales y mostrar lo mejor de la gastronomía local.",
+    "cta": "Saber Más Sobre Menupedia"
+  },
+  "featured": {
+    "title": "Restaurantes Destacados",
+    "empty": "No hay restaurantes destacados disponibles en este momento.",
+    "button": {
+      "single": "Ver Menú",
+      "all": "Ver Todos los Restaurantes"
+    }
+  },
+  "themes": {
+    "title": "¿Por Qué Elegir Menupedia?",
+    "description": "Menupedia simplifica la gestión y el descubrimiento del menú de un restaurante. Ofrecemos herramientas intuitivas para empresas y una experiencia rica y fácil de usar para los comensales. Nuestro enfoque en la gastronomía local significa que apoyas a tu comunidad mientras exploras diversas opciones culinarias. Con una integración perfecta y temas de visualización dinámicos, hacemos que los menús digitales sean atractivos y sin esfuerzo.",
+    "previewTitle": "Ve Nuestros Menús Digitales en Acción",
+    "example": {
+      "classic": "Diseño Clásico",
+      "accordion": "Diseño de Tarjetas Acordeón"
+    },
+    "cta": "Explorar Todas las Características"
+  },
+  "contact": {
+    "title": "Ponte en Contacto",
+    "description": "¿Tienes preguntas o necesitas ayuda? ¡Contáctanos!",
+    "emailLabel": "Correo electrónico",
+    "phoneLabel": "Teléfono"
+  },
+  "messages": {
+    "title": "Tus Mensajes",
+    "empty": "Aún no hay mensajes. ¡Inicia una conversación!",
+    "noChatSelected": "Selecciona un chat para ver los mensajes.",
+    "chatInputPlaceholder": "Escribe tu mensaje...",
+    "sendButton": "Enviar",
+    "messageSent": "¡Mensaje enviado!",
+    "errorSendingMessage": "Error al enviar el mensaje.",
+    "loadingMessages": "Cargando mensajes...",
+    "errorLoadingMessages": "Error al cargar mensajes."
+  },
+  "aboutPage": {
+    "mainTitle": "Acerca de Menupedia",
+    "mainDescription": "Menupedia es tu plataforma online definitiva para descubrir y explorar restaurantes locales y sus diversas ofertas culinarias. Conectamos a los amantes de la comida con una amplia gama de experiencias gastronómicas, haciendo que sea más fácil que nunca encontrar exactamente lo que se te antoja. Nuestra misión es simplificar tus opciones gastronómicas y resaltar lo mejor de la gastronomía local, todo en un lugar conveniente.",
+    "whatWeOfferTitle": "Qué Ofrecemos",
+    "whatWeOfferDescription": "Menupedia proporciona una experiencia fluida tanto para comensales como para propietarios de restaurantes.",
+    "forDiners": {
+      "title": "Para Comensales:",
+      "description": "Acceso fácil a menús de restaurantes dedicados, platos categorizados, información detallada de los elementos (incluyendo ingredientes y etiquetas dietéticas) y hermosas imágenes. Descubre nuevos favoritos sin esfuerzo."
+    },
+    "forRestaurantOwners": {
+      "title": "Para Propietarios de Restaurantes:",
+      "description": "Un potente panel de administración para gestionar el perfil de tu restaurante, las categorías del menú y los elementos individuales del menú. Sube imágenes, establece precios y actualiza la información dietética con facilidad."
+    },
+    "customizableThemes": {
+      "title": "Temas Personalizables:",
+      "description": "Los restaurantes pueden elegir entre varios temas de visualización para que coincidan con el estilo único de su marca, asegurando una experiencia personalizada para el cliente."
+    },
+    "optimizedForAllDevices": {
+      "title": "Optimizado para Todos los Dispositivos:",
+      "description": "Nuestra plataforma está diseñada para proporcionar una experiencia óptima de visualización y navegación tanto en teléfonos móviles como en ordenadores de escritorio."
+    },
+    "ourCommitmentTitle": "Nuestro Compromiso",
+    "simplicity": {
+      "title": "Simplicidad:",
+      "description": "Nos esforzamos por hacer que la gestión y el descubrimiento de menús online sean lo más sencillos posible."
+    },
+    "innovation": {
+      "title": "Innovación:",
+      "description": "Mejoramos continuamente nuestra plataforma con nuevas características y tecnologías."
+    },
+    "userExperience": {
+      "title": "Experiencia del Usuario:",
+      "description": "Priorizamos el diseño intuitivo tanto para los propietarios de restaurantes como para sus clientes."
+    },
+    "reliability": {
+      "title": "Fiabilidad:",
+      "description": "Construida sobre una pila robusta, Menupedia ofrece un rendimiento consistente."
+    },
+    "getStartedTitle": "Comenzar",
+    "getStartedDescription": "¿Listo para optimizar la presencia online de tu restaurante o descubrir tu próxima comida favorita? ¡Explora Menupedia hoy mismo!",
+    "exploreRestaurants": {
+      "title": "Explorar Restaurantes:",
+      "linkText": "Explorar Todos los Menús"
+    }
+  },
+  "restaurantsPage": {
+    "mainTitle": "Descubre Restaurantes",
+    "description": "Busca y explora todos los restaurantes disponibles en Menupedia.",
+    "searchButton": "Buscar Restaurantes",
+    "searchPlaceholder": "Busca un restaurante, cocina o artículo del menú...",
+    "noResultsFound": "No se encontraron resultados para \"{searchTerm}\".",
+    "allRestaurantsTitle": "Todos los Restaurantes",
+    "noRestaurantsFound": "No se encontraron restaurantes.",
+    "adminPrompt": "Si eres el administrador, por favor añade restaurantes a través del panel."
+  },
+  "themesPage": {
+    "mainTitle": "Explorar Temas de Menú",
+    "description": "Descubre las diferentes formas en que el menú de tu restaurante puede brillar. Cada tema ofrece una experiencia visual única.",
+    "sections": {
+      "classic": {
+        "title": "Diseño Clásico",
+        "description": "Un diseño atemporal y fácil de navegar. Presenta categorías principales prominentes y una clara cuadrícula de menú de dos columnas. Ideal para menús amplios.",
+        "howItLooks": "Así es como se ve:",
+        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'clásico' para mostrar."
+      },
+      "sidebarList": {
+        "title": "Diseño de Lista Lateral",
+        "description": "Presenta una barra lateral vertical limpia para la navegación por categorías, con los elementos del menú mostrados en un formato de lista de una sola columna.",
+        "howItLooks": "Así es como se ve:",
+        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'lista-lateral' para mostrar."
+      },
+      "accordionCard": {
+        "title": "Diseño de Tarjetas Acordeón",
+        "description": "Organiza las categorías del menú en secciones de acordeón expandibles/colapsables, revelando los elementos del menú mostrados como tarjetas distintas.",
+        "howItLooks": "Así es como se ve:",
+        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'tarjetas-acordeón' para mostrar."
+      },
+      "categoryCardsImageDominant": {
+        "title": "Diseño de Tarjetas de Categoría con Imagen Dominante",
+        "description": "Presenta las categorías como tarjetas prominentes y clicables. Al seleccionarlas, los elementos del menú se muestran con imágenes más grandes y dominantes para una experiencia visualmente rica.",
+        "howItLooks": "Así es como se ve:",
+        "noRestaurantFound": "No se encontró ningún restaurante con el tema 'tarjetas-de-categoría-imagen-dominante' para mostrar."
+      }
+    }
+  },
+  "navbar": {
+    "home": "Inicio",
+    "restaurants": "Restaurantes",
+    "themes": "Temas",
+    "aboutUs": "Sobre Nosotros",
+    "language": "Idioma"
+  },
+  "restaurantCard": {
+    "viewMenu": "Ver Menú"
+  }
+}

@@ -18,7 +18,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = useTranslations("navbar");
 
-  const locales = ["en", "tr", "ar"];
+  const locales = ["en", "tr", "ar", "es", "ru"];
 
   const navLinks = [
     { name: t("home"), href: "/" },
