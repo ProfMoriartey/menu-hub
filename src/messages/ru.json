@@ -145,7 +145,8 @@
   "restaurantMenuPage": {
     "browseMenuDefault": "Просмотрите наше вкусное меню",
     "noMenuItemsAvailable": "Пока нет пунктов меню для этого ресторана.",
-    "checkBackLater": "Пожалуйста, проверьте позже!"
+    "checkBackLater": "Пожалуйста, проверьте позже!",
+    "restaurantDetailsButton": "Детали ресторана" 
   },
   "menuItemDetailPage": {
     "pageTitle": "Детали Пункта Меню",

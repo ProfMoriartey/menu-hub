@@ -145,7 +145,8 @@
   "restaurantMenuPage": {
     "browseMenuDefault": "Lezzetli menümüzü inceleyin",
     "noMenuItemsAvailable": "Bu restoran için henüz menü öğesi bulunmamaktadır.",
-    "checkBackLater": "Lütfen daha sonra tekrar kontrol edin!"
+    "checkBackLater": "Lütfen daha sonra tekrar kontrol edin!",
+    "restaurantDetailsButton": "Restoran Detayları" 
   },
   "menuItemDetailPage": {
     "pageTitle": "Menü Öğesi Detayları",

@@ -145,7 +145,8 @@
   "restaurantMenuPage": {
     "browseMenuDefault": "Browse our delicious menu",
     "noMenuItemsAvailable": "No menu items available for this restaurant yet.",
-    "checkBackLater": "Please check back later!"
+    "checkBackLater": "Please check back later!",
+    "restaurantDetailsButton": "Restaurant Details"  
   },
   "menuItemDetailPage": {
     "pageTitle": "Menu Item Details",

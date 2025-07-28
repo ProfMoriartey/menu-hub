@@ -9,23 +9,23 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
-import { getTranslations } from "next-intl/server"; // ADDED: Import getTranslations
+import { getTranslations } from "next-intl/server";
+import { Button } from "~/components/ui/button";
 
 interface PageProps {
   params: Promise<{
     restaurantSlug: string;
-    itemId?: string; // Changed from Promise to direct string for clarity in params
+    itemId?: string;
   }>;
   searchParams?: Promise<
     Readonly<Record<string, string | string[] | undefined>>
-  >; // Changed from Promise for clarity
+  >;
 }
 
 export default async function RestaurantMenuPage({ params }: PageProps) {
   const { restaurantSlug } = await params;
 
-  // ADDED: Fetch translations for this page
-  const t = await getTranslations("restaurantMenuPage");
+  const t = await getTranslations("restaurantMenuPage"); // 't' is already fetched from "restaurantMenuPage"
 
   const restaurantDetails = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
@@ -93,16 +93,13 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
   const themeClass = `theme-${restaurantDetails.theme ?? "default"}`;
 
   return (
-    // Make the main div relative for absolute positioning of the mobile toggle
     <div className={cn("relative min-h-screen", themeClass)}>
-      {/* Mobile Format: Theme Toggle in the top right corner (hidden on MD screens and up) */}
       <div className="absolute top-4 right-4 z-50 md:hidden">
         <ThemeToggle />
       </div>
 
       <header className="bg-card p-4 shadow-sm">
         <div className="container mx-auto flex flex-col items-center sm:flex-row sm:items-start sm:justify-between sm:space-x-4">
-          {/* Leftmost Block: Restaurant Logo - NOW A LINK TO ABOUT PAGE */}
           {restaurantDetails.logoUrl && (
             <Link
               href={`/${restaurantDetails.slug}/about`}
@@ -121,25 +118,42 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
             </Link>
           )}
 
-          {/* Middle Block: Restaurant Name and Description */}
           <div className="mb-4 flex-grow text-center sm:mb-0 sm:text-left">
             <h1 className="text-foreground text-4xl font-bold">
               {restaurantDetails.name}
             </h1>
             {restaurantDetails.description ? (
-              <p className="text-muted-foreground mt-2 text-lg">
-                {restaurantDetails.description}
-              </p>
+              <>
+                <p className="text-muted-foreground mt-2 text-lg">
+                  {restaurantDetails.description}
+                </p>
+                {/* Mobile: Restaurant Details Button (hidden on MD and up) */}
+                <div className="mt-4 md:hidden">
+                  <Link href={`/${restaurantDetails.slug}/about`} passHref>
+                    <Button variant="outline">
+                      {t("restaurantDetailsButton")}{" "}
+                      {/* MODIFIED: Using translation key */}
+                    </Button>
+                  </Link>
+                </div>
+              </>
             ) : (
-              // UPDATED: Use translation for default description
               <p className="text-muted-foreground mt-2 text-lg">
                 {t("browseMenuDefault")}
               </p>
             )}
           </div>
 
-          {/* PC Format: Theme Toggle in the Header on the right side (hidden on small screens) */}
-          <div className="hidden flex-shrink-0 sm:self-center md:block">
+          {/* PC Format: Theme Toggle and Restaurant Details Button */}
+          <div className="hidden flex-shrink-0 sm:self-center md:flex md:items-center md:space-x-2">
+            {restaurantDetails.description && (
+              <Link href={`/${restaurantDetails.slug}/about`} passHref>
+                <Button variant="outline">
+                  {t("restaurantDetailsButton")}{" "}
+                  {/* MODIFIED: Using translation key */}
+                </Button>
+              </Link>
+            )}
             <ThemeToggle />
           </div>
         </div>
@@ -148,7 +162,6 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
       <main className="container mx-auto px-4 py-8">
         {menuData.categories.length === 0 ? (
           <div className="text-muted-foreground py-10 text-center">
-            {/* UPDATED: Use translations for empty menu messages */}
             <p>{t("noMenuItemsAvailable")}</p>
             <p>{t("checkBackLater")}</p>
           </div>

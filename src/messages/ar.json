@@ -145,7 +145,8 @@
   "restaurantMenuPage": {
     "browseMenuDefault": "تصفح قائمتنا اللذيذة",
     "noMenuItemsAvailable": "لا توجد عناصر قائمة متاحة لهذا المطعم بعد.",
-    "checkBackLater": "يرجى التحقق لاحقًا!"
+    "checkBackLater": "يرجى التحقق لاحقًا!",
+    "restaurantDetailsButton": "تفاصيل المطعم" 
   },
   "menuItemDetailPage": {
     "pageTitle": "تفاصيل عنصر القائمة",
