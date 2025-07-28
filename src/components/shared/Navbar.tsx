@@ -8,12 +8,13 @@ import { Menu, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations, useLocale } from "next-intl"; // CHANGED: Import useLocale
+import { useTranslations, useLocale } from "next-intl";
+import Image from "next/image";
 
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const currentLocale = useLocale(); // ADDED: Get current locale using useLocale
+  const currentLocale = useLocale();
   const [isPending, startTransition] = useTransition();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = useTranslations("navbar");
@@ -41,7 +42,6 @@ export function Navbar() {
 
   const handleLocaleChange = (newLocale: string) => {
     startTransition(() => {
-      // The router.replace method correctly uses the provided locale option
       router.replace(pathname, { locale: newLocale });
     });
   };
@@ -56,7 +56,14 @@ export function Navbar() {
       <div className="container mx-auto flex items-center justify-between">
         {/* Left Side: Website Logo (linked to Home) */}
         <Link href="/" className="flex items-center space-x-2">
-          <span className="text-primary text-2xl font-bold">Menupedia</span>
+          {/* Adjusted width and height, and Tailwind classes for a larger logo (h-16) */}
+          <Image
+            src="/menupedia-logo.png"
+            alt="Menupedia Logo"
+            width={240} // Increased width (e.g., 180 -> 240)
+            height={64} // Increased height (e.g., 48 -> 64)
+            className="h-8 w-auto md:h-16" // Adjusted Tailwind class to h-16 (64px)
+          />
         </Link>
 
         {/* Right Side: Desktop Navigation Links, Language Toggle, and Theme Toggle */}
@@ -90,7 +97,7 @@ export function Navbar() {
             </label>
             <select
               id="language-select"
-              defaultValue={currentLocale} // CHANGED: Use currentLocale here
+              defaultValue={currentLocale}
               onChange={(e) => handleLocaleChange(e.target.value)}
               disabled={isPending}
               className={cn(
@@ -174,7 +181,7 @@ export function Navbar() {
               </label>
               <select
                 id="mobile-language-select"
-                defaultValue={currentLocale} // CHANGED: Use currentLocale here
+                defaultValue={currentLocale}
                 onChange={(e) => handleLocaleChange(e.target.value)}
                 disabled={isPending}
                 className={cn(
