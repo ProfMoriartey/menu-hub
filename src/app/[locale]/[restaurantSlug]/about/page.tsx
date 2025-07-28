@@ -14,13 +14,13 @@ import { getTranslations } from "next-intl/server"; // ADDED: Import getTranslat
 import type { Restaurant } from "~/types/restaurant";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     restaurantSlug: string;
-  };
+  }>;
 }
 
 export default async function RestaurantProfilePage({ params }: PageProps) {
-  const { restaurantSlug } = params; // Changed from await params for clarity
+  const { restaurantSlug } = await params; // Changed from await params for clarity
 
   // ADDED: Fetch translations for this page
   const t = await getTranslations("restaurantProfilePage");

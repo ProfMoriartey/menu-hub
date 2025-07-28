@@ -7,15 +7,17 @@ import { MenuItemDisplayClient } from "~/components/public/MenuItemDisplayClient
 import { getTranslations } from "next-intl/server"; // ADDED: Import getTranslations
 
 interface PageProps {
-  params: {
+  params: Promise<{
     restaurantSlug: string;
     itemId: string;
-  };
-  searchParams?: Readonly<Record<string, string | string[] | undefined>>;
+  }>;
+  searchParams?: Promise<
+    Readonly<Record<string, string | string[] | undefined>>
+  >;
 }
 
 export default async function MenuItemDetailPage({ params }: PageProps) {
-  const { restaurantSlug, itemId } = params;
+  const { restaurantSlug, itemId } = await params;
 
   // ADDED: Fetch translations for this page
   const t = await getTranslations("menuItemDetailPage");

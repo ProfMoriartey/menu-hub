@@ -12,15 +12,17 @@ import { ThemeToggle } from "~/components/shared/ThemeToggle";
 import { getTranslations } from "next-intl/server"; // ADDED: Import getTranslations
 
 interface PageProps {
-  params: {
+  params: Promise<{
     restaurantSlug: string;
     itemId?: string; // Changed from Promise to direct string for clarity in params
-  };
-  searchParams?: Readonly<Record<string, string | string[] | undefined>>; // Changed from Promise for clarity
+  }>;
+  searchParams?: Promise<
+    Readonly<Record<string, string | string[] | undefined>>
+  >; // Changed from Promise for clarity
 }
 
 export default async function RestaurantMenuPage({ params }: PageProps) {
-  const { restaurantSlug } = params;
+  const { restaurantSlug } = await params;
 
   // ADDED: Fetch translations for this page
   const t = await getTranslations("restaurantMenuPage");
