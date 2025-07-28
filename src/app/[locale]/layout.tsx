@@ -14,6 +14,7 @@ import { ThemeProvider } from "~/context/ThemeContext";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "~/i18n/routing";
+import MouseTracker from "~/components/visuals/MouseTracker";
 
 export const metadata: Metadata = {
   title: "Menupedia",
@@ -54,7 +55,10 @@ export default async function LocaleLayout({
             />
 
             <ThemeProvider>
-              <LayoutWrapper>{children}</LayoutWrapper>
+              <LayoutWrapper>
+                {children}
+                <MouseTracker />
+              </LayoutWrapper>
             </ThemeProvider>
           </NextIntlClientProvider>
         </body>
