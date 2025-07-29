@@ -10,10 +10,37 @@ import { AccordionCardThemeExample } from "~/components/themes/AccordionCardThem
 import { useTranslations } from "next-intl"; // Import useTranslations
 
 import SittingDoodle from "../svg/SittingDoodle";
+import { useEffect, useState } from "react";
+import { useParallax } from "react-scroll-parallax";
 
 export function ThemesHomeSection() {
   // Initialize translations for the 'themes' namespace
   const t = useTranslations("themes");
+
+  const [isParallaxDisabled, setIsParallaxDisabled] = useState(false);
+
+  useEffect(() => {
+    // Function to check screen width and update state
+    const checkScreenSize = () => {
+      // Tailwind's 'lg' breakpoint is 1024px. Adjust if your 'lg' is different.
+      setIsParallaxDisabled(window.innerWidth < 1024);
+    };
+
+    // Set initial state
+    checkScreenSize();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkScreenSize);
+
+    // Clean up event listener on component unmount
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []); // Empty dependency array means this runs once on mount and cleans up on unmount
+
+  const { ref: doodleRef } = useParallax<HTMLDivElement>({
+    translateX: [90, 0],
+    speed: -5,
+    disabled: isParallaxDisabled, // ADDED: Apply the isDisabled prop
+  });
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -57,6 +84,7 @@ export function ThemesHomeSection() {
           </div>
           {/* CoffeeDoodle SVG */}
           <motion.div
+            ref={doodleRef}
             variants={itemVariants}
             transition={{ delay: 0.5 }}
             className="w-full max-w-xs flex-shrink-0 lg:max-w-sm" // MODIFIED: Sizing for doodle

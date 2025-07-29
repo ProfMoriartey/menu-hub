@@ -5,10 +5,38 @@ import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import ZombieingDoodle from "../svg/ZombieingDoodle";
 import { useTranslations } from "next-intl"; // Import useTranslations
+import { useEffect, useState } from "react";
+import { useParallax } from "react-scroll-parallax";
 
 export function ContactHomeSection() {
   // Initialize translations for the 'contact' namespace
   const t = useTranslations("contact");
+
+  // ADDED: State to track if parallax should be disabled
+  const [isParallaxDisabled, setIsParallaxDisabled] = useState(false);
+
+  useEffect(() => {
+    // Function to check screen width and update state
+    const checkScreenSize = () => {
+      // Tailwind's 'lg' breakpoint is 1024px. Adjust if your 'lg' is different.
+      setIsParallaxDisabled(window.innerWidth < 1024);
+    };
+
+    // Set initial state
+    checkScreenSize();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkScreenSize);
+
+    // Clean up event listener on component unmount
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []); // Empty dependency array means this runs once on mount and cleans up on unmount
+
+  const { ref: doodleRef } = useParallax<HTMLDivElement>({
+    translateX: [-60, 0],
+    speed: -6,
+    disabled: isParallaxDisabled, // ADDED: Apply the isDisabled prop
+  });
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -33,6 +61,7 @@ export function ContactHomeSection() {
         {/* MODIFIED: Added flex layout classes */}
         {/* Left Column: CoffeeDoodle SVG */}
         <motion.div
+          ref={doodleRef}
           variants={itemVariants}
           transition={{ delay: 0.2 }} // Staggered animation
           className="order-2 w-full max-w-xs flex-shrink-0 lg:order-1 lg:max-w-sm" /* Sets SVG to left on large screens */

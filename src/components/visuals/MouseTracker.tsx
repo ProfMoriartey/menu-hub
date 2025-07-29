@@ -1,4 +1,4 @@
-// components/MouseTracker.tsx
+// components/visuals/MouseTracker.tsx
 "use client";
 
 import { useState, useEffect } from "react";

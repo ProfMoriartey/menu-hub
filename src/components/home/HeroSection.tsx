@@ -1,16 +1,43 @@
 // src/components/home/HeroSection.tsx
 "use client";
 
+import { useEffect, useState } from "react"; // ADDED: Import useEffect and useState
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl"; // Import useTranslations
+import { useTranslations } from "next-intl";
 
 import GroovySittingDoodle from "../svg/GroovySittingDoodle";
 
+import { useParallax } from "react-scroll-parallax";
+
 export function HeroSection() {
-  // Initialize translations for the 'hero' namespace
   const t = useTranslations("hero");
+
+  // ADDED: State to track if parallax should be disabled
+  const [isParallaxDisabled, setIsParallaxDisabled] = useState(false);
+
+  useEffect(() => {
+    // Function to check screen width and update state
+    const checkScreenSize = () => {
+      // Tailwind's 'lg' breakpoint is 1024px. Adjust if your 'lg' is different.
+      setIsParallaxDisabled(window.innerWidth < 1024);
+    };
+
+    // Set initial state
+    checkScreenSize();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkScreenSize);
+
+    // Clean up event listener on component unmount
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []); // Empty dependency array means this runs once on mount and cleans up on unmount
+
+  const { ref: doodleRef } = useParallax<HTMLDivElement>({
+    speed: -21,
+    disabled: isParallaxDisabled, // ADDED: Apply the isDisabled prop
+  });
 
   return (
     <motion.section
@@ -30,7 +57,6 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-6 text-6xl leading-tight font-extrabold"
         >
-          {/* Use translated values for title.main and title.highlight */}
           {t("title.main")}{" "}
           <span className="text-attention">{t("title.highlight")}</span>
         </motion.h1>
@@ -40,7 +66,6 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mb-8 text-xl opacity-90"
         >
-          {/* Use translated value for description */}
           {t("description")}
         </motion.p>
         <Link href="/restaurants" passHref>
@@ -52,13 +77,13 @@ export function HeroSection() {
               "bg-primary-foreground text-primary hover:bg-muted",
             )}
           >
-            {/* Use translated value for cta button */}
             {t("cta")}
           </motion.button>
         </Link>
       </div>
 
       <motion.div
+        ref={doodleRef}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.6 }}

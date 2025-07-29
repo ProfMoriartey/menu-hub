@@ -3,14 +3,13 @@ import { db } from "~/server/db";
 
 import type { Restaurant } from "~/types/restaurant";
 
-import { HeroSection } from "~/components/home/HeroSection";
-import { AboutHomeSection } from "~/components/home/AboutHomeSection";
 import { FeaturedRestaurantsSection } from "~/components/home/FeaturedRestaurantsSection";
-import { ThemesHomeSection } from "~/components/home/ThemesHomeSection";
-import { ContactHomeSection } from "~/components/home/ContactHomeSection";
 import { cn } from "~/lib/utils"; // ADDED: Import cn utility (if not already there)
 import { getTranslations } from "next-intl/server";
-import { Link } from "~/i18n/navigation";
+import { HeroScroll } from "~/components/home/HeroSectionScroll";
+import { AboutScroll } from "~/components/home/AboutSectionScroll";
+import { ThemesScroll } from "~/components/home/ThemesSectionScroll";
+import { ContactScroll } from "~/components/home/ContactSectionScroll";
 
 export default async function HomePage() {
   // Fetch 6 featured restaurants for the "Restaurants Section"
@@ -39,11 +38,12 @@ export default async function HomePage() {
         <ThemeToggle />
       </header> */}
 
-      <HeroSection />
-      <AboutHomeSection />
+      <HeroScroll />
+
+      <AboutScroll />
       <FeaturedRestaurantsSection restaurants={featuredRestaurants} />
-      <ThemesHomeSection />
-      <ContactHomeSection />
+      <ThemesScroll />
+      <ContactScroll />
 
       {/* UPDATED: Footer also uses semantic background and text colors */}
       <footer className="bg-card text-muted-foreground w-full py-8 text-center text-sm">
