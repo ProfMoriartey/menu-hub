@@ -30,7 +30,7 @@ export function AboutHomeSection() {
     // To move left: start from a positive offset and go to 0 or a negative offset.
     // Let's try starting at 50% to the right and moving to -50% to the left relative to its natural position.
     // This will create a noticeable leftward slide. Adjust values for desired effect.
-    translateX: [15, -75], // Moves from 50% right to 50% left relative to its initial scroll position
+    translateX: [30, -40], // Moves from 50% right to 50% left relative to its initial scroll position
     // If you want it to appear from the right and slide more prominently left,
     // you might set a larger positive starting value and a negative ending value.
     // For a subtle shift, you could do [0, -20] meaning it starts at its normal position

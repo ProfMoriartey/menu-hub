@@ -63,7 +63,6 @@ export function ContactHomeSection() {
         <motion.div
           ref={doodleRef}
           variants={itemVariants}
-          transition={{ delay: 0.2 }} // Staggered animation
           className="order-2 w-full max-w-xs flex-shrink-0 lg:order-1 lg:max-w-sm" /* Sets SVG to left on large screens */
         >
           <ZombieingDoodle

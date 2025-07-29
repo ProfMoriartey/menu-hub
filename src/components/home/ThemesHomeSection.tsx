@@ -37,7 +37,7 @@ export function ThemesHomeSection() {
   }, []); // Empty dependency array means this runs once on mount and cleans up on unmount
 
   const { ref: doodleRef } = useParallax<HTMLDivElement>({
-    translateX: [90, 0],
+    translateX: [40, -20],
     speed: -5,
     disabled: isParallaxDisabled, // ADDED: Apply the isDisabled prop
   });
@@ -86,7 +86,6 @@ export function ThemesHomeSection() {
           <motion.div
             ref={doodleRef}
             variants={itemVariants}
-            transition={{ delay: 0.5 }}
             className="w-full max-w-xs flex-shrink-0 lg:max-w-sm" // MODIFIED: Sizing for doodle
           >
             <SittingDoodle
