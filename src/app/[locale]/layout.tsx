@@ -39,7 +39,7 @@ export async function generateMetadata({
       siteName: "Menupedia",
       images: [
         {
-          url: `${APP_BASE_URL}/menupedia.png`,
+          url: `${APP_BASE_URL}/menupedia1.png`,
           width: 1000,
           height: 1000,
           alt: "Menupedia Logo and Slogan",
@@ -53,7 +53,7 @@ export async function generateMetadata({
       title: "Menupedia",
       description: "The Smart Way to Share Menus",
       creator: "@yourtwitterhandle",
-      images: [`${APP_BASE_URL}/menupedia.png`],
+      images: [`${APP_BASE_URL}/menupedia1.png`],
     },
   };
 }
