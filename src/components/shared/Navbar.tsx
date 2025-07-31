@@ -51,7 +51,7 @@ export function Navbar() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-card sticky top-0 z-50 w-full p-4 shadow-md"
+      className="bg-card sticky top-0 z-50 w-full rounded-lg p-4 shadow-md"
     >
       <div className="container mx-auto flex items-center justify-between">
         {/* Left Side: Website Logo (linked to Home) */}
