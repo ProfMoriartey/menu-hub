@@ -29,6 +29,7 @@ export async function generateMetadata({
   const ogLocale = locale.replace("-", "_"); // Converts 'en-US' to 'en_US' if necessary
 
   return {
+    metadataBase: new URL(APP_BASE_URL), // ADDED: metadataBase property here
     title: "Menupedia",
     description: "The Smart Way to Share Menus",
     icons: [{ rel: "icon", url: "/favicon.ico" }],
@@ -48,13 +49,13 @@ export async function generateMetadata({
       locale: ogLocale,
       type: "website",
     },
-    twitter: {
-      card: "summary_large_image",
-      title: "Menupedia",
-      description: "The Smart Way to Share Menus",
-      creator: "@yourtwitterhandle",
-      images: [`${APP_BASE_URL}/menupedia1.png`],
-    },
+    // twitter: {
+    //   card: "summary_large_image",
+    //   title: "Menupedia",
+    //   description: "The Smart Way to Share Menus",
+    //   creator: "@yourtwitterhandle",
+    //   images: [`${APP_BASE_URL}/menupedia1.png`],
+    // },
   };
 }
 
@@ -84,7 +85,7 @@ export default async function LocaleLayout({
             <ThemeProvider>
               <LayoutWrapper>
                 {children}
-                <MouseTracker />
+                {/* <MouseTracker /> */}
               </LayoutWrapper>
             </ThemeProvider>
           </NextIntlClientProvider>
