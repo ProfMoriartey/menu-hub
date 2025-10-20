@@ -67,13 +67,37 @@ function SubmitButton({ label }: SubmitButtonProps) {
 // --- Wrapper action to integrate Server Actions with useFormState ---
 // This handles the void return type of your Server Actions and provides UI feedback.
 async function wrapCategoryAction(
-  action: (formData: FormData) => Promise<void>,
-  formData: FormData,
+  action: (
+    formData: FormData,
+  ) =>
+    | Promise<void>
+    | ((
+        itemId: string,
+        restaurantId: string,
+        categoryId: string,
+      ) => Promise<void>),
+  prevState: FormState, // Accepts the current state from useFormState
+  formData: FormData, // Accepts the new form payload
 ): Promise<FormState> {
   try {
-    await action(formData);
+    // Determine the correct function call based on arguments (same logic as before)
+    if (action.length === 3) {
+      // For delete, which requires separate positional arguments
+      const categoryId = formData.get("categoryId") as string;
+      const restaurantId = formData.get("restaurantId") as string;
+      // Note: Delete action only takes two arguments, but we keep the wrapper flexible
+      await (
+        action as (categoryId: string, restaurantId: string) => Promise<void>
+      )(categoryId, restaurantId);
+    } else {
+      // For add/update, which takes FormData
+      await (action as (formData: FormData) => Promise<void>)(formData);
+    }
+
+    // Success State
     return { message: "Action completed successfully.", success: true };
   } catch (error) {
+    // Error State
     const message =
       error instanceof Error
         ? error.message
