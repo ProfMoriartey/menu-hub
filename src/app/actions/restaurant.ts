@@ -239,3 +239,19 @@ try {
   revalidatePath("/admin/restaurants");
   revalidatePath("/");
 }
+
+export const initialState = {
+    message: '',
+    success: false,
+    errors: {}
+};
+
+export async function dummyRestaurantAction(
+  prevState: typeof initialState, 
+  payload: FormData
+) {
+  // This function is the placeholder for useFormState
+  // It should be replaced with a wrapper that calls updateRestaurant, 
+  // but for simplicity, we use it to show the initial state.
+  return initialState; 
+}

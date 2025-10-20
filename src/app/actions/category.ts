@@ -4,7 +4,7 @@
 import { db } from "~/server/db";
 import { categories } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth"; // IMPORT the authorization helper
 
 
@@ -101,18 +101,27 @@ export async function updateCategory(formData: FormData) {
 // Server Action to delete a category
 export async function deleteCategory(categoryId: string, restaurantId: string) {
   
-  // 🛑 1. ENFORCE AUTHORIZATION (ABAC)
+  // 🛑 1. ENFORCE AUTHORIZATION (ABAC) - PASSES
   try {
-    // Check if the user is authorized to modify this restaurant's resources
     await checkAuthorization(restaurantId);
   } catch (error) {
     throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
   }
 
   try {
-    await db.delete(categories).where(eq(categories.id, categoryId));
+    await db.delete(categories)
+      // 🛑 CRITICAL FIX: Ensure Category ID AND Restaurant ID match
+      .where(
+        and(
+          eq(categories.id, categoryId),
+          eq(categories.restaurantId, restaurantId) // <--- THIS IS THE MISSING CHECK
+        )
+      );
+      
+    // Revalidations are fine
     revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
-     revalidatePath(`/dashboard/${restaurantId}/edit`);
+    revalidatePath(`/dashboard/${restaurantId}/edit`);
+    
   } catch (error) {
     console.error("Error deleting category:", error);
     throw new Error("Failed to delete category.");
