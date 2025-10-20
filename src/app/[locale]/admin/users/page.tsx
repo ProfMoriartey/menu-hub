@@ -1,7 +1,11 @@
+// app/[locale]/admin/users/page.tsx
+
 import { db } from "~/server/db";
 import * as schema from "~/server/db/schema";
 import { type Metadata } from "next";
 import Link from "next/link";
+// IMPORT Drizzle functions for querying and sorting
+import { count, desc, sql, eq } from "drizzle-orm";
 
 export const metadata: Metadata = {
   title: "Admin: Manage Users",
@@ -10,60 +14,85 @@ export const metadata: Metadata = {
 
 /**
  * Admin: Users List Page
- * Displays a list of all users from the database.
- * Each user links to the specific assignment panel.
+ * Fetches users along with a count of their assigned restaurants.
  * NOTE: Assumes RBAC check is handled by a parent layout.
  */
 export default async function AdminUsersPage() {
-  // Fetch all users from your Drizzle table
-  const users = await db.query.users.findMany({
-    orderBy: [schema.users.createdAt],
-  });
+  // 1. Fetch users and aggregate the count of assigned restaurants
+  const usersWithCounts = await db
+    .select({
+      id: schema.users.id,
+      email: schema.users.email,
+      createdAt: schema.users.createdAt,
+      // Use an aggregation query to count the links in the junction table
+      restaurantCount:
+        sql<number>`count(${schema.usersToRestaurants.userId})`.as(
+          "restaurant_count",
+        ),
+    })
+    .from(schema.users)
+    // Join the users table to the junction table
+    .leftJoin(
+      schema.usersToRestaurants,
+      eq(schema.users.id, schema.usersToRestaurants.userId),
+    )
+    // Group the results by user columns to allow the COUNT aggregation
+    .groupBy(schema.users.id, schema.users.email, schema.users.createdAt)
+    // Order by creation date, newest first
+    .orderBy(desc(schema.users.createdAt));
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <header className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-          System Users ({users.length})
+          System Users ({usersWithCounts.length})
         </h1>
         <p className="mt-2 text-lg text-gray-600">
-          Click on a user ID to view and modify their assigned restaurants.
+          Click on a user to modify their restaurant assignments.
         </p>
       </header>
 
       <div className="overflow-hidden rounded-xl bg-white shadow-xl">
         <ul role="list" className="divide-y divide-gray-200">
-          {users.length === 0 ? (
+          {usersWithCounts.length === 0 ? (
             <li className="p-6 text-center text-gray-500">
-              No users found in the database. Users are synced upon sign-up.
+              No users found. New users will appear here after sign-up.
             </li>
           ) : (
-            users.map((user) => (
+            usersWithCounts.map((user) => (
               <li
                 key={user.id}
                 className="p-4 transition duration-100 hover:bg-indigo-50/50 sm:px-6"
               >
                 <Link
-                  // Next.js automatically prepends the current locale to this path
                   href={`/admin/users/${user.id}`}
                   className="flex items-center justify-between"
                 >
                   <div className="min-w-0 flex-1 pr-4">
-                    <p className="truncate text-sm font-medium text-gray-900">
-                      User ID:
+                    <p className="truncate text-lg font-medium text-gray-900">
+                      {/* Display the email if available, otherwise show the ID */}
+                      {user.email || `User ID: ${user.id}`}
                     </p>
-                    <p className="mt-1 font-mono text-sm break-all text-indigo-600">
-                      {user.id}
-                    </p>
+                    {user.email && (
+                      <p className="mt-1 font-mono text-xs break-all text-gray-500">
+                        ID: {user.id}
+                      </p>
+                    )}
                   </div>
-                  <div className="hidden shrink-0 sm:block">
-                    <p className="text-xs text-gray-500">
+
+                  <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                    <p className="text-sm font-semibold text-indigo-600">
+                      {user.restaurantCount} Assigned Restaurant
+                      {user.restaurantCount === 1 ? "" : "s"}
+                    </p>
+                    <p className="mt-1 text-xs text-gray-500">
                       Joined:{" "}
                       {user.createdAt
                         ? user.createdAt.toLocaleDateString()
                         : "N/A"}
                     </p>
                   </div>
+
                   <svg
                     className="ml-4 h-5 w-5 text-gray-400"
                     xmlns="http://www.w3.org/2000/svg"

@@ -5,17 +5,32 @@ import { db } from '~/server/db';
 import { usersToRestaurants } from '~/server/db/schema';
 import { auth } from '@clerk/nextjs/server';
 
-export async function assignRestaurantToUser(clerkUserId: string, restaurantId: string) {
-  // 1. HIGHLY CRITICAL: Ensure the caller is an admin
+import { revalidatePath } from 'next/cache'; 
+import { redirect } from 'next/navigation';
+
+// Server Action now accepts FormData as required by the HTML form method="POST"
+export async function assignRestaurantToUser(formData: FormData) {
+  // Extract data from the FormData object
+  const clerkUserId = formData.get('clerkUserId') as string;
+  const restaurantId = formData.get('restaurantId') as string;
+
+  // --- 1. Security Check (RBAC) ---
 const { sessionClaims } = await auth();
 const metadata = sessionClaims && 'metadata' in sessionClaims ? sessionClaims.metadata : null;
 const role = metadata && typeof metadata === 'object' && 'role' in metadata ? metadata.role : null;
 const isAdmin = role === "admin";
   if (!isAdmin) {
-    throw new Error("ADMIN ACCESS REQUIRED"); // Fail fast
+    // Fail fast and do not proceed with the database operation
+    throw new Error("ADMIN ACCESS REQUIRED"); 
   }
 
-  // 2. Perform the assignment (Resource-level ABAC setup)
+  // --- 2. Input Validation (Basic) ---
+  if (!clerkUserId || !restaurantId) {
+    console.error("Missing required fields for assignment.");
+    return; // Return silently
+  }
+
+  // --- 3. Perform the assignment (ABAC Setup) ---
   try {
     await db.insert(usersToRestaurants)
       .values({
@@ -23,16 +38,19 @@ const isAdmin = role === "admin";
         restaurantId: restaurantId,
         accessLevel: 'editor', // Default access
       })
-      // Use onConflict to handle cases where a user is already assigned
+      // Use onConflictDoUpdate to handle cases where a user is already assigned
       .onConflictDoUpdate({
         target: [usersToRestaurants.userId, usersToRestaurants.restaurantId],
         set: { accessLevel: 'editor' }, 
       });
 
-    return { success: true, message: `User ${clerkUserId} assigned to restaurant ${restaurantId}.` };
-
+    console.log(`User ${clerkUserId} assigned to restaurant ${restaurantId}.`);
+    // NOTE: Function returns void (no explicit return value) to satisfy Next.js form action typing.
+    
+    revalidatePath(`/admin/users/${clerkUserId}`); 
+    // redirect(`/admin/users/${clerkUserId}`);
   } catch (error) {
     console.error("Assignment error:", error);
-    return { success: false, message: "Failed to assign restaurant." };
+    // In a production app, you might log this error and redirect with a failure status.
   }
 }
