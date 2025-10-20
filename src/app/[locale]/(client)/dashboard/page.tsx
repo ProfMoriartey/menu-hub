@@ -53,7 +53,7 @@ export default async function ClientUserDashboardPage() {
           <CardTitle className="mb-3 text-xl">No Menus Assigned</CardTitle>
           <CardContent>
             <p className="text-muted-foreground">
-              It looks like you haven't been assigned any menus yet. Please
+              It looks like you haven&apos;t been assigned any menus yet. Please
               contact the administrator.
             </p>
           </CardContent>

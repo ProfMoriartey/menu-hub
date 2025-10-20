@@ -7,8 +7,10 @@ import { auth } from '@clerk/nextjs/server';
 
 export async function assignRestaurantToUser(clerkUserId: string, restaurantId: string) {
   // 1. HIGHLY CRITICAL: Ensure the caller is an admin
-  const { sessionClaims } = await auth();
-  const isAdmin = sessionClaims?.metadata?.role === "admin";
+const { sessionClaims } = await auth();
+const metadata = sessionClaims && 'metadata' in sessionClaims ? sessionClaims.metadata : null;
+const role = metadata && typeof metadata === 'object' && 'role' in metadata ? metadata.role : null;
+const isAdmin = role === "admin";
   if (!isAdmin) {
     throw new Error("ADMIN ACCESS REQUIRED"); // Fail fast
   }

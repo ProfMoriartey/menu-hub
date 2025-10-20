@@ -12,7 +12,7 @@ export default async function AdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId, sessionClaims } = await auth();
+  const { userId } = await auth();
 
   // 1. Unauthenticated check
   if (!userId) {
@@ -22,8 +22,16 @@ export default async function AdminDashboardLayout({
 
   // 2. Authorization check (System-level RBAC)
   // Ensure you've completed the TypeScript type extension for sessionClaims
-  const isAdmin = sessionClaims?.metadata?.role === "admin";
-
+  const { sessionClaims } = await auth();
+  const metadata =
+    sessionClaims && "metadata" in sessionClaims
+      ? sessionClaims.metadata
+      : null;
+  const role =
+    metadata && typeof metadata === "object" && "role" in metadata
+      ? metadata.role
+      : null;
+  const isAdmin = role === "admin";
   if (!isAdmin) {
     // User is authenticated but not an admin
     return redirect("/dashboard");
