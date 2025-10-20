@@ -4,7 +4,10 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 
-import { assignRestaurantToUser } from "~/app/[locale]/admin/actions";
+import {
+  assignRestaurantToUser,
+  revokeRestaurantAccess,
+} from "~/app/[locale]/admin/actions";
 
 interface UserPanelProps {
   params: Promise<{ userId: string }>;
@@ -121,12 +124,22 @@ export default async function UserAssignmentPanel({ params }: UserPanelProps) {
                     </p>
                   </div>
                   {/* Action Button for Admin: Use a Server Action here to revoke access */}
-                  <form className="ml-4">
-                    {/* Hidden fields for userId and restaurantId */}
+                  <form className="ml-4" action={revokeRestaurantAccess}>
+                    {/* Hidden field for the user whose access we are revoking */}
+                    <input
+                      type="hidden"
+                      name="clerkUserId"
+                      value={targetUserId}
+                    />
+                    {/* Hidden field for the specific restaurant to revoke */}
+                    <input
+                      type="hidden"
+                      name="restaurantId"
+                      value={restaurant.id}
+                    />
+
                     <button
                       type="submit"
-                      // You will replace this placeholder action later
-                      // formAction={revokeAccessAction}
                       className="rounded-lg bg-red-500 px-3 py-1 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-600"
                     >
                       Revoke
