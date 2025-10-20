@@ -5,6 +5,8 @@ import { db } from "~/server/db";
 import { categories } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
+import { checkAuthorization } from "~/app/actions/auth"; // IMPORT the authorization helper
+
 
 // Import schemas from the shared schemas file (now without async exports)
 import { createCategorySchema, updateCategorySchema } from "~/lib/schemas"; // CORRECT IMPORT PATH
@@ -13,6 +15,16 @@ import { createCategorySchema, updateCategorySchema } from "~/lib/schemas"; // C
 export async function addCategory(formData: FormData) {
   const name = formData.get("name") as string;
   const restaurantId = formData.get("restaurantId") as string;
+
+// 🛑 1. ENFORCE AUTHORIZATION (ABAC)
+    try {
+    // Check if the user is authorized to modify this restaurant's resources
+    await checkAuthorization(restaurantId);
+  } catch (error) {
+    // Re-throw the authorization error
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
+
 
   const validationResult = createCategorySchema.safeParse({
     name,
@@ -31,6 +43,7 @@ export async function addCategory(formData: FormData) {
     });
 
     revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
+    revalidatePath(`/dashboard/${restaurantId}/edit`); 
   } catch (error) {
     console.error("Error adding category:", error);
     throw new Error(
@@ -44,6 +57,14 @@ export async function updateCategory(formData: FormData) {
   const id = formData.get("id") as string;
   const name = formData.get("name") as string;
   const restaurantId = formData.get("restaurantId") as string; // Needed for revalidation
+
+  // 🛑 1. ENFORCE AUTHORIZATION (ABAC)
+  try {
+    // Check if the user is authorized to modify this restaurant's resources
+    await checkAuthorization(restaurantId);
+  } catch (error) {
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
 
   const validationResult = updateCategorySchema.safeParse({
     id,
@@ -68,6 +89,7 @@ export async function updateCategory(formData: FormData) {
       .where(eq(categories.id, validationResult.data.id));
 
     revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
+    revalidatePath(`/dashboard/${restaurantId}/edit`);
   } catch (error) {
     console.error("Error updating category:", error);
     throw new Error(
@@ -78,9 +100,19 @@ export async function updateCategory(formData: FormData) {
 
 // Server Action to delete a category
 export async function deleteCategory(categoryId: string, restaurantId: string) {
+  
+  // 🛑 1. ENFORCE AUTHORIZATION (ABAC)
+  try {
+    // Check if the user is authorized to modify this restaurant's resources
+    await checkAuthorization(restaurantId);
+  } catch (error) {
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
+
   try {
     await db.delete(categories).where(eq(categories.id, categoryId));
     revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
+     revalidatePath(`/dashboard/${restaurantId}/edit`);
   } catch (error) {
     console.error("Error deleting category:", error);
     throw new Error("Failed to delete category.");

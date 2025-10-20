@@ -20,6 +20,7 @@ const { sessionClaims } = await auth();
 const metadata = sessionClaims && 'metadata' in sessionClaims ? sessionClaims.metadata : null;
 const role = metadata && typeof metadata === 'object' && 'role' in metadata ? metadata.role : null;
 const isAdmin = role === "admin";
+
   if (!isAdmin) {
     // Fail fast and do not proceed with the database operation
     throw new Error("ADMIN ACCESS REQUIRED"); 

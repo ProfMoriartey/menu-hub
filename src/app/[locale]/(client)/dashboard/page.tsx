@@ -72,7 +72,7 @@ export default async function ClientUserDashboardPage() {
                 </p>
               </CardHeader>
               <CardContent className="flex justify-end pt-0">
-                <Link href={`/${restaurant.slug}/edit`}>
+                <Link href={`/dashboard/${restaurant.slug}/edit`}>
                   <Button className="w-full">Manage Menu</Button>
                 </Link>
               </CardContent>

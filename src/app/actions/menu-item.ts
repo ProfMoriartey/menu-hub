@@ -5,6 +5,8 @@ import { db } from "~/server/db";
 import { menuItems } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
+import { checkAuthorization } from "~/app/actions/auth"; // IMPORT the authorization helper
+
 
 // Import schemas and types from the new menu-item-schemas file
 import {
@@ -25,7 +27,14 @@ const getStringValue = (formData: FormData, key: string): string | null => {
 // The code provided earlier for these functions already uses safeParseAsync, so no changes needed there.
 
 export async function addMenuItem(formData: FormData) {
-  // ... (existing code for addMenuItem)
+ const restaurantId = getStringValue(formData, "restaurantId") as string;
+try {
+    if (!restaurantId) throw new Error("Restaurant ID is required.");
+    await checkAuthorization(restaurantId);
+  } catch (error) {
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
+
   const rawData = {
     name: getStringValue(formData, "name"),
     description: getStringValue(formData, "description"),
@@ -49,6 +58,7 @@ export async function addMenuItem(formData: FormData) {
     await db.insert(menuItems).values({
       ...validatedData,
     });
+    revalidatePath(`/dashboard/${restaurantId}/edit`); 
     revalidatePath(
       `/admin/restaurants/${validatedData.restaurantId}/categories/${validatedData.categoryId}/menu-items`,
     );
@@ -61,7 +71,16 @@ export async function addMenuItem(formData: FormData) {
 }
 
 export async function updateMenuItem(formData: FormData) {
-  // ... (existing code for updateMenuItem)
+
+  const restaurantId = getStringValue(formData, "restaurantId") as string;
+
+  try {
+    if (!restaurantId) throw new Error("Restaurant ID is required.");
+    await checkAuthorization(restaurantId);
+  } catch (error) {
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
+
   const rawData = {
     id: getStringValue(formData, "id"),
     name: getStringValue(formData, "name"),
@@ -82,6 +101,15 @@ export async function updateMenuItem(formData: FormData) {
 
   const validatedData: UpdateMenuItemData = result.data;
 
+// 🛑 1. ENFORCE AUTHORIZATION (ABAC)
+    try {
+    // Check if the user is authorized to modify this restaurant's resources
+    await checkAuthorization(restaurantId);
+  } catch (error) {
+    // Re-throw the authorization error
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
+
   try {
     await db
       .update(menuItems)
@@ -96,6 +124,7 @@ export async function updateMenuItem(formData: FormData) {
       })
       .where(eq(menuItems.id, validatedData.id));
 
+      revalidatePath(`/dashboard/${restaurantId}/edit`); 
     revalidatePath(
       `/admin/restaurants/${validatedData.restaurantId}/categories/${validatedData.categoryId}/menu-items`,
     );
@@ -113,8 +142,16 @@ export async function deleteMenuItem(
   categoryId: string,
 ) {
   // ... (existing code for deleteMenuItem)
+
+  try {
+    if (!restaurantId) throw new Error("Restaurant ID is required.");
+    await checkAuthorization(restaurantId);
+  } catch (error) {
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
   try {
     await db.delete(menuItems).where(eq(menuItems.id, menuItemId));
+    revalidatePath(`/dashboard/${restaurantId}/edit`); 
     revalidatePath(
       `/admin/restaurants/${restaurantId}/categories/${categoryId}/menu-items`,
     );

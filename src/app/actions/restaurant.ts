@@ -5,6 +5,7 @@ import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { checkAuthorization, isSystemAdmin } from "~/app/actions/auth";
 
 // Import the schema and type from the shared schemas file
 import { restaurantSchema,  } from "~/lib/schemas";
@@ -17,6 +18,8 @@ const getStringValue = (formData: FormData, key: string): string | null => {
 
 // Server Action to add a new restaurant
 export async function addRestaurant(formData: FormData) {
+   const restaurantId = formData.get("restaurantId") as string;
+
   const rawData = {
     name: getStringValue(formData, "name"),
     slug: getStringValue(formData, "slug"),
@@ -41,6 +44,16 @@ export async function addRestaurant(formData: FormData) {
     name: rawData.name ?? "",
     slug: rawData.slug ?? "",
   };
+
+ try {
+        const isAdmin = await isSystemAdmin();
+        if (!isAdmin) {
+            // New restaurant creation is a global administrative task
+            throw new Error("Unauthorized: Only system administrators can add new restaurants.");
+        }
+    } catch (error) {
+        throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+    }
 
   const result = restaurantSchema.safeParse(parsedRawData);
 
@@ -93,14 +106,27 @@ export async function addRestaurant(formData: FormData) {
     typeOfEstablishment,
   });
 
+ revalidatePath(`/dashboard/${restaurantId}/edit`); 
   revalidatePath("/admin/restaurants");
   revalidatePath("/");
 }
 
 // Server Action to delete a restaurant (no change needed)
 export async function deleteRestaurant(restaurantId: string) {
+// 🛑 1. ENFORCE AUTHORIZATION (ABAC)
+try {
+        const isAdmin = await isSystemAdmin();
+        if (!isAdmin) {
+            // New restaurant creation is a global administrative task
+            throw new Error("Unauthorized: Only system administrators can delete restaurants.");
+        }
+    } catch (error) {
+        throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+    }
+
   try {
     await db.delete(restaurants).where(eq(restaurants.id, restaurantId));
+     revalidatePath(`/dashboard/${restaurantId}/edit`); 
     revalidatePath("/admin/restaurants");
     revalidatePath("/");
   } catch (error) {
@@ -127,6 +153,8 @@ export async function updateRestaurant(formData: FormData) {
     theme: getStringValue(formData, "theme"),
     typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
   };
+  const restaurantId = formData.get("restaurantId") as string;
+
 
   const parsedRawData = {
     ...rawData,
@@ -137,6 +165,14 @@ export async function updateRestaurant(formData: FormData) {
     slug: rawData.slug ?? "",
     id: rawData.id ?? "",
   };
+
+  // 🛑 1. ENFORCE AUTHORIZATION (ABAC)
+try {
+        if (!restaurantId) throw new Error("Restaurant ID is required for update.");
+        await checkAuthorization(restaurantId);
+    } catch (error) {
+        throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+    }
 
   const result = restaurantSchema.safeParse(parsedRawData);
 
@@ -199,6 +235,7 @@ export async function updateRestaurant(formData: FormData) {
     })
     .where(eq(restaurants.id, id));
 
+     revalidatePath(`/dashboard/${restaurantId}/edit`); 
   revalidatePath("/admin/restaurants");
   revalidatePath("/");
 }
