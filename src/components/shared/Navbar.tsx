@@ -10,6 +10,7 @@ import { ThemeToggle } from "~/components/shared/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
+import { UserButton } from "@clerk/nextjs";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -116,6 +117,7 @@ export function Navbar() {
 
           {/* Theme Toggle */}
           <ThemeToggle />
+          <UserButton />
 
           {/* Mobile Menu Button (Hamburger) */}
           <div className="md:hidden">

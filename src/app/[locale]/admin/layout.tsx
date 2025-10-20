@@ -1,62 +1,76 @@
-// app/admin/layout.tsx
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { ClerkProvider, UserButton } from "@clerk/nextjs";
-import Link from "next/link"; // Keep Link if you'll use it in a top bar or elsewhere
+import { UserButton } from "@clerk/nextjs"; // ClerkProvider removed, UserButton kept
+import Link from "next/link";
 import { cn } from "~/lib/utils";
-import { ThemeToggle } from "~/components/shared/ThemeToggle";
+import { ThemeToggle } from "~/components/shared/ThemeToggle"; // Assuming this is correct
+
+// Ensure ClerkProvider is in the root app/layout.tsx, not here.
 
 export default async function AdminDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-  const adminUserId = process.env.ADMIN_USER_ID;
+  const { userId, sessionClaims } = await auth();
 
-  if (!userId || userId !== adminUserId) {
-    redirect("/sign-in");
+  // 1. Unauthenticated check
+  if (!userId) {
+    // Force sign-in
+    return redirect("/sign-in");
   }
 
+  // 2. Authorization check (System-level RBAC)
+  // Ensure you've completed the TypeScript type extension for sessionClaims
+  const isAdmin = sessionClaims?.metadata?.role === "admin";
+
+  if (!isAdmin) {
+    // User is authenticated but not an admin
+    return redirect("/dashboard");
+  }
+
+  const navItems = [
+    { name: "Restaurants", href: "/admin/restaurants" },
+    { name: "Users", href: "/admin/users" }, // ADDED USERS LINK
+  ];
+
   return (
-    <ClerkProvider>
-      {/* Main container, now without flex to accommodate sidebar */}
-      <div className={cn("min-h-screen", "bg-background")}>
-        {/* Top Navigation Bar for Admin - NEW */}
-        <header className="bg-card text-card-foreground flex items-center justify-between p-4 shadow-sm">
-          <h2 className="text-2xl font-bold">Admin Dashboard</h2>
-          <nav>
-            <ul className="flex space-x-4">
-              <li>
+    // ClerkProvider removed here
+    <div className={cn("min-h-screen", "bg-background")}>
+      {/* Top Navigation Bar for Admin */}
+      <header className="bg-card text-card-foreground sticky top-0 z-10 flex items-center justify-between p-4 shadow-md">
+        <h2 className="text-primary text-2xl font-extrabold tracking-tight">
+          Admin Dashboard
+        </h2>
+        <nav>
+          <ul className="flex space-x-4">
+            {navItems.map((item) => (
+              <li key={item.name}>
                 <Link
-                  href="/admin/restaurants"
+                  href={item.href}
                   className={cn(
-                    "rounded p-2",
+                    "rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-150",
                     "hover:bg-accent hover:text-accent-foreground",
+                    // Optional: Add active state logic here based on current path if needed
                   )}
                 >
-                  Restaurants
+                  {item.name}
                 </Link>
               </li>
-              {/* Add more admin navigation links here if needed */}
-            </ul>
-          </nav>
-          <div className="flex items-center space-x-4">
-            <ThemeToggle />
-            <UserButton afterSignOutUrl="/" />
-          </div>
-        </header>
+            ))}
+          </ul>
+        </nav>
+        <div className="flex items-center space-x-4">
+          <ThemeToggle />
+          <UserButton afterSignOutUrl="/" />
+        </div>
+      </header>
 
-        {/* Main Content Area - now takes full width */}
-        <main className={cn("relative w-full", "text-foreground")}>
-          {/* The ThemeToggle is now in the header, so remove its absolute positioning here */}
-          {/* <div className="absolute top-4 right-4 z-50">
-            <ThemeToggle />
-          </div> */}
-          {/* Wrap children in a div with padding */}
-          <div className="p-8">{children}</div>
-        </main>
-      </div>
-    </ClerkProvider>
+      {/* Main Content Area */}
+      <main className={cn("w-full", "text-foreground")}>
+        {/* Wrap children in a div with generous padding */}
+        <div className="mx-auto max-w-7xl p-8">{children}</div>
+      </main>
+    </div>
   );
 }

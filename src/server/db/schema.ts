@@ -8,6 +8,7 @@ import {
   jsonb,
   pgEnum,
   integer,
+  primaryKey, foreignKey,
   text, // IMPORTANT: Add 'text' import for longer string fields like description
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
@@ -50,7 +51,9 @@ export const restaurants = pgTable("menu-hub_restaurants", {
 // Define relations for restaurants
 export const restaurantsRelations = relations(restaurants, ({ many }) => ({
   categories: many(categories),
+  usersToRestaurants: many(usersToRestaurants), // ADDED LINK
 }));
+
 
 export const categories = pgTable("menu-hub_categories", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -100,4 +103,59 @@ export const menuItemsRelations = relations(menuItems, ({ one }) => ({
     fields: [menuItems.restaurantId],
     references: [restaurants.id],
   }),
+}));
+
+// 1. User Table (to reference Clerk IDs)
+export const users = pgTable("menu-hub_users", {
+  // Store the Clerk User ID (text, non-nullable)
+  id: text("id").primaryKey(), 
+  // You can add an optional email/name for debugging, but Clerk is the source of truth
+  email: varchar("email", { length: 256 }).unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// 2. Junction Table (Many-to-Many Link)
+export const usersToRestaurants = pgTable(
+  "menu-hub_users_to_restaurants",
+  {
+    // Foreign Key to the users table (Clerk ID)
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+
+    // Foreign Key to the restaurants table (your UUID)
+    restaurantId: uuid("restaurant_id")
+      .notNull()
+      .references(() => restaurants.id, { onDelete: "cascade" }),
+
+    // Access Level: Use this for fine-grained permissions later (e.g., 'owner', 'editor', 'viewer')
+    accessLevel: varchar("access_level", { length: 50 })
+      .notNull()
+      .default("editor"),
+  },
+  (t) => ({
+    // Enforce uniqueness for the pair (user_id, restaurant_id)
+    pk: primaryKey({ columns: [t.userId, t.restaurantId] }),
+  })
+);
+
+// 3. Relations for Junction Table (Optional but recommended for relational queries)
+export const usersToRestaurantsRelations = relations(
+  usersToRestaurants,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [usersToRestaurants.userId],
+      references: [users.id],
+    }),
+    restaurant: one(restaurants, {
+      fields: [usersToRestaurants.restaurantId],
+      references: [restaurants.id],
+    }),
+  })
+);
+
+// Update existing relations to include the new link
+// Update your user relations
+export const usersRelations = relations(users, ({ many }) => ({
+  usersToRestaurants: many(usersToRestaurants),
 }));
