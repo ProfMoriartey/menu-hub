@@ -53,7 +53,7 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
   const restaurantData = await getRestaurantData((await params).restaurantSlug);
 
   return (
-    <div className="mx-auto max-w-7xl py-8">
+    <div className="mx-auto max-w-7xl">
       {/* 🛑 RENDER THE MAIN CLIENT WRAPPER */}
       <RestaurantEditor initialRestaurantData={restaurantData} />
     </div>

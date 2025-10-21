@@ -6,6 +6,8 @@ import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import { SignedIn, UserButton } from "@clerk/nextjs";
+import AuthNavButtons from "~/components/layout/AuthNavButtons";
 
 interface AssignedRestaurant {
   id: string;
@@ -44,9 +46,14 @@ export default async function ClientUserDashboardPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-4xl font-extrabold tracking-tight">
-        Your Assigned Menus
-      </h1>
+      <div className="mb-8 flex justify-between">
+        <h1 className="text-4xl font-extrabold tracking-tight">
+          Your Assigned Menus
+        </h1>
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
+      </div>
 
       {assignedRestaurants.length === 0 ? (
         <Card className="p-6 text-center">

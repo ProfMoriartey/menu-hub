@@ -10,7 +10,8 @@ import { ThemeToggle } from "~/components/shared/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import AuthNavButtons from "~/components/layout/AuthNavButtons"; // Assuming this path
 
 export function Navbar() {
   const pathname = usePathname();
@@ -55,21 +56,20 @@ export function Navbar() {
       className="bg-card sticky top-0 z-50 w-full rounded-lg p-4 shadow-md"
     >
       <div className="container mx-auto flex items-center justify-between">
-        {/* Left Side: Website Logo (linked to Home) */}
+        {/* Left Side: Website Logo (Always Visible) */}
         <Link href="/" className="flex items-center space-x-2">
-          {/* Adjusted width and height, and Tailwind classes for a larger logo (h-16) */}
           <Image
             src="/menupedia-logo.png"
             alt="Menupedia Logo"
-            width={240} // Increased width (e.g., 180 -> 240)
-            height={64} // Increased height (e.g., 48 -> 64)
-            className="h-8 w-auto md:h-12" // Adjusted Tailwind class to h-16 (64px)
+            width={240}
+            height={64}
+            className="h-8 w-auto md:h-12"
           />
         </Link>
 
-        {/* Right Side: Desktop Navigation Links, Language Toggle, and Theme Toggle */}
+        {/* Right Side: Controls */}
         <div className="flex items-center space-x-4 md:space-x-6">
-          {/* Desktop Navigation Links */}
+          {/* 1. Desktop Navigation Links (HIDDEN ON MOBILE) */}
           <div className="hidden items-center space-x-6 md:flex">
             {navLinks.map((link, index) => (
               <motion.a
@@ -91,8 +91,8 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Language Toggle */}
-          <div className="flex items-center gap-2">
+          {/* 2. Language Toggle (HIDDEN ON MOBILE) */}
+          <div className="hidden items-center gap-2 md:flex">
             <label htmlFor="language-select" className="sr-only">
               {t("language")}
             </label>
@@ -115,11 +115,27 @@ export function Navbar() {
             </select>
           </div>
 
-          {/* Theme Toggle */}
+          {/* 3. Theme Toggle (ALWAYS VISIBLE - Desktop & Mobile) */}
           <ThemeToggle />
-          <UserButton />
 
-          {/* Mobile Menu Button (Hamburger) */}
+          {/* 4. Auth/Dashboard Button (ALWAYS VISIBLE) */}
+          {/* 5. User Profile Button (HIDDEN ON MOBILE to save space) */}
+          <SignedOut>
+            <AuthNavButtons />
+          </SignedOut>
+
+          <SignedIn>
+            <div className="flex items-center space-x-4">
+              <AuthNavButtons />
+              <div className="hidden md:block">
+                {" "}
+                {/* Hide UserButton on mobile */}
+                <UserButton afterSignOutUrl="/" />
+              </div>
+            </div>
+          </SignedIn>
+
+          {/* 6. Mobile Menu Button (Hamburger) (MOBILE ONLY) */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -156,6 +172,7 @@ export function Navbar() {
               <X className="h-8 w-8" />
             </button>
 
+            {/* Nav Links in Mobile Menu */}
             {navLinks.map((link, index) => (
               <motion.a
                 key={link.name}
@@ -176,7 +193,7 @@ export function Navbar() {
               </motion.a>
             ))}
 
-            {/* Language Toggle in Mobile Menu */}
+            {/* Language Toggle in Mobile Menu (Moved here from main navbar row) */}
             <div className="mt-8 flex items-center gap-2">
               <label htmlFor="mobile-language-select" className="sr-only">
                 {t("language")}
@@ -199,8 +216,11 @@ export function Navbar() {
                 ))}
               </select>
             </div>
-            {/* Theme Toggle in Mobile Menu */}
-            <ThemeToggle />
+
+            {/* User Profile Button in Mobile Menu (Visible here) */}
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </motion.div>
         )}
       </AnimatePresence>
