@@ -53,6 +53,8 @@ export function AddRestaurantForm({
   // NEW STATE VARIABLES FOR NEW FIELDS
   const [newRestaurantCurrency, setNewRestaurantCurrency] = useState("USD"); // Default value
   const [newRestaurantPhoneNumber, setNewRestaurantPhoneNumber] = useState("");
+  const [newRestaurantCountry, setNewRestaurantCountry] = useState("");
+
   const [newRestaurantDescription, setNewRestaurantDescription] = useState("");
   const [newRestaurantTheme, setNewRestaurantTheme] = useState("");
   const [
@@ -74,6 +76,7 @@ export function AddRestaurantForm({
     formData.set("description", newRestaurantDescription);
     formData.set("theme", newRestaurantTheme);
     formData.set("typeOfEstablishment", newRestaurantTypeOfEstablishment);
+    formData.set("country", newRestaurantCountry);
 
     const values = {
       name: formData.get("name") as string,
@@ -119,6 +122,7 @@ export function AddRestaurantForm({
       setNewRestaurantCurrency("USD");
       setNewRestaurantPhoneNumber("");
       setNewRestaurantDescription("");
+      setNewRestaurantCountry("");
       setNewRestaurantTheme("");
       setNewRestaurantTypeOfEstablishment("");
     } catch (error) {
@@ -172,10 +176,12 @@ export function AddRestaurantForm({
             onPhoneNumberChange={setNewRestaurantPhoneNumber}
             currentDescription={newRestaurantDescription}
             onDescriptionChange={setNewRestaurantDescription}
+            onCountryChange={setNewRestaurantCountry}
             currentTheme={newRestaurantTheme}
             onThemeChange={setNewRestaurantTheme}
             currentTypeOfEstablishment={newRestaurantTypeOfEstablishment}
             onTypeOfEstablishmentChange={setNewRestaurantTypeOfEstablishment}
+            currentCountry={""}
           />
 
           {formErrors.general && (

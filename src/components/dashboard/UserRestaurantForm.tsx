@@ -1,74 +1,66 @@
-// src/components/admin/RestaurantForm.tsx
+// src/components/dashboard/UserRestaurantForm.tsx
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Switch } from "~/components/ui/switch";
-import { UploadButton } from "~/utils/uploadthing";
-import { XCircle } from "lucide-react";
 import { Textarea } from "~/components/ui/textarea";
-
-// Import types for restaurant data and form errors
+import { Button } from "~/components/ui/button";
+import { UploadButton } from "~/utils/uploadthing"; // Assuming this utility is correctly configured
+import { XCircle } from "lucide-react";
 import type { Restaurant } from "~/types/restaurant";
-import { Button } from "../ui/button";
 
-interface RestaurantFormProps {
-  initialData?: Restaurant;
+interface UserRestaurantFormProps {
+  initialData: Restaurant;
   formErrors: Record<string, string>;
-  onLogoUrlChange: (url: string | null) => void;
-  onIsActiveChange: (checked: boolean) => void;
-  onIsDisplayedChange: (checked: boolean) => void;
+
+  // Handlers for state changes
+  onLogoUrlChange: (url: string | null) => void; // 🛑 Re-integrated
   onCurrencyChange: (value: string) => void;
   onPhoneNumberChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
-  onThemeChange: (value: string) => void;
   onTypeOfEstablishmentChange: (value: string) => void;
   onCountryChange: (value: string) => void;
 
-  currentIsActive: boolean;
-  currentIsDisplayed: boolean;
-  currentLogoUrl: string | null;
+  // Current state values
+  currentLogoUrl: string | null; // 🛑 Re-integrated
   currentCurrency: string;
   currentPhoneNumber: string;
   currentDescription: string;
-  currentTheme: string;
   currentTypeOfEstablishment: string;
   currentCountry: string;
 }
 
-export function RestaurantForm({
+export function UserRestaurantForm({
   initialData,
   formErrors,
   onLogoUrlChange,
-  onIsActiveChange,
-  onIsDisplayedChange,
   onCurrencyChange,
   onPhoneNumberChange,
   onDescriptionChange,
-  onThemeChange,
   onTypeOfEstablishmentChange,
-  currentIsActive,
-  currentIsDisplayed,
+  onCountryChange,
   currentLogoUrl,
   currentCurrency,
   currentPhoneNumber,
   currentDescription,
-  currentTheme,
   currentTypeOfEstablishment,
-  onCountryChange,
   currentCountry,
-}: RestaurantFormProps) {
+}: UserRestaurantFormProps) {
+  // NOTE: Slug, isActive, isDisplayed, and Theme inputs are intentionally excluded.
+
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      {/* LEFT COLUMN: Name, Slug, Country, Food Type, Address, Currency, Phone Number */}
+      {/* LEFT COLUMN: Essential Details */}
       <div className="space-y-4">
+        {/* 1. Name (Read-only for users, but editable in RestaurantDetailsForm) */}
         <div>
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
             name="name"
-            defaultValue={initialData?.name ?? ""}
+            defaultValue={initialData.name ?? ""}
             required
           />
           {formErrors.name && (
@@ -76,25 +68,14 @@ export function RestaurantForm({
           )}
         </div>
 
-        <div>
-          <Label htmlFor="slug">Slug</Label>
-          <Input
-            id="slug"
-            name="slug"
-            defaultValue={initialData?.slug ?? ""}
-            required
-          />
-          {formErrors.slug && (
-            <p className="text-sm text-red-500">{formErrors.slug}</p>
-          )}
-        </div>
-
+        {/* 2. Country */}
         <div>
           <Label htmlFor="country">Country</Label>
           <Input
             id="country"
             name="country"
-            defaultValue={initialData?.country ?? ""}
+            value={currentCountry}
+            onChange={(e) => onCountryChange(e.target.value)}
             required
           />
           {formErrors.country && (
@@ -102,31 +83,7 @@ export function RestaurantForm({
           )}
         </div>
 
-        <div>
-          <Label htmlFor="foodType">Type of Food</Label>
-          <Input
-            id="foodType"
-            name="foodType"
-            defaultValue={initialData?.foodType ?? ""}
-            required
-          />
-          {formErrors.foodType && (
-            <p className="text-sm text-red-500">{formErrors.foodType}</p>
-          )}
-        </div>
-
-        <div>
-          <Label htmlFor="address">Address</Label>
-          <Input
-            id="address"
-            name="address"
-            defaultValue={initialData?.address ?? ""}
-          />
-          {formErrors.address && (
-            <p className="text-sm text-red-500">{formErrors.address}</p>
-          )}
-        </div>
-
+        {/* 3. Currency */}
         <div>
           <Label htmlFor="currency">Currency</Label>
           <Input
@@ -141,6 +98,7 @@ export function RestaurantForm({
           )}
         </div>
 
+        {/* 4. Phone Number */}
         <div>
           <Label htmlFor="phoneNumber">Phone Number</Label>
           <Input
@@ -153,10 +111,24 @@ export function RestaurantForm({
             <p className="text-sm text-red-500">{formErrors.phoneNumber}</p>
           )}
         </div>
+
+        {/* 5. Address */}
+        <div>
+          <Label htmlFor="address">Address</Label>
+          <Input
+            id="address"
+            name="address"
+            defaultValue={initialData.address ?? ""}
+          />
+          {formErrors.address && (
+            <p className="text-sm text-red-500">{formErrors.address}</p>
+          )}
+        </div>
       </div>
 
-      {/* RIGHT COLUMN: Description, Theme, Type of Establishment, Switches, Logo Upload */}
+      {/* RIGHT COLUMN: Description, Type of Establishment, Logo Upload */}
       <div className="space-y-4">
+        {/* 6. Description */}
         <div>
           <Label htmlFor="description">Description</Label>
           <Textarea
@@ -170,28 +142,8 @@ export function RestaurantForm({
             <p className="text-sm text-red-500">{formErrors.description}</p>
           )}
         </div>
-        {/* START OF THEME INPUT CHANGES */}
-        <div>
-          <Label htmlFor="theme">Theme</Label>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
-            <Input
-              id="theme"
-              name="theme"
-              value={currentTheme}
-              onChange={(e) => onThemeChange(e.target.value)}
-              className="flex-grow" // Allows input to take available space
-            />
-            {/* Theme Suggestions */}
-            <p className="text-muted-foreground mt-1 text-sm sm:mt-0">
-              **Suggestions:** classic, sidebar-list, accordion-card,
-              category-cards-image-dominant
-            </p>
-          </div>
-          {formErrors.theme && (
-            <p className="text-sm text-red-500">{formErrors.theme}</p>
-          )}
-        </div>
-        {/* END OF THEME INPUT CHANGES */}
+
+        {/* 7. Type of Establishment */}
         <div>
           <Label htmlFor="typeOfEstablishment">Type of Establishment</Label>
           <Input
@@ -206,30 +158,12 @@ export function RestaurantForm({
             </p>
           )}
         </div>
-        {/* Switches */}
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="isActive"
-            name="isActive"
-            checked={currentIsActive}
-            onCheckedChange={onIsActiveChange}
-          />
-          <Label htmlFor="isActive">Active</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="isDisplayed"
-            name="isDisplayed"
-            checked={currentIsDisplayed}
-            onCheckedChange={onIsDisplayedChange}
-          />
-          <Label htmlFor="isDisplayed">Display on Public Site</Label>
-        </div>
-        {/* Logo Upload Section */}
+
+        {/* 8. Logo Upload Section 🛑 RE-INTEGRATED */}
         <div className="space-y-2 pt-2">
           <Label htmlFor="logoUrl">Restaurant Logo</Label>
           {currentLogoUrl && (
-            <div className="relative mb-2 h-24 w-24 overflow-hidden rounded-md">
+            <div className="relative mb-2 h-24 w-24 overflow-hidden rounded-md border">
               <Image
                 width={250}
                 height={250}
@@ -248,6 +182,7 @@ export function RestaurantForm({
             </div>
           )}
           <UploadButton
+            className="border-2 border-b-amber-500 bg-amber-400 text-violet-700"
             endpoint="logoUploader"
             onClientUploadComplete={(res) => {
               if (res && res.length > 0 && res[0]) {
@@ -258,6 +193,7 @@ export function RestaurantForm({
               console.error(`ERROR! ${error.message}`);
             }}
           />
+          <input type="hidden" name="logoUrl" value={currentLogoUrl ?? ""} />
           {formErrors.logoUrl && (
             <p className="text-sm text-red-500">{formErrors.logoUrl}</p>
           )}

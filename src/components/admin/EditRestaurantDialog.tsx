@@ -75,6 +75,8 @@ export function EditRestaurantDialog({
     restaurant.typeOfEstablishment ?? "",
   );
 
+  const [newRestaurantCountry, setNewRestaurantCountry] = useState("");
+
   const handleSubmit = async (formData: FormData) => {
     setFormErrors({});
 
@@ -88,6 +90,7 @@ export function EditRestaurantDialog({
     formData.set("description", currentDescription);
     formData.set("theme", currentTheme);
     formData.set("typeOfEstablishment", currentTypeOfEstablishment);
+    formData.set("country", newRestaurantCountry);
 
     // Create a 'values' object to pass to Zod for validation
     // Ensure all fields from the schema are present, even if null
@@ -178,11 +181,13 @@ export function EditRestaurantDialog({
             currentPhoneNumber={currentPhoneNumber}
             onPhoneNumberChange={setCurrentPhoneNumber}
             currentDescription={currentDescription}
+            onCountryChange={setNewRestaurantCountry}
             onDescriptionChange={setCurrentDescription}
             currentTheme={currentTheme}
             onThemeChange={setCurrentTheme}
             currentTypeOfEstablishment={currentTypeOfEstablishment}
             onTypeOfEstablishmentChange={setCurrentTypeOfEstablishment}
+            currentCountry={""}
           />
 
           {formErrors.general && (
