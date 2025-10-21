@@ -9,23 +9,19 @@ import {
   deleteMenuItem,
 } from "~/app/actions/menu-item"; // Secured actions
 import { cn } from "~/lib/utils";
+// 🛑 IMPORT CLIENT EDITOR
+import { EditMenuItemClient } from "./EditMenuItemClient";
+// 🛑 Import the Add Item component
+import { AddMenuItemClient } from "./AddMenuItemClient";
+
+import type { MenuItem } from "~/types/restaurant";
 
 // --- TYPE DEFINITIONS ---
-
-interface MenuItemData {
-  id: string;
-  name: string;
-  description: string | null;
-  price: string;
-  ingredients: string | null;
-  imageUrl: string | null;
-  dietaryLabels: string[] | null;
-}
 
 interface CategoryProps {
   categoryId: string;
   restaurantId: string;
-  initialMenuItems: MenuItemData[];
+  initialMenuItems: MenuItem[];
 }
 
 interface FormState {
@@ -39,12 +35,8 @@ const initialState: FormState = {
   success: false,
 };
 
-interface SubmitButtonProps {
-  label: string;
-}
-
-// --- Submit Button Component ---
-function SubmitButton({ label }: SubmitButtonProps) {
+// --- Submit Button Component (Kept for compatibility) ---
+function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
     <button
@@ -58,8 +50,9 @@ function SubmitButton({ label }: SubmitButtonProps) {
   );
 }
 
+// 🛑 START OF SHARED WRAPPER FUNCTIONS 🛑
+
 // --- Wrapper Action for FormData Actions (Add/Update) ---
-// This handles Server Actions that only accept a single FormData payload.
 type ServerAction = (formData: FormData) => Promise<void>;
 
 async function wrapMenuItemAction(
@@ -80,8 +73,6 @@ async function wrapMenuItemAction(
 }
 
 // --- Specific Wrapper for DELETE Action (Handles Positional Args) ---
-// This wrapper accepts the useFormState signature (prevState, formData)
-// but delegates the call to the original 3-argument deleteMenuItem action.
 async function deleteWrapperAction(
   prevState: FormState,
   formData: FormData,
@@ -91,7 +82,6 @@ async function deleteWrapperAction(
     const rId = formData.get("restaurantId") as string;
     const cId = formData.get("categoryId") as string;
 
-    // Call the original 3-argument secured Server Action
     await deleteMenuItem(itemId, rId, cId);
 
     return { message: "Item deleted successfully.", success: true };
@@ -104,138 +94,60 @@ async function deleteWrapperAction(
   }
 }
 
-// --- Single Menu Item Component (Edit/View) ---
+// 🛑 END OF SHARED WRAPPER FUNCTIONS 🛑
+
+// --- Single Menu Item Component (VIEW MODE and DELETE) ---
 function MenuItemItem({
   item,
   categoryId,
   restaurantId,
+  onEdit,
+  deleteState,
+  deleteFormAction,
 }: {
-  item: MenuItemData;
+  item: MenuItem;
   categoryId: string;
   restaurantId: string;
+  onEdit: () => void;
+  deleteState: FormState;
+  deleteFormAction: (formData: FormData) => void;
 }) {
-  const [isEditing, setIsEditing] = useState(false);
-
-  // Bind actions
-  const boundUpdateAction = wrapMenuItemAction.bind(null, updateMenuItem);
-
-  const [updateState, updateFormAction] = useFormState(
-    boundUpdateAction,
-    initialState,
-  );
-  // Use the specific delete wrapper here
-  const [deleteState, deleteFormAction] = useFormState(
-    deleteWrapperAction,
-    initialState,
-  );
-
   const handleDelete = () => {
     if (
       window.confirm(
         `Are you sure you want to delete the menu item: ${item.name}?`,
       )
     ) {
-      // Create FormData dynamically for delete action
       const formData = new FormData();
       formData.set("menuItemId", item.id);
       formData.set("restaurantId", restaurantId);
       formData.set("categoryId", categoryId);
-      deleteFormAction(formData); // Execute the action with FormData
+      deleteFormAction(formData);
     }
   };
 
   return (
-    <div className="rounded-lg border bg-white p-4 shadow-sm">
-      {isEditing ? (
-        // --- Edit Mode Form ---
-        <form action={updateFormAction} className="space-y-3">
-          <input type="hidden" name="id" defaultValue={item.id} />
-          <input
-            type="hidden"
-            name="restaurantId"
-            defaultValue={restaurantId}
-          />
-          <input type="hidden" name="categoryId" defaultValue={categoryId} />
-
-          <h4 className="text-md font-medium text-gray-700">
-            Edit {item.name}
-          </h4>
-
-          {/* Input: Name */}
-          <input
-            type="text"
-            name="name"
-            required
-            defaultValue={item.name}
-            className="block w-full rounded-md border-gray-300"
-            placeholder="Name"
-          />
-
-          {/* Input: Price */}
-          <input
-            type="text"
-            name="price"
-            required
-            defaultValue={item.price}
-            className="block w-full rounded-md border-gray-300"
-            placeholder="Price"
-          />
-
-          {/* Input: Dietary Labels (Needs upgrading) */}
-          <input
-            type="text"
-            name="dietaryLabels"
-            defaultValue={item.dietaryLabels?.join(", ") ?? ""}
-            className="block w-full rounded-md border-gray-300"
-            placeholder="e.g., vegan, gluten-free"
-          />
-
-          <div className="flex justify-end space-x-2">
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
-            >
-              Cancel
-            </button>
-            <SubmitButton label="Save Item" />
-          </div>
-          {updateState.message && (
-            <p
-              className={cn(
-                "text-xs",
-                updateState.success ? "text-green-600" : "text-red-600",
-              )}
-            >
-              {updateState.message}
-            </p>
-          )}
-        </form>
-      ) : (
-        // --- View Mode ---
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="text-md font-semibold text-gray-800">
-              {item.name} - {item.price}
-            </h4>
-            <p className="text-sm text-gray-500">{item.description}</p>
-          </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setIsEditing(true)}
-              className="rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
-            >
-              Edit
-            </button>
-            <button
-              onClick={handleDelete}
-              className="rounded-lg bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      )}
+    <div className="flex items-center justify-between rounded-lg border bg-white p-4 shadow-sm">
+      <div>
+        <h4 className="text-md font-semibold text-gray-800">
+          {item.name} - {item.price}
+        </h4>
+        <p className="text-sm text-gray-500">{item.description}</p>
+      </div>
+      <div className="flex space-x-2">
+        <button
+          onClick={onEdit}
+          className="rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
+        >
+          Edit
+        </button>
+        <button
+          onClick={handleDelete}
+          className="rounded-lg bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
+        >
+          Delete
+        </button>
+      </div>
       {deleteState.message && (
         <p
           className={cn(
@@ -256,10 +168,22 @@ export default function MenuItemManager({
   restaurantId,
   initialMenuItems,
 }: CategoryProps) {
+  // State for the Add New Menu Item Form
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
-  const boundAddAction = wrapMenuItemAction.bind(null, addMenuItem);
-  const [addState, addFormAction] = useFormState(boundAddAction, initialState);
+  // Bound actions for Update and Delete
+  const [deleteState, deleteFormAction] = useFormState(
+    deleteWrapperAction,
+    initialState,
+  );
+
+  // Bound actions for Update (used inside EditMenuItemClient)
+  const boundUpdateAction = wrapMenuItemAction.bind(null, updateMenuItem);
+  const [updateState, updateFormAction] = useFormState(
+    boundUpdateAction,
+    initialState,
+  );
 
   return (
     <div className="space-y-4">
@@ -271,56 +195,17 @@ export default function MenuItemManager({
         {showAddForm ? "Hide Form" : "+ Add New Menu Item"}
       </button>
 
-      {/* 2. Add New Menu Item Form */}
+      {/* 2. RENDER THE ADD ITEM CLIENT COMPONENT */}
       {showAddForm && (
-        <div className="rounded-xl border border-dashed border-green-300 bg-green-50 p-6 shadow-inner">
-          <h4 className="mb-4 text-lg font-semibold text-green-800">
-            New Item Details
-          </h4>
-          <form action={addFormAction} className="space-y-3">
-            <input
-              type="hidden"
-              name="restaurantId"
-              defaultValue={restaurantId}
-            />
-            <input type="hidden" name="categoryId" defaultValue={categoryId} />
-
-            <input
-              type="text"
-              name="name"
-              required
-              className="block w-full rounded-md border-gray-300"
-              placeholder="Name"
-            />
-            <input
-              type="text"
-              name="price"
-              required
-              className="block w-full rounded-md border-gray-300"
-              placeholder="Price (e.g., $12.50)"
-            />
-            <textarea
-              name="description"
-              rows={2}
-              className="block w-full rounded-md border-gray-300"
-              placeholder="Description"
-            ></textarea>
-
-            <div className="flex justify-end pt-2">
-              <SubmitButton label="Create Item" />
-            </div>
-          </form>
-          {addState.message && (
-            <p
-              className={cn(
-                "mt-2 text-sm",
-                addState.success ? "text-green-600" : "text-red-600",
-              )}
-            >
-              {addState.message}
-            </p>
-          )}
-        </div>
+        <AddMenuItemClient
+          restaurantId={restaurantId}
+          categoryId={categoryId}
+          // The onSuccess callback hides the form and allows the parent to refresh/re-render
+          onSuccess={() => {
+            setShowAddForm(false);
+            // In a production app, you'd trigger a revalidation or state change here
+          }}
+        />
       )}
 
       {/* 3. List of Existing Items */}
@@ -329,12 +214,28 @@ export default function MenuItemManager({
           <p className="text-gray-500">No items in this category.</p>
         ) : (
           initialMenuItems.map((item) => (
-            <MenuItemItem
-              key={item.id}
-              item={item}
-              categoryId={categoryId}
-              restaurantId={restaurantId}
-            />
+            <React.Fragment key={item.id}>
+              {editingItemId === item.id ? (
+                // 🛑 RENDER EDIT FORM
+                <EditMenuItemClient
+                  menuItem={item}
+                  onCancel={() => setEditingItemId(null)}
+                  formAction={updateFormAction}
+                  // Pass errors (if needed)
+                  formErrors={[]}
+                />
+              ) : (
+                // 🛑 RENDER VIEW MODE
+                <MenuItemItem
+                  item={item}
+                  categoryId={categoryId}
+                  restaurantId={restaurantId}
+                  onEdit={() => setEditingItemId(item.id)}
+                  deleteState={deleteState}
+                  deleteFormAction={deleteFormAction}
+                />
+              )}
+            </React.Fragment>
           ))
         )}
       </div>

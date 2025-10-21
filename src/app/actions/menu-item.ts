@@ -5,8 +5,7 @@ import { db } from "~/server/db";
 import { menuItems } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
-import { checkAuthorization } from "~/app/actions/auth"; // IMPORT the authorization helper
-
+import { checkAuthorization } from "~/app/actions/auth";
 
 // Import schemas and types from the new menu-item-schemas file
 import {
@@ -14,7 +13,7 @@ import {
   updateMenuItemSchema,
   type CreateMenuItemData,
   type UpdateMenuItemData,
-} from "~/lib/menu-item-schemas"; // CHANGED IMPORT PATH
+} from "~/lib/menu-item-schemas";
 
 // Helper to safely get string values from FormData
 const getStringValue = (formData: FormData, key: string): string | null => {
@@ -22,13 +21,14 @@ const getStringValue = (formData: FormData, key: string): string | null => {
   return typeof value === "string" ? value : null;
 };
 
-// ... (rest of addMenuItem, updateMenuItem, deleteMenuItem functions remain the same)
-// Ensure safeParseAsync is used where schema has async transform.
-// The code provided earlier for these functions already uses safeParseAsync, so no changes needed there.
-
+// ----------------------------------------------------------------------
+// 1. ADD MENU ITEM
+// ----------------------------------------------------------------------
 export async function addMenuItem(formData: FormData) {
-const restaurantId = getStringValue(formData, "id")!;
-try {
+  // 🛑 FIX: Use the correct field name 'restaurantId' from the form
+  const restaurantId = getStringValue(formData, "restaurantId")!; 
+  
+  try {
     if (!restaurantId) throw new Error("Restaurant ID is required.");
     await checkAuthorization(restaurantId);
   } catch (error) {
@@ -42,11 +42,12 @@ try {
     ingredients: getStringValue(formData, "ingredients"),
     dietaryLabels: getStringValue(formData, "dietaryLabels"),
     imageUrl: getStringValue(formData, "imageUrl"),
-    restaurantId: getStringValue(formData, "restaurantId") ?? "",
+    // 🛑 Ensure rawData uses the local variable for consistency
+    restaurantId: restaurantId, 
     categoryId: getStringValue(formData, "categoryId") ?? "",
   };
 
-  const result = await createMenuItemSchema.safeParseAsync(rawData); // Keep safeParseAsync
+  const result = await createMenuItemSchema.safeParseAsync(rawData);
   if (!result.success) {
     console.error("Validation failed (addMenuItem):", result.error.errors);
     throw new Error(result.error.errors.map((_e) => _e.message).join(", "));
@@ -58,7 +59,7 @@ try {
     await db.insert(menuItems).values({
       ...validatedData,
     });
-    revalidatePath(`/dashboard/${restaurantId}/edit`); 
+    revalidatePath(`/dashboard/${restaurantId}/edit`);
     revalidatePath(
       `/admin/restaurants/${validatedData.restaurantId}/categories/${validatedData.categoryId}/menu-items`,
     );
@@ -70,9 +71,13 @@ try {
   }
 }
 
+// ----------------------------------------------------------------------
+// 2. UPDATE MENU ITEM
+// ----------------------------------------------------------------------
 export async function updateMenuItem(formData: FormData) {
-
-const restaurantId = getStringValue(formData, "id")!;
+  // 🛑 FIX: Use the correct field name 'restaurantId' from the form
+  const restaurantId = getStringValue(formData, "restaurantId")!; 
+  
   try {
     if (!restaurantId) throw new Error("Restaurant ID is required.");
     await checkAuthorization(restaurantId);
@@ -88,11 +93,12 @@ const restaurantId = getStringValue(formData, "id")!;
     ingredients: getStringValue(formData, "ingredients"),
     dietaryLabels: getStringValue(formData, "dietaryLabels"),
     imageUrl: getStringValue(formData, "imageUrl"),
-    restaurantId: getStringValue(formData, "restaurantId") ?? "",
+    // 🛑 FIX: Use the local 'restaurantId' variable
+    restaurantId: restaurantId, 
     categoryId: getStringValue(formData, "categoryId") ?? "",
   };
 
-  const result = await updateMenuItemSchema.safeParseAsync(rawData); // Keep safeParseAsync
+  const result = await updateMenuItemSchema.safeParseAsync(rawData);
   if (!result.success) {
     console.error("Validation failed (updateMenuItem):", result.error.errors);
     throw new Error(result.error.errors.map((_e) => _e.message).join(", "));
@@ -112,12 +118,13 @@ const restaurantId = getStringValue(formData, "id")!;
         imageUrl: validatedData.imageUrl,
         updatedAt: new Date(),
       })
+      // Corrected WHERE clause with integrity check
       .where(and(
             eq(menuItems.id, validatedData.id),
             eq(menuItems.restaurantId, restaurantId)))
 
 
-      revalidatePath(`/dashboard/${restaurantId}/edit`); 
+    revalidatePath(`/dashboard/${restaurantId}/edit`);
     revalidatePath(
       `/admin/restaurants/${validatedData.restaurantId}/categories/${validatedData.categoryId}/menu-items`,
     );
@@ -129,13 +136,14 @@ const restaurantId = getStringValue(formData, "id")!;
   }
 }
 
+// ----------------------------------------------------------------------
+// 3. DELETE MENU ITEM
+// ----------------------------------------------------------------------
 export async function deleteMenuItem(
   menuItemId: string,
   restaurantId: string,
   categoryId: string,
 ) {
-  // ... (existing code for deleteMenuItem)
-
   try {
     if (!restaurantId) throw new Error("Restaurant ID is required.");
     await checkAuthorization(restaurantId);
@@ -147,7 +155,7 @@ export async function deleteMenuItem(
             eq(menuItems.id, menuItemId),
             eq(menuItems.restaurantId, restaurantId)
         ));
-    revalidatePath(`/dashboard/${restaurantId}/edit`); 
+    revalidatePath(`/dashboard/${restaurantId}/edit`);
     revalidatePath(
       `/admin/restaurants/${restaurantId}/categories/${categoryId}/menu-items`,
     );
