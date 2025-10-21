@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { db } from "~/server/db";
-import { usersToRestaurants, restaurants } from "~/server/db/schema"; // Import the necessary tables
+import { usersToRestaurants } from "~/server/db/schema"; // Import the necessary tables
 import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";

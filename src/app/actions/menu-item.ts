@@ -4,7 +4,7 @@
 import { db } from "~/server/db";
 import { menuItems } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth"; // IMPORT the authorization helper
 
 
@@ -27,7 +27,7 @@ const getStringValue = (formData: FormData, key: string): string | null => {
 // The code provided earlier for these functions already uses safeParseAsync, so no changes needed there.
 
 export async function addMenuItem(formData: FormData) {
- const restaurantId = getStringValue(formData, "restaurantId") as string;
+const restaurantId = getStringValue(formData, "id")!;
 try {
     if (!restaurantId) throw new Error("Restaurant ID is required.");
     await checkAuthorization(restaurantId);
@@ -72,8 +72,7 @@ try {
 
 export async function updateMenuItem(formData: FormData) {
 
-  const restaurantId = getStringValue(formData, "restaurantId") as string;
-
+const restaurantId = getStringValue(formData, "id")!;
   try {
     if (!restaurantId) throw new Error("Restaurant ID is required.");
     await checkAuthorization(restaurantId);
@@ -101,15 +100,6 @@ export async function updateMenuItem(formData: FormData) {
 
   const validatedData: UpdateMenuItemData = result.data;
 
-// 🛑 1. ENFORCE AUTHORIZATION (ABAC)
-    try {
-    // Check if the user is authorized to modify this restaurant's resources
-    await checkAuthorization(restaurantId);
-  } catch (error) {
-    // Re-throw the authorization error
-    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
-  }
-
   try {
     await db
       .update(menuItems)
@@ -122,7 +112,10 @@ export async function updateMenuItem(formData: FormData) {
         imageUrl: validatedData.imageUrl,
         updatedAt: new Date(),
       })
-      .where(eq(menuItems.id, validatedData.id));
+      .where(and(
+            eq(menuItems.id, validatedData.id),
+            eq(menuItems.restaurantId, restaurantId)))
+
 
       revalidatePath(`/dashboard/${restaurantId}/edit`); 
     revalidatePath(
@@ -150,7 +143,10 @@ export async function deleteMenuItem(
     throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
   }
   try {
-    await db.delete(menuItems).where(eq(menuItems.id, menuItemId));
+    await db.delete(menuItems).where(and(
+            eq(menuItems.id, menuItemId),
+            eq(menuItems.restaurantId, restaurantId)
+        ));
     revalidatePath(`/dashboard/${restaurantId}/edit`); 
     revalidatePath(
       `/admin/restaurants/${restaurantId}/categories/${categoryId}/menu-items`,

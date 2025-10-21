@@ -7,7 +7,6 @@ import { db } from "~/server/db";
 import { users } from "~/server/db/schema"; 
 import { NextResponse } from "next/server";
 import { env } from "~/env"; 
-import { eq } from "drizzle-orm"; 
 
 // This handler will not be cached
 // export const runtime = "edge"; 

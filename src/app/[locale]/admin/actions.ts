@@ -6,7 +6,6 @@ import { usersToRestaurants } from '~/server/db/schema';
 import { auth } from '@clerk/nextjs/server';
 
 import { revalidatePath } from 'next/cache'; 
-import { redirect } from 'next/navigation';
 import { and, eq } from 'drizzle-orm';
 
 // Server Action now accepts FormData as required by the HTML form method="POST"

@@ -4,8 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect, notFound } from "next/navigation";
 import { db } from "~/server/db";
 import * as schema from "~/server/db/schema";
-import { eq, and } from "drizzle-orm";
-import { headers } from "next/headers"; // Used to debug/check request origin if needed
+import { eq } from "drizzle-orm";
 
 interface DynamicLayoutProps {
   children: React.ReactNode;

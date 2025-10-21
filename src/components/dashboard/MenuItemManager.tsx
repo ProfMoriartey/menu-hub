@@ -10,7 +10,7 @@ import {
 } from "~/app/actions/menu-item"; // Secured actions
 import { cn } from "~/lib/utils";
 
-// --- TYPE DEFINITIONS (Matching your Drizzle schema and data structure) ---
+// --- TYPE DEFINITIONS ---
 
 interface MenuItemData {
   id: string;
@@ -19,7 +19,6 @@ interface MenuItemData {
   price: string;
   ingredients: string | null;
   imageUrl: string | null;
-  // NOTE: dietaryLabels is an array of strings in the DB but is often passed as a JSON string
   dietaryLabels: string[] | null;
 }
 
@@ -59,42 +58,48 @@ function SubmitButton({ label }: SubmitButtonProps) {
   );
 }
 
-// --- Wrapper Action for useFormState ---
+// --- Wrapper Action for FormData Actions (Add/Update) ---
+// This handles Server Actions that only accept a single FormData payload.
+type ServerAction = (formData: FormData) => Promise<void>;
+
 async function wrapMenuItemAction(
-  action: (
-    formData: FormData,
-  ) =>
-    | Promise<void>
-    | ((
-        itemId: string,
-        restaurantId: string,
-        categoryId: string,
-      ) => Promise<void>),
+  action: ServerAction,
+  prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
   try {
-    // Check if the action is the delete function which takes separate arguments
-    if (action.length === 3) {
-      // For delete, we execute the specific signature
-      const itemId = formData.get("menuItemId") as string;
-      const restaurantId = formData.get("restaurantId") as string;
-      const categoryId = formData.get("categoryId") as string;
-      await (
-        action as (
-          itemId: string,
-          restaurantId: string,
-          categoryId: string,
-        ) => Promise<void>
-      )(itemId, restaurantId, categoryId);
-    } else {
-      // For add/update, we execute the FormData signature
-      await (action as (formData: FormData) => Promise<void>)(formData);
-    }
-
-    return { message: "Item updated successfully.", success: true };
+    await action(formData);
+    return { message: "Action completed successfully.", success: true };
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "An unknown error occurred.";
+      error instanceof Error
+        ? error.message
+        : "An unknown error occurred during submission.";
+    return { message: `Failed: ${message}`, success: false };
+  }
+}
+
+// --- Specific Wrapper for DELETE Action (Handles Positional Args) ---
+// This wrapper accepts the useFormState signature (prevState, formData)
+// but delegates the call to the original 3-argument deleteMenuItem action.
+async function deleteWrapperAction(
+  prevState: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  try {
+    const itemId = formData.get("menuItemId") as string;
+    const rId = formData.get("restaurantId") as string;
+    const cId = formData.get("categoryId") as string;
+
+    // Call the original 3-argument secured Server Action
+    await deleteMenuItem(itemId, rId, cId);
+
+    return { message: "Item deleted successfully.", success: true };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "An unknown error occurred during deletion.";
     return { message: `Failed: ${message}`, success: false };
   }
 }
@@ -113,14 +118,14 @@ function MenuItemItem({
 
   // Bind actions
   const boundUpdateAction = wrapMenuItemAction.bind(null, updateMenuItem);
-  const boundDeleteAction = wrapMenuItemAction.bind(null, deleteMenuItem);
 
   const [updateState, updateFormAction] = useFormState(
     boundUpdateAction,
     initialState,
   );
+  // Use the specific delete wrapper here
   const [deleteState, deleteFormAction] = useFormState(
-    boundDeleteAction,
+    deleteWrapperAction,
     initialState,
   );
 
@@ -130,11 +135,12 @@ function MenuItemItem({
         `Are you sure you want to delete the menu item: ${item.name}?`,
       )
     ) {
+      // Create FormData dynamically for delete action
       const formData = new FormData();
       formData.set("menuItemId", item.id);
       formData.set("restaurantId", restaurantId);
       formData.set("categoryId", categoryId);
-      deleteFormAction(formData);
+      deleteFormAction(formData); // Execute the action with FormData
     }
   };
 
@@ -179,7 +185,7 @@ function MenuItemItem({
           <input
             type="text"
             name="dietaryLabels"
-            defaultValue={item.dietaryLabels?.join(", ") || ""}
+            defaultValue={item.dietaryLabels?.join(", ") ?? ""}
             className="block w-full rounded-md border-gray-300"
             placeholder="e.g., vegan, gluten-free"
           />

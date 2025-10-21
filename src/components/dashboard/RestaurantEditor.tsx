@@ -3,41 +3,14 @@
 
 import React, { useState } from "react";
 import { cn } from "~/lib/utils"; // Assuming this utility exists
+import type { Restaurant } from "~/types/restaurant";
 
 // Placeholder components (now imported as TSX)
 import RestaurantDetailsForm from "./RestaurantDetailsForm";
 import CategoryManager from "./CategoryManager";
 
-// --- TYPE DEFINITIONS ---
-interface MenuItemData {
-  id: string;
-  // Include other minimal item properties needed for display
-}
-
-interface CategoryData {
-  id: string;
-  name: string;
-  order: number;
-  menuItems: MenuItemData[]; // Nested items for display count
-  // Include other category properties
-}
-
-interface RestaurantData {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  address: string | null;
-  country: string | null;
-  foodType: string | null;
-  currency: string;
-  phoneNumber: string | null;
-  theme: string | null;
-  categories: CategoryData[];
-}
-
 interface RestaurantEditorProps {
-  initialRestaurantData: RestaurantData;
+  initialRestaurantData: Restaurant;
 }
 
 // --- TAB DATA ---

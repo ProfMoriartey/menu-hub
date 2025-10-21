@@ -8,7 +8,7 @@ import {
   jsonb,
   pgEnum,
   integer,
-  primaryKey, foreignKey,
+  primaryKey, 
   text, // IMPORTANT: Add 'text' import for longer string fields like description
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";

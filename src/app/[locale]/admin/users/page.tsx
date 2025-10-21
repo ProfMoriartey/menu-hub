@@ -5,7 +5,7 @@ import * as schema from "~/server/db/schema";
 import { type Metadata } from "next";
 import Link from "next/link";
 // IMPORT Drizzle functions for querying and sorting
-import { count, desc, sql, eq } from "drizzle-orm";
+import { desc, sql, eq } from "drizzle-orm";
 
 export const metadata: Metadata = {
   title: "Admin: Manage Users",
@@ -71,7 +71,7 @@ export default async function AdminUsersPage() {
                   <div className="min-w-0 flex-1 pr-4">
                     <p className="truncate text-lg font-medium text-gray-900">
                       {/* Display the email if available, otherwise show the ID */}
-                      {user.email || `User ID: ${user.id}`}
+                      {user.email ?? `User ID: ${user.id}`}
                     </p>
                     {user.email && (
                       <p className="mt-1 font-mono text-xs break-all text-gray-500">

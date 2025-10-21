@@ -5,20 +5,9 @@ import React from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { updateRestaurant } from "~/app/actions/restaurant"; // Your secured Server Action
 
-// --- 1. Define Props and State Types ---
-interface Restaurant {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  address: string | null;
-  country: string | null;
-  foodType: string | null;
-  currency: string;
-  phoneNumber: string | null;
-  theme: string | null;
-}
+import type { Restaurant } from "~/types/restaurant";
 
+// --- 1. Define Props and State Types ---
 interface FormState {
   message: string;
   success: boolean;
@@ -108,7 +97,6 @@ export default function RestaurantDetailsForm({
       <form action={formAction} className="space-y-6">
         {/* Hidden Field for Authorization/Identification (ID used by updateRestaurant) */}
         <input type="hidden" name="id" defaultValue={restaurant.id} />
-
         <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-6">
           {/* 1. Name */}
           <div>
@@ -141,7 +129,6 @@ export default function RestaurantDetailsForm({
               name="slug"
               id="slug"
               readOnly
-              disabled
               defaultValue={restaurant.slug}
               className="mt-1 block w-full rounded-md border-gray-200 bg-gray-50 shadow-sm"
             />
@@ -161,7 +148,7 @@ export default function RestaurantDetailsForm({
             name="description"
             id="description"
             rows={3}
-            defaultValue={restaurant.description || ""}
+            defaultValue={restaurant.description ?? ""}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           ></textarea>
         </div>
@@ -179,7 +166,7 @@ export default function RestaurantDetailsForm({
               type="text"
               name="address"
               id="address"
-              defaultValue={restaurant.address || ""}
+              defaultValue={restaurant.address ?? ""}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
             />
           </div>
@@ -213,7 +200,7 @@ export default function RestaurantDetailsForm({
               type="tel"
               name="phoneNumber"
               id="phoneNumber"
-              defaultValue={restaurant.phoneNumber || ""}
+              defaultValue={restaurant.phoneNumber ?? ""}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
             />
           </div>

@@ -9,20 +9,12 @@ import {
   deleteCategory,
 } from "~/app/actions/category";
 import { cn } from "~/lib/utils";
-// Assuming you have a component library for visual elements
+
+import type { Category } from "~/types/restaurant"; // 🛑 Import Category and MenuItem types
+
+import MenuItemManager from "./MenuItemManager";
 
 // --- TYPE DEFINITIONS ---
-
-interface MenuItemData {
-  id: string;
-}
-
-interface CategoryData {
-  id: string;
-  name: string;
-  menuItems: MenuItemData[];
-  // Add other category properties if needed
-}
 
 interface FormState {
   message: string;
@@ -37,7 +29,7 @@ const initialState: FormState = {
 
 interface CategoryManagerProps {
   restaurantId: string;
-  initialCategories: CategoryData[];
+  initialCategories: Category[];
 }
 
 interface SubmitButtonProps {
@@ -45,11 +37,11 @@ interface SubmitButtonProps {
 }
 
 interface CategoryItemProps {
-  category: CategoryData;
+  category: Category;
   restaurantId: string;
 }
 
-// --- Sub-component for form submission status ---
+// --- 1. Submit Button Component ---
 function SubmitButton({ label }: SubmitButtonProps) {
   const { pending } = useFormStatus();
   return (
@@ -64,40 +56,18 @@ function SubmitButton({ label }: SubmitButtonProps) {
   );
 }
 
-// --- Wrapper action to integrate Server Actions with useFormState ---
-// This handles the void return type of your Server Actions and provides UI feedback.
+// --- 2. Wrapper Action for FormData Actions (Add/Update) ---
+type ServerAction = (formData: FormData) => Promise<void>;
+
 async function wrapCategoryAction(
-  action: (
-    formData: FormData,
-  ) =>
-    | Promise<void>
-    | ((
-        itemId: string,
-        restaurantId: string,
-        categoryId: string,
-      ) => Promise<void>),
-  prevState: FormState, // Accepts the current state from useFormState
-  formData: FormData, // Accepts the new form payload
+  action: ServerAction,
+  prevState: FormState,
+  formData: FormData,
 ): Promise<FormState> {
   try {
-    // Determine the correct function call based on arguments (same logic as before)
-    if (action.length === 3) {
-      // For delete, which requires separate positional arguments
-      const categoryId = formData.get("categoryId") as string;
-      const restaurantId = formData.get("restaurantId") as string;
-      // Note: Delete action only takes two arguments, but we keep the wrapper flexible
-      await (
-        action as (categoryId: string, restaurantId: string) => Promise<void>
-      )(categoryId, restaurantId);
-    } else {
-      // For add/update, which takes FormData
-      await (action as (formData: FormData) => Promise<void>)(formData);
-    }
-
-    // Success State
+    await action(formData);
     return { message: "Action completed successfully.", success: true };
   } catch (error) {
-    // Error State
     const message =
       error instanceof Error
         ? error.message
@@ -106,18 +76,36 @@ async function wrapCategoryAction(
   }
 }
 
-// --- Component to display a single category and its actions ---
+// --- 3. Wrapper Action for Delete (Positional Args) ---
+// This explicitly wraps the two-argument deleteCategory action for useFormState.
+async function deleteCategoryWrapperAction(
+  prevState: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  try {
+    const categoryId = formData.get("categoryId") as string;
+    const restaurantId = formData.get("restaurantId") as string;
+
+    // Call the original, secured two-argument Server Action
+    await deleteCategory(categoryId, restaurantId);
+
+    return { message: "Category deleted successfully.", success: true };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "An unknown error occurred during deletion.";
+    return { message: `Failed: ${message}`, success: false };
+  }
+}
+
+// --- 4. Component to display a single category and its actions ---
 function CategoryItem({ category, restaurantId }: CategoryItemProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false); // 🛑 NEW STATE FOR EXPANSION
 
   // Create bound actions for useFormState
   const boundUpdateAction = wrapCategoryAction.bind(null, updateCategory);
-  const boundDeleteAction = wrapCategoryAction.bind(null, (formData) =>
-    deleteCategory(
-      formData.get("categoryId") as string,
-      formData.get("restaurantId") as string,
-    ),
-  );
 
   // State for Update Form
   const [updateState, updateFormAction] = useFormState(
@@ -125,13 +113,12 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
     initialState,
   );
 
-  // State for Delete Form
+  // State for Delete Form - Using the specific delete wrapper
   const [deleteState, deleteFormAction] = useFormState(
-    boundDeleteAction,
+    deleteCategoryWrapperAction,
     initialState,
   );
 
-  // You would typically use a confirmation dialog here instead of a raw form.
   const handleDelete = () => {
     if (
       window.confirm(
@@ -142,83 +129,126 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
       const formData = new FormData();
       formData.set("categoryId", category.id);
       formData.set("restaurantId", restaurantId);
-      deleteFormAction(formData);
+      deleteFormAction(formData); // Execute the action with FormData
     }
   };
 
   return (
-    <div className="rounded-lg border bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
-      {isEditing ? (
-        // --- Edit Mode Form ---
-        <form action={updateFormAction} className="space-y-3">
-          <input type="hidden" name="id" defaultValue={category.id} />
-          <input
-            type="hidden"
-            name="restaurantId"
-            defaultValue={restaurantId}
-          />
+    <div className="rounded-lg border bg-white shadow-md transition-shadow hover:shadow-lg">
+      {/* Top Header Section */}
+      <div
+        className="flex cursor-pointer items-center justify-between p-4"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div className="flex items-center space-x-3">
+          <h3 className="text-lg font-semibold text-gray-800">
+            {category.name}
+          </h3>
+          <span className="text-sm text-gray-500">
+            ({(category.menuItems ?? []).length} Items)
+          </span>
+        </div>
 
-          <input
-            type="text"
-            name="name"
-            required
-            defaultValue={category.name}
-            className="block w-full rounded-md border-gray-300 shadow-sm"
-            placeholder="Category Name"
+        <div className="flex items-center space-x-3">
+          {/* Edit/Delete Buttons for the Category */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsEditing(true);
+            }}
+            className="rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white transition-colors hover:bg-yellow-600"
+          >
+            Edit
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
+            className="rounded-lg bg-red-500 px-3 py-1 text-sm text-white transition-colors hover:bg-red-600"
+          >
+            Delete
+          </button>
+
+          {/* Expansion Indicator */}
+          <svg
+            className={cn(
+              "h-5 w-5 transform text-gray-500 transition-transform duration-200",
+              isExpanded ? "rotate-180" : "",
+            )}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Expansion Content - Menu Item Manager */}
+      {isExpanded && (
+        <div className="border-t bg-gray-50 p-4">
+          <MenuItemManager
+            categoryId={category.id}
+            restaurantId={restaurantId}
+            initialMenuItems={category.menuItems ?? []}
           />
-          <div className="flex justify-end space-x-2">
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
-            >
-              Cancel
-            </button>
-            <SubmitButton label="Save Category" />
-          </div>
-          {updateState.message && (
-            <p
-              className={cn(
-                "text-xs",
-                updateState.success ? "text-green-600" : "text-red-600",
-              )}
-            >
-              {updateState.message}
-            </p>
-          )}
-        </form>
-      ) : (
-        // --- View Mode ---
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800">
-              {category.name}
-            </h3>
-            <p className="text-sm text-gray-500">
-              Items: {category.menuItems.length}
-            </p>
-          </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setIsEditing(true)}
-              className="rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
-            >
-              Edit
-            </button>
-            <button
-              onClick={handleDelete}
-              className="rounded-lg bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
-            >
-              Delete
-            </button>
-          </div>
         </div>
       )}
+
+      {/* Editing Form (rendered conditionally) */}
+      {isEditing && (
+        <div className="border-t bg-yellow-50/50 p-4">
+          <form action={updateFormAction} className="space-y-3">
+            <input type="hidden" name="id" defaultValue={category.id} />
+            <input
+              type="hidden"
+              name="restaurantId"
+              defaultValue={restaurantId}
+            />
+
+            <input
+              type="text"
+              name="name"
+              required
+              defaultValue={category.name}
+              className="block w-full rounded-md border-gray-300 shadow-sm"
+              placeholder="Category Name"
+            />
+            <div className="flex justify-end space-x-2">
+              <button
+                type="button"
+                onClick={() => setIsEditing(false)}
+                className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <SubmitButton label="Save Category" />
+            </div>
+            {updateState.message && (
+              <p
+                className={cn(
+                  "text-xs",
+                  updateState.success ? "text-green-600" : "text-red-600",
+                )}
+              >
+                {updateState.message}
+              </p>
+            )}
+          </form>
+        </div>
+      )}
+
       {/* Display messages for delete action outside of the main flow */}
       {deleteState.message && (
         <p
           className={cn(
-            "mt-2 text-xs",
+            "p-4 text-xs",
             deleteState.success ? "text-green-600" : "text-red-600",
           )}
         >
@@ -228,8 +258,7 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
     </div>
   );
 }
-
-// --- Main Category Manager Component ---
+// --- 5. Main Category Manager Component ---
 export default function CategoryManager({
   restaurantId,
   initialCategories,

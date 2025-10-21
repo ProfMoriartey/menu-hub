@@ -137,6 +137,21 @@ try {
 
 // Server Action to update a restaurant
 export async function updateRestaurant(formData: FormData) {
+
+   // 🛑 FIX 1: Extract the ID using the name attribute from the form ("id")
+const restaurantId = getStringValue(formData, "id")!;
+  // --- 1. ENFORCE AUTHORIZATION (ABAC) ---
+  try {
+    if (!restaurantId) {
+      throw new Error("400: Restaurant ID is required for authorization.");
+    }
+    // Check if the user is authorized (Admin or Assigned Editor)
+    await checkAuthorization(restaurantId);
+  } catch (error) {
+    // Re-throw the authorization error
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
+
   const rawData = {
     id: getStringValue(formData, "id"),
     name: getStringValue(formData, "name"),
@@ -153,9 +168,7 @@ export async function updateRestaurant(formData: FormData) {
     theme: getStringValue(formData, "theme"),
     typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
   };
-  const restaurantId = formData.get("restaurantId") as string;
-
-
+ 
   const parsedRawData = {
     ...rawData,
     currency: rawData.currency ?? "USD",
@@ -166,22 +179,13 @@ export async function updateRestaurant(formData: FormData) {
     id: rawData.id ?? "",
   };
 
-  // 🛑 1. ENFORCE AUTHORIZATION (ABAC)
-try {
-        if (!restaurantId) throw new Error("Restaurant ID is required for update.");
-        await checkAuthorization(restaurantId);
-    } catch (error) {
-        throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
-    }
-
   const result = restaurantSchema.safeParse(parsedRawData);
 
-  if (!result.success) {
+if (!result.success) {
     console.error("Validation failed (updateRestaurant):", result.error.errors);
-    // Corrected line: Use _e.message
     throw new Error(
       "Invalid input: " +
-        result.error.errors.map((_e) => _e.message).join(", "),
+      result.error.errors.map((_e) => _e.message).join(", "),
     );
   }
 
@@ -202,8 +206,10 @@ try {
     typeOfEstablishment,
   } = result.data;
 
+
   if (!id) {
-    throw new Error("Restaurant ID is required for update.");
+    // This should never be hit if validation is correct, but satisfies TS
+    throw new Error("Internal Error: Validated ID is missing."); 
   }
 
   const existing = await db.query.restaurants.findFirst({
@@ -240,18 +246,19 @@ try {
   revalidatePath("/");
 }
 
-export const initialState = {
-    message: '',
-    success: false,
-    errors: {}
-};
+// export const initialState = {
+//     message: '',
+//     success: false,
+//     errors: {}
+// };
 
-export async function dummyRestaurantAction(
-  prevState: typeof initialState, 
-  payload: FormData
-) {
-  // This function is the placeholder for useFormState
-  // It should be replaced with a wrapper that calls updateRestaurant, 
-  // but for simplicity, we use it to show the initial state.
-  return initialState; 
-}
+// export async function dummyRestaurantAction(
+//   prevState: typeof initialState, 
+//   payload: FormData
+// ) {
+//   // This function is the placeholder for useFormState
+//   // It should be replaced with a wrapper that calls updateRestaurant, 
+//   // but for simplicity, we use it to show the initial state.
+//   return initialState; 
+// }
+

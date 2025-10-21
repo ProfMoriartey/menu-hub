@@ -1,7 +1,6 @@
 // src/app/themes/page.tsx
 // No "use client" here - this is a Server Component
 
-import { cn } from "~/lib/utils";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
 import { eq, desc } from "drizzle-orm";
