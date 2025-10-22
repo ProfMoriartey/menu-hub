@@ -179,7 +179,7 @@ export default async function UserAssignmentPanel({ params }: UserPanelProps) {
               name="restaurantId"
               required
               // Theme Fix: Generic colors replaced with theme tokens
-              className="border-input text-primary-foreground focus:border-primary focus:ring-primary bg-background flex-grow rounded-md border p-2 shadow-sm"
+              className="border-input text-foreground focus:border-primary focus:ring-primary bg-background flex-grow rounded-md border p-2 shadow-sm"
             >
               <option value="" disabled>
                 Select a restaurant to assign
