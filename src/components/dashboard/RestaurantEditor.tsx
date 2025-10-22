@@ -139,7 +139,7 @@ export default function RestaurantEditor({
           <CardHeader>
             <CardTitle className="text-2xl font-semibold">
               {/* Translated Card Title based on active tab */}
-              {t(tabIds.find((t) => t.id === activeTab)?.key || "detailsTab")}
+              {t(tabIds.find((t) => t.id === activeTab)?.key ?? "detailsTab")}
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
