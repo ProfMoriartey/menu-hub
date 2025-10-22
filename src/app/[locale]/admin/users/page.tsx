@@ -5,7 +5,7 @@ import * as schema from "~/server/db/schema";
 import { type Metadata } from "next";
 import Link from "next/link";
 // IMPORT Drizzle functions for querying and sorting
-import { desc, sql, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 
 export const metadata: Metadata = {
   title: "Admin: Manage Users",
@@ -15,7 +15,6 @@ export const metadata: Metadata = {
 /**
  * Admin: Users List Page
  * Fetches users along with a count of their assigned restaurants.
- * NOTE: Assumes RBAC check is handled by a parent layout.
  */
 export default async function AdminUsersPage() {
   // 1. Fetch users and aggregate the count of assigned restaurants
@@ -42,50 +41,60 @@ export default async function AdminUsersPage() {
     .orderBy(desc(schema.users.createdAt));
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <header className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+        <h1 className="text-foreground text-3xl font-bold tracking-tight">
+          {/* Theme fix: text-gray-900 -> text-foreground */}
           System Users ({usersWithCounts.length})
         </h1>
-        <p className="mt-2 text-lg text-gray-600">
+        <p className="text-muted-foreground mt-2 text-lg">
+          {/* Theme fix: text-gray-600 -> text-muted-foreground */}
           Click on a user to modify their restaurant assignments.
         </p>
       </header>
 
-      <div className="overflow-hidden rounded-xl bg-white shadow-xl">
-        <ul role="list" className="divide-y divide-gray-200">
+      {/* Theme fix: bg-white -> bg-card, shadow-xl retained for prominence */}
+      <div className="bg-card border-border overflow-hidden rounded-xl border shadow-xl">
+        {/* Theme fix: divide-gray-200 -> divide-border */}
+        <ul role="list" className="divide-border divide-y">
           {usersWithCounts.length === 0 ? (
-            <li className="p-6 text-center text-gray-500">
+            <li className="text-muted-foreground p-6 text-center">
+              {/* Theme fix: text-gray-500 -> text-muted-foreground */}
               No users found. New users will appear here after sign-up.
             </li>
           ) : (
             usersWithCounts.map((user) => (
               <li
                 key={user.id}
-                className="p-4 transition duration-100 hover:bg-indigo-50/50 sm:px-6"
+                // Theme fix: hover:bg-indigo-50/50 -> hover:bg-accent/20 for light,
+                // and hover:bg-secondary for better dark mode visibility
+                className="hover:bg-accent/20 p-4 transition duration-100 sm:px-6"
               >
                 <Link
                   href={`/admin/users/${user.id}`}
                   className="flex items-center justify-between"
                 >
                   <div className="min-w-0 flex-1 pr-4">
-                    <p className="truncate text-lg font-medium text-gray-900">
-                      {/* Display the email if available, otherwise show the ID */}
+                    <p className="text-foreground truncate text-lg font-medium">
+                      {/* Theme fix: text-gray-900 -> text-foreground */}
                       {user.email ?? `User ID: ${user.id}`}
                     </p>
                     {user.email && (
-                      <p className="mt-1 font-mono text-xs break-all text-gray-500">
+                      <p className="text-muted-foreground mt-1 font-mono text-xs break-all">
+                        {/* Theme fix: text-gray-500 -> text-muted-foreground */}
                         ID: {user.id}
                       </p>
                     )}
                   </div>
 
                   <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                    <p className="text-sm font-semibold text-indigo-600">
+                    <p className="text-primary text-sm font-semibold">
+                      {/* Theme fix: text-indigo-600 -> text-primary */}
                       {user.restaurantCount} Assigned Restaurant
                       {user.restaurantCount === 1 ? "" : "s"}
                     </p>
-                    <p className="mt-1 text-xs text-gray-500">
+                    <p className="text-muted-foreground mt-1 text-xs">
+                      {/* Theme fix: text-gray-500 -> text-muted-foreground */}
                       Joined:{" "}
                       {user.createdAt
                         ? user.createdAt.toLocaleDateString()
@@ -94,7 +103,8 @@ export default async function AdminUsersPage() {
                   </div>
 
                   <svg
-                    className="ml-4 h-5 w-5 text-gray-400"
+                    className="text-muted-foreground/60 ml-4 h-5 w-5"
+                    // Theme fix: text-gray-400 -> text-muted-foreground/60
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"

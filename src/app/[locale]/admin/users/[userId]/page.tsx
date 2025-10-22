@@ -3,6 +3,7 @@ import * as schema from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
+import Link from "next/link"; // Ensure Link is imported if needed for navigation
 
 import {
   assignRestaurantToUser,
@@ -20,8 +21,6 @@ export const metadata: Metadata = {
 
 /**
  * Admin Panel: Displays all restaurants linked to the user specified in the URL.
- * Also fetches ALL restaurants to populate the assignment form.
- * NOTE: This component assumes a parent layout has already enforced the 'admin' role check.
  */
 export default async function UserAssignmentPanel({ params }: UserPanelProps) {
   const { userId: targetUserId } = await params;
@@ -31,7 +30,6 @@ export default async function UserAssignmentPanel({ params }: UserPanelProps) {
     where: eq(schema.users.id, targetUserId),
     with: {
       usersToRestaurants: {
-        // Use relations to join through the junction table to the restaurants
         with: {
           restaurant: {
             columns: {
@@ -47,7 +45,6 @@ export default async function UserAssignmentPanel({ params }: UserPanelProps) {
   });
 
   if (!targetUserWithAssignments) {
-    // If the target user ID from the URL does not exist in our DB table
     return notFound();
   }
 
@@ -74,41 +71,48 @@ export default async function UserAssignmentPanel({ params }: UserPanelProps) {
   const targetUserEmail = targetUserWithAssignments.email ?? targetUserId;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <header className="mb-10 rounded-lg bg-white p-6 shadow-md">
-        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
+    <div className="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      {/* Theme Fix: bg-white -> bg-card, text-gray-900 -> text-foreground */}
+      <header className="bg-card border-border mb-10 rounded-lg border p-6 shadow-md">
+        <h1 className="text-foreground text-3xl font-extrabold tracking-tight">
           Restaurant Assignment Panel
         </h1>
-        <p className="mt-2 text-lg text-gray-600">
+        {/* Theme Fix: text-gray-600 -> text-muted-foreground, text-indigo-600 -> text-primary */}
+        <p className="text-muted-foreground mt-2 text-lg">
           Managing access for:{" "}
-          <span className="font-semibold text-indigo-600">
-            {targetUserEmail}
-          </span>
+          <span className="text-primary font-semibold">{targetUserEmail}</span>
         </p>
       </header>
 
       {/* SECTION: Current Assignments */}
       <section className="mb-12 space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-800">
+        <h2 className="text-foreground text-2xl font-semibold">
+          {/* Theme Fix: text-gray-800 -> text-foreground */}
           Current Assignments ({assignedRestaurants.length})
         </h2>
-        <div className="rounded-xl bg-white shadow-lg">
-          <ul role="list" className="divide-y divide-gray-100">
+        {/* Theme Fix: bg-white -> bg-card */}
+        <div className="bg-card border-border rounded-xl border shadow-lg">
+          {/* Theme Fix: divide-gray-100 -> divide-border */}
+          <ul role="list" className="divide-border divide-y">
             {assignedRestaurants.length === 0 ? (
-              <li className="px-6 py-4 text-gray-500">
+              <li className="text-muted-foreground px-6 py-4">
+                {/* Theme Fix: text-gray-500 -> text-muted-foreground */}
                 This user currently manages no restaurants.
               </li>
             ) : (
               assignedRestaurants.map((restaurant) => (
                 <li
                   key={restaurant.id}
-                  className="flex items-center justify-between px-6 py-4 transition duration-150 hover:bg-gray-50"
+                  // Theme Fix: hover:bg-gray-50 -> hover:bg-accent/20
+                  className="hover:bg-accent/20 flex items-center justify-between px-6 py-4 transition duration-150"
                 >
                   <div className="min-w-0 flex-auto">
-                    <p className="text-lg leading-6 font-semibold text-gray-900">
+                    <p className="text-foreground text-lg leading-6 font-semibold">
+                      {/* Theme Fix: text-gray-900 -> text-foreground */}
                       {restaurant.name}
                     </p>
-                    <p className="mt-1 flex text-sm leading-5 text-gray-500">
+                    <p className="text-muted-foreground mt-1 flex text-sm leading-5">
+                      {/* Theme Fix: text-gray-500 -> text-muted-foreground */}
                       Slug:{" "}
                       <span className="ml-1 font-mono text-xs">
                         {restaurant.slug}
@@ -116,31 +120,30 @@ export default async function UserAssignmentPanel({ params }: UserPanelProps) {
                     </p>
                   </div>
                   <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                    <p className="text-sm leading-6 text-indigo-600">
+                    <p className="text-primary text-sm leading-6">
+                      {/* Theme Fix: text-indigo-600 -> text-primary */}
                       Role:{" "}
                       <span className="font-medium capitalize">
                         {restaurant.accessLevel}
                       </span>
                     </p>
                   </div>
-                  {/* Action Button for Admin: Use a Server Action here to revoke access */}
+                  {/* Action Button for Admin */}
                   <form className="ml-4" action={revokeRestaurantAccess}>
-                    {/* Hidden field for the user whose access we are revoking */}
                     <input
                       type="hidden"
                       name="clerkUserId"
                       value={targetUserId}
                     />
-                    {/* Hidden field for the specific restaurant to revoke */}
                     <input
                       type="hidden"
                       name="restaurantId"
                       value={restaurant.id}
                     />
-
                     <button
                       type="submit"
-                      className="rounded-lg bg-red-500 px-3 py-1 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-red-600"
+                      // Theme Fix: bg-red-500/600 -> bg-destructive
+                      className="bg-destructive text-primary-foreground hover:bg-destructive/90 rounded-lg px-3 py-1 text-sm font-medium shadow-sm transition duration-150"
                     >
                       Revoke
                     </button>
@@ -153,29 +156,30 @@ export default async function UserAssignmentPanel({ params }: UserPanelProps) {
       </section>
 
       {/* SECTION: Assign New Restaurant Form */}
-      <section className="mt-12 rounded-xl border border-dashed border-gray-300 bg-white p-6 shadow-md">
-        <h2 className="mb-4 text-xl font-semibold text-gray-800">
+      <section className="border-border bg-card mt-12 rounded-xl border border-dashed p-6 shadow-md">
+        {/* Theme Fix: border-gray-300 -> border-border, bg-white -> bg-card */}
+        <h2 className="text-foreground mb-4 text-xl font-semibold">
+          {/* Theme Fix: text-gray-800 -> text-foreground */}
           Assign New Restaurant
         </h2>
 
         {availableRestaurants.length === 0 ? (
-          <p className="text-sm text-gray-500">
+          <p className="text-muted-foreground text-sm">
+            {/* Theme Fix: text-gray-500 -> text-muted-foreground */}
             All available restaurants have been assigned to this user.
           </p>
         ) : (
           <form
-            // CRUCIAL FIX: Use POST method to execute the Server Action
             method="POST"
-            // Connect to the Server Action
             action={assignRestaurantToUser}
             className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4"
           >
-            {/* Ensure the userId is passed to the action */}
             <input type="hidden" name="clerkUserId" value={targetUserId} />
             <select
               name="restaurantId"
               required
-              className="flex-grow rounded-md border border-gray-300 p-2 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              // Theme Fix: Generic colors replaced with theme tokens
+              className="border-input text-primary-foreground focus:border-primary focus:ring-primary bg-background flex-grow rounded-md border p-2 shadow-sm"
             >
               <option value="" disabled>
                 Select a restaurant to assign
@@ -189,7 +193,8 @@ export default async function UserAssignmentPanel({ params }: UserPanelProps) {
 
             <button
               type="submit"
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-indigo-700"
+              // Theme Fix: bg-indigo-600/700 -> bg-primary
+              className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition duration-150"
             >
               Assign Restaurant
             </button>
