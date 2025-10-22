@@ -1,4 +1,3 @@
-// src/components/dashboard/MenuItemManager.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -7,14 +6,15 @@ import {
   addMenuItem,
   updateMenuItem,
   deleteMenuItem,
-} from "~/app/actions/menu-item"; // Secured actions
+} from "~/app/actions/menu-item";
 import { cn } from "~/lib/utils";
-// 🛑 IMPORT CLIENT EDITOR
+import { Button } from "~/components/ui/button"; // Import Shadcn Button
+
 import { EditMenuItemClient } from "./EditMenuItemClient";
-// 🛑 Import the Add Item component
 import { AddMenuItemClient } from "./AddMenuItemClient";
 
 import type { MenuItem } from "~/types/restaurant";
+import { PlusCircle, Pencil, Trash2 } from "lucide-react";
 
 // --- TYPE DEFINITIONS ---
 
@@ -35,18 +35,19 @@ const initialState: FormState = {
   success: false,
 };
 
-// --- Submit Button Component (Kept for compatibility) ---
+// --- Submit Button Component (No longer needed, but kept as placeholder) ---
+// This component should ideally be removed as all buttons now use Shadcn's Button.
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button
+    <Button
       type="submit"
       aria-disabled={pending}
       disabled={pending}
-      className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-indigo-700 disabled:opacity-50"
+      variant="default" // Use theme variant
     >
       {pending ? "Processing..." : label}
-    </button>
+    </Button>
   );
 }
 
@@ -127,32 +128,38 @@ function MenuItemItem({
   };
 
   return (
-    <div className="flex items-center justify-between rounded-lg border bg-white p-4 shadow-sm">
-      <div>
-        <h4 className="text-md font-semibold text-gray-800">
+    // Uses card colors for item container
+    <div className="border-border bg-card flex flex-col items-start justify-between rounded-lg border p-4 shadow-sm sm:flex-row sm:items-center">
+      <div className="mb-2 sm:mb-0">
+        <h4 className="text-md text-foreground font-semibold">
           {item.name} - {item.price}
         </h4>
-        <p className="text-sm text-gray-500">{item.description}</p>
+        <p className="text-muted-foreground text-sm">{item.description}</p>
       </div>
       <div className="flex space-x-2">
-        <button
+        <Button
           onClick={onEdit}
-          className="rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
+          variant="secondary"
+          size="icon"
+          className="h-8 w-8"
         >
-          Edit
-        </button>
-        <button
+          <Pencil className="text-secondary-foreground h-4 w-4" />
+        </Button>
+        <Button
           onClick={handleDelete}
-          className="rounded-lg bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
+          variant="destructive"
+          size="icon"
+          className="h-8 w-8"
         >
-          Delete
-        </button>
+          <Trash2 className="h-4 w-4" />
+        </Button>
       </div>
       {deleteState.message && (
         <p
           className={cn(
-            "mt-2 text-xs",
-            deleteState.success ? "text-green-600" : "text-red-600",
+            "mt-2 w-full text-xs sm:absolute sm:top-full sm:left-0 sm:mt-0",
+            // Use semantic colors for feedback messages
+            deleteState.success ? "text-primary" : "text-destructive",
           )}
         >
           {deleteState.message}
@@ -168,17 +175,14 @@ export default function MenuItemManager({
   restaurantId,
   initialMenuItems,
 }: CategoryProps) {
-  // State for the Add New Menu Item Form
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
-  // Bound actions for Update and Delete
   const [deleteState, deleteFormAction] = useFormState(
     deleteWrapperAction,
     initialState,
   );
 
-  // Bound actions for Update (used inside EditMenuItemClient)
   const boundUpdateAction = wrapMenuItemAction.bind(null, updateMenuItem);
   const [updateState, updateFormAction] = useFormState(
     boundUpdateAction,
@@ -188,30 +192,35 @@ export default function MenuItemManager({
   return (
     <div className="space-y-4">
       {/* 1. Add New Menu Item Button/Form Toggle */}
-      <button
+      <Button
         onClick={() => setShowAddForm(!showAddForm)}
-        className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-green-700"
+        variant="secondary" // Use secondary for non-destructive actions
+        className="w-full sm:w-auto"
       >
-        {showAddForm ? "Hide Form" : "+ Add New Menu Item"}
-      </button>
+        <PlusCircle className="mr-2 h-4 w-4" />
+        {showAddForm ? "Hide Add Item Form" : "Add New Menu Item"}
+      </Button>
 
       {/* 2. RENDER THE ADD ITEM CLIENT COMPONENT */}
       {showAddForm && (
-        <AddMenuItemClient
-          restaurantId={restaurantId}
-          categoryId={categoryId}
-          // The onSuccess callback hides the form and allows the parent to refresh/re-render
-          onSuccess={() => {
-            setShowAddForm(false);
-            // In a production app, you'd trigger a revalidation or state change here
-          }}
-        />
+        <div className="border-border bg-secondary/20 rounded-lg border p-4">
+          <AddMenuItemClient
+            restaurantId={restaurantId}
+            categoryId={categoryId}
+            onSuccess={() => {
+              setShowAddForm(false);
+              // Trigger item list refresh here if needed
+            }}
+          />
+        </div>
       )}
 
       {/* 3. List of Existing Items */}
-      <div className="space-y-3 border-t border-gray-100 pt-4">
+      <div className="border-border space-y-3 border-t pt-4">
+        {" "}
+        {/* Use border-border */}
         {initialMenuItems.length === 0 ? (
-          <p className="text-gray-500">No items in this category.</p>
+          <p className="text-muted-foreground">No items in this category.</p>
         ) : (
           initialMenuItems.map((item) => (
             <React.Fragment key={item.id}>
@@ -221,7 +230,6 @@ export default function MenuItemManager({
                   menuItem={item}
                   onCancel={() => setEditingItemId(null)}
                   formAction={updateFormAction}
-                  // Pass errors (if needed)
                   formErrors={[]}
                 />
               ) : (
@@ -239,6 +247,21 @@ export default function MenuItemManager({
           ))
         )}
       </div>
+
+      {/* 4. Display global update/delete feedback outside of list */}
+      {updateState.message && (
+        <p
+          className={cn(
+            "text-sm",
+            updateState.success ? "text-primary" : "text-destructive",
+          )}
+        >
+          {updateState.message}
+        </p>
+      )}
     </div>
   );
 }
+
+// NOTE: The `AddMenuItemClient` component would need similar theme adjustments.
+// You should ensure the `AddMenuItemClient` component uses the same semantic styles.

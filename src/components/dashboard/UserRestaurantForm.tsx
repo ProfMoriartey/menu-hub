@@ -56,7 +56,9 @@ export function UserRestaurantForm({
       <div className="space-y-6">
         {/* 1. Name (Read-only for users) */}
         <div>
-          <Label htmlFor="name">Name</Label>
+          <Label className="mb-2" htmlFor="name">
+            Name
+          </Label>
           <Input
             id="name"
             name="name"
@@ -73,7 +75,9 @@ export function UserRestaurantForm({
 
         {/* 2. Country */}
         <div>
-          <Label htmlFor="country">Country</Label>
+          <Label className="mb-2" htmlFor="country">
+            Country
+          </Label>
           <Input
             id="country"
             name="country"
@@ -91,7 +95,9 @@ export function UserRestaurantForm({
 
         {/* 3. Currency */}
         <div>
-          <Label htmlFor="currency">Currency Code</Label>
+          <Label className="mb-2" htmlFor="currency">
+            Currency Code
+          </Label>
           <Input
             id="currency"
             name="currency"
@@ -109,7 +115,9 @@ export function UserRestaurantForm({
 
         {/* 4. Phone Number */}
         <div>
-          <Label htmlFor="phoneNumber">Phone Number</Label>
+          <Label className="mb-2" htmlFor="phoneNumber">
+            Phone Number
+          </Label>
           <Input
             id="phoneNumber"
             name="phoneNumber"
@@ -127,7 +135,9 @@ export function UserRestaurantForm({
 
         {/* 5. Address */}
         <div>
-          <Label htmlFor="address">Address</Label>
+          <Label className="mb-2" htmlFor="address">
+            Address
+          </Label>
           <Input
             id="address"
             name="address"
@@ -146,7 +156,9 @@ export function UserRestaurantForm({
       <div className="space-y-6">
         {/* 6. Description */}
         <div>
-          <Label htmlFor="description">Short Description</Label>
+          <Label className="mb-2" htmlFor="description">
+            Short Description
+          </Label>
           <Textarea
             id="description"
             name="description"
@@ -164,7 +176,9 @@ export function UserRestaurantForm({
 
         {/* 7. Type of Establishment */}
         <div>
-          <Label htmlFor="typeOfEstablishment">Type of Establishment</Label>
+          <Label className="mb-2" htmlFor="typeOfEstablishment">
+            Type of Establishment
+          </Label>
           <Input
             id="typeOfEstablishment"
             name="typeOfEstablishment"
@@ -181,7 +195,9 @@ export function UserRestaurantForm({
 
         {/* 8. Logo Upload Section */}
         <div className="space-y-2 pt-2">
-          <Label htmlFor="logoUrl">Restaurant Logo</Label>
+          <Label className="mb-2" htmlFor="logoUrl">
+            Restaurant Logo
+          </Label>
           {currentLogoUrl && (
             <div className="border-border relative mb-2 h-24 w-24 overflow-hidden rounded-md border">
               <Image

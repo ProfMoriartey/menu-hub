@@ -37,7 +37,7 @@ function SubmitButton() {
       type="submit"
       // disabled={pending} // You would use useFormStatus here
       className={cn(
-        "bg-primary rounded-lg px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:opacity-50",
+        "bg-primary text-background rounded-lg px-6 py-2 text-sm font-medium transition-colors hover:bg-indigo-700 disabled:opacity-50",
       )}
     >
       Save Changes
