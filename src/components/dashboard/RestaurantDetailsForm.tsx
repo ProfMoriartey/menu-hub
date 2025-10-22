@@ -37,7 +37,7 @@ function SubmitButton() {
       type="submit"
       // disabled={pending} // You would use useFormStatus here
       className={cn(
-        "rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:opacity-50",
+        "bg-primary rounded-lg px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:opacity-50",
       )}
     >
       Save Changes
@@ -175,8 +175,8 @@ export default function RestaurantDetailsForm({
   };
 
   return (
-    <div className="max-w-4xl rounded-xl border bg-white p-6 shadow-lg">
-      <h2 className="mb-6 text-2xl font-semibold text-gray-800">
+    <div className="bg-background max-w-4xl rounded-xl border p-6 shadow-lg">
+      <h2 className="text-foreground mb-6 text-2xl font-semibold">
         Restaurant Settings
       </h2>
 
@@ -216,7 +216,7 @@ export default function RestaurantDetailsForm({
         />
 
         {/* Save Button */}
-        <div className="flex justify-end border-t border-gray-100 pt-4">
+        <div className="border-primary flex justify-end border-t pt-4">
           <SubmitButton />
         </div>
       </form>

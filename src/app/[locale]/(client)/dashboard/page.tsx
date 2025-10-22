@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import AuthNavButtons from "~/components/layout/AuthNavButtons";
+import { ThemeToggle } from "~/components/shared/ThemeToggle";
 
 interface AssignedRestaurant {
   id: string;
@@ -50,9 +51,12 @@ export default async function ClientUserDashboardPage() {
         <h1 className="text-4xl font-extrabold tracking-tight">
           Your Assigned Menus
         </h1>
-        <SignedIn>
-          <UserButton afterSignOutUrl="/" />
-        </SignedIn>
+        <div className="flex flex-col justify-between gap-6 md:flex-row-reverse">
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
+          <ThemeToggle />
+        </div>
       </div>
 
       {assignedRestaurants.length === 0 ? (
