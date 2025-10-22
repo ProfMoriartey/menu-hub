@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import { useTranslations } from "next-intl"; // Import next-intl hook
 import {
   addCategory,
   updateCategory,
@@ -46,7 +47,9 @@ interface CategoryItemProps {
 
 // --- 1. Submit Button Component (Uses Shadcn Button) ---
 function SubmitButton({ label, variant = "default" }: SubmitButtonProps) {
+  const t = useTranslations("CategoryManager");
   const { pending } = useFormStatus();
+
   return (
     <Button
       type="submit"
@@ -55,7 +58,7 @@ function SubmitButton({ label, variant = "default" }: SubmitButtonProps) {
       variant={variant}
       className="w-full sm:w-auto"
     >
-      {pending ? "Processing..." : label}
+      {pending ? t("processing") : label}
     </Button>
   );
 }
@@ -70,13 +73,12 @@ async function wrapCategoryAction(
 ): Promise<FormState> {
   try {
     await action(formData);
-    return { message: "Action completed successfully.", success: true };
+    // Use fixed success key
+    return { message: "updateSuccess", success: true };
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "An unknown error occurred during submission.";
-    return { message: `Failed: ${message}`, success: false };
+    const message = error instanceof Error ? error.message : "unknownError";
+    // Use fixed error key
+    return { message: `updateFailedPrefix: ${message}`, success: false };
   }
 }
 
@@ -91,18 +93,19 @@ async function deleteCategoryWrapperAction(
 
     await deleteCategory(categoryId, restaurantId);
 
-    return { message: "Category deleted successfully.", success: true };
+    // Use fixed success key
+    return { message: "deleteSuccess", success: true };
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "An unknown error occurred during deletion.";
-    return { message: `Failed: ${message}`, success: false };
+    const message = error instanceof Error ? error.message : "unknownError";
+    // Use fixed error key
+    return { message: `deleteFailedPrefix: ${message}`, success: false };
   }
 }
 
 // --- 4. Component to display a single category and its actions ---
 function CategoryItem({ category, restaurantId }: CategoryItemProps) {
+  const t = useTranslations("CategoryManager.item"); // Item-specific keys
+
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -119,11 +122,8 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
   );
 
   const handleDelete = () => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete the category: ${category.name}?`,
-      )
-    ) {
+    // Replaced window.confirm with t()
+    if (window.confirm(t("confirmDelete", { categoryName: category.name }))) {
       const formData = new FormData();
       formData.set("categoryId", category.id);
       formData.set("restaurantId", restaurantId);
@@ -143,12 +143,13 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
             {category.name}
           </h3>
           <span className="text-muted-foreground text-sm">
-            ({(category.menuItems ?? []).length} Items)
+            {/* Using t() for the item count text */}
+            {t("itemCount", { count: (category.menuItems ?? []).length })}
           </span>
         </div>
 
         <div className="flex items-center space-x-2">
-          {/* Edit/Delete Buttons using Shadcn Button */}
+          {/* Edit Button */}
           <Button
             onClick={(e) => {
               e.stopPropagation();
@@ -160,6 +161,7 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
           >
             <Pencil className="text-secondary-foreground h-4 w-4" />
           </Button>
+          {/* Delete Button */}
           <Button
             onClick={(e) => {
               e.stopPropagation();
@@ -209,7 +211,7 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
               name="name"
               required
               defaultValue={category.name}
-              placeholder="Category Name"
+              placeholder={t("placeholderName")}
             />
             <div className="flex justify-end space-x-2">
               <Button
@@ -217,9 +219,9 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
                 onClick={() => setIsEditing(false)}
                 variant="outline"
               >
-                Cancel
+                {t("cancelButton")}
               </Button>
-              <SubmitButton label="Save Category" variant="default" />
+              <SubmitButton label={t("saveButton")} variant="default" />
             </div>
             {updateState.message && (
               <p
@@ -228,7 +230,14 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
                   updateState.success ? "text-primary" : "text-destructive",
                 )}
               >
-                {updateState.message}
+                {/* Localized success/error messages */}
+                {updateState.success
+                  ? t("messages.updateSuccess")
+                  : t("messages.updateFailed", {
+                      error: t(
+                        updateState.message.split(": ")[1] ?? "unknownError",
+                      ), // 🛑 FIX: Use ?? 'unknownError'
+                    })}
               </p>
             )}
           </form>
@@ -243,7 +252,12 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
             deleteState.success ? "text-primary" : "text-destructive",
           )}
         >
-          {deleteState.message}
+          {/* Localized success/error messages */}
+          {deleteState.success
+            ? t("messages.deleteSuccess")
+            : t("messages.deleteFailed", {
+                error: t(deleteState.message.split(": ")[1] ?? "unknownError"),
+              })}
         </p>
       )}
     </div>
@@ -254,7 +268,9 @@ export default function CategoryManager({
   restaurantId,
   initialCategories,
 }: CategoryManagerProps) {
-  const [isAddFormOpen, setIsAddFormOpen] = useState(false); // New state for dropdown
+  const t = useTranslations("CategoryManager"); // Base namespace
+
+  const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const boundAddAction = wrapCategoryAction.bind(null, addCategory);
 
   const [addState, addFormAction] = useFormState(boundAddAction, initialState);
@@ -277,7 +293,8 @@ export default function CategoryManager({
         >
           <div className="flex items-center space-x-3">
             <PlusCircle className="text-primary h-5 w-5" />
-            <span>Add New Category</span>
+            {/* Translated Header */}
+            <span>{t("addForm.headerTitle")}</span>
           </div>
           <ChevronDown
             className={cn(
@@ -304,11 +321,10 @@ export default function CategoryManager({
                 name="name"
                 required
                 className="flex-grow"
-                placeholder="e.g., Appetizers, Main Dishes, Drinks"
-                // Reset input value after successful submission (UX enhancement)
+                placeholder={t("addForm.placeholderName")}
                 key={addState.success ? "success" : "error"}
               />
-              <SubmitButton label="Add Category" />
+              <SubmitButton label={t("addForm.addButton")} />
             </form>
             {addState.message && (
               <p
@@ -317,7 +333,14 @@ export default function CategoryManager({
                   addState.success ? "text-primary" : "text-destructive",
                 )}
               >
-                {addState.message}
+                {/* Localized success/error messages */}
+                {addState.success
+                  ? t("messages.addSuccess")
+                  : t("messages.addFailed", {
+                      error: t(
+                        addState.message.split(": ")[1] ?? "unknownError",
+                      ),
+                    })}
               </p>
             )}
           </div>
@@ -326,13 +349,15 @@ export default function CategoryManager({
 
       {/* 2. List of Existing Categories */}
       <div className="space-y-4">
+        {/* Translated List Header */}
         <h2 className="text-foreground text-2xl font-semibold">
-          Existing Categories
+          {t("listTitle")}
         </h2>
 
         {initialCategories.length === 0 ? (
+          // Translated Empty State
           <div className="border-border text-muted-foreground bg-card rounded-lg border p-6 text-center">
-            No categories found. Start by adding one above.
+            {t("emptyListMessage")}
           </div>
         ) : (
           <div className="space-y-3">
@@ -349,5 +374,3 @@ export default function CategoryManager({
     </div>
   );
 }
-
-// NOTE: Placeholder components and types were removed from the final block for clarity.

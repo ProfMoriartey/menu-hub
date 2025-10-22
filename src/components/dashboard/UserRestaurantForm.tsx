@@ -1,13 +1,29 @@
-// src/components/dashboard/UserRestaurantForm.tsx
 "use client";
 
 import React from "react";
-import Image from "next/image";
+// Local component to replace next/image
+const CustomImage = ({
+  src,
+  alt,
+  className,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) => (
+  <img
+    src={src}
+    alt={alt}
+    className={className}
+    style={{ width: "100%", height: "100%" }}
+  />
+);
+import { useTranslations } from "next-intl"; // Import next-intl hook
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
-import { UploadButton } from "~/utils/uploadthing"; // Assuming this utility is correctly configured
+import { UploadButton } from "~/utils/uploadthing";
 import { XCircle } from "lucide-react";
 import type { Restaurant } from "~/types/restaurant";
 import { cn } from "~/lib/utils";
@@ -17,7 +33,7 @@ interface UserRestaurantFormProps {
   formErrors: Record<string, string>;
 
   // Handlers for state changes
-  onLogoUrlChange: (url: string | null) => void; // 🛑 Re-integrated
+  onLogoUrlChange: (url: string | null) => void;
   onCurrencyChange: (value: string) => void;
   onPhoneNumberChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
@@ -25,7 +41,7 @@ interface UserRestaurantFormProps {
   onCountryChange: (value: string) => void;
 
   // Current state values
-  currentLogoUrl: string | null; // 🛑 Re-integrated
+  currentLogoUrl: string | null;
   currentCurrency: string;
   currentPhoneNumber: string;
   currentDescription: string;
@@ -49,22 +65,22 @@ export function UserRestaurantForm({
   currentTypeOfEstablishment,
   currentCountry,
 }: UserRestaurantFormProps) {
-  // NOTE: Slug, isActive, isDisplayed, and Theme inputs are intentionally excluded.
+  const t = useTranslations("RestaurantForm"); // Base namespace for this form
+
   return (
-    <div className="bg-background grid grid-cols-1 gap-6 md:grid-cols-2">
+    <div className="bg-card grid grid-cols-1 gap-6 md:grid-cols-2">
       {/* LEFT COLUMN: Essential Details */}
       <div className="space-y-6">
         {/* 1. Name (Read-only for users) */}
         <div>
           <Label className="mb-2" htmlFor="name">
-            Name
+            {t("labelName")}
           </Label>
           <Input
             id="name"
             name="name"
             defaultValue={initialData.name ?? ""}
             readOnly
-            // Ensure read-only field uses muted background
             className="bg-muted/50 text-muted-foreground cursor-not-allowed"
             required
           />
@@ -76,14 +92,14 @@ export function UserRestaurantForm({
         {/* 2. Country */}
         <div>
           <Label className="mb-2" htmlFor="country">
-            Country
+            {t("labelCountry")}
           </Label>
           <Input
             id="country"
             name="country"
             value={currentCountry}
             onChange={(e) => onCountryChange(e.target.value)}
-            placeholder="e.g., United States"
+            placeholder={t("placeholderCountry")}
             required
           />
           {formErrors.country && (
@@ -96,14 +112,14 @@ export function UserRestaurantForm({
         {/* 3. Currency */}
         <div>
           <Label className="mb-2" htmlFor="currency">
-            Currency Code
+            {t("labelCurrency")}
           </Label>
           <Input
             id="currency"
             name="currency"
             value={currentCurrency}
             onChange={(e) => onCurrencyChange(e.target.value)}
-            placeholder="e.g., USD, EUR"
+            placeholder={t("placeholderCurrency")}
             required
           />
           {formErrors.currency && (
@@ -116,7 +132,7 @@ export function UserRestaurantForm({
         {/* 4. Phone Number */}
         <div>
           <Label className="mb-2" htmlFor="phoneNumber">
-            Phone Number
+            {t("labelPhoneNumber")}
           </Label>
           <Input
             id="phoneNumber"
@@ -124,7 +140,7 @@ export function UserRestaurantForm({
             value={currentPhoneNumber}
             onChange={(e) => onPhoneNumberChange(e.target.value)}
             type="tel"
-            placeholder="+1 555-123-4567"
+            placeholder={t("placeholderPhoneNumber")}
           />
           {formErrors.phoneNumber && (
             <p className="text-destructive mt-1 text-sm">
@@ -136,13 +152,13 @@ export function UserRestaurantForm({
         {/* 5. Address */}
         <div>
           <Label className="mb-2" htmlFor="address">
-            Address
+            {t("labelAddress")}
           </Label>
           <Input
             id="address"
             name="address"
             defaultValue={initialData.address ?? ""}
-            placeholder="Street, City, Postal Code"
+            placeholder={t("placeholderAddress")}
           />
           {formErrors.address && (
             <p className="text-destructive mt-1 text-sm">
@@ -157,14 +173,14 @@ export function UserRestaurantForm({
         {/* 6. Description */}
         <div>
           <Label className="mb-2" htmlFor="description">
-            Short Description
+            {t("labelShortDescription")}
           </Label>
           <Textarea
             id="description"
             name="description"
             value={currentDescription}
             onChange={(e) => onDescriptionChange(e.target.value)}
-            placeholder="A brief, engaging summary of your restaurant."
+            placeholder={t("placeholderDescription")}
             rows={5}
           />
           {formErrors.description && (
@@ -177,14 +193,14 @@ export function UserRestaurantForm({
         {/* 7. Type of Establishment */}
         <div>
           <Label className="mb-2" htmlFor="typeOfEstablishment">
-            Type of Establishment
+            {t("labelTypeOfEstablishment")}
           </Label>
           <Input
             id="typeOfEstablishment"
             name="typeOfEstablishment"
             value={currentTypeOfEstablishment}
             onChange={(e) => onTypeOfEstablishmentChange(e.target.value)}
-            placeholder="e.g., Casual Dining, Cafe, Fine Dining"
+            placeholder={t("placeholderTypeOfEstablishment")}
           />
           {formErrors.typeOfEstablishment && (
             <p className="text-destructive mt-1 text-sm">
@@ -196,15 +212,14 @@ export function UserRestaurantForm({
         {/* 8. Logo Upload Section */}
         <div className="space-y-2 pt-2">
           <Label className="mb-2" htmlFor="logoUrl">
-            Restaurant Logo
+            {t("labelRestaurantLogo")}
           </Label>
           {currentLogoUrl && (
             <div className="border-border relative mb-2 h-24 w-24 overflow-hidden rounded-md border">
-              <Image
+              <CustomImage
                 src={currentLogoUrl}
-                alt="Logo Preview"
-                width={100}
-                height={100}
+                // Translated alt text
+                alt={t("logoPreviewAlt")}
                 className="h-full w-full object-cover"
               />
               <Button
@@ -217,13 +232,18 @@ export function UserRestaurantForm({
               </Button>
             </div>
           )}
+          {!currentLogoUrl && (
+            // Translated No Image fallback
+            <div className="border-border bg-muted text-muted-foreground flex h-24 w-24 items-center justify-center rounded-md border text-sm">
+              {t("noLogo")}
+            </div>
+          )}
           <UploadButton
             endpoint="logoUploader"
-            // Ensure all colors use theme tokens to respect dark mode
+            // Apply theme overrides
             className={cn(
               "ut-button:bg-primary ut-button:hover:bg-primary/90 ut-button:text-primary-foreground",
               "ut-allowed-content:text-muted-foreground",
-              // Use card background for the container, border-border for the outline
               "ut-container:bg-card ut-container:border-border ut-container:hover:bg-accent/10 ut-container:transition-colors",
               "ut-readying:bg-muted ut-readying:text-muted-foreground",
               "ut-label:text-foreground",

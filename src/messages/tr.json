@@ -270,5 +270,128 @@
         "name": "Coca Cola"
       }
     }
+  },
+  "MenuItemManager": {
+    "addItemButton": "Yeni Menü Öğesi Ekle",
+    "hideFormButton": "Öğe Ekleme Formunu Gizle",
+    "emptyListMessage": "Bu kategoride hiç öğe bulunmamaktadır.",
+    "item": {
+      "confirmDelete": "Menü öğesini silmek istediğinizden emin misiniz: {itemName}?"
+    },
+    "addForm": {
+      "newTitle": "Yeni Öğe Detayları",
+      "placeholderName": "Öğe Adı",
+      "placeholderPrice": "Fiyat (ör: 12.99)",
+      "placeholderDescription": "Açıklama (isteğe bağlı)",
+      "placeholderIngredients": "İçindekiler (isteğe bağlı)",
+      "labelDietaryLabels": "Beslenme Etiketleri",
+      "labelItemImage": "Öğe Görseli",
+      "imagePreviewAlt": "Görsel önizleme",
+      "createItemButton": "Öğe Oluştur",
+      "processing": "İşleniyor...",
+      "dietaryLabels": {
+        "vegan": "Vegan",
+        "vegetarian": "Vejetaryen",
+        "gluten-free": "Glutensiz",
+        "nut-free": "Fındıksız"
+      },
+      "addSuccess": "Öğe başarıyla eklendi.",
+      "addFailedPrefix": "Başarısız:",
+      "addUnknownError": "Bilinmeyen bir hata oluştu."
+    },
+    "editForm": {
+      "labelName": "Ad",
+      "labelPrice": "Fiyat",
+      "labelDescription": "Açıklama",
+      "labelIngredients": "İçindekiler",
+      "labelDietaryLabels": "Beslenme Etiketleri",
+      "labelItemImage": "Öğe Görseli",
+      "placeholderPrice": "ör: 12.99",
+      "placeholderDescription": "Menü için kısa açıklama.",
+      "placeholderIngredients": "Virgülle ayrılmış liste (ör: un, yumurta, tereyağı)",
+      "saveButton": "Öğeyi Kaydet",
+      "saving": "Kaydediliyor...",
+      "cancelButton": "İptal",
+      "noImage": "Görsel Yok",
+      "imagePreviewAlt": "Öğe görseli önizlemesi"
+    }
+  },
+  "CategoryManager": {
+    "processing": "İşleniyor...",
+    "addForm": {
+      "headerTitle": "Yeni Kategori Ekle",
+      "placeholderName": "ör: Başlangıçlar, Ana Yemekler, İçecekler",
+      "addButton": "Kategori Ekle"
+    },
+    "listTitle": "Mevcut Kategoriler",
+    "emptyListMessage": "Kategori bulunamadı. Lütfen yukarıdan bir tane ekleyin.",
+    "item": {
+      "itemCount": "({count} Öğe)",
+      "confirmDelete": "Kategoriyi silmek istediğinizden emin misiniz: {categoryName}?",
+      "placeholderName": "Kategori Adı",
+      "saveButton": "Kategoriyi Kaydet",
+      "cancelButton": "İptal"
+    },
+    "messages": {
+      "addSuccess": "Kategori başarıyla eklendi.",
+      "addFailed": "Başarısız: {error}",
+      "updateSuccess": "Kategori başarıyla güncellendi.",
+      "updateFailed": "Başarısız: {error}",
+      "deleteSuccess": "Kategori başarıyla silindi.",
+      "deleteFailed": "Başarısız: {error}"
+    },
+    "updateSuccess": "İşlem başarıyla tamamlandı.",
+    "deleteSuccess": "Kategori başarıyla silindi.",
+    "unknownError": "Bilinmeyen bir hata oluştu."
+  },
+  "RestaurantForm": {
+    "mainTitle": "Restoran Ayarları",
+    "labelName": "Ad",
+    "labelCountry": "Ülke",
+    "labelCurrency": "Para Birimi Kodu",
+    "labelPhoneNumber": "Telefon Numarası",
+    "labelAddress": "Adres",
+    "labelShortDescription": "Kısa Açıklama",
+    "labelTypeOfEstablishment": "Kuruluş Türü",
+    "labelRestaurantLogo": "Restoran Logosu",
+    "placeholderCountry": "ör: Amerika Birleşik Devletleri",
+    "placeholderCurrency": "ör: USD, EUR",
+    "placeholderPhoneNumber": "+1 555-123-4567",
+    "placeholderAddress": "Cadde, Şehir, Posta Kodu",
+    "placeholderDescription": "Restoranınızın kısa ve ilgi çekici bir özeti.",
+    "placeholderTypeOfEstablishment": "ör: Günlük Restoran, Kafe, Fine Dining",
+    "logoPreviewAlt": "Logo Önizlemesi",
+    "noLogo": "Logo Yok",
+    "buttonSaveChanges": "Değişiklikleri Kaydet",
+    "buttonSaving": "Kaydediliyor...",
+    "messages": {
+      "updateSuccess": "Restoran detayları başarıyla güncellendi.",
+      "updateFailed": "Güncelleme başarısız: {error}",
+      "validationFailed": "Doğrulama başarısız. Alanları kontrol edin."
+    },
+    "validationFailed": "Doğrulama başarısız. Alanları kontrol edin.",
+    "updateSuccess": "Restoran detayları başarıyla güncellendi.",
+    "unknownError": "Bilinmeyen bir hata oluştu."
+  },
+  "RestaurantEditor": {
+    "errorTitle": "Menü Yüklenirken Hata",
+    "errorMessage": "Hata: Restoran verisi yüklenemedi veya atanmadı.",
+    "titlePrefix": "Düzenleniyor",
+    "backToDashboard": "Kontrol Paneline Geri Dön",
+    "selectPage": "Bir sayfa seçin",
+    "detailsTab": "Restoran Detayları",
+    "categoriesTab": "Kategoriler ve Öğeler"
+  },
+  "Dashboard": {
+    "title": "Atanmış Menüleriniz",
+    "emptyTitle": "Atanmış Menü Yok",
+    "emptyMessage": "Henüz size atanmış herhangi bir menü görünmüyor. Lütfen yönetici ile iletişime geçin.",
+    "accessLevelLabel": "Erişim Seviyesi",
+    "manageMenuButton": "Menüyü Yönet",
+    "accessLevels": {
+      "editor": "Düzenleyici",
+      "owner": "Sahip",
+      "viewer": "Görüntüleyici"
+    }
   }
 }

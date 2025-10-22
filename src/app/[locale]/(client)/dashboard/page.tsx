@@ -1,13 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server"; // 🛑 Import getTranslations for Server Component
 import { db } from "~/server/db";
-import { usersToRestaurants } from "~/server/db/schema"; // Import the necessary tables
+import { usersToRestaurants } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { SignedIn, UserButton } from "@clerk/nextjs";
-import AuthNavButtons from "~/components/layout/AuthNavButtons";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
 
 interface AssignedRestaurant {
@@ -20,18 +20,18 @@ interface AssignedRestaurant {
 // NOTE: This component is placed inside an (app) route group to avoid
 // dynamic segment conflicts with [restaurantSlug]. The URL is /dashboard.
 export default async function ClientUserDashboardPage() {
+  const t = await getTranslations("Dashboard"); // 🛑 Initialize server-side translations
   const { userId } = await auth();
 
   if (!userId) {
-    // Should be caught by middleware/parent layout, but good practice to redirect.
     return redirect("/sign-in");
   }
 
-  // 1. Fetch assigned restaurants via the junction table
+  // 1. Fetch assigned restaurants
   const userAssignments = await db.query.usersToRestaurants.findMany({
     where: eq(usersToRestaurants.userId, userId),
     with: {
-      restaurant: true, // Join to get the restaurant details
+      restaurant: true,
     },
   });
 
@@ -49,7 +49,8 @@ export default async function ClientUserDashboardPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 flex justify-between">
         <h1 className="text-4xl font-extrabold tracking-tight">
-          Your Assigned Menus
+          {/* Translated Title */}
+          {t("title")}
         </h1>
         <div className="flex flex-col justify-between gap-6 md:flex-row-reverse">
           <SignedIn>
@@ -61,12 +62,11 @@ export default async function ClientUserDashboardPage() {
 
       {assignedRestaurants.length === 0 ? (
         <Card className="p-6 text-center">
-          <CardTitle className="mb-3 text-xl">No Menus Assigned</CardTitle>
+          {/* Translated Empty State Title */}
+          <CardTitle className="mb-3 text-xl">{t("emptyTitle")}</CardTitle>
           <CardContent>
-            <p className="text-muted-foreground">
-              It looks like you haven&apos;t been assigned any menus yet. Please
-              contact the administrator.
-            </p>
+            {/* Translated Empty State Message */}
+            <p className="text-muted-foreground">{t("emptyMessage")}</p>
           </CardContent>
         </Card>
       ) : (
@@ -79,12 +79,15 @@ export default async function ClientUserDashboardPage() {
               <CardHeader>
                 <CardTitle>{restaurant.name}</CardTitle>
                 <p className="text-muted-foreground text-sm capitalize">
-                  Access Level: {restaurant.accessLevel}
+                  {/* Translated Access Level Label */}
+                  {t("accessLevelLabel")}:{" "}
+                  {t(`accessLevels.${restaurant.accessLevel}`)}
                 </p>
               </CardHeader>
               <CardContent className="flex justify-end pt-0">
                 <Link href={`/dashboard/${restaurant.slug}/edit`}>
-                  <Button className="w-full">Manage Menu</Button>
+                  {/* Translated Button */}
+                  <Button className="w-full">{t("manageMenuButton")}</Button>
                 </Link>
               </CardContent>
             </Card>

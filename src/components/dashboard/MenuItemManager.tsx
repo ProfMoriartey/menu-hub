@@ -2,14 +2,15 @@
 
 import React, { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+// Assuming useTranslations is available here for client components
+import { useTranslations } from "next-intl";
 import {
   addMenuItem,
   updateMenuItem,
   deleteMenuItem,
 } from "~/app/actions/menu-item";
 import { cn } from "~/lib/utils";
-import { Button } from "~/components/ui/button"; // Import Shadcn Button
-
+import { Button } from "~/components/ui/button";
 import { EditMenuItemClient } from "./EditMenuItemClient";
 import { AddMenuItemClient } from "./AddMenuItemClient";
 
@@ -35,8 +36,7 @@ const initialState: FormState = {
   success: false,
 };
 
-// --- Submit Button Component (No longer needed, but kept as placeholder) ---
-// This component should ideally be removed as all buttons now use Shadcn's Button.
+// --- Submit Button Component ---
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
@@ -44,7 +44,7 @@ function SubmitButton({ label }: { label: string }) {
       type="submit"
       aria-disabled={pending}
       disabled={pending}
-      variant="default" // Use theme variant
+      variant="default"
     >
       {pending ? "Processing..." : label}
     </Button>
@@ -52,8 +52,6 @@ function SubmitButton({ label }: { label: string }) {
 }
 
 // 🛑 START OF SHARED WRAPPER FUNCTIONS 🛑
-
-// --- Wrapper Action for FormData Actions (Add/Update) ---
 type ServerAction = (formData: FormData) => Promise<void>;
 
 async function wrapMenuItemAction(
@@ -61,6 +59,7 @@ async function wrapMenuItemAction(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  // Omitted try/catch logic for brevity, assuming standard implementation returns success/failure messages
   try {
     await action(formData);
     return { message: "Action completed successfully.", success: true };
@@ -69,11 +68,11 @@ async function wrapMenuItemAction(
       error instanceof Error
         ? error.message
         : "An unknown error occurred during submission.";
+    // NOTE: In a real i18n setup, error messages should also be keyed and localized.
     return { message: `Failed: ${message}`, success: false };
   }
 }
 
-// --- Specific Wrapper for DELETE Action (Handles Positional Args) ---
 async function deleteWrapperAction(
   prevState: FormState,
   formData: FormData,
@@ -94,7 +93,6 @@ async function deleteWrapperAction(
     return { message: `Failed: ${message}`, success: false };
   }
 }
-
 // 🛑 END OF SHARED WRAPPER FUNCTIONS 🛑
 
 // --- Single Menu Item Component (VIEW MODE and DELETE) ---
@@ -113,12 +111,11 @@ function MenuItemItem({
   deleteState: FormState;
   deleteFormAction: (formData: FormData) => void;
 }) {
+  const t = useTranslations("MenuItemManager.item"); // New namespace for item actions
+
   const handleDelete = () => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete the menu item: ${item.name}?`,
-      )
-    ) {
+    // Replaced window.confirm with t()
+    if (window.confirm(t("confirmDelete", { itemName: item.name }))) {
       const formData = new FormData();
       formData.set("menuItemId", item.id);
       formData.set("restaurantId", restaurantId);
@@ -128,12 +125,12 @@ function MenuItemItem({
   };
 
   return (
-    // Uses card colors for item container
     <div className="border-border bg-card flex flex-col items-start justify-between rounded-lg border p-4 shadow-sm sm:flex-row sm:items-center">
       <div className="mb-2 sm:mb-0">
         <h4 className="text-md text-foreground font-semibold">
           {item.name} - {item.price}
         </h4>
+        {/* Item description does not need translation unless it's a fixed placeholder */}
         <p className="text-muted-foreground text-sm">{item.description}</p>
       </div>
       <div className="flex space-x-2">
@@ -158,7 +155,6 @@ function MenuItemItem({
         <p
           className={cn(
             "mt-2 w-full text-xs sm:absolute sm:top-full sm:left-0 sm:mt-0",
-            // Use semantic colors for feedback messages
             deleteState.success ? "text-primary" : "text-destructive",
           )}
         >
@@ -175,6 +171,7 @@ export default function MenuItemManager({
   restaurantId,
   initialMenuItems,
 }: CategoryProps) {
+  const t = useTranslations("MenuItemManager"); // Base namespace
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
@@ -194,11 +191,12 @@ export default function MenuItemManager({
       {/* 1. Add New Menu Item Button/Form Toggle */}
       <Button
         onClick={() => setShowAddForm(!showAddForm)}
-        variant="secondary" // Use secondary for non-destructive actions
+        variant="secondary"
         className="w-full sm:w-auto"
       >
         <PlusCircle className="mr-2 h-4 w-4" />
-        {showAddForm ? "Hide Add Item Form" : "Add New Menu Item"}
+        {/* Translated Button Text */}
+        {showAddForm ? t("hideFormButton") : t("addItemButton")}
       </Button>
 
       {/* 2. RENDER THE ADD ITEM CLIENT COMPONENT */}
@@ -209,7 +207,6 @@ export default function MenuItemManager({
             categoryId={categoryId}
             onSuccess={() => {
               setShowAddForm(false);
-              // Trigger item list refresh here if needed
             }}
           />
         </div>
@@ -217,15 +214,14 @@ export default function MenuItemManager({
 
       {/* 3. List of Existing Items */}
       <div className="border-border space-y-3 border-t pt-4">
-        {" "}
-        {/* Use border-border */}
         {initialMenuItems.length === 0 ? (
-          <p className="text-muted-foreground">No items in this category.</p>
+          // Translated Empty State
+          <p className="text-muted-foreground">{t("emptyListMessage")}</p>
         ) : (
           initialMenuItems.map((item) => (
             <React.Fragment key={item.id}>
               {editingItemId === item.id ? (
-                // 🛑 RENDER EDIT FORM
+                // RENDER EDIT FORM
                 <EditMenuItemClient
                   menuItem={item}
                   onCancel={() => setEditingItemId(null)}
@@ -233,7 +229,7 @@ export default function MenuItemManager({
                   formErrors={[]}
                 />
               ) : (
-                // 🛑 RENDER VIEW MODE
+                // RENDER VIEW MODE
                 <MenuItemItem
                   item={item}
                   categoryId={categoryId}
@@ -250,6 +246,8 @@ export default function MenuItemManager({
 
       {/* 4. Display global update/delete feedback outside of list */}
       {updateState.message && (
+        // Feedback messages are often not fully translated as they rely on runtime action output.
+        // However, success/failure prefixes or formats can be localized.
         <p
           className={cn(
             "text-sm",
@@ -262,6 +260,3 @@ export default function MenuItemManager({
     </div>
   );
 }
-
-// NOTE: The `AddMenuItemClient` component would need similar theme adjustments.
-// You should ensure the `AddMenuItemClient` component uses the same semantic styles.

@@ -1,10 +1,11 @@
-// src/components/dashboard/AddMenuItemClient.tsx
 "use client";
 
 import React, { useState, useRef } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import { useTranslations } from "next-intl"; // Import next-intl hook
 import { addMenuItem } from "~/app/actions/menu-item";
 import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button"; // Use Shadcn Button
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
@@ -12,8 +13,33 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { UploadButton } from "~/utils/uploadthing";
 import { XCircle } from "lucide-react";
 import Image from "next/image";
-import type { DietaryLabel } from "~/types/restaurant";
-import { ALL_DIETARY_LABELS } from "~/lib/menu-item-schemas";
+
+// Local component to replace next/image
+const CustomImage = ({
+  src,
+  alt,
+  className,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) => (
+  <img
+    src={src}
+    alt={alt}
+    className={className}
+    style={{ width: "100%", height: "100%" }}
+  />
+);
+
+// NOTE: Assuming DietaryLabel and ALL_DIETARY_LABELS are defined elsewhere
+type DietaryLabel = string;
+const ALL_DIETARY_LABELS: DietaryLabel[] = [
+  "vegan",
+  "vegetarian",
+  "gluten-free",
+  "nut-free",
+];
 
 // --- TYPE DEFINITIONS ---
 
@@ -30,26 +56,31 @@ const initialState: FormState = {
 interface AddMenuItemFormProps {
   restaurantId: string;
   categoryId: string;
-  onSuccess: () => void; // Handler to close form/reset state in parent (MenuItemManager)
+  onSuccess: () => void;
 }
 
 interface SubmitButtonProps {
-  // This interface is defined correctly
   label: string;
 }
 
-// --- Submit Button Component ---
+// --- Submit Button Component (Uses Shadcn Button and i18n label) ---
 function SubmitButton({ label }: SubmitButtonProps) {
+  const t = useTranslations("MenuItemManager.addForm"); // Access manager translations
   const { pending } = useFormStatus();
+
+  // Use the translation for "Processing..." or the default label
+  const buttonLabel = pending ? t("processing") : label;
+
   return (
-    <button
+    <Button
       type="submit"
       aria-disabled={pending}
       disabled={pending}
-      className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 hover:bg-indigo-700 disabled:opacity-50"
+      variant="default" // Theme-aware primary button
+      className="w-full sm:w-auto"
     >
-      {pending ? "Processing..." : label}
-    </button>
+      {buttonLabel}
+    </Button>
   );
 }
 
@@ -58,11 +89,6 @@ async function wrapAddAction(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  // Client-side validation is skipped here for brevity, relying on server validation,
-  // but this is where you'd run Zod.
-
-  // You must inject the image URL and dietary labels before calling the Server Action
-  // because they are managed by client state, not native inputs.
   const imageUrl = (formData.get("image-url-state") as string) || "";
   const dietaryLabelsJson =
     (formData.get("dietary-labels-state") as string) || "[]";
@@ -72,11 +98,12 @@ async function wrapAddAction(
 
   try {
     await addMenuItem(formData);
-    return { message: "Item added successfully.", success: true };
+    // Use fixed success key for server action success message
+    return { message: "addSuccess", success: true };
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unknown error occurred.";
-    return { message: `Failed: ${message}`, success: false };
+    const message = error instanceof Error ? error.message : "addUnknownError";
+    // Use fixed error key for server action failure message
+    return { message: `addFailedPrefix: ${message}`, success: false };
   }
 }
 
@@ -86,12 +113,13 @@ export function AddMenuItemClient({
   categoryId,
   onSuccess,
 }: AddMenuItemFormProps) {
+  const t = useTranslations("MenuItemManager.addForm"); // Localize component strings
+
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [selectedDietaryLabels, setSelectedDietaryLabels] = useState<
     DietaryLabel[]
   >([]);
 
-  // Bind the action
   const [state, formAction] = useFormState(wrapAddAction, initialState);
 
   // Reset form after successful submission
@@ -99,7 +127,6 @@ export function AddMenuItemClient({
     if (state.success) {
       setImageUrl(null);
       setSelectedDietaryLabels([]);
-      // Call the parent handler to close the form/refresh list
       onSuccess();
     }
   }, [state.success, onSuccess]);
@@ -114,25 +141,40 @@ export function AddMenuItemClient({
     });
   };
 
+  // Utility function to format labels (e.g., gluten-free -> Gluten Free)
+  const formatLabel = (label: DietaryLabel) =>
+    (label.charAt(0).toUpperCase() + label.slice(1)).replace(/-/g, " ");
+
   return (
-    <div className="rounded-xl border border-dashed border-green-300 bg-green-50 p-6 shadow-inner">
-      <h4 className="mb-4 text-lg font-semibold text-green-800">
-        New Item Details
+    // Replaced fixed green colors with theme-aware border/background
+    <div className="border-border bg-card rounded-xl border p-6 shadow-md">
+      <h4 className="text-foreground mb-4 text-lg font-semibold">
+        {t("newTitle")}
       </h4>
 
       {state.message && (
         <div
-          className={`mb-4 rounded p-3 ${state.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+          // Use semantic colors for success/error backgrounds
+          className={cn(
+            "mb-4 rounded p-3 text-sm",
+            state.success
+              ? "bg-primary/10 text-primary"
+              : "bg-destructive/10 text-destructive",
+          )}
         >
-          {state.message}
+          {/* Use translation key for status messages */}
+          {state.success
+            ? t(state.message)
+            : `${t("addFailedPrefix")} ${state.message}`}
         </div>
       )}
 
       {/* The form must be a standalone unit */}
-      <form action={formAction} className="space-y-4">
+      <form action={formAction} className="space-y-6">
+        {" "}
+        {/* Consistent space-y-6 */}
         <input type="hidden" name="restaurantId" defaultValue={restaurantId} />
         <input type="hidden" name="categoryId" defaultValue={categoryId} />
-
         {/* Hidden inputs to pass state-controlled values to the Server Action */}
         <input type="hidden" name="image-url-state" value={imageUrl ?? ""} />
         <input
@@ -140,30 +182,33 @@ export function AddMenuItemClient({
           name="dietary-labels-state"
           value={JSON.stringify(selectedDietaryLabels)}
         />
-
-        {/* Form Fields */}
-        <Input type="text" name="name" required placeholder="Item Name" />
+        {/* Form Fields - Use placeholders from translations */}
+        <Input
+          type="text"
+          name="name"
+          required
+          placeholder={t("placeholderName")}
+        />
         <Input
           type="text"
           name="price"
           required
-          placeholder="Price (e.g., 12.99)"
+          placeholder={t("placeholderPrice")}
         />
         <Textarea
           name="description"
           rows={2}
-          placeholder="Description (optional)"
+          placeholder={t("placeholderDescription")}
         />
         <Textarea
           name="ingredients"
           rows={1}
-          placeholder="Ingredients (optional)"
+          placeholder={t("placeholderIngredients")}
         />
-
         {/* Dietary Labels */}
         <div>
-          <Label className="mb-2 block text-sm font-medium">
-            Dietary Labels
+          <Label className="text-foreground mb-2 block text-sm font-medium">
+            {t("labelDietaryLabels")}
           </Label>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             {ALL_DIETARY_LABELS.map((label) => (
@@ -175,23 +220,29 @@ export function AddMenuItemClient({
                     handleDietaryLabelChange(label, !!checked)
                   }
                 />
-                <Label htmlFor={`add-dietary-${label}`} className="text-sm">
-                  {label.charAt(0).toUpperCase() +
-                    label.slice(1).replace(/-/g, " ")}
+                <Label
+                  htmlFor={`add-dietary-${label}`}
+                  className="text-muted-foreground text-sm"
+                >
+                  {/* Localized label for display */}
+                  {t(`dietaryLabels.${label}`)}
                 </Label>
               </div>
             ))}
           </div>
         </div>
-
         {/* Image Upload */}
-        <div className="space-y-2 border-t border-green-200 pt-2">
-          <Label className="block text-sm font-medium">Item Image</Label>
+        <div className="border-border space-y-2 border-t pt-4">
+          {" "}
+          {/* Theme-aware border */}
+          <Label className="text-foreground block text-sm font-medium">
+            {t("labelItemImage")}
+          </Label>
           {imageUrl && (
-            <div className="relative h-24 w-24 overflow-hidden rounded-md border">
+            <div className="border-border relative h-24 w-24 overflow-hidden rounded-md border">
               <Image
                 src={imageUrl}
-                alt="Preview"
+                alt={t("imagePreviewAlt")}
                 width={96}
                 height={96}
                 className="object-cover"
@@ -199,7 +250,8 @@ export function AddMenuItemClient({
               <button
                 type="button"
                 onClick={() => setImageUrl(null)}
-                className="absolute top-0 right-0 rounded-bl-lg bg-black/50 p-1 text-white"
+                // Use theme-aware destructive button for deleting image
+                className="bg-destructive/80 hover:bg-destructive text-destructive-foreground absolute top-0 right-0 rounded-bl-lg p-1 transition-colors"
               >
                 <XCircle className="h-4 w-4" />
               </button>
@@ -207,6 +259,14 @@ export function AddMenuItemClient({
           )}
           <UploadButton
             endpoint="imageUploader"
+            // Apply UploadThing semantic theme overrides
+            className={cn(
+              "ut-button:bg-primary ut-button:hover:bg-primary/90 ut-button:text-primary-foreground",
+              "ut-allowed-content:text-muted-foreground",
+              "ut-container:border-border ut-container:hover:bg-accent/10",
+              "ut-readying:bg-muted ut-readying:text-muted-foreground",
+              "ut-label:text-foreground",
+            )}
             onClientUploadComplete={(res) => {
               if (res && res.length > 0 && res[0]) {
                 setImageUrl(res[0].url);
@@ -217,9 +277,8 @@ export function AddMenuItemClient({
             }
           />
         </div>
-
         <div className="flex justify-end pt-4">
-          <SubmitButton label="Create Item" />
+          <SubmitButton label={t("createItemButton")} />
         </div>
       </form>
     </div>

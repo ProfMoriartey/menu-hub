@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { z } from "zod";
-// Replaced next/image with CustomImage placeholder
+import { useTranslations } from "next-intl"; // Import next-intl hook
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -12,7 +12,6 @@ import { UploadButton } from "~/utils/uploadthing";
 import { XCircle } from "lucide-react";
 import { cn } from "~/lib/utils";
 
-// 🛑 Import the specific Multi-Select Component
 import { DietaryLabelSelect, type DietaryLabel } from "./DietaryLabelSelect";
 import Image from "next/image";
 
@@ -56,14 +55,12 @@ interface EditMenuItemClientProps {
 
 // --- Submit Button Component ---
 function SubmitButton() {
+  const t = useTranslations("MenuItemManager.editForm");
   const { pending } = useFormStatus();
+
   return (
-    <Button
-      type="submit"
-      disabled={pending}
-      variant="default" // Uses bg-primary/default
-    >
-      {pending ? "Saving..." : "Save Item"}
+    <Button type="submit" disabled={pending} variant="default">
+      {pending ? t("saving") : t("saveButton")}
     </Button>
   );
 }
@@ -75,6 +72,7 @@ export function EditMenuItemClient({
   formAction,
   formErrors,
 }: EditMenuItemClientProps) {
+  const t = useTranslations("MenuItemManager.editForm");
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(
     menuItem.imageUrl ?? null,
   );
@@ -91,14 +89,17 @@ export function EditMenuItemClient({
     formAction(formData);
   };
 
-  const getError = (path: string) =>
-    formErrors.find((e) => e.path[0] === path)?.message;
+  // Helper to find and localize server-side validation errors (if applicable)
+  const getError = (path: string) => {
+    const error = formErrors.find((e) => e.path[0] === path)?.message;
+    // NOTE: For true i18n, this error message should be mapped to a translation key.
+    return error;
+  };
 
   return (
-    // Use theme-aware colors for the form container
     <form
       action={handleSubmitWrapper}
-      className="border-border bg-card grid grid-cols-1 gap-x-6 gap-y-6 rounded-lg border p-4 md:grid-cols-3" // Increased gap-y and theme colors
+      className="border-border bg-card grid grid-cols-1 gap-x-6 gap-y-6 rounded-lg border p-4 md:grid-cols-3"
     >
       {/* Hidden inputs */}
       <input type="hidden" name="id" defaultValue={menuItem.id} />
@@ -115,11 +116,9 @@ export function EditMenuItemClient({
 
       {/* LEFT COLUMN: Name, Price, Ingredients, Description */}
       <div className="space-y-6 md:col-span-2">
-        {" "}
-        {/* Consistent space-y-6 */}
         {/* Name */}
         <div>
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">{t("labelName")}</Label>
           <Input id="name" name="name" defaultValue={menuItem.name} required />
           {getError("name") && (
             <p className="text-destructive mt-1 text-sm">{getError("name")}</p>
@@ -127,13 +126,13 @@ export function EditMenuItemClient({
         </div>
         {/* Price */}
         <div>
-          <Label htmlFor="price">Price</Label>
+          <Label htmlFor="price">{t("labelPrice")}</Label>
           <Input
             id="price"
             name="price"
             type="text"
             defaultValue={menuItem.price}
-            placeholder="e.g., 12.99"
+            placeholder={t("placeholderPrice")}
             required
           />
           {getError("price") && (
@@ -142,13 +141,13 @@ export function EditMenuItemClient({
         </div>
         {/* Description */}
         <div>
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description">{t("labelDescription")}</Label>
           <Textarea
             id="description"
             name="description"
             defaultValue={menuItem.description ?? ""}
             rows={2}
-            placeholder="Short description for the menu."
+            placeholder={t("placeholderDescription")}
           />
           {getError("description") && (
             <p className="text-destructive mt-1 text-sm">
@@ -158,13 +157,13 @@ export function EditMenuItemClient({
         </div>
         {/* Ingredients */}
         <div>
-          <Label htmlFor="ingredients">Ingredients</Label>
+          <Label htmlFor="ingredients">{t("labelIngredients")}</Label>
           <Textarea
             id="ingredients"
             name="ingredients"
             defaultValue={menuItem.ingredients ?? ""}
             rows={1}
-            placeholder="Comma-separated list (e.g., flour, eggs, butter)"
+            placeholder={t("placeholderIngredients")}
           />
           {getError("ingredients") && (
             <p className="text-destructive mt-1 text-sm">
@@ -174,9 +173,7 @@ export function EditMenuItemClient({
         </div>
         {/* Dietary Labels - MULTI-SELECT */}
         <div className="border-border space-y-2 border-t pt-4">
-          {" "}
-          {/* Used border-border and pt-4 for separation */}
-          <Label>Dietary Labels</Label>
+          <Label>{t("labelDietaryLabels")}</Label>
           <DietaryLabelSelect
             selectedLabels={selectedDietaryLabels}
             onLabelsChange={setSelectedDietaryLabels}
@@ -191,16 +188,15 @@ export function EditMenuItemClient({
 
       {/* RIGHT COLUMN: Image Upload and Actions */}
       <div className="space-y-6 pt-4 md:col-span-1 md:pt-0">
-        {" "}
-        {/* Consistent space-y-6 */}
         {/* Item Image */}
         <div className="space-y-2">
-          <Label>Item Image</Label>
+          <Label>{t("labelItemImage")}</Label>
           {currentImageUrl ? (
             <div className="border-border relative h-28 w-28 overflow-hidden rounded-md border">
               <Image
                 src={currentImageUrl}
-                alt={menuItem.name}
+                // Use a translation key for the alt text
+                alt={t("imagePreviewAlt")}
                 width={128}
                 height={128}
                 className="h-full w-full object-cover"
@@ -215,14 +211,12 @@ export function EditMenuItemClient({
               </Button>
             </div>
           ) : (
-            // Fallback block uses theme-aware colors
             <div className="border-border bg-muted text-muted-foreground flex h-28 w-28 items-center justify-center rounded-md border text-sm">
-              No Image
+              {t("noImage")}
             </div>
           )}
           <UploadButton
             endpoint="imageUploader"
-            // Apply UploadThing semantic theme overrides
             className={cn(
               "ut-button:bg-primary ut-button:hover:bg-primary/90 ut-button:text-primary-foreground",
               "ut-allowed-content:text-muted-foreground",
@@ -249,15 +243,11 @@ export function EditMenuItemClient({
 
       {/* Footer Actions */}
       <div className="border-border flex justify-end space-x-2 border-t pt-4 md:col-span-3">
-        {" "}
-        {/* Used border-border */}
         <Button variant="outline" onClick={onCancel} type="button">
-          Cancel
+          {t("cancelButton")}
         </Button>
         <SubmitButton />
       </div>
     </form>
   );
 }
-
-// NOTE: Placeholder components and types were removed from the final block for clarity.

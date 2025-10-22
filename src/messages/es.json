@@ -270,5 +270,128 @@
         "name": "Coca Cola"
       }
     }
+  },
+  "MenuItemManager": {
+    "addItemButton": "Añadir nuevo artículo de menú",
+    "hideFormButton": "Ocultar formulario de artículo",
+    "emptyListMessage": "No hay artículos en esta categoría.",
+    "item": {
+      "confirmDelete": "¿Está seguro de que desea eliminar el artículo del menú: {itemName}?"
+    },
+    "addForm": {
+      "newTitle": "Detalles del nuevo artículo",
+      "placeholderName": "Nombre del artículo",
+      "placeholderPrice": "Precio (ej: 12.99)",
+      "placeholderDescription": "Descripción (opcional)",
+      "placeholderIngredients": "Ingredientes (opcional)",
+      "labelDietaryLabels": "Etiquetas Dietéticas",
+      "labelItemImage": "Imagen del artículo",
+      "imagePreviewAlt": "Vista previa de la imagen",
+      "createItemButton": "Crear artículo",
+      "processing": "Procesando...",
+      "dietaryLabels": {
+        "vegan": "Vegano",
+        "vegetarian": "Vegetariano",
+        "gluten-free": "Sin Gluten",
+        "nut-free": "Sin Frutos Secos"
+      },
+      "addSuccess": "Artículo añadido con éxito.",
+      "addFailedPrefix": "Fallo:",
+      "addUnknownError": "Ocurrió un error desconocido."
+    },
+    "editForm": {
+      "labelName": "Nombre",
+      "labelPrice": "Precio",
+      "labelDescription": "Descripción",
+      "labelIngredients": "Ingredientes",
+      "labelDietaryLabels": "Etiquetas Dietéticas",
+      "labelItemImage": "Imagen del artículo",
+      "placeholderPrice": "ej: 12.99",
+      "placeholderDescription": "Descripción corta para el menú.",
+      "placeholderIngredients": "Lista separada por comas (ej.: harina, huevos, mantequilla)",
+      "saveButton": "Guardar artículo",
+      "saving": "Guardando...",
+      "cancelButton": "Cancelar",
+      "noImage": "Sin imagen",
+      "imagePreviewAlt": "Vista previa de la imagen del artículo"
+    }
+  },
+  "CategoryManager": {
+    "processing": "Procesando...",
+    "addForm": {
+      "headerTitle": "Añadir nueva categoría",
+      "placeholderName": "ej.: Entrantes, Platos Principales, Bebidas",
+      "addButton": "Añadir categoría"
+    },
+    "listTitle": "Categorías existentes",
+    "emptyListMessage": "No se encontraron categorías. Comience por añadir una arriba.",
+    "item": {
+      "itemCount": "({count} artículos)",
+      "confirmDelete": "¿Está seguro de que desea eliminar la categoría: {categoryName}?",
+      "placeholderName": "Nombre de la categoría",
+      "saveButton": "Guardar categoría",
+      "cancelButton": "Cancelar"
+    },
+    "messages": {
+      "addSuccess": "Categoría añadida con éxito.",
+      "addFailed": "Fallo: {error}",
+      "updateSuccess": "Categoría actualizada con éxito.",
+      "updateFailed": "Fallo: {error}",
+      "deleteSuccess": "Categoría eliminada con éxito.",
+      "deleteFailed": "Fallo: {error}"
+    },
+    "updateSuccess": "Acción completada con éxito.",
+    "deleteSuccess": "Categoría eliminada con éxito.",
+    "unknownError": "Ocurrió un error desconocido al enviar."
+  },
+  "RestaurantForm": {
+    "mainTitle": "Configuración del restaurante",
+    "labelName": "Nombre",
+    "labelCountry": "País",
+    "labelCurrency": "Código de moneda",
+    "labelPhoneNumber": "Número de teléfono",
+    "labelAddress": "Dirección",
+    "labelShortDescription": "Descripción corta",
+    "labelTypeOfEstablishment": "Tipo de establecimiento",
+    "labelRestaurantLogo": "Logo del restaurante",
+    "placeholderCountry": "ej.: España",
+    "placeholderCurrency": "ej.: EUR, MXN",
+    "placeholderPhoneNumber": "+34 600 000 000",
+    "placeholderAddress": "Calle, Ciudad, Código Postal",
+    "placeholderDescription": "Un resumen breve y atractivo de su restaurante.",
+    "placeholderTypeOfEstablishment": "ej.: Comida Informal, Cafetería, Cena de Lujo",
+    "logoPreviewAlt": "Vista previa del logo",
+    "noLogo": "Sin Logo",
+    "buttonSaveChanges": "Guardar cambios",
+    "buttonSaving": "Guardando...",
+    "messages": {
+      "updateSuccess": "Detalles del restaurante actualizados con éxito.",
+      "updateFailed": "Fallo de actualización: {error}",
+      "validationFailed": "Fallo de validación. Compruebe los campos."
+    },
+    "validationFailed": "Fallo de validación. Compruebe los campos.",
+    "updateSuccess": "Detalles del restaurante actualizados con éxito.",
+    "unknownError": "Ocurrió un error desconocido."
+  },
+  "RestaurantEditor": {
+    "errorTitle": "Error al cargar el menú",
+    "errorMessage": "Error: Los datos del restaurante no se cargaron o asignaron.",
+    "titlePrefix": "Editando",
+    "backToDashboard": "Volver al panel de control",
+    "selectPage": "Seleccionar una página",
+    "detailsTab": "Detalles del restaurante",
+    "categoriesTab": "Categorías y artículos"
+  },
+  "Dashboard": {
+    "title": "Sus Menús Asignados",
+    "emptyTitle": "No hay menús asignados",
+    "emptyMessage": "Parece que aún no se le han asignado menús. Por favor, póngase en contacto con el administrador.",
+    "accessLevelLabel": "Nivel de Acceso",
+    "manageMenuButton": "Administrar Menú",
+    "accessLevels": {
+      "editor": "Editor",
+      "owner": "Propietario",
+      "viewer": "Visualizador"
+    }
   }
 }

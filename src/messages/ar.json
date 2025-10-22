@@ -270,5 +270,128 @@
         "name": "كوكا كولا"
       }
     }
+  },
+  "MenuItemManager": {
+    "addItemButton": "إضافة صنف جديد للقائمة",
+    "hideFormButton": "إخفاء نموذج إضافة الصنف",
+    "emptyListMessage": "لا توجد أصناف في هذه الفئة.",
+    "item": {
+      "confirmDelete": "هل أنت متأكد من رغبتك في حذف صنف القائمة: {itemName}؟"
+    },
+    "addForm": {
+      "newTitle": "تفاصيل الصنف الجديد",
+      "placeholderName": "اسم الصنف",
+      "placeholderPrice": "السعر (مثال: 12.99)",
+      "placeholderDescription": "الوصف (اختياري)",
+      "placeholderIngredients": "المكونات (اختياري)",
+      "labelDietaryLabels": "ملصقات النظام الغذائي",
+      "labelItemImage": "صورة الصنف",
+      "imagePreviewAlt": "معاينة الصورة",
+      "createItemButton": "إنشاء الصنف",
+      "processing": "جاري المعالجة...",
+      "dietaryLabels": {
+        "vegan": "نباتي صرف (فيجان)",
+        "vegetarian": "نباتي",
+        "gluten-free": "خالٍ من الغلوتين",
+        "nut-free": "خالٍ من المكسرات"
+      },
+      "addSuccess": "تمت إضافة الصنف بنجاح.",
+      "addFailedPrefix": "فشل:",
+      "addUnknownError": "حدث خطأ غير معروف."
+    },
+    "editForm": {
+      "labelName": "الاسم",
+      "labelPrice": "السعر",
+      "labelDescription": "الوصف",
+      "labelIngredients": "المكونات",
+      "labelDietaryLabels": "ملصقات النظام الغذائي",
+      "labelItemImage": "صورة الصنف",
+      "placeholderPrice": "مثال: 12.99",
+      "placeholderDescription": "وصف قصير للقائمة.",
+      "placeholderIngredients": "قائمة مفصولة بفواصل (مثال: طحين، بيض، زبدة)",
+      "saveButton": "حفظ الصنف",
+      "saving": "جاري الحفظ...",
+      "cancelButton": "إلغاء",
+      "noImage": "لا توجد صورة",
+      "imagePreviewAlt": "معاينة صورة الصنف"
+    }
+  },
+  "CategoryManager": {
+    "processing": "جاري المعالجة...",
+    "addForm": {
+      "headerTitle": "إضافة فئة جديدة",
+      "placeholderName": "مثال: مقبلات، أطباق رئيسية، مشروبات",
+      "addButton": "إضافة فئة"
+    },
+    "listTitle": "الفئات الحالية",
+    "emptyListMessage": "لم يتم العثور على فئات. ابدأ بإضافة فئة أعلاه.",
+    "item": {
+      "itemCount": "({count} أصناف)",
+      "confirmDelete": "هل أنت متأكد من رغبتك في حذف الفئة: {categoryName}؟",
+      "placeholderName": "اسم الفئة",
+      "saveButton": "حفظ الفئة",
+      "cancelButton": "إلغاء"
+    },
+    "messages": {
+      "addSuccess": "تمت إضافة الفئة بنجاح.",
+      "addFailed": "فشل: {error}",
+      "updateSuccess": "تم تحديث الفئة بنجاح.",
+      "updateFailed": "فشل: {error}",
+      "deleteSuccess": "تم حذف الفئة بنجاح.",
+      "deleteFailed": "فشل: {error}"
+    },
+    "updateSuccess": "تمت العملية بنجاح.",
+    "deleteSuccess": "تم حذف الفئة بنجاح.",
+    "unknownError": "حدث خطأ غير معروف أثناء الإرسال."
+  },
+  "RestaurantForm": {
+    "mainTitle": "إعدادات المطعم",
+    "labelName": "الاسم",
+    "labelCountry": "البلد",
+    "labelCurrency": "رمز العملة",
+    "labelPhoneNumber": "رقم الهاتف",
+    "labelAddress": "العنوان",
+    "labelShortDescription": "وصف مختصر",
+    "labelTypeOfEstablishment": "نوع المنشأة",
+    "labelRestaurantLogo": "شعار المطعم",
+    "placeholderCountry": "مثال: المملكة العربية السعودية",
+    "placeholderCurrency": "مثال: SAR, AED",
+    "placeholderPhoneNumber": "+966 500 000 000",
+    "placeholderAddress": "الشارع، المدينة، الرمز البريدي",
+    "placeholderDescription": "ملخص موجز وجذاب لمطعمك.",
+    "placeholderTypeOfEstablishment": "مثال: مطعم عادي، مقهى، مطعم فاخر",
+    "logoPreviewAlt": "معاينة الشعار",
+    "noLogo": "لا يوجد شعار",
+    "buttonSaveChanges": "حفظ التغييرات",
+    "buttonSaving": "جاري الحفظ...",
+    "messages": {
+      "updateSuccess": "تم تحديث تفاصيل المطعم بنجاح.",
+      "updateFailed": "فشل التحديث: {error}",
+      "validationFailed": "فشل التحقق من الصحة. يرجى مراجعة الحقول."
+    },
+    "validationFailed": "فشل التحقق من الصحة. يرجى مراجعة الحقول.",
+    "updateSuccess": "تم تحديث تفاصيل المطعم بنجاح.",
+    "unknownError": "حدث خطأ غير معروف."
+  },
+  "RestaurantEditor": {
+    "errorTitle": "خطأ في تحميل القائمة",
+    "errorMessage": "خطأ: لم يتم تحميل أو تعيين بيانات المطعم.",
+    "titlePrefix": "جاري التعديل",
+    "backToDashboard": "العودة إلى لوحة التحكم",
+    "selectPage": "اختر صفحة",
+    "detailsTab": "تفاصيل المطعم",
+    "categoriesTab": "الفئات والأصناف"
+  },
+  "Dashboard": {
+    "title": "قوائمك المُعيّنة",
+    "emptyTitle": "لا توجد قوائم مُعيّنة",
+    "emptyMessage": "يبدو أنه لم يتم تعيين أي قوائم لك بعد. يرجى التواصل مع المسؤول.",
+    "accessLevelLabel": "مستوى الوصول",
+    "manageMenuButton": "إدارة القائمة",
+    "accessLevels": {
+      "editor": "محرر",
+      "owner": "مالك",
+      "viewer": "مشاهد"
+    }
   }
 }

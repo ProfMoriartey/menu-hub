@@ -1,16 +1,15 @@
-// src/components/dashboard/RestaurantDetailsForm.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
+import { useTranslations } from "next-intl"; // Import next-intl hook
 import { updateRestaurant } from "~/app/actions/restaurant";
 import { cn } from "~/lib/utils";
 import { restaurantSchema } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
 // 🛑 IMPORT THE REUSABLE FORM AND BUTTONS
-import { RestaurantForm } from "~/components/admin/RestaurantForm"; // Assuming this path or similar is correct
-import { Button } from "~/components/ui/button"; // Assuming your button component is here
+import { Button } from "~/components/ui/button";
 import { UserRestaurantForm } from "./UserRestaurantForm";
 
 interface FormState {
@@ -29,18 +28,20 @@ interface RestaurantDetailsFormProps {
   restaurant: Restaurant;
 }
 
-// --- Submit Button Component (REUSED from Admin form logic) ---
+// --- Submit Button Component ---
 function SubmitButton() {
-  // Use useFormStatus directly here if needed, or define it in a separate file
+  const t = useTranslations("RestaurantForm");
+  const { pending } = useFormStatus();
+
   return (
     <Button
       type="submit"
-      // disabled={pending} // You would use useFormStatus here
+      disabled={pending}
       className={cn(
-        "bg-primary text-background rounded-lg px-6 py-2 text-sm font-medium transition-colors hover:bg-indigo-700 disabled:opacity-50",
+        "bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg px-6 py-2 text-sm font-medium transition-colors disabled:opacity-50",
       )}
     >
-      Save Changes
+      {pending ? t("buttonSaving") : t("buttonSaveChanges")}
     </Button>
   );
 }
@@ -50,8 +51,8 @@ async function formWrapperAction(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  // NOTE: Validation logic remains here.
   const values = {
-    // ... all fields collected here for Zod validation (copied from previous response)
     id: formData.get("id") as string,
     name: formData.get("name") as string,
     slug: formData.get("slug") as string,
@@ -78,7 +79,8 @@ async function formWrapperAction(
     });
     return {
       success: false,
-      message: "Validation failed. Check the fields.",
+      // Fixed key for validation message
+      message: "validationFailed",
       errors,
     };
   }
@@ -87,13 +89,18 @@ async function formWrapperAction(
     await updateRestaurant(formData);
     return {
       success: true,
-      message: "Restaurant details updated successfully.",
+      // Fixed key for success message
+      message: "updateSuccess",
       errors: {},
     };
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unknown error occurred.";
-    return { success: false, message: `Update failed: ${message}`, errors: {} };
+    const message = error instanceof Error ? error.message : "unknownError";
+    // Fixed key for failure message
+    return {
+      success: false,
+      message: `updateFailedPrefix:${message}`,
+      errors: {},
+    };
   }
 }
 
@@ -101,7 +108,9 @@ async function formWrapperAction(
 export default function RestaurantDetailsForm({
   restaurant,
 }: RestaurantDetailsFormProps) {
-  // 🛑 REPLICATE ALL STATE FROM ADMIN DIALOG HERE
+  const t = useTranslations("RestaurantForm");
+
+  // State replication logic remains the same
   const [isRestaurantActive, setIsRestaurantActive] = useState(
     restaurant.isActive ?? true,
   );
@@ -137,13 +146,13 @@ export default function RestaurantDetailsForm({
   useEffect(() => {
     if (state.success) {
       const timer = setTimeout(() => {
+        // Send a dummy action to reset useFormState without triggering validation/update
         formAction(new FormData());
       }, 3000);
       return () => clearTimeout(timer);
     }
   }, [state.success, formAction]);
 
-  // Use a wrapper function for handleSubmit to inject state values into FormData
   const handleSubmitWrapper = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -155,37 +164,50 @@ export default function RestaurantDetailsForm({
     formData.set("currency", currentCurrency);
     formData.set("phoneNumber", currentPhoneNumber);
     formData.set("description", currentDescription);
-    formData.set("theme", currentTheme); // This is still state-controlled, so it's fine.
     formData.set("typeOfEstablishment", currentTypeOfEstablishment);
     formData.set("country", currentCountry);
 
-    // 🛑 CRITICAL FIX: INJECT STATIC, READ-ONLY FIELDS
-    // These fields are required by Zod but are not visible/editable in the User Form.
+    // CRITICAL: INJECT STATIC, READ-ONLY FIELDS required by Zod
+    formData.set("id", restaurant.id);
     formData.set("slug", restaurant.slug);
-    // Ensure isActive/isDisplayed are set, even if they are controlled by state later
-    formData.set("isActive", restaurant.isActive ? "on" : "");
-    formData.set("isDisplayed", restaurant.isDisplayed ? "on" : "");
     formData.set("theme", restaurant.theme ?? "classic");
     formData.set("foodType", restaurant.foodType ?? "");
 
-    // Note: If you removed theme from the state, you must inject it here too:
-    // formData.set("theme", restaurant.theme ?? 'classic');
+    // Ensure that isActive/isDisplayed are set even if not controlled by state explicitly in this code block
+    formData.set("isActive", isRestaurantActive ? "on" : "");
+    formData.set("isDisplayed", isRestaurantDisplayed ? "on" : "");
 
     formAction(formData);
   };
 
+  const getTranslatedStatusMessage = (currentState: FormState) => {
+    const key = currentState.message;
+    if (key.startsWith("updateFailedPrefix")) {
+      // Extract the error code and translate it (e.g., "updateFailedPrefix:unknownError")
+      const errorCode = key.split(":")[1] ?? "unknownError";
+      return t("messages.updateFailed", { error: t(errorCode) });
+    }
+    // Handle validation failure and success directly
+    return t(`messages.${key}`);
+  };
+
   return (
-    <div className="bg-background max-w-4xl rounded-xl border p-6 shadow-lg">
+    <div className="bg-card border-border max-w-4xl rounded-xl border p-6 shadow-lg">
       <h2 className="text-foreground mb-6 text-2xl font-semibold">
-        Restaurant Settings
+        {t("mainTitle")}
       </h2>
 
       {/* State Feedback Message */}
       {state.message && (
         <div
-          className={`mb-4 rounded p-3 ${state.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+          className={cn(
+            "mb-4 rounded p-3 text-sm",
+            state.success
+              ? "bg-primary/10 text-primary"
+              : "bg-destructive/10 text-destructive",
+          )}
         >
-          {state.message}
+          {getTranslatedStatusMessage(state)}
         </div>
       )}
 
@@ -193,9 +215,8 @@ export default function RestaurantDetailsForm({
         {/* CRITICAL: Hidden ID for Authorization */}
         <input type="hidden" name="id" defaultValue={restaurant.id} />
 
-        {/* 🛑 RENDER THE REUSABLE FORM COMPONENT */}
+        {/* RENDER THE REUSABLE FORM COMPONENT */}
         <UserRestaurantForm
-          // Pass the non-form-controlled data
           initialData={restaurant}
           formErrors={state.errors}
           // Pass down all state and handler functions
@@ -204,19 +225,18 @@ export default function RestaurantDetailsForm({
           onPhoneNumberChange={setCurrentPhoneNumber}
           onDescriptionChange={setCurrentDescription}
           onTypeOfEstablishmentChange={setCurrentTypeOfEstablishment}
-          onCountryChange={setCurrentCountry} // Assuming you add this handler to RestaurantFormProps
+          onCountryChange={setCurrentCountry}
           // Pass current state values
-
           currentLogoUrl={logoUrl}
           currentCurrency={currentCurrency}
           currentPhoneNumber={currentPhoneNumber}
           currentDescription={currentDescription}
           currentTypeOfEstablishment={currentTypeOfEstablishment}
-          currentCountry={currentCountry} // Assuming you add this prop to RestaurantFormProps
+          currentCountry={currentCountry}
         />
 
         {/* Save Button */}
-        <div className="border-primary flex justify-end border-t pt-4">
+        <div className="border-border flex justify-end border-t pt-4">
           <SubmitButton />
         </div>
       </form>

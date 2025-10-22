@@ -270,5 +270,128 @@
         "name": "Кока-Кола"
       }
     }
+  },
+  "MenuItemManager": {
+    "addItemButton": "Добавить новый пункт меню",
+    "hideFormButton": "Скрыть форму добавления пункта",
+    "emptyListMessage": "В этой категории нет пунктов.",
+    "item": {
+      "confirmDelete": "Вы уверены, что хотите удалить пункт меню: {itemName}?"
+    },
+    "addForm": {
+      "newTitle": "Детали нового пункта",
+      "placeholderName": "Название пункта",
+      "placeholderPrice": "Цена (напр. 12.99)",
+      "placeholderDescription": "Описание (необязательно)",
+      "placeholderIngredients": "Ингредиенты (необязательно)",
+      "labelDietaryLabels": "Диетические метки",
+      "labelItemImage": "Изображение пункта",
+      "imagePreviewAlt": "Предпросмотр изображения",
+      "createItemButton": "Создать пункт",
+      "processing": "Обработка...",
+      "dietaryLabels": {
+        "vegan": "Веганский",
+        "vegetarian": "Вегетарианский",
+        "gluten-free": "Без глютена",
+        "nut-free": "Без орехов"
+      },
+      "addSuccess": "Пункт успешно добавлен.",
+      "addFailedPrefix": "Ошибка:",
+      "addUnknownError": "Произошла неизвестная ошибка."
+    },
+    "editForm": {
+      "labelName": "Название",
+      "labelPrice": "Цена",
+      "labelDescription": "Описание",
+      "labelIngredients": "Ингредиенты",
+      "labelDietaryLabels": "Диетические метки",
+      "labelItemImage": "Изображение пункта",
+      "placeholderPrice": "напр. 12.99",
+      "placeholderDescription": "Краткое описание для меню.",
+      "placeholderIngredients": "Список через запятую (напр.: мука, яйца, масло)",
+      "saveButton": "Сохранить пункт",
+      "saving": "Сохранение...",
+      "cancelButton": "Отмена",
+      "noImage": "Нет изображения",
+      "imagePreviewAlt": "Предпросмотр изображения пункта"
+    }
+  },
+  "CategoryManager": {
+    "processing": "Обработка...",
+    "addForm": {
+      "headerTitle": "Добавить новую категорию",
+      "placeholderName": "напр.: Закуски, Основные блюда, Напитки",
+      "addButton": "Добавить категорию"
+    },
+    "listTitle": "Существующие категории",
+    "emptyListMessage": "Категории не найдены. Начните с добавления одной выше.",
+    "item": {
+      "itemCount": "({count} пунктов)",
+      "confirmDelete": "Вы уверены, что хотите удалить категорию: {categoryName}?",
+      "placeholderName": "Название категории",
+      "saveButton": "Сохранить категорию",
+      "cancelButton": "Отмена"
+    },
+    "messages": {
+      "addSuccess": "Категория успешно добавлена.",
+      "addFailed": "Ошибка: {error}",
+      "updateSuccess": "Категория успешно обновлена.",
+      "updateFailed": "Ошибка: {error}",
+      "deleteSuccess": "Категория успешно удалена.",
+      "deleteFailed": "Ошибка: {error}"
+    },
+    "updateSuccess": "Действие успешно завершено.",
+    "deleteSuccess": "Категория успешно удалена.",
+    "unknownError": "Произошла неизвестная ошибка при отправке."
+  },
+  "RestaurantForm": {
+    "mainTitle": "Настройки ресторана",
+    "labelName": "Название",
+    "labelCountry": "Страна",
+    "labelCurrency": "Код валюты",
+    "labelPhoneNumber": "Номер телефона",
+    "labelAddress": "Адрес",
+    "labelShortDescription": "Краткое описание",
+    "labelTypeOfEstablishment": "Тип заведения",
+    "labelRestaurantLogo": "Логотип ресторана",
+    "placeholderCountry": "напр.: Россия",
+    "placeholderCurrency": "напр.: RUB, USD",
+    "placeholderPhoneNumber": "+7 900 000 00 00",
+    "placeholderAddress": "Улица, Город, Почтовый индекс",
+    "placeholderDescription": "Краткий, привлекательный обзор вашего ресторана.",
+    "placeholderTypeOfEstablishment": "напр.: Обычное кафе, Кофейня, Ресторан высокой кухни",
+    "logoPreviewAlt": "Предпросмотр логотипа",
+    "noLogo": "Нет логотипа",
+    "buttonSaveChanges": "Сохранить изменения",
+    "buttonSaving": "Сохранение...",
+    "messages": {
+      "updateSuccess": "Детали ресторана успешно обновлены.",
+      "updateFailed": "Ошибка обновления: {error}",
+      "validationFailed": "Ошибка валидации. Проверьте поля."
+    },
+    "validationFailed": "Ошибка валидации. Проверьте поля.",
+    "updateSuccess": "Детали ресторана успешно обновлены.",
+    "unknownError": "Произошла неизвестная ошибка."
+  },
+  "RestaurantEditor": {
+    "errorTitle": "Ошибка загрузки меню",
+    "errorMessage": "Ошибка: Данные ресторана не загружены или не назначены.",
+    "titlePrefix": "Редактирование",
+    "backToDashboard": "Назад к панели управления",
+    "selectPage": "Выбрать страницу",
+    "detailsTab": "Детали ресторана",
+    "categoriesTab": "Категории и пункты"
+  },
+  "Dashboard": {
+    "title": "Назначенные Вам Меню",
+    "emptyTitle": "Меню не назначены",
+    "emptyMessage": "Похоже, вам еще не назначены меню. Пожалуйста, свяжитесь с администратором.",
+    "accessLevelLabel": "Уровень доступа",
+    "manageMenuButton": "Управление Меню",
+    "accessLevels": {
+      "editor": "Редактор",
+      "owner": "Владелец",
+      "viewer": "Просмотрщик"
+    }
   }
 }
