@@ -150,20 +150,26 @@ export async function reorderCategories(formData: FormData) {
   }
   
   // 2. Parse Data
-  let orderedIds: string[];
+let orderedIds: unknown; // Use 'unknown' instead of implicitly 'any'
+
   try {
-    orderedIds = JSON.parse(orderedIdsJson);
+    // 🛑 FIX 1: Parse to 'unknown' to avoid 'any' assignment
+    orderedIds = JSON.parse(orderedIdsJson); 
   } catch (e) {
     throw new Error("Invalid format for ordered IDs payload.");
   }
-
-  if (!Array.isArray(orderedIds)) {
-    throw new Error("Invalid format for ordered IDs array.");
+  
+  // 🛑 FIX 2: Type Guard to ensure it is an array and assert types
+  if (!Array.isArray(orderedIds) || orderedIds.some(id => typeof id !== 'string')) {
+    throw new Error("Invalid format for ordered IDs array. Expected string[].");
   }
+
+  // At this point, we know the structure is correct, so we can assert the type.
+  const finalOrderedIds: string[] = orderedIds as string[];
 
   // 3. Create Batch Update Queries
   // IMPORTANT: We use a simple UPDATE query here.
-  const updateQueries = orderedIds.map((id, index) => {
+  const updateQueries = finalOrderedIds.map((id, index) => {
     // We update the order based on the index in the client-sent array.
     // We also include the restaurantId in the WHERE clause for integrity.
     return db.update(categories)
