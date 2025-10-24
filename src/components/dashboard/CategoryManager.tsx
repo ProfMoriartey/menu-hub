@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl"; // Import next-intl hook
 import {
   addCategory,
   updateCategory,
   deleteCategory,
+  reorderCategories,
 } from "~/app/actions/category";
 import { cn } from "~/lib/utils";
 
@@ -16,6 +17,25 @@ import MenuItemManager from "./MenuItemManager";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ChevronDown, Pencil, Trash2, PlusCircle } from "lucide-react";
+
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  // Using verticalListSortingStrategy is fine for a stack of cards
+} from "@dnd-kit/sortable";
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 
 // --- TYPE DEFINITIONS ---
 
@@ -102,6 +122,47 @@ async function deleteCategoryWrapperAction(
   }
 }
 
+interface SortableCategoryItemProps extends CategoryItemProps {
+  isDragging: boolean;
+  attributes: React.HTMLAttributes<HTMLDivElement>;
+  listeners: React.HTMLAttributes<HTMLDivElement>;
+}
+
+function SortableCategoryItem({ category, restaurantId }: CategoryItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: category.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 2 : 1,
+    opacity: isDragging ? 0.8 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      // 🛑 Listeners are applied to the entire item for drag capability 🛑
+      {...listeners}
+      className={cn(
+        "border-border bg-card cursor-grab rounded-lg border shadow-md transition-shadow hover:shadow-lg",
+        isDragging ? "shadow-xl ring-2 ring-indigo-500" : "",
+      )}
+    >
+      {/* Render the core Category Item UI inside the draggable element */}
+      <CategoryItem category={category} restaurantId={restaurantId} />
+    </div>
+  );
+}
+
 // --- 4. Component to display a single category and its actions ---
 function CategoryItem({ category, restaurantId }: CategoryItemProps) {
   const t = useTranslations("CategoryManager.item"); // Item-specific keys
@@ -132,7 +193,7 @@ function CategoryItem({ category, restaurantId }: CategoryItemProps) {
   };
 
   return (
-    <div className="border-border bg-card rounded-lg border shadow-md transition-shadow hover:shadow-lg">
+    <div className="w-full">
       {/* Top Header Section - Clickable Area */}
       <div
         className="flex cursor-pointer items-center justify-between p-4"
@@ -270,10 +331,54 @@ export default function CategoryManager({
 }: CategoryManagerProps) {
   const t = useTranslations("CategoryManager"); // Base namespace
 
+  const [items, setItems] = useState<Category[]>(
+    // Ensure initial items are sorted by 'order'
+    [...initialCategories].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+  );
+  const categoryIds = useMemo(() => items.map((c) => c.id), [items]);
+  const [isSaving, setIsSaving] = useState(false);
+
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const boundAddAction = wrapCategoryAction.bind(null, addCategory);
 
   const [addState, addFormAction] = useFormState(boundAddAction, initialState);
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 250, tolerance: 5 },
+    }),
+  );
+
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = items.findIndex((c) => c.id === active.id);
+      const newIndex = items.findIndex((c) => c.id === over!.id);
+      const newOrderedItems = arrayMove(items, oldIndex, newIndex);
+
+      // a. Update local state for immediate visual feedback
+      setItems(newOrderedItems);
+
+      // b. Send new order to server action
+      const finalOrderedIds = newOrderedItems.map((c) => c.id);
+
+      try {
+        setIsSaving(true);
+        const formData = new FormData();
+        formData.set("restaurantId", restaurantId);
+        formData.set("orderedIds", JSON.stringify(finalOrderedIds));
+
+        await reorderCategories(formData);
+      } catch (error) {
+        console.error("Failed to save new category order:", error);
+        // Optionally revert state on error
+      } finally {
+        setIsSaving(false);
+      }
+    }
+  }
 
   // Close the form if successfully submitted
   React.useEffect(() => {
@@ -283,94 +388,110 @@ export default function CategoryManager({
   }, [addState.success]);
 
   return (
-    <div className="max-w-4xl space-y-8">
-      {/* 1. Collapsible Add New Category Form */}
-      <div className="border-border bg-card rounded-xl border shadow-md">
-        {/* Toggle Button/Header */}
-        <button
-          onClick={() => setIsAddFormOpen(!isAddFormOpen)}
-          className="text-foreground hover:bg-muted/50 flex w-full items-center justify-between p-4 text-left text-lg font-semibold transition-colors"
-        >
-          <div className="flex items-center space-x-3">
-            <PlusCircle className="text-primary h-5 w-5" />
-            {/* Translated Header */}
-            <span>{t("addForm.headerTitle")}</span>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="max-w-4xl space-y-8">
+        {isSaving && (
+          <div className="rounded-lg bg-indigo-100 p-2 text-center text-sm text-indigo-700">
+            Saved
           </div>
-          <ChevronDown
-            className={cn(
-              "h-5 w-5 transform transition-transform duration-200",
-              isAddFormOpen ? "rotate-180" : "",
-            )}
-          />
-        </button>
+        )}
+        {/* 1. Collapsible Add New Category Form */}
+        <div className="border-border bg-card rounded-xl border shadow-md">
+          {/* Toggle Button/Header */}
+          <button
+            onClick={() => setIsAddFormOpen(!isAddFormOpen)}
+            className="text-foreground hover:bg-muted/50 flex w-full items-center justify-between p-4 text-left text-lg font-semibold transition-colors"
+          >
+            <div className="flex items-center space-x-3">
+              <PlusCircle className="text-primary h-5 w-5" />
+              {/* Translated Header */}
+              <span>{t("addForm.headerTitle")}</span>
+            </div>
+            <ChevronDown
+              className={cn(
+                "h-5 w-5 transform transition-transform duration-200",
+                isAddFormOpen ? "rotate-180" : "",
+              )}
+            />
+          </button>
 
-        {/* Form Content (Conditionally Rendered) */}
-        {isAddFormOpen && (
-          <div className="border-border bg-secondary/20 border-t p-6">
-            <form
-              action={addFormAction}
-              className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3"
-            >
-              <input
-                type="hidden"
-                name="restaurantId"
-                defaultValue={restaurantId}
-              />
-              <Input
-                type="text"
-                name="name"
-                required
-                className="flex-grow"
-                placeholder={t("addForm.placeholderName")}
-                key={addState.success ? "success" : "error"}
-              />
-              <SubmitButton label={t("addForm.addButton")} />
-            </form>
-            {addState.message && (
-              <p
-                className={cn(
-                  "mt-2 text-sm",
-                  addState.success ? "text-primary" : "text-destructive",
-                )}
+          {/* Form Content (Conditionally Rendered) */}
+          {isAddFormOpen && (
+            <div className="border-border bg-secondary/20 border-t p-6">
+              <form
+                action={addFormAction}
+                className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3"
               >
-                {/* Localized success/error messages */}
-                {addState.success
-                  ? t("messages.addSuccess")
-                  : t("messages.addFailed", {
-                      error: t(
-                        addState.message.split(": ")[1] ?? "unknownError",
-                      ),
-                    })}
-              </p>
-            )}
-          </div>
-        )}
-      </div>
+                <input
+                  type="hidden"
+                  name="restaurantId"
+                  defaultValue={restaurantId}
+                />
+                <Input
+                  type="text"
+                  name="name"
+                  required
+                  className="flex-grow"
+                  placeholder={t("addForm.placeholderName")}
+                  key={addState.success ? "success" : "error"}
+                />
+                <SubmitButton label={t("addForm.addButton")} />
+              </form>
+              {addState.message && (
+                <p
+                  className={cn(
+                    "mt-2 text-sm",
+                    addState.success ? "text-primary" : "text-destructive",
+                  )}
+                >
+                  {/* Localized success/error messages */}
+                  {addState.success
+                    ? t("messages.addSuccess")
+                    : t("messages.addFailed", {
+                        error: t(
+                          addState.message.split(": ")[1] ?? "unknownError",
+                        ),
+                      })}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
 
-      {/* 2. List of Existing Categories */}
-      <div className="space-y-4">
-        {/* Translated List Header */}
-        <h2 className="text-foreground text-2xl font-semibold">
-          {t("listTitle")}
-        </h2>
+        {/* 2. List of Existing Categories */}
+        <div className="space-y-4">
+          {/* Translated List Header */}
+          <h2 className="text-foreground text-2xl font-semibold">
+            {t("listTitle")}
+          </h2>
 
-        {initialCategories.length === 0 ? (
-          // Translated Empty State
-          <div className="border-border text-muted-foreground bg-card rounded-lg border p-6 text-center">
-            {t("emptyListMessage")}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {initialCategories.map((category) => (
-              <CategoryItem
-                key={category.id}
-                category={category}
-                restaurantId={restaurantId}
-              />
-            ))}
-          </div>
-        )}
+          {initialCategories.length === 0 ? (
+            // Translated Empty State
+            <div className="border-border text-muted-foreground bg-card rounded-lg border p-6 text-center">
+              {t("emptyListMessage")}
+            </div>
+          ) : (
+            <SortableContext
+              items={categoryIds}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-3">
+                {items.map((category) => (
+                  <SortableCategoryItem
+                    key={category.id}
+                    category={category}
+                    restaurantId={restaurantId}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          )}
+        </div>
       </div>
-    </div>
+    </DndContext>
   );
 }

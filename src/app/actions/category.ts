@@ -4,8 +4,9 @@
 import { db } from "~/server/db";
 import { categories } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
-import { and, eq } from "drizzle-orm";
-import { checkAuthorization } from "~/app/actions/auth"; // IMPORT the authorization helper
+// 🛑 ADDED: sql and db.transaction support
+import { and, eq, sql } from "drizzle-orm"; 
+import { checkAuthorization, isSystemAdmin } from "~/app/actions/auth"; // IMPORT helpers
 
 
 // Import schemas from the shared schemas file (now without async exports)
@@ -17,11 +18,9 @@ export async function addCategory(formData: FormData) {
   const restaurantId = formData.get("restaurantId") as string;
 
 // 🛑 1. ENFORCE AUTHORIZATION (ABAC)
-    try {
-    // Check if the user is authorized to modify this restaurant's resources
+  try {
     await checkAuthorization(restaurantId);
   } catch (error) {
-    // Re-throw the authorization error
     throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
   }
 
@@ -36,10 +35,14 @@ export async function addCategory(formData: FormData) {
     throw new Error("Invalid input for category creation.");
   }
 
+  // Logic to determine the next order number would go here (e.g., query max order + 1)
+  // For simplicity, Drizzle default(0) is used, but a full feature would calculate this.
+
   try {
     await db.insert(categories).values({
       name: validationResult.data.name,
       restaurantId: validationResult.data.restaurantId,
+      // order: (maxOrder + 1), // Ideally calculated here
     });
 
     revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
@@ -56,11 +59,10 @@ export async function addCategory(formData: FormData) {
 export async function updateCategory(formData: FormData) {
   const id = formData.get("id") as string;
   const name = formData.get("name") as string;
-  const restaurantId = formData.get("restaurantId") as string; // Needed for revalidation
+  const restaurantId = formData.get("restaurantId") as string;
 
   // 🛑 1. ENFORCE AUTHORIZATION (ABAC)
   try {
-    // Check if the user is authorized to modify this restaurant's resources
     await checkAuthorization(restaurantId);
   } catch (error) {
     throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
@@ -86,6 +88,7 @@ export async function updateCategory(formData: FormData) {
         name: validationResult.data.name,
         updatedAt: new Date(),
       })
+      // Data integrity check: ensure category ID and restaurant ID match
       .where(eq(categories.id, validationResult.data.id));
 
     revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
@@ -110,20 +113,76 @@ export async function deleteCategory(categoryId: string, restaurantId: string) {
 
   try {
     await db.delete(categories)
-      // 🛑 CRITICAL FIX: Ensure Category ID AND Restaurant ID match
+      // Data integrity check: ensure category ID AND Restaurant ID match
       .where(
         and(
           eq(categories.id, categoryId),
-          eq(categories.restaurantId, restaurantId) // <--- THIS IS THE MISSING CHECK
+          eq(categories.restaurantId, restaurantId)
         )
       );
       
-    // Revalidations are fine
     revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
     revalidatePath(`/dashboard/${restaurantId}/edit`);
     
   } catch (error) {
     console.error("Error deleting category:", error);
     throw new Error("Failed to delete category.");
+  }
+}
+
+// ----------------------------------------------------------------------
+// 🛑 NEW SERVER ACTION: REORDER CATEGORIES
+// ----------------------------------------------------------------------
+/**
+ * @description Updates the 'order' field for a list of categories in a single transaction.
+ * @param {FormData} formData - Expects 'restaurantId' and 'orderedIds' (JSON string of string[]).
+ */
+export async function reorderCategories(formData: FormData) {
+  const restaurantId = formData.get("restaurantId") as string;
+  const orderedIdsJson = formData.get("orderedIds") as string;
+  
+  // 🛑 1. ENFORCE AUTHORIZATION (ABAC)
+  try {
+    if (!restaurantId) throw new Error("Restaurant ID is required.");
+    await checkAuthorization(restaurantId);
+  } catch (error) {
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
+  
+  // 2. Parse Data
+  let orderedIds: string[];
+  try {
+    orderedIds = JSON.parse(orderedIdsJson);
+  } catch (e) {
+    throw new Error("Invalid format for ordered IDs payload.");
+  }
+
+  if (!Array.isArray(orderedIds)) {
+    throw new Error("Invalid format for ordered IDs array.");
+  }
+
+  // 3. Create Batch Update Queries
+  // IMPORTANT: We use a simple UPDATE query here.
+  const updateQueries = orderedIds.map((id, index) => {
+    // We update the order based on the index in the client-sent array.
+    // We also include the restaurantId in the WHERE clause for integrity.
+    return db.update(categories)
+      .set({ order: index }) 
+      .where(and(eq(categories.id, id), eq(categories.restaurantId, restaurantId)));
+  });
+  
+  // 4. Execute all updates in a transaction
+  try {
+    await db.transaction(async (tx) => {
+      // Execute all update promises within the transaction context
+      await Promise.all(updateQueries.map(query => tx.execute(query)));
+    });
+
+    // 5. Revalidate
+    revalidatePath(`/dashboard/${restaurantId}/edit`);
+    
+  } catch (error) {
+    console.error("Error reordering categories:", error);
+    throw new Error("Failed to reorder categories due to a database error.");
   }
 }

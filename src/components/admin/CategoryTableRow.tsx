@@ -1,11 +1,11 @@
 // src/components/admin/CategoryTableRow.tsx
-"use client";
+"use client"; // Keep this as it's a client component
 
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
-import { TableCell, TableRow } from "~/components/ui/table";
-import { EditCategoryDialog } from "~/components/admin/EditCategoryDialog"; // Existing component
-import { DeleteCategoryDialog } from "~/components/admin/DeleteCategoryDialog"; // New component
+import { TableCell } from "~/components/ui/table"; // REMOVE TableRow import
+import { EditCategoryDialog } from "~/components/admin/EditCategoryDialog";
+import { DeleteCategoryDialog } from "~/components/admin/DeleteCategoryDialog";
 
 // Assuming 'Category' type is defined, e.g., from drizzle schema
 import type { InferSelectModel } from "drizzle-orm";
@@ -18,19 +18,23 @@ import { updateCategory } from "~/app/actions/category";
 interface CategoryTableRowProps {
   category: CategoryType;
   restaurantId: string;
+  // NEW: Optional prop for the drag handle, will be passed from SortableRow
+  dragHandle?: React.ReactNode;
 }
 
+// 🛑 IMPORTANT: This component now only renders TableCell elements, NOT TableRow.
+// The TableRow will be rendered by the parent SortableRow component.
 export function CategoryTableRow({
   category,
   restaurantId,
 }: CategoryTableRowProps) {
   return (
-    <TableRow key={category.id}>
+    <>
+      {/* The drag handle will be a separate TableCell rendered by SortableRow */}
       <TableCell className="font-medium">{category.name}</TableCell>
       <TableCell>{category.order}</TableCell>
       <TableCell>
         {new Date(category.createdAt).toLocaleDateString("tr-TR", {
-          // Ensure consistent date formatting
           year: "numeric",
           month: "2-digit",
           day: "2-digit",
@@ -58,6 +62,6 @@ export function CategoryTableRow({
           restaurantId={restaurantId}
         />
       </TableCell>
-    </TableRow>
+    </>
   );
 }
