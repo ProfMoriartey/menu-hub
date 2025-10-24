@@ -7,7 +7,7 @@ import Image from "next/image";
 
 import { ChevronLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { motion } from "framer-motion"; // ADDED: Import motion
+import { motion } from "framer-motion";
 
 import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
 
@@ -19,6 +19,7 @@ interface RestaurantMenuData {
     currency: string;
     description: string | null;
   };
+  // Ensure menuItems is included in the categories type
   categories: (Category & { menuItems: MenuItem[] })[];
 }
 
@@ -33,15 +34,16 @@ export function CategoryCardsImageDominantLayout({
     null,
   );
 
-  const fallbackImageUrl = `https://placehold.co/400x300/E0E0E0/333333?text=No+Image`;
+  const fallbackImageUrl = `https://placehold.co/400x300/E0E0E0/333333?text=Menu+Item`; // Changed fallback text
 
   if (selectedCategory) {
     const itemsToDisplay = selectedCategory.menuItems ?? [];
 
-    // Display Menu Items for the selected category
+    // Display Menu Items for the selected category (No visual changes needed here, only in the main list)
     return (
       <div className="space-y-6">
-        <motion.div // ADDED: motion.div for Back button
+        {/* Back Button Section */}
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
@@ -65,77 +67,70 @@ export function CategoryCardsImageDominantLayout({
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-            {itemsToDisplay.map(
-              (
-                item,
-                itemIndex, // ADDED: itemIndex
-              ) => (
-                <motion.div // ADDED: motion.div wrapper for each menu item
-                  key={item.id}
-                  initial={{ opacity: 0, y: 10 }} // Start slightly below and invisible
-                  animate={{ opacity: 1, y: 0 }} // Animate to visible and original position
-                  transition={{ delay: itemIndex * 0.05, duration: 0.3 }} // Staggered fade-in for items
-                  whileHover={{ scale: 1.02 }} // Subtle scale on item card hover
-                  className="block h-full" // Ensure it remains a block and takes full height
+            {itemsToDisplay.map((item, itemIndex) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: itemIndex * 0.05, duration: 0.3 }}
+                whileHover={{ scale: 1.02 }}
+                className="block h-full"
+              >
+                <Link
+                  href={`/${menuData.restaurant.slug}/item/${item.id}`}
+                  passHref
+                  className="group block h-full"
                 >
-                  <Link
-                    href={`/${menuData.restaurant.slug}/item/${item.id}`}
-                    passHref
-                    className="group block h-full" // Ensure Link takes full height of motion.div
-                  >
-                    <div className="bg-card border-border flex flex-col overflow-hidden rounded-lg border shadow-md transition-shadow duration-200 hover:shadow-lg">
-                      <div className="relative h-64 w-full overflow-hidden sm:h-80">
-                        <Image
-                          src={item.imageUrl ?? fallbackImageUrl}
-                          alt={item.name}
-                          layout="fill"
-                          objectFit="cover"
-                          className="transition-transform duration-220 group-hover:scale-105"
-                        />
-                      </div>
-                      <div className="flex flex-grow flex-col justify-between p-4">
-                        <div>
-                          <h3 className="text-foreground group-hover:text-primary mb-1 text-xl font-semibold transition-colors duration-200">
-                            {item.name}
-                          </h3>
-                          {item.description && (
-                            <p className="text-muted-foreground mb-2 line-clamp-2 text-sm">
-                              {item.description}
-                            </p>
-                          )}
-                          {item.dietaryLabels &&
-                            item.dietaryLabels.length > 0 && (
-                              <div className="mt-2 flex flex-wrap gap-1">
-                                {item.dietaryLabels.map(
-                                  (label: DietaryLabel) => (
-                                    <span
-                                      key={label}
-                                      className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold"
-                                    >
-                                      {label.charAt(0).toUpperCase() +
-                                        label.slice(1).replace(/-/g, " ")}
-                                    </span>
-                                  ),
-                                )}
-                              </div>
-                            )}
-                        </div>
-                        <p className="text-primary mt-4 text-lg font-bold">
-                          {item.price} {menuData.restaurant.currency}
-                        </p>
-                      </div>
+                  <div className="bg-card border-border flex flex-col overflow-hidden rounded-lg border shadow-md transition-shadow duration-200 hover:shadow-lg">
+                    <div className="relative h-64 w-full overflow-hidden sm:h-80">
+                      <Image
+                        src={item.imageUrl ?? fallbackImageUrl}
+                        alt={item.name}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        className="transition-transform duration-220 group-hover:scale-105"
+                      />
                     </div>
-                  </Link>
-                </motion.div>
-              ),
-            )}
+                    <div className="flex flex-grow flex-col justify-between p-4">
+                      <div>
+                        <h3 className="text-foreground group-hover:text-primary mb-1 text-xl font-semibold transition-colors duration-200">
+                          {item.name}
+                        </h3>
+                        {item.description && (
+                          <p className="text-muted-foreground mb-2 line-clamp-2 text-sm">
+                            {item.description}
+                          </p>
+                        )}
+                        {item.dietaryLabels &&
+                          item.dietaryLabels.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {item.dietaryLabels.map((label: DietaryLabel) => (
+                                <span
+                                  key={label}
+                                  className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold"
+                                >
+                                  {label.charAt(0).toUpperCase() +
+                                    label.slice(1).replace(/-/g, " ")}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                      </div>
+                      <p className="text-primary mt-4 text-lg font-bold">
+                        {item.price} {menuData.restaurant.currency}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
           </div>
         )}
       </div>
     );
   }
 
-  // Display Category Cards
+  // Display Category Cards (Initial View)
   return (
     <div className="space-y-6">
       {menuData.categories.length === 0 ? (
@@ -144,33 +139,51 @@ export function CategoryCardsImageDominantLayout({
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {menuData.categories.map(
-            (
-              category,
-              categoryIndex, // ADDED: categoryIndex
-            ) => (
-              <motion.div // ADDED: motion.div wrapper for each category card
+          {menuData.categories.map((category, categoryIndex) => {
+            // 🛑 1. FIND THE FIRST IMAGE URL
+            const firstImageUrl = category.menuItems?.find(
+              (item) => item.imageUrl,
+            )?.imageUrl;
+
+            return (
+              <motion.div
                 key={category.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: categoryIndex * 0.1, duration: 0.5 }} // Staggered fade-in for categories
-                whileHover={{ scale: 1.03 }} // Subtle scale on category card hover
-                className="block" // Ensure it remains a block
+                transition={{ delay: categoryIndex * 0.1, duration: 0.5 }}
+                whileHover={{ scale: 1.03 }}
+                className="block"
               >
                 <div
                   onClick={() => setSelectedCategory(category)}
-                  className="group bg-card border-border flex h-full cursor-pointer flex-col items-center rounded-lg border p-6 text-center shadow-md transition-shadow duration-200 hover:shadow-lg" // ADDED h-full
+                  className="group bg-card border-border flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border text-center shadow-md transition-shadow duration-200 hover:shadow-lg"
                 >
-                  <h3 className="text-foreground group-hover:text-primary mb-2 text-2xl font-semibold">
-                    {category.name}
-                  </h3>
-                  <p className="text-muted-foreground">
-                    {category.menuItems?.length ?? 0} items
-                  </p>
+                  {/* 🛑 2. IMAGE SECTION (Image Dominant) */}
+                  <div className="relative h-40 w-full overflow-hidden bg-gray-100">
+                    <Image
+                      src={firstImageUrl ?? fallbackImageUrl}
+                      alt={`${category.name} preview`}
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-300 group-hover:scale-110"
+                    />
+                    {/* Overlay for contrast */}
+                    <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20"></div>
+                  </div>
+
+                  {/* 🛑 3. TEXT SECTION (Below Image) */}
+                  <div className="flex flex-grow flex-col justify-between p-4">
+                    <h3 className="text-foreground group-hover:text-primary mb-2 text-2xl font-semibold">
+                      {category.name}
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {category.menuItems?.length ?? 0} items
+                    </p>
+                  </div>
                 </div>
               </motion.div>
-            ),
-          )}
+            );
+          })}
         </div>
       )}
     </div>
