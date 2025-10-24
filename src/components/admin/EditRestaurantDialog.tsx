@@ -75,7 +75,9 @@ export function EditRestaurantDialog({
     restaurant.typeOfEstablishment ?? "",
   );
 
-  const [newRestaurantCountry, setNewRestaurantCountry] = useState("");
+  const [newRestaurantCountry, setNewRestaurantCountry] = useState(
+    restaurant.country ?? "",
+  );
 
   const handleSubmit = async (formData: FormData) => {
     setFormErrors({});
@@ -187,7 +189,7 @@ export function EditRestaurantDialog({
             onThemeChange={setCurrentTheme}
             currentTypeOfEstablishment={currentTypeOfEstablishment}
             onTypeOfEstablishmentChange={setCurrentTypeOfEstablishment}
-            currentCountry={""}
+            currentCountry={newRestaurantCountry}
           />
 
           {formErrors.general && (

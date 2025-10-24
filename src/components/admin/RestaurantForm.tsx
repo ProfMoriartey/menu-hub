@@ -68,7 +68,7 @@ export function RestaurantForm({
           <Input
             id="name"
             name="name"
-            defaultValue={initialData?.name ?? ""}
+            value={initialData?.name ?? ""}
             required
           />
           {formErrors.name && (
@@ -94,7 +94,8 @@ export function RestaurantForm({
           <Input
             id="country"
             name="country"
-            defaultValue={initialData?.country ?? ""}
+            value={currentCountry} // 🛑 BIND TO STATE VALUE
+            onChange={(e) => onCountryChange(e.target.value)} // 🛑 BIND TO HANDLER
             required
           />
           {formErrors.country && (
