@@ -48,6 +48,10 @@ export function RestaurantSearchAndGrid({
   // ADDED: Initialize translations
   const t = useTranslations("restaurantsPage");
 
+  const activeInitialRestaurants = initialRestaurants.filter(
+    (restaurant) => restaurant.isActive === true,
+  );
+
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Restaurant[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -100,7 +104,7 @@ export function RestaurantSearchAndGrid({
 
   // Determine which list of restaurants to display in the main grid
   const restaurantsToDisplayInGrid =
-    searchTerm.length > 0 ? searchResults : initialRestaurants;
+    searchTerm.length > 0 ? searchResults : activeInitialRestaurants; // 🛑 USE FILTERED LIST
 
   // Handler for popover open state changes, to reset search term if closed
   const handlePopoverOpenChange = (newOpenState: boolean) => {
