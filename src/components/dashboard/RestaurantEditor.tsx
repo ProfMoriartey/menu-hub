@@ -47,7 +47,7 @@ export default function RestaurantEditor({
   const t = useTranslations("RestaurantEditor");
 
   const [activeTab, setActiveTab] = useState<"details" | "categories">(
-    "details",
+    "categories",
   );
 
   if (!initialRestaurantData) {
