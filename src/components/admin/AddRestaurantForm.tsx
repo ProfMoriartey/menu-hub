@@ -1,7 +1,6 @@
-// src/components/admin/AddRestaurantForm.tsx
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react"; // ADDED useEffect
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -13,11 +12,9 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { useFormStatus } from "react-dom";
-import { cn } from "~/lib/utils"; // ADDED: Import cn utility
-
-// Import the schema from the shared schemas file
+import { cn } from "~/lib/utils";
+import { useTranslations } from "next-intl"; // Import for i18n
 import { restaurantSchema } from "~/lib/schemas";
-// Import the new shared form component
 import { RestaurantForm } from "~/components/admin/RestaurantForm";
 
 interface AddRestaurantFormProps {
@@ -25,9 +22,9 @@ interface AddRestaurantFormProps {
 }
 
 function SubmitButton() {
+  const t = useTranslations("AdminRestaurants");
   const { pending } = useFormStatus();
   return (
-    // UPDATED: Submit Button uses semantic colors
     <Button
       type="submit"
       disabled={pending}
@@ -41,8 +38,15 @@ function SubmitButton() {
 export function AddRestaurantForm({
   addRestaurantAction,
 }: AddRestaurantFormProps) {
+  const t = useTranslations("AdminRestaurants");
+
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  // 🛑 FIX: INTRODUCE STATE FOR NAME AND COUNTRY
+  const [newRestaurantName, setNewRestaurantName] = useState("");
+  const [newRestaurantCountry, setNewRestaurantCountry] = useState("");
+
   const [isNewRestaurantActive, setIsNewRestaurantActive] = useState(true);
   const [isNewRestaurantDisplayed, setIsNewRestaurantDisplayed] =
     useState(true);
@@ -50,11 +54,8 @@ export function AddRestaurantForm({
     string | null
   >(null);
 
-  // NEW STATE VARIABLES FOR NEW FIELDS
-  const [newRestaurantCurrency, setNewRestaurantCurrency] = useState("USD"); // Default value
+  const [newRestaurantCurrency, setNewRestaurantCurrency] = useState("USD");
   const [newRestaurantPhoneNumber, setNewRestaurantPhoneNumber] = useState("");
-  const [newRestaurantCountry, setNewRestaurantCountry] = useState("");
-
   const [newRestaurantDescription, setNewRestaurantDescription] = useState("");
   const [newRestaurantTheme, setNewRestaurantTheme] = useState("");
   const [
@@ -64,19 +65,31 @@ export function AddRestaurantForm({
 
   const addFormRef = useRef<HTMLFormElement>(null);
 
+  // Clear generic errors when the dialog is closed (UX improvement)
+  useEffect(() => {
+    if (!isAddDialogOpen) {
+      setFormErrors({});
+      // Also reset state values when the dialog is closed without success,
+      // though successful submission handles reset too.
+    }
+  }, [isAddDialogOpen]);
+
   const handleAddSubmit = async (formData: FormData) => {
     setFormErrors({});
 
+    // 🛑 FIX: Inject the controlled Name and Country fields
+    formData.set("name", newRestaurantName);
+    formData.set("country", newRestaurantCountry);
+
+    // Inject all other controlled state values
     formData.set("isActive", isNewRestaurantActive ? "on" : "");
     formData.set("isDisplayed", isNewRestaurantDisplayed ? "on" : "");
     formData.set("logoUrl", newRestaurantLogoUrl ?? "");
-    // NEW: Set new field values onto formData
     formData.set("currency", newRestaurantCurrency);
     formData.set("phoneNumber", newRestaurantPhoneNumber);
     formData.set("description", newRestaurantDescription);
     formData.set("theme", newRestaurantTheme);
     formData.set("typeOfEstablishment", newRestaurantTypeOfEstablishment);
-    formData.set("country", newRestaurantCountry);
 
     const values = {
       name: formData.get("name") as string,
@@ -87,7 +100,6 @@ export function AddRestaurantForm({
       isActive: formData.get("isActive") as string,
       isDisplayed: formData.get("isDisplayed") as string | null,
       logoUrl: formData.get("logoUrl") as string | null,
-      // NEW: Include new field values for schema validation
       currency: formData.get("currency") as string,
       phoneNumber: formData.get("phoneNumber") as string | null,
       description: formData.get("description") as string | null,
@@ -115,19 +127,22 @@ export function AddRestaurantForm({
       setIsAddDialogOpen(false);
       addFormRef.current?.reset();
       setFormErrors({});
+
+      // 🛑 FIX: Reset all states after success
+      setNewRestaurantName("");
+      setNewRestaurantCountry("");
       setIsNewRestaurantActive(true);
       setIsNewRestaurantDisplayed(true);
       setNewRestaurantLogoUrl(null);
-      // NEW: Reset new field states
       setNewRestaurantCurrency("USD");
       setNewRestaurantPhoneNumber("");
       setNewRestaurantDescription("");
-      setNewRestaurantCountry("");
       setNewRestaurantTheme("");
       setNewRestaurantTypeOfEstablishment("");
     } catch (error) {
       setFormErrors({
-        general: error instanceof Error ? error.message : "Add failed.",
+        general:
+          error instanceof Error ? error.message : t("addForm.addFailed"),
       });
     }
   };
@@ -135,7 +150,6 @@ export function AddRestaurantForm({
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
       <DialogTrigger asChild>
-        {/* UPDATED: Trigger Button uses semantic colors */}
         <Button
           className={cn(
             "w-full md:w-1/3",
@@ -145,13 +159,8 @@ export function AddRestaurantForm({
           Add New Restaurant
         </Button>
       </DialogTrigger>
-      {/* DialogContent and its children (Header, Title, Description, Footer)
-          typically inherit their colors from Shadcn's default styling, which
-          should be based on your globals.css variables (bg-popover, text-popover-foreground, etc.).
-          If specific elements within these are not themed, they might need explicit class updates. */}
       <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
         <DialogHeader>
-          {/* DialogTitle and DialogDescription should pick up text-popover-foreground */}
           <DialogTitle>Add New Restaurant</DialogTitle>
           <DialogDescription>
             Fill out the details below to create a new restaurant.
@@ -162,8 +171,14 @@ export function AddRestaurantForm({
           action={handleAddSubmit}
           className="grid gap-4 py-4"
         >
+          {/* NOTE: You need to ensure the RestaurantForm component uses these props for its inputs */}
           <RestaurantForm
             formErrors={formErrors}
+            // 🛑 FIX: PASS NEW CONTROLLED STATE AND HANDLERS
+            currentName={newRestaurantName}
+            onNameChange={setNewRestaurantName}
+            currentCountry={newRestaurantCountry}
+            onCountryChange={setNewRestaurantCountry}
             onLogoUrlChange={setNewRestaurantLogoUrl}
             onIsActiveChange={setIsNewRestaurantActive}
             onIsDisplayedChange={setIsNewRestaurantDisplayed}
@@ -176,16 +191,13 @@ export function AddRestaurantForm({
             onPhoneNumberChange={setNewRestaurantPhoneNumber}
             currentDescription={newRestaurantDescription}
             onDescriptionChange={setNewRestaurantDescription}
-            onCountryChange={setNewRestaurantCountry}
             currentTheme={newRestaurantTheme}
             onThemeChange={setNewRestaurantTheme}
             currentTypeOfEstablishment={newRestaurantTypeOfEstablishment}
             onTypeOfEstablishmentChange={setNewRestaurantTypeOfEstablishment}
-            currentCountry={""}
           />
 
           {formErrors.general && (
-            // UPDATED: Error message uses semantic destructive color
             <p className="text-destructive col-span-full mt-4 text-center text-sm">
               {formErrors.general}
             </p>

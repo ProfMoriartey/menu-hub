@@ -49,6 +49,10 @@ export function EditRestaurantDialog({
   const [isOpen, setIsOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
+  const [currentName, setCurrentName] = useState(
+    restaurant.name ?? "", // Initialize with existing name
+  );
+
   // Initialize states with existing restaurant data
   const [isRestaurantActive, setIsRestaurantActive] = useState(
     restaurant.isActive ?? true,
@@ -82,6 +86,8 @@ export function EditRestaurantDialog({
   const handleSubmit = async (formData: FormData) => {
     setFormErrors({});
 
+    // 🛑 FIX 2: SET THE CONTROLLED NAME VALUE
+    formData.set("name", currentName);
     // Set all boolean/nullable string states onto formData for server action
     formData.set("isActive", isRestaurantActive ? "on" : "");
     formData.set("isDisplayed", isRestaurantDisplayed ? "on" : "");
@@ -172,6 +178,8 @@ export function EditRestaurantDialog({
           <RestaurantForm
             initialData={restaurant}
             formErrors={formErrors}
+            currentName={currentName}
+            onNameChange={setCurrentName}
             onLogoUrlChange={setLogoPreviewUrl}
             onIsActiveChange={setIsRestaurantActive}
             onIsDisplayedChange={setIsRestaurantDisplayed}
