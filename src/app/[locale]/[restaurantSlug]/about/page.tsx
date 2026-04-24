@@ -26,19 +26,26 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
   const { restaurantSlug } = await params;
   const t = await getTranslations("restaurantProfilePage");
 
-  const restaurantDetails: Restaurant | undefined =
-    await db.query.restaurants.findFirst({
-      where: eq(restaurants.slug, restaurantSlug),
-      with: {
-        categories: true,
-      },
-    });
+  // 1. Fetch raw data without the strict type hint yet
+  const rawData = await db.query.restaurants.findFirst({
+    where: eq(restaurants.slug, restaurantSlug),
+    with: {
+      categories: true,
+    },
+  });
 
-  if (!restaurantDetails) {
+  if (!rawData) {
     notFound();
   }
 
-  // Parse JSON fields
+  // 2. Cast the JSON fields specifically to satisfy the Restaurant interface
+  const restaurantDetails = {
+    ...rawData,
+    socialMedia: rawData.socialMedia as SocialMediaLinks,
+    deliveryApps: rawData.deliveryApps as DeliveryAppLinks,
+  } as Restaurant;
+
+  // 3. Now the rest of your code will work without errors
   const socials = (restaurantDetails.socialMedia as SocialMediaLinks) ?? {};
   const deliveryApps = (restaurantDetails.deliveryApps as DeliveryAppLinks) ?? {};
   

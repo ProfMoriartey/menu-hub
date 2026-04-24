@@ -5,56 +5,54 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 
-// 🛑 IMPORT THE MAIN CLIENT WRAPPER
 import RestaurantEditor from "~/components/dashboard/RestaurantEditor";
+import type { DeliveryAppLinks, SocialMediaLinks } from "~/lib/schemas";
+import type { Restaurant } from "~/types/restaurant";
 
 interface EditPageProps {
   params: Promise<{ restaurantSlug: string }>;
 }
 
-// 1. Fetch the restaurant data structure required by the client components
 async function getRestaurantData(slug: string) {
   const restaurant = await db.query.restaurants.findFirst({
     where: eq(schema.restaurants.slug, slug),
     with: {
       categories: {
         with: {
-          menuItems: true, // Fetch nested items for item count display
+          menuItems: {
+            orderBy: (menuItems, { asc }) => [asc(menuItems.order)],
+          },
         },
         orderBy: (categories, { asc }) => [asc(categories.order)],
       },
     },
-    // IMPORTANT: The layout should have already enforced authorization.
-    // We rely on the layout's check, but this fetch is for the data payload.
   });
 
-  // Safety check: if the layout passed, the data should exist.
   if (!restaurant) {
     notFound();
   }
 
-  // Ensure currency has a default value for the form
-  const currency = restaurant.currency || "USD";
-
-  // Destructure to match the RestaurantData interface in RestaurantEditor.tsx
+  // Cast unknown JSONB fields to their expected types
   return {
     ...restaurant,
-    currency,
-  };
+    currency: restaurant.currency || "USD",
+    socialMedia: restaurant.socialMedia as SocialMediaLinks,
+    deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
+  } as Restaurant;
 }
 
 export const metadata: Metadata = {
-  title: "Menu Editor",
-  description: "Edit restaurant details, categories, and menu items.",
+  title: "Menu Editor | Menupedia",
+  description: "Manage your restaurant menu, categories, and delivery links.",
 };
 
 export default async function RestaurantEditPage({ params }: EditPageProps) {
-  // Fetch the detailed, nested data structure
-  const restaurantData = await getRestaurantData((await params).restaurantSlug);
+  const { restaurantSlug } = await params;
+  const restaurantData = await getRestaurantData(restaurantSlug);
 
   return (
-    <div className="mx-auto max-w-7xl">
-      {/* 🛑 RENDER THE MAIN CLIENT WRAPPER */}
+    // Increased to max-w-7xl to give the new multi-column form breathing room
+    <div className="mx-auto max-w-7xl px-4">
       <RestaurantEditor initialRestaurantData={restaurantData} />
     </div>
   );
