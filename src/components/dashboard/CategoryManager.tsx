@@ -16,7 +16,7 @@ import type { Category } from "~/types/restaurant";
 import MenuItemManager from "./MenuItemManager";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { ChevronDown, Pencil, Trash2, PlusCircle } from "lucide-react";
+import { ChevronDown, Pencil, Trash2, PlusCircle, GripVertical } from "lucide-react";
 
 import {
   arrayMove,
@@ -149,16 +149,24 @@ function SortableCategoryItem({ category, restaurantId }: CategoryItemProps) {
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      // 🛑 Listeners are applied to the entire item for drag capability 🛑
-      {...listeners}
       className={cn(
-        "border-border bg-card cursor-grab rounded-lg border shadow-md transition-shadow hover:shadow-lg",
+        "border-border bg-card flex rounded-lg border shadow-md transition-shadow hover:shadow-lg",
         isDragging ? "shadow-xl ring-2 ring-indigo-500" : "",
       )}
     >
-      {/* Render the core Category Item UI inside the draggable element */}
-      <CategoryItem category={category} restaurantId={restaurantId} />
+      {/* ISOLATED DRAG HANDLE */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="border-border flex cursor-grab items-center justify-center rounded-l-lg border-r px-3 hover:bg-muted active:cursor-grabbing"
+      >
+        <GripVertical className="text-muted-foreground h-5 w-5" />
+      </div>
+
+      {/* RENDER THE CORE CATEGORY ITEM */}
+      <div className="flex-grow">
+        <CategoryItem category={category} restaurantId={restaurantId} />
+      </div>
     </div>
   );
 }

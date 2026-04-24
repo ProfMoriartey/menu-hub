@@ -33,19 +33,24 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   country: varchar("country", { length: 256 }),
   foodType: varchar("food_type", { length: 256 }),
   isActive: boolean("is_active").default(true).notNull(),
-  isDisplayed: boolean("is_displayed").default(false).notNull(), // Added isDisplayed
+  isDisplayed: boolean("is_displayed").default(false).notNull(),
   logoUrl: varchar("logo_url", { length: 256 }),
 
-  // --- NEW FIELDS ADDED HERE ---
-  currency: varchar("currency", { length: 10 }).default("USD").notNull(), // Default to 'USD', cannot be null
-  phoneNumber: varchar("phone_number", { length: 50 }), // Nullable by default
-  description: text("description"), // Use 'text' for potentially long descriptions, nullable by default
-  theme: varchar("theme", { length: 50 }), // Nullable by default
-  typeOfEstablishment: varchar("type_of_establishment", { length: 100 }), // Nullable by default
-  // --- END NEW FIELDS ---
+  currency: varchar("currency", { length: 10 }).default("USD").notNull(),
+  phoneNumber: varchar("phone_number", { length: 50 }),
+  description: text("description"),
+  theme: varchar("theme", { length: 50 }),
+  typeOfEstablishment: varchar("type_of_establishment", { length: 100 }),
+
+  socialMedia: jsonb("social_media"), 
+  orderUrl: varchar("order_url", { length: 512 }),
+  mapUrl: varchar("map_url", { length: 512 }), 
+  metaTitle: varchar("meta_title", { length: 256 }),
+  metaDescription: text("meta_description"),
+  ogImage: varchar("og_image", { length: 256 }),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow(), // Or .default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()), if you prefer automatic update
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // Define relations for restaurants
@@ -89,6 +94,7 @@ export const menuItems = pgTable("menu-hub_menu_items", {
   ingredients: varchar("ingredients", { length: 512 }),
   dietaryLabels: jsonb("dietary_labels").$type<DietaryLabelValue[]>().default([]),
   imageUrl: varchar("image_url", { length: 256 }),
+  order: integer("order").notNull().default(0), // Ensure this line exists
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

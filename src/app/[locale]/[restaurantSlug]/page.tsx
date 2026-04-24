@@ -38,13 +38,14 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
     notFound();
   }
 
-  const categoriesWithMenuItems = await db.query.categories.findMany({
+ const categoriesWithMenuItems = await db.query.categories.findMany({
     where: eq(categories.restaurantId, restaurantDetails.id),
     orderBy: (categories, { asc }) => [asc(categories.order)],
     with: {
       menuItems: {
         where: eq(menuItems.restaurantId, restaurantDetails.id),
-        orderBy: (menuItems, { asc }) => [asc(menuItems.name)],
+        // UPDATE: Changed asc(menuItems.name) to asc(menuItems.order)
+        orderBy: (menuItems, { asc }) => [asc(menuItems.order)],
       },
     },
   });

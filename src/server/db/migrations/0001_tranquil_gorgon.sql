@@ -1,0 +1,1 @@
+ALTER TABLE "menu-hub_menu_items" ADD COLUMN "order" integer DEFAULT 0 NOT NULL;

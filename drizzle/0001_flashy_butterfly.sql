@@ -1,1 +1,0 @@
-ALTER TABLE "menu-hub_restaurants" DROP COLUMN "gallery_urls";
