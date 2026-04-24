@@ -23,7 +23,7 @@ const getStringValue = (formData: FormData, key: string): string | null => {
 
 const getFileKey = (url: string | null | undefined): string | null => {
   if (!url) return null;
-  return url.split("/f/")[1] || null;
+  return url.split("/f/")[1] ?? null;
 };
 
 export async function addMenuItem(formData: FormData) {
