@@ -19,8 +19,8 @@ export interface Restaurant {
   theme: string | null; 
   typeOfEstablishment: string | null; 
 
-  socialMedia?: SocialMediaLinks | unknown | null;
-  deliveryApps?: DeliveryAppLinks | unknown | null;
+  socialMedia?: SocialMediaLinks | null;
+  deliveryApps?: DeliveryAppLinks | null;
   mapUrl: string | null;
   metaTitle: string | null;
   metaDescription: string | null;
