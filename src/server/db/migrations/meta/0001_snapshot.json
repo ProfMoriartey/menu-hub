@@ -1,6 +1,6 @@
 {
-  "id": "00094a34-6761-4d00-87a3-4d7f664f4c9b",
-  "prevId": "66ccb380-7394-415d-b02f-ac91b00afeb1",
+  "id": "2cd66a24-3a28-4a4d-bddc-ddc95d65b960",
+  "prevId": "498fdf6f-1f97-4810-a684-a42ceef9936f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -286,9 +286,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "order_url": {
-          "name": "order_url",
-          "type": "varchar(512)",
+        "delivery_apps": {
+          "name": "delivery_apps",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },

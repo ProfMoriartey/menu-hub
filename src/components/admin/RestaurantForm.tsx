@@ -6,14 +6,14 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { UploadButton } from "~/utils/uploadthing";
-import { XCircle } from "lucide-react";
+import { XCircle, Link as LinkIcon, MapPin, Search } from "lucide-react";
 import { Textarea } from "~/components/ui/textarea";
-import { useTranslations } from "next-intl"; // 🛑 Import next-intl hook
-import { cn } from "~/lib/utils"; // 🛑 Import cn utility
-
-// Import types for restaurant data and form errors
-import type { Restaurant } from "~/types/restaurant";
+import { useTranslations } from "next-intl";
+import { cn } from "~/lib/utils";
 import { Button } from "../ui/button";
+
+import type { Restaurant } from "~/types/restaurant";
+import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 
 interface RestaurantFormProps {
   initialData?: Restaurant;
@@ -40,14 +40,28 @@ interface RestaurantFormProps {
   currentTheme: string;
   currentTypeOfEstablishment: string;
   currentCountry: string;
+
+  // --- NEW PROPS FOR SEO, MAP & LINKS ---
+  currentMapUrl: string;
+  onMapUrlChange: (value: string) => void;
+  currentMetaTitle: string;
+  onMetaTitleChange: (value: string) => void;
+  currentMetaDescription: string;
+  onMetaDescriptionChange: (value: string) => void;
+  
+  currentSocialMedia: SocialMediaLinks;
+  onSocialMediaChange: (key: keyof SocialMediaLinks, value: string) => void;
+  
+  currentDeliveryApps: DeliveryAppLinks;
+  onDeliveryAppsChange: (key: keyof DeliveryAppLinks, value: string) => void;
 }
 
 export function RestaurantForm({
   initialData,
   formErrors,
 
-  currentName, // 🛑 DESTRUCTED
-  onNameChange, // 🛑 DESTRUCTED
+  currentName,
+  onNameChange,
   onLogoUrlChange,
   onIsActiveChange,
   onIsDisplayedChange,
@@ -66,24 +80,38 @@ export function RestaurantForm({
   currentTypeOfEstablishment,
   onCountryChange,
   currentCountry,
+
+  // NEW DESTRUCTURED PROPS
+  currentMapUrl,
+  onMapUrlChange,
+  currentMetaTitle,
+  onMetaTitleChange,
+  currentMetaDescription,
+  onMetaDescriptionChange,
+  currentSocialMedia,
+  onSocialMediaChange,
+  currentDeliveryApps,
+  onDeliveryAppsChange,
 }: RestaurantFormProps) {
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      {/* LEFT COLUMN: Name, Slug, Country, Food Type, Address, Currency, Phone Number */}
-      <div className="space-y-4">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {/* COLUMN 1: Basic Info */}
+      <div className="space-y-4 rounded-lg border border-border bg-card p-6 shadow-sm">
+        <h3 className="mb-4 text-lg font-semibold flex items-center gap-2">
+           Basic Details
+        </h3>
+        
         <div>
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
             name="name"
-            value={currentName} // 🛑 FIX: BIND TO STATE VALUE
-            onChange={(e) => onNameChange(e.target.value)} // 🛑 FIX: BIND TO HANDLER
-            placeholder="Name"
+            value={currentName}
+            onChange={(e) => onNameChange(e.target.value)}
+            placeholder="Restaurant Name"
             required
           />
-          {formErrors.name && (
-            <p className="text-sm text-red-500">{formErrors.name}</p>
-          )}
+          {formErrors.name && <p className="mt-1 text-sm text-destructive">{formErrors.name}</p>}
         </div>
 
         <div>
@@ -94,9 +122,7 @@ export function RestaurantForm({
             defaultValue={initialData?.slug ?? ""}
             required
           />
-          {formErrors.slug && (
-            <p className="text-sm text-red-500">{formErrors.slug}</p>
-          )}
+          {formErrors.slug && <p className="mt-1 text-sm text-destructive">{formErrors.slug}</p>}
         </div>
 
         <div>
@@ -104,26 +130,10 @@ export function RestaurantForm({
           <Input
             id="country"
             name="country"
-            value={currentCountry} // 🛑 BIND TO STATE VALUE
-            onChange={(e) => onCountryChange(e.target.value)} // 🛑 BIND TO HANDLER
+            value={currentCountry}
+            onChange={(e) => onCountryChange(e.target.value)}
             required
           />
-          {formErrors.country && (
-            <p className="text-sm text-red-500">{formErrors.country}</p>
-          )}
-        </div>
-
-        <div>
-          <Label htmlFor="foodType">Type of Food</Label>
-          <Input
-            id="foodType"
-            name="foodType"
-            defaultValue={initialData?.foodType ?? ""}
-            required
-          />
-          {formErrors.foodType && (
-            <p className="text-sm text-red-500">{formErrors.foodType}</p>
-          )}
         </div>
 
         <div>
@@ -133,9 +143,6 @@ export function RestaurantForm({
             name="address"
             defaultValue={initialData?.address ?? ""}
           />
-          {formErrors.address && (
-            <p className="text-sm text-red-500">{formErrors.address}</p>
-          )}
         </div>
 
         <div>
@@ -147,9 +154,6 @@ export function RestaurantForm({
             onChange={(e) => onCurrencyChange(e.target.value)}
             required
           />
-          {formErrors.currency && (
-            <p className="text-sm text-red-500">{formErrors.currency}</p>
-          )}
         </div>
 
         <div>
@@ -160,65 +164,9 @@ export function RestaurantForm({
             value={currentPhoneNumber}
             onChange={(e) => onPhoneNumberChange(e.target.value)}
           />
-          {formErrors.phoneNumber && (
-            <p className="text-sm text-red-500">{formErrors.phoneNumber}</p>
-          )}
         </div>
-      </div>
-
-      {/* RIGHT COLUMN: Description, Theme, Type of Establishment, Switches, Logo Upload */}
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            name="description"
-            value={currentDescription}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            rows={5}
-          />
-          {formErrors.description && (
-            <p className="text-sm text-red-500">{formErrors.description}</p>
-          )}
-        </div>
-        {/* START OF THEME INPUT CHANGES */}
-        <div>
-          <Label htmlFor="theme">Theme</Label>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
-            <Input
-              id="theme"
-              name="theme"
-              value={currentTheme}
-              onChange={(e) => onThemeChange(e.target.value)}
-              className="flex-grow" // Allows input to take available space
-            />
-            {/* Theme Suggestions */}
-            <p className="text-muted-foreground mt-1 text-sm sm:mt-0">
-              **Suggestions:** classic, sidebar-list, accordion-card,
-              category-cards-image-dominant
-            </p>
-          </div>
-          {formErrors.theme && (
-            <p className="text-sm text-red-500">{formErrors.theme}</p>
-          )}
-        </div>
-        {/* END OF THEME INPUT CHANGES */}
-        <div>
-          <Label htmlFor="typeOfEstablishment">Type of Establishment</Label>
-          <Input
-            id="typeOfEstablishment"
-            name="typeOfEstablishment"
-            value={currentTypeOfEstablishment}
-            onChange={(e) => onTypeOfEstablishmentChange(e.target.value)}
-          />
-          {formErrors.typeOfEstablishment && (
-            <p className="text-sm text-red-500">
-              {formErrors.typeOfEstablishment}
-            </p>
-          )}
-        </div>
-        {/* Switches */}
-        <div className="flex items-center space-x-2">
+        
+         <div className="flex items-center space-x-2 pt-2">
           <Switch
             id="isActive"
             name="isActive"
@@ -236,14 +184,81 @@ export function RestaurantForm({
           />
           <Label htmlFor="isDisplayed">Display on Public Site</Label>
         </div>
-        {/* Logo Upload Section */}
-        <div className="space-y-2 pt-2">
+      </div>
+
+      {/* COLUMN 2: Branding & External Links */}
+      <div className="space-y-4 rounded-lg border border-border bg-card p-6 shadow-sm">
+        <h3 className="mb-4 text-lg font-semibold flex items-center gap-2">
+           Branding & External Links
+        </h3>
+
+        <div>
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            name="description"
+            value={currentDescription}
+            onChange={(e) => onDescriptionChange(e.target.value)}
+            rows={3}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="theme">Theme</Label>
+          <Input
+            id="theme"
+            name="theme"
+            value={currentTheme}
+            onChange={(e) => onThemeChange(e.target.value)}
+            placeholder="e.g., classic, sidebar-list"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="mapUrl" className="flex items-center gap-1">
+            <MapPin className="h-4 w-4" /> Map Link (Google/Apple)
+          </Label>
+          <Input
+            id="mapUrl"
+            name="mapUrl"
+            type="url"
+            value={currentMapUrl}
+            onChange={(e) => onMapUrlChange(e.target.value)}
+            placeholder="https://maps.google.com/..."
+          />
+          {formErrors.mapUrl && <p className="mt-1 text-sm text-destructive">{formErrors.mapUrl}</p>}
+        </div>
+
+        {/* Social Media Group */}
+        <div className="space-y-3 pt-2">
+          <Label className="flex items-center gap-1">
+            <LinkIcon className="h-4 w-4" /> Social Media Links
+          </Label>
+          <Input
+            placeholder="Instagram URL"
+            value={currentSocialMedia?.instagram ?? ""}
+            onChange={(e) => onSocialMediaChange("instagram", e.target.value)}
+          />
+          <Input
+            placeholder="Facebook URL"
+            value={currentSocialMedia?.facebook ?? ""}
+            onChange={(e) => onSocialMediaChange("facebook", e.target.value)}
+          />
+          <Input
+            placeholder="TikTok URL"
+            value={currentSocialMedia?.tiktok ?? ""}
+            onChange={(e) => onSocialMediaChange("tiktok", e.target.value)}
+          />
+        </div>
+        
+        {/* Logo Upload */}
+        <div className="space-y-2 pt-4">
           <Label htmlFor="logoUrl">Restaurant Logo</Label>
           {currentLogoUrl && (
-            <div className="relative mb-2 h-24 w-24 overflow-hidden rounded-md">
+            <div className="relative mb-2 h-24 w-24 overflow-hidden rounded-md border border-border">
               <Image
-                width={250}
-                height={250}
+                width={96}
+                height={96}
                 src={currentLogoUrl}
                 alt="Logo Preview"
                 className="h-full w-full object-cover"
@@ -269,11 +284,71 @@ export function RestaurantForm({
               console.error(`ERROR! ${error.message}`);
             }}
           />
-          {formErrors.logoUrl && (
-            <p className="text-sm text-red-500">{formErrors.logoUrl}</p>
-          )}
         </div>
       </div>
+
+      {/* COLUMN 3: Delivery Apps & SEO */}
+      <div className="space-y-4 rounded-lg border border-border bg-card p-6 shadow-sm">
+        
+        {/* SEO Group */}
+        <div className="space-y-3 mb-6">
+          <h3 className="mb-4 text-lg font-semibold flex items-center gap-2">
+            <Search className="h-4 w-4" /> Search Engine Optimization (SEO)
+          </h3>
+          
+          <div>
+            <Label htmlFor="metaTitle">Meta Title</Label>
+            <Input
+              id="metaTitle"
+              name="metaTitle"
+              value={currentMetaTitle}
+              onChange={(e) => onMetaTitleChange(e.target.value)}
+              placeholder="e.g., Best Pizza in Town | Mario's"
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="metaDescription">Meta Description</Label>
+            <Textarea
+              id="metaDescription"
+              name="metaDescription"
+              value={currentMetaDescription}
+              onChange={(e) => onMetaDescriptionChange(e.target.value)}
+              rows={2}
+              placeholder="Short description for search results..."
+            />
+          </div>
+        </div>
+
+        {/* Delivery Apps Group */}
+        <div className="space-y-3 pt-4 border-t border-border">
+          <h3 className="mb-4 text-lg font-semibold flex items-center gap-2">
+             Delivery Platforms
+          </h3>
+          
+          <Input
+            placeholder="Yemeksepeti URL"
+            value={currentDeliveryApps?.yemeksepeti ?? ""}
+            onChange={(e) => onDeliveryAppsChange("yemeksepeti", e.target.value)}
+          />
+          <Input
+            placeholder="Getir URL"
+            value={currentDeliveryApps?.getir ?? ""}
+            onChange={(e) => onDeliveryAppsChange("getir", e.target.value)}
+          />
+           <Input
+            placeholder="Trendyol Yemek URL"
+            value={currentDeliveryApps?.trendyolYemek ?? ""}
+            onChange={(e) => onDeliveryAppsChange("trendyolYemek", e.target.value)}
+          />
+          <Input
+            placeholder="UberEats URL"
+            value={currentDeliveryApps?.uberEats ?? ""}
+            onChange={(e) => onDeliveryAppsChange("uberEats", e.target.value)}
+          />
+        </div>
+      </div>
+
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react"; // ADDED useEffect
+import { useRef, useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -13,8 +13,8 @@ import {
 } from "~/components/ui/dialog";
 import { useFormStatus } from "react-dom";
 import { cn } from "~/lib/utils";
-import { useTranslations } from "next-intl"; // Import for i18n
-import { restaurantSchema } from "~/lib/schemas";
+import { useTranslations } from "next-intl";
+import { restaurantSchema, type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
 import { RestaurantForm } from "~/components/admin/RestaurantForm";
 
 interface AddRestaurantFormProps {
@@ -43,45 +43,46 @@ export function AddRestaurantForm({
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  // 🛑 FIX: INTRODUCE STATE FOR NAME AND COUNTRY
   const [newRestaurantName, setNewRestaurantName] = useState("");
   const [newRestaurantCountry, setNewRestaurantCountry] = useState("");
-
   const [isNewRestaurantActive, setIsNewRestaurantActive] = useState(true);
-  const [isNewRestaurantDisplayed, setIsNewRestaurantDisplayed] =
-    useState(true);
-  const [newRestaurantLogoUrl, setNewRestaurantLogoUrl] = useState<
-    string | null
-  >(null);
-
+  const [isNewRestaurantDisplayed, setIsNewRestaurantDisplayed] = useState(true);
+  const [newRestaurantLogoUrl, setNewRestaurantLogoUrl] = useState<string | null>(null);
   const [newRestaurantCurrency, setNewRestaurantCurrency] = useState("USD");
   const [newRestaurantPhoneNumber, setNewRestaurantPhoneNumber] = useState("");
   const [newRestaurantDescription, setNewRestaurantDescription] = useState("");
   const [newRestaurantTheme, setNewRestaurantTheme] = useState("");
-  const [
-    newRestaurantTypeOfEstablishment,
-    setNewRestaurantTypeOfEstablishment,
-  ] = useState("");
+  const [newRestaurantTypeOfEstablishment, setNewRestaurantTypeOfEstablishment] = useState("");
+
+  // --- NEW STATES ---
+  const [currentMapUrl, setCurrentMapUrl] = useState("");
+  const [currentMetaTitle, setCurrentMetaTitle] = useState("");
+  const [currentMetaDescription, setCurrentMetaDescription] = useState("");
+  
+  const [currentSocialMedia, setCurrentSocialMedia] = useState<SocialMediaLinks>({});
+  const [currentDeliveryApps, setCurrentDeliveryApps] = useState<DeliveryAppLinks>({});
+
+  const handleSocialMediaChange = (key: keyof SocialMediaLinks, value: string) => {
+    setCurrentSocialMedia((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleDeliveryAppsChange = (key: keyof DeliveryAppLinks, value: string) => {
+    setCurrentDeliveryApps((prev) => ({ ...prev, [key]: value }));
+  };
 
   const addFormRef = useRef<HTMLFormElement>(null);
 
-  // Clear generic errors when the dialog is closed (UX improvement)
   useEffect(() => {
     if (!isAddDialogOpen) {
       setFormErrors({});
-      // Also reset state values when the dialog is closed without success,
-      // though successful submission handles reset too.
     }
   }, [isAddDialogOpen]);
 
   const handleAddSubmit = async (formData: FormData) => {
     setFormErrors({});
 
-    // 🛑 FIX: Inject the controlled Name and Country fields
     formData.set("name", newRestaurantName);
     formData.set("country", newRestaurantCountry);
-
-    // Inject all other controlled state values
     formData.set("isActive", isNewRestaurantActive ? "on" : "");
     formData.set("isDisplayed", isNewRestaurantDisplayed ? "on" : "");
     formData.set("logoUrl", newRestaurantLogoUrl ?? "");
@@ -90,6 +91,13 @@ export function AddRestaurantForm({
     formData.set("description", newRestaurantDescription);
     formData.set("theme", newRestaurantTheme);
     formData.set("typeOfEstablishment", newRestaurantTypeOfEstablishment);
+
+    // --- APPEND NEW FIELDS ---
+    formData.set("mapUrl", currentMapUrl);
+    formData.set("metaTitle", currentMetaTitle);
+    formData.set("metaDescription", currentMetaDescription);
+    formData.set("socialMedia", JSON.stringify(currentSocialMedia));
+    formData.set("deliveryApps", JSON.stringify(currentDeliveryApps));
 
     const values = {
       name: formData.get("name") as string,
@@ -105,6 +113,12 @@ export function AddRestaurantForm({
       description: formData.get("description") as string | null,
       theme: formData.get("theme") as string | null,
       typeOfEstablishment: formData.get("typeOfEstablishment") as string | null,
+      // --- VALIDATE NEW FIELDS ---
+      mapUrl: formData.get("mapUrl") as string | null,
+      metaTitle: formData.get("metaTitle") as string | null,
+      metaDescription: formData.get("metaDescription") as string | null,
+      socialMedia: currentSocialMedia,
+      deliveryApps: currentDeliveryApps,
     };
 
     const result = restaurantSchema.safeParse(values);
@@ -128,7 +142,6 @@ export function AddRestaurantForm({
       addFormRef.current?.reset();
       setFormErrors({});
 
-      // 🛑 FIX: Reset all states after success
       setNewRestaurantName("");
       setNewRestaurantCountry("");
       setIsNewRestaurantActive(true);
@@ -139,10 +152,17 @@ export function AddRestaurantForm({
       setNewRestaurantDescription("");
       setNewRestaurantTheme("");
       setNewRestaurantTypeOfEstablishment("");
+      
+      // RESET NEW FIELDS
+      setCurrentMapUrl("");
+      setCurrentMetaTitle("");
+      setCurrentMetaDescription("");
+      setCurrentSocialMedia({});
+      setCurrentDeliveryApps({});
+      
     } catch (error) {
       setFormErrors({
-        general:
-          error instanceof Error ? error.message : t("addForm.addFailed"),
+        general: error instanceof Error ? error.message : t("addForm.addFailed"),
       });
     }
   };
@@ -159,7 +179,7 @@ export function AddRestaurantForm({
           Add New Restaurant
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
+      <DialogContent className="sm:max-w-2xl lg:max-w-[1000px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Restaurant</DialogTitle>
           <DialogDescription>
@@ -171,10 +191,8 @@ export function AddRestaurantForm({
           action={handleAddSubmit}
           className="grid gap-4 py-4"
         >
-          {/* NOTE: You need to ensure the RestaurantForm component uses these props for its inputs */}
           <RestaurantForm
             formErrors={formErrors}
-            // 🛑 FIX: PASS NEW CONTROLLED STATE AND HANDLERS
             currentName={newRestaurantName}
             onNameChange={setNewRestaurantName}
             currentCountry={newRestaurantCountry}
@@ -195,6 +213,20 @@ export function AddRestaurantForm({
             onThemeChange={setNewRestaurantTheme}
             currentTypeOfEstablishment={newRestaurantTypeOfEstablishment}
             onTypeOfEstablishmentChange={setNewRestaurantTypeOfEstablishment}
+
+            // --- PASS NEW PROPS ---
+            currentMapUrl={currentMapUrl}
+            onMapUrlChange={setCurrentMapUrl}
+            currentMetaTitle={currentMetaTitle}
+            onMetaTitleChange={setCurrentMetaTitle}
+            currentMetaDescription={currentMetaDescription}
+            onMetaDescriptionChange={setCurrentMetaDescription}
+            
+            currentSocialMedia={currentSocialMedia}
+            onSocialMediaChange={handleSocialMediaChange}
+            
+            currentDeliveryApps={currentDeliveryApps}
+            onDeliveryAppsChange={handleDeliveryAppsChange}
           />
 
           {formErrors.general && (
@@ -203,7 +235,7 @@ export function AddRestaurantForm({
             </p>
           )}
 
-          <DialogFooter className="col-span-full">
+          <DialogFooter className="col-span-full pt-4">
             <SubmitButton />
           </DialogFooter>
         </form>

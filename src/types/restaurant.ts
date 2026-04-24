@@ -1,7 +1,8 @@
 // src/types/restaurant.ts
+import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 
 export interface Restaurant {
-  categories: Category[]; // Remains the same, includes nested categories
+  categories: Category[]; 
   id: string;
   name: string;
   slug: string;
@@ -12,20 +13,22 @@ export interface Restaurant {
   isDisplayed: boolean;
   logoUrl: string | null;
 
-  // --- NEW PROPERTIES ADDED HERE ---
-  currency: string; // Not nullable because you set a NOT NULL DEFAULT 'USD' in schema
-  phoneNumber: string | null; // Nullable as per schema
-  description: string | null; // Nullable as per schema
-  theme: string | null; // Nullable as per schema
-  typeOfEstablishment: string | null; // Nullable as per schema
-  // --- END NEW PROPERTIES ---
+  currency: string; 
+  phoneNumber: string | null; 
+  description: string | null; 
+  theme: string | null; 
+  typeOfEstablishment: string | null; 
+
+  socialMedia: SocialMediaLinks | unknown | null;
+  deliveryApps: DeliveryAppLinks | unknown | null;
+  mapUrl: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  ogImage: string | null;
 
   createdAt: Date;
   updatedAt: Date | null;
 }
-
-// You might also want to define types for Category and MenuItem if they are not already.
-// This is good practice for strict typing throughout your application.
 
 export interface Category {
   id: string;
@@ -34,8 +37,7 @@ export interface Category {
   order: number;
   createdAt: Date;
   updatedAt: Date | null;
-  // Add relations if you fetch them with categories
-  menuItems?: MenuItem[]; // Optional, as it might not always be included in the query
+  menuItems?: MenuItem[]; 
 }
 
 export type DietaryLabel = "vegetarian" | "vegan" | "gluten-free" | "dairy-free" | "nut-free";
@@ -46,9 +48,9 @@ export interface MenuItem {
   restaurantId: string;
   name: string;
   description: string | null;
-  price: string; // Assuming varchar for price
+  price: string; 
   ingredients: string | null;
-  dietaryLabels: DietaryLabel[] | null; // Matches the Drizzle type
+  dietaryLabels: DietaryLabel[] | null; 
   imageUrl: string | null;
   createdAt: Date;
   updatedAt: Date | null;

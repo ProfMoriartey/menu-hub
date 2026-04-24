@@ -14,11 +14,9 @@ import {
 } from "~/components/ui/dialog";
 import { Pencil } from "lucide-react";
 import { useFormStatus } from "react-dom";
-import { cn } from "~/lib/utils"; // ADDED: Import cn utility
+import { cn } from "~/lib/utils";
 
-// Import the shared schema
-import { restaurantSchema } from "~/lib/schemas";
-// Import the new shared form component
+import { restaurantSchema, type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
 import { RestaurantForm } from "~/components/admin/RestaurantForm";
 
 import type { Restaurant } from "~/types/restaurant";
@@ -26,7 +24,6 @@ import type { Restaurant } from "~/types/restaurant";
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    // UPDATED: Submit Button uses semantic colors
     <Button
       type="submit"
       disabled={pending}
@@ -49,50 +46,49 @@ export function EditRestaurantDialog({
   const [isOpen, setIsOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  const [currentName, setCurrentName] = useState(
-    restaurant.name ?? "", // Initialize with existing name
-  );
+  const [currentName, setCurrentName] = useState(restaurant.name ?? "");
 
-  // Initialize states with existing restaurant data
-  const [isRestaurantActive, setIsRestaurantActive] = useState(
-    restaurant.isActive ?? true,
-  );
-  const [isRestaurantDisplayed, setIsRestaurantDisplayed] = useState(
-    restaurant.isDisplayed ?? true,
-  );
-  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(
-    restaurant.logoUrl ?? null,
-  );
+  const [isRestaurantActive, setIsRestaurantActive] = useState(restaurant.isActive ?? true);
+  const [isRestaurantDisplayed, setIsRestaurantDisplayed] = useState(restaurant.isDisplayed ?? true);
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(restaurant.logoUrl ?? null);
 
-  // NEW STATES: Initialize with existing data, default to empty string for null/undefined
-  const [currentCurrency, setCurrentCurrency] = useState(
-    restaurant.currency ?? "",
-  );
-  const [currentPhoneNumber, setCurrentPhoneNumber] = useState(
-    restaurant.phoneNumber ?? "",
-  );
-  const [currentDescription, setCurrentDescription] = useState(
-    restaurant.description ?? "",
-  );
+  const [currentCurrency, setCurrentCurrency] = useState(restaurant.currency ?? "");
+  const [currentPhoneNumber, setCurrentPhoneNumber] = useState(restaurant.phoneNumber ?? "");
+  const [currentDescription, setCurrentDescription] = useState(restaurant.description ?? "");
   const [currentTheme, setCurrentTheme] = useState(restaurant.theme ?? "");
-  const [currentTypeOfEstablishment, setCurrentTypeOfEstablishment] = useState(
-    restaurant.typeOfEstablishment ?? "",
+  const [currentTypeOfEstablishment, setCurrentTypeOfEstablishment] = useState(restaurant.typeOfEstablishment ?? "");
+  const [newRestaurantCountry, setNewRestaurantCountry] = useState(restaurant.country ?? "");
+
+  // --- NEW STATES ---
+  const [currentMapUrl, setCurrentMapUrl] = useState(restaurant.mapUrl ?? "");
+  const [currentMetaTitle, setCurrentMetaTitle] = useState(restaurant.metaTitle ?? "");
+  const [currentMetaDescription, setCurrentMetaDescription] = useState(restaurant.metaDescription ?? "");
+  
+  // Cast existing JSON or provide empty objects to match the schema
+  const [currentSocialMedia, setCurrentSocialMedia] = useState<SocialMediaLinks>(
+    (restaurant.socialMedia as SocialMediaLinks) ?? {}
+  );
+  
+  const [currentDeliveryApps, setCurrentDeliveryApps] = useState<DeliveryAppLinks>(
+    (restaurant.deliveryApps as DeliveryAppLinks) ?? {}
   );
 
-  const [newRestaurantCountry, setNewRestaurantCountry] = useState(
-    restaurant.country ?? "",
-  );
+  // Helper handlers for nested objects
+  const handleSocialMediaChange = (key: keyof SocialMediaLinks, value: string) => {
+    setCurrentSocialMedia((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleDeliveryAppsChange = (key: keyof DeliveryAppLinks, value: string) => {
+    setCurrentDeliveryApps((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleSubmit = async (formData: FormData) => {
     setFormErrors({});
 
-    // 🛑 FIX 2: SET THE CONTROLLED NAME VALUE
     formData.set("name", currentName);
-    // Set all boolean/nullable string states onto formData for server action
     formData.set("isActive", isRestaurantActive ? "on" : "");
     formData.set("isDisplayed", isRestaurantDisplayed ? "on" : "");
-    formData.set("logoUrl", logoPreviewUrl ?? ""); // Use the state URL, not default
-    // NEW: Set new field values onto formData
+    formData.set("logoUrl", logoPreviewUrl ?? ""); 
     formData.set("currency", currentCurrency);
     formData.set("phoneNumber", currentPhoneNumber);
     formData.set("description", currentDescription);
@@ -100,8 +96,14 @@ export function EditRestaurantDialog({
     formData.set("typeOfEstablishment", currentTypeOfEstablishment);
     formData.set("country", newRestaurantCountry);
 
-    // Create a 'values' object to pass to Zod for validation
-    // Ensure all fields from the schema are present, even if null
+    // --- APPEND NEW FIELDS ---
+    formData.set("mapUrl", currentMapUrl);
+    formData.set("metaTitle", currentMetaTitle);
+    formData.set("metaDescription", currentMetaDescription);
+    // Stringify the JSON objects before sending
+    formData.set("socialMedia", JSON.stringify(currentSocialMedia));
+    formData.set("deliveryApps", JSON.stringify(currentDeliveryApps));
+
     const values = {
       id: formData.get("id") as string,
       name: formData.get("name") as string,
@@ -109,15 +111,20 @@ export function EditRestaurantDialog({
       country: formData.get("country") as string | null,
       foodType: formData.get("foodType") as string | null,
       address: formData.get("address") as string | null,
-      isActive: formData.get("isActive") as string, // Zod `coerce.boolean` expects string "on" or ""
-      isDisplayed: formData.get("isDisplayed") as string | null, // Zod expects string "on" or ""
+      isActive: formData.get("isActive") as string, 
+      isDisplayed: formData.get("isDisplayed") as string | null, 
       logoUrl: formData.get("logoUrl") as string | null,
-      // NEW: Include new field values for schema validation
       currency: formData.get("currency") as string,
       phoneNumber: formData.get("phoneNumber") as string | null,
       description: formData.get("description") as string | null,
       theme: formData.get("theme") as string | null,
       typeOfEstablishment: formData.get("typeOfEstablishment") as string | null,
+      // --- VALIDATE NEW FIELDS ---
+      mapUrl: formData.get("mapUrl") as string | null,
+      metaTitle: formData.get("metaTitle") as string | null,
+      metaDescription: formData.get("metaDescription") as string | null,
+      socialMedia: currentSocialMedia,
+      deliveryApps: currentDeliveryApps,
     };
 
     const result = restaurantSchema.safeParse(values);
@@ -148,25 +155,20 @@ export function EditRestaurantDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        {/* UPDATED: Trigger Button uses semantic colors */}
         <Button
           variant="outline"
           size="sm"
           className={cn(
             "mr-2",
-            "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground", // Outline variant often uses secondary colors
+            "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground", 
           )}
         >
           <Pencil className="mr-2 h-4 w-4" />
           Edit
         </Button>
       </DialogTrigger>
-      {/* DialogContent and its children (Header, Title, Description, Footer)
-          typically inherit their colors from Shadcn's default styling, which
-          should be based on your globals.css variables (bg-popover, text-popover-foreground, etc.). */}
-      <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
+      <DialogContent className="sm:max-w-2xl lg:max-w-[1000px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          {/* DialogTitle and DialogDescription should pick up text-popover-foreground */}
           <DialogTitle>Edit Restaurant</DialogTitle>
           <DialogDescription>
             Update info for &quot;{restaurant.name}&quot;.
@@ -178,6 +180,7 @@ export function EditRestaurantDialog({
           <RestaurantForm
             initialData={restaurant}
             formErrors={formErrors}
+            
             currentName={currentName}
             onNameChange={setCurrentName}
             onLogoUrlChange={setLogoPreviewUrl}
@@ -186,28 +189,42 @@ export function EditRestaurantDialog({
             currentIsActive={isRestaurantActive}
             currentIsDisplayed={isRestaurantDisplayed}
             currentLogoUrl={logoPreviewUrl}
+            
             currentCurrency={currentCurrency}
             onCurrencyChange={setCurrentCurrency}
             currentPhoneNumber={currentPhoneNumber}
             onPhoneNumberChange={setCurrentPhoneNumber}
             currentDescription={currentDescription}
-            onCountryChange={setNewRestaurantCountry}
             onDescriptionChange={setCurrentDescription}
             currentTheme={currentTheme}
             onThemeChange={setCurrentTheme}
             currentTypeOfEstablishment={currentTypeOfEstablishment}
             onTypeOfEstablishmentChange={setCurrentTypeOfEstablishment}
             currentCountry={newRestaurantCountry}
+            onCountryChange={setNewRestaurantCountry}
+
+            // --- PASS NEW PROPS ---
+            currentMapUrl={currentMapUrl}
+            onMapUrlChange={setCurrentMapUrl}
+            currentMetaTitle={currentMetaTitle}
+            onMetaTitleChange={setCurrentMetaTitle}
+            currentMetaDescription={currentMetaDescription}
+            onMetaDescriptionChange={setCurrentMetaDescription}
+            
+            currentSocialMedia={currentSocialMedia}
+            onSocialMediaChange={handleSocialMediaChange}
+            
+            currentDeliveryApps={currentDeliveryApps}
+            onDeliveryAppsChange={handleDeliveryAppsChange}
           />
 
           {formErrors.general && (
-            // UPDATED: Error message uses semantic destructive color
             <p className="text-destructive col-span-full mt-4 text-center text-sm">
               {formErrors.general}
             </p>
           )}
 
-          <DialogFooter className="col-span-full">
+          <DialogFooter className="col-span-full pt-4">
             <SubmitButton />
           </DialogFooter>
         </form>

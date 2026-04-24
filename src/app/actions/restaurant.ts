@@ -7,8 +7,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { checkAuthorization, isSystemAdmin } from "~/app/actions/auth";
 
-// Import the schema and type from the shared schemas file
-import { restaurantSchema,  } from "~/lib/schemas";
+import { restaurantSchema } from "~/lib/schemas";
 
 // Helper to safely get string values from FormData
 const getStringValue = (formData: FormData, key: string): string | null => {
@@ -16,9 +15,23 @@ const getStringValue = (formData: FormData, key: string): string | null => {
   return typeof value === "string" ? value : null;
 };
 
+// Helper to safely parse JSON strings from FormData
+const getJsonValue = (formData: FormData, key: string): any => {
+  const value = formData.get(key);
+  if (typeof value === "string" && value.trim() !== "") {
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      console.error(`Failed to parse JSON for ${key}:`, e);
+      return null;
+    }
+  }
+  return null;
+};
+
 // Server Action to add a new restaurant
 export async function addRestaurant(formData: FormData) {
-   const restaurantId = formData.get("restaurantId") as string;
+  const restaurantId = formData.get("restaurantId") as string;
 
   const rawData = {
     name: getStringValue(formData, "name"),
@@ -34,32 +47,38 @@ export async function addRestaurant(formData: FormData) {
     description: getStringValue(formData, "description"),
     theme: getStringValue(formData, "theme"),
     typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
+    
+    // --- NEW FIELDS ---
+    socialMedia: getJsonValue(formData, "socialMedia"),
+    deliveryApps: getJsonValue(formData, "deliveryApps"),
+    mapUrl: getStringValue(formData, "mapUrl"),
+    metaTitle: getStringValue(formData, "metaTitle"),
+    metaDescription: getStringValue(formData, "metaDescription"),
+    ogImage: getStringValue(formData, "ogImage"),
   };
 
   const parsedRawData = {
     ...rawData,
-    currency: rawData.currency ?? "USD", // Example default if not sent by form
+    currency: rawData.currency ?? "USD", 
     isActive: rawData.isActive,
     isDisplayed: rawData.isDisplayed,
     name: rawData.name ?? "",
     slug: rawData.slug ?? "",
   };
 
- try {
-        const isAdmin = await isSystemAdmin();
-        if (!isAdmin) {
-            // New restaurant creation is a global administrative task
-            throw new Error("Unauthorized: Only system administrators can add new restaurants.");
-        }
-    } catch (error) {
-        throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  try {
+    const isAdmin = await isSystemAdmin();
+    if (!isAdmin) {
+      throw new Error("Unauthorized: Only system administrators can add new restaurants.");
     }
+  } catch (error) {
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
 
   const result = restaurantSchema.safeParse(parsedRawData);
 
   if (!result.success) {
     console.error("Validation failed (addRestaurant):", result.error.errors);
-    // Corrected line: Use _e.message
     throw new Error(
       "Invalid input: " +
         result.error.errors.map((_e) => _e.message).join(", "),
@@ -80,6 +99,12 @@ export async function addRestaurant(formData: FormData) {
     description,
     theme,
     typeOfEstablishment,
+    socialMedia,
+    deliveryApps,
+    mapUrl,
+    metaTitle,
+    metaDescription,
+    ogImage,
   } = result.data;
 
   const existing = await db.query.restaurants.findFirst({
@@ -104,29 +129,33 @@ export async function addRestaurant(formData: FormData) {
     description,
     theme,
     typeOfEstablishment,
+    socialMedia,
+    deliveryApps,
+    mapUrl,
+    metaTitle,
+    metaDescription,
+    ogImage,
   });
 
- revalidatePath(`/dashboard/${restaurantId}/edit`); 
+  revalidatePath(`/dashboard/${restaurantId}/edit`); 
   revalidatePath("/admin/restaurants");
   revalidatePath("/");
 }
 
-// Server Action to delete a restaurant (no change needed)
+// Server Action to delete a restaurant
 export async function deleteRestaurant(restaurantId: string) {
-// 🛑 1. ENFORCE AUTHORIZATION (ABAC)
-try {
-        const isAdmin = await isSystemAdmin();
-        if (!isAdmin) {
-            // New restaurant creation is a global administrative task
-            throw new Error("Unauthorized: Only system administrators can delete restaurants.");
-        }
-    } catch (error) {
-        throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  try {
+    const isAdmin = await isSystemAdmin();
+    if (!isAdmin) {
+      throw new Error("Unauthorized: Only system administrators can delete restaurants.");
     }
+  } catch (error) {
+    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
+  }
 
   try {
     await db.delete(restaurants).where(eq(restaurants.id, restaurantId));
-     revalidatePath(`/dashboard/${restaurantId}/edit`); 
+    revalidatePath(`/dashboard/${restaurantId}/edit`); 
     revalidatePath("/admin/restaurants");
     revalidatePath("/");
   } catch (error) {
@@ -137,18 +166,14 @@ try {
 
 // Server Action to update a restaurant
 export async function updateRestaurant(formData: FormData) {
-
-   // 🛑 FIX 1: Extract the ID using the name attribute from the form ("id")
-const restaurantId = getStringValue(formData, "id")!;
-  // --- 1. ENFORCE AUTHORIZATION (ABAC) ---
+  const restaurantId = getStringValue(formData, "id")!;
+  
   try {
     if (!restaurantId) {
       throw new Error("400: Restaurant ID is required for authorization.");
     }
-    // Check if the user is authorized (Admin or Assigned Editor)
     await checkAuthorization(restaurantId);
   } catch (error) {
-    // Re-throw the authorization error
     throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
   }
 
@@ -167,6 +192,14 @@ const restaurantId = getStringValue(formData, "id")!;
     description: getStringValue(formData, "description"),
     theme: getStringValue(formData, "theme"),
     typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
+    
+    // --- NEW FIELDS ---
+    socialMedia: getJsonValue(formData, "socialMedia"),
+    deliveryApps: getJsonValue(formData, "deliveryApps"),
+    mapUrl: getStringValue(formData, "mapUrl"),
+    metaTitle: getStringValue(formData, "metaTitle"),
+    metaDescription: getStringValue(formData, "metaDescription"),
+    ogImage: getStringValue(formData, "ogImage"),
   };
  
   const parsedRawData = {
@@ -181,7 +214,7 @@ const restaurantId = getStringValue(formData, "id")!;
 
   const result = restaurantSchema.safeParse(parsedRawData);
 
-if (!result.success) {
+  if (!result.success) {
     console.error("Validation failed (updateRestaurant):", result.error.errors);
     throw new Error(
       "Invalid input: " +
@@ -204,11 +237,16 @@ if (!result.success) {
     description,
     theme,
     typeOfEstablishment,
+    socialMedia,
+    deliveryApps,
+    mapUrl,
+    metaTitle,
+    metaDescription,
+    ogImage,
   } = result.data;
 
 
   if (!id) {
-    // This should never be hit if validation is correct, but satisfies TS
     throw new Error("Internal Error: Validated ID is missing."); 
   }
 
@@ -237,28 +275,17 @@ if (!result.success) {
       description,
       theme,
       typeOfEstablishment,
+      socialMedia,
+      deliveryApps,
+      mapUrl,
+      metaTitle,
+      metaDescription,
+      ogImage,
       updatedAt: new Date(),
     })
     .where(eq(restaurants.id, id));
 
-     revalidatePath(`/dashboard/${restaurantId}/edit`); 
+  revalidatePath(`/dashboard/${restaurantId}/edit`); 
   revalidatePath("/admin/restaurants");
   revalidatePath("/");
 }
-
-// export const initialState = {
-//     message: '',
-//     success: false,
-//     errors: {}
-// };
-
-// export async function dummyRestaurantAction(
-//   prevState: typeof initialState, 
-//   payload: FormData
-// ) {
-//   // This function is the placeholder for useFormState
-//   // It should be replaced with a wrapper that calls updateRestaurant, 
-//   // but for simplicity, we use it to show the initial state.
-//   return initialState; 
-// }
-

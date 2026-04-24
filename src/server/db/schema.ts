@@ -43,7 +43,7 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   typeOfEstablishment: varchar("type_of_establishment", { length: 100 }),
 
   socialMedia: jsonb("social_media"), 
-  orderUrl: varchar("order_url", { length: 512 }),
+  deliveryApps: jsonb("delivery_apps"),
   mapUrl: varchar("map_url", { length: 512 }), 
   metaTitle: varchar("meta_title", { length: 256 }),
   metaDescription: text("meta_description"),
