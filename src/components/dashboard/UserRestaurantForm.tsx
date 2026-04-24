@@ -1,52 +1,55 @@
 "use client";
 
 import React from "react";
-// Local component to replace next/image
-const CustomImage = ({
-  src,
-  alt,
-  className,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-}) => (
-  <img
-    src={src}
-    alt={alt}
-    className={className}
-    style={{ width: "100%", height: "100%" }}
-  />
-);
-import { useTranslations } from "next-intl"; // Import next-intl hook
+import { useTranslations } from "next-intl";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import { UploadButton } from "~/utils/uploadthing";
-import { XCircle } from "lucide-react";
+import { XCircle, Instagram, Facebook, Twitter, MapPin, Search, ShoppingBag, Link as LinkIcon } from "lucide-react";
 import type { Restaurant } from "~/types/restaurant";
+import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 import { cn } from "~/lib/utils";
+
+// Local component to replace next/image
+const CustomImage = ({ src, alt, className }: { src: string; alt: string; className?: string }) => (
+  <img src={src} alt={alt} className={className} style={{ width: "100%", height: "100%" }} />
+);
 
 interface UserRestaurantFormProps {
   initialData: Restaurant;
   formErrors: Record<string, string>;
 
-  // Handlers for state changes
+  // Handlers
   onLogoUrlChange: (url: string | null) => void;
   onCurrencyChange: (value: string) => void;
   onPhoneNumberChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
   onTypeOfEstablishmentChange: (value: string) => void;
   onCountryChange: (value: string) => void;
+  
+  // NEW Handlers
+  onMapUrlChange: (value: string) => void;
+  onMetaTitleChange: (value: string) => void;
+  onMetaDescriptionChange: (value: string) => void;
+  onSocialMediaChange: (key: keyof SocialMediaLinks, value: string) => void;
+  onDeliveryAppsChange: (key: keyof DeliveryAppLinks, value: string) => void;
 
-  // Current state values
+  // Current values
   currentLogoUrl: string | null;
   currentCurrency: string;
   currentPhoneNumber: string;
   currentDescription: string;
   currentTypeOfEstablishment: string;
   currentCountry: string;
+  
+  // NEW Values
+  currentMapUrl: string;
+  currentMetaTitle: string;
+  currentMetaDescription: string;
+  currentSocialMedia: SocialMediaLinks;
+  currentDeliveryApps: DeliveryAppLinks;
 }
 
 export function UserRestaurantForm({
@@ -58,212 +61,138 @@ export function UserRestaurantForm({
   onDescriptionChange,
   onTypeOfEstablishmentChange,
   onCountryChange,
+  onMapUrlChange,
+  onMetaTitleChange,
+  onMetaDescriptionChange,
+  onSocialMediaChange,
+  onDeliveryAppsChange,
   currentLogoUrl,
   currentCurrency,
   currentPhoneNumber,
   currentDescription,
   currentTypeOfEstablishment,
   currentCountry,
+  currentMapUrl,
+  currentMetaTitle,
+  currentMetaDescription,
+  currentSocialMedia,
+  currentDeliveryApps,
 }: UserRestaurantFormProps) {
-  const t = useTranslations("RestaurantForm"); // Base namespace for this form
+  const t = useTranslations("RestaurantForm");
 
   return (
-    <div className="bg-card grid grid-cols-1 gap-6 md:grid-cols-2">
-      {/* LEFT COLUMN: Essential Details */}
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      {/* LEFT COLUMN: Essential Details & Branding */}
       <div className="space-y-6">
-        {/* 1. Name (Read-only for users) */}
-        <div>
-          <Label className="mb-2" htmlFor="name">
-            {t("labelName")}
-          </Label>
-          <Input
-            id="name"
-            name="name"
-            defaultValue={initialData.name ?? ""}
-            readOnly
-            className="bg-muted/50 text-muted-foreground cursor-not-allowed"
-            required
-          />
-          {formErrors.name && (
-            <p className="text-destructive mt-1 text-sm">{formErrors.name}</p>
-          )}
-        </div>
+        <section className="space-y-4">
+          <h3 className="text-lg font-semibold border-b pb-2">{t("sectionBasicInfo")}</h3>
+          
+          <div>
+            <Label className="mb-2" htmlFor="name">{t("labelName")}</Label>
+            <Input id="name" name="name" defaultValue={initialData.name ?? ""} readOnly className="bg-muted/50 text-muted-foreground cursor-not-allowed" />
+          </div>
 
-        {/* 2. Country */}
-        <div>
-          <Label className="mb-2" htmlFor="country">
-            {t("labelCountry")}
-          </Label>
-          <Input
-            id="country"
-            name="country"
-            value={currentCountry}
-            onChange={(e) => onCountryChange(e.target.value)}
-            placeholder={t("placeholderCountry")}
-            required
-          />
-          {formErrors.country && (
-            <p className="text-destructive mt-1 text-sm">
-              {formErrors.country}
-            </p>
-          )}
-        </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="mb-2" htmlFor="country">{t("labelCountry")}</Label>
+              <Input id="country" name="country" value={currentCountry} onChange={(e) => onCountryChange(e.target.value)} required />
+            </div>
+            <div>
+              <Label className="mb-2" htmlFor="currency">{t("labelCurrency")}</Label>
+              <Input id="currency" name="currency" value={currentCurrency} onChange={(e) => onCurrencyChange(e.target.value)} required />
+            </div>
+          </div>
 
-        {/* 3. Currency */}
-        <div>
-          <Label className="mb-2" htmlFor="currency">
-            {t("labelCurrency")}
-          </Label>
-          <Input
-            id="currency"
-            name="currency"
-            value={currentCurrency}
-            onChange={(e) => onCurrencyChange(e.target.value)}
-            placeholder={t("placeholderCurrency")}
-            required
-          />
-          {formErrors.currency && (
-            <p className="text-destructive mt-1 text-sm">
-              {formErrors.currency}
-            </p>
-          )}
-        </div>
+          <div>
+            <Label className="mb-2" htmlFor="phoneNumber">{t("labelPhoneNumber")}</Label>
+            <Input id="phoneNumber" name="phoneNumber" value={currentPhoneNumber} onChange={(e) => onPhoneNumberChange(e.target.value)} type="tel" />
+          </div>
 
-        {/* 4. Phone Number */}
-        <div>
-          <Label className="mb-2" htmlFor="phoneNumber">
-            {t("labelPhoneNumber")}
-          </Label>
-          <Input
-            id="phoneNumber"
-            name="phoneNumber"
-            value={currentPhoneNumber}
-            onChange={(e) => onPhoneNumberChange(e.target.value)}
-            type="tel"
-            placeholder={t("placeholderPhoneNumber")}
-          />
-          {formErrors.phoneNumber && (
-            <p className="text-destructive mt-1 text-sm">
-              {formErrors.phoneNumber}
-            </p>
-          )}
-        </div>
+          <div>
+            <Label className="mb-2 flex items-center gap-2" htmlFor="mapUrl">
+              <MapPin className="h-4 w-4" /> {t("labelMapUrl")}
+            </Label>
+            <Input id="mapUrl" name="mapUrl" value={currentMapUrl} onChange={(e) => onMapUrlChange(e.target.value)} placeholder="Google Maps link..." />
+          </div>
+        </section>
 
-        {/* 5. Address */}
-        <div>
-          <Label className="mb-2" htmlFor="address">
-            {t("labelAddress")}
-          </Label>
-          <Input
-            id="address"
-            name="address"
-            defaultValue={initialData.address ?? ""}
-            placeholder={t("placeholderAddress")}
-          />
-          {formErrors.address && (
-            <p className="text-destructive mt-1 text-sm">
-              {formErrors.address}
-            </p>
-          )}
-        </div>
+        <section className="space-y-4 pt-4">
+          <h3 className="text-lg font-semibold border-b pb-2 flex items-center gap-2">
+            <LinkIcon className="h-4 w-4" /> {t("sectionSocialMedia")}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="text-xs uppercase text-muted-foreground">Instagram</Label>
+              <Input value={currentSocialMedia.instagram ?? ""} onChange={(e) => onSocialMediaChange("instagram", e.target.value)} placeholder="https://..." />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs uppercase text-muted-foreground">Facebook</Label>
+              <Input value={currentSocialMedia.facebook ?? ""} onChange={(e) => onSocialMediaChange("facebook", e.target.value)} placeholder="https://..." />
+            </div>
+          </div>
+        </section>
       </div>
 
-      {/* RIGHT COLUMN: Description, Type of Establishment, Logo Upload */}
+      {/* RIGHT COLUMN: Marketing, Delivery & SEO */}
       <div className="space-y-6">
-        {/* 6. Description */}
-        <div>
-          <Label className="mb-2" htmlFor="description">
-            {t("labelShortDescription")}
-          </Label>
-          <Textarea
-            id="description"
-            name="description"
-            value={currentDescription}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            placeholder={t("placeholderDescription")}
-            rows={5}
-          />
-          {formErrors.description && (
-            <p className="text-destructive mt-1 text-sm">
-              {formErrors.description}
-            </p>
-          )}
-        </div>
+        <section className="space-y-4">
+          <h3 className="text-lg font-semibold border-b pb-2">{t("sectionBranding")}</h3>
+          
+          <div>
+            <Label className="mb-2" htmlFor="description">{t("labelShortDescription")}</Label>
+            <Textarea id="description" value={currentDescription} onChange={(e) => onDescriptionChange(e.target.value)} rows={3} />
+          </div>
 
-        {/* 7. Type of Establishment */}
-        <div>
-          <Label className="mb-2" htmlFor="typeOfEstablishment">
-            {t("labelTypeOfEstablishment")}
-          </Label>
-          <Input
-            id="typeOfEstablishment"
-            name="typeOfEstablishment"
-            value={currentTypeOfEstablishment}
-            onChange={(e) => onTypeOfEstablishmentChange(e.target.value)}
-            placeholder={t("placeholderTypeOfEstablishment")}
-          />
-          {formErrors.typeOfEstablishment && (
-            <p className="text-destructive mt-1 text-sm">
-              {formErrors.typeOfEstablishment}
-            </p>
-          )}
-        </div>
+          <div className="flex items-start gap-4">
+            <div className="flex-1">
+              <Label className="mb-2" htmlFor="typeOfEstablishment">{t("labelTypeOfEstablishment")}</Label>
+              <Input id="typeOfEstablishment" value={currentTypeOfEstablishment} onChange={(e) => onTypeOfEstablishmentChange(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("labelLogo")}</Label>
+              {currentLogoUrl ? (
+                <div className="relative h-20 w-20 border rounded-md overflow-hidden">
+                  <CustomImage src={currentLogoUrl} alt="Logo" />
+                  <Button variant="destructive" size="icon" className="absolute -top-1 -right-1 h-5 w-5 rounded-full" onClick={() => onLogoUrlChange(null)}>
+                    <XCircle className="h-3 w-3" />
+                  </Button>
+                </div>
+              ) : (
+                <UploadButton 
+                  endpoint="logoUploader" 
+                  className="ut-button:h-20 ut-button:w-20 ut-button:text-[10px]" 
+                  onClientUploadComplete={(res) => res?.[0] && onLogoUrlChange(res[0].url)} 
+                />
+              )}
+            </div>
+          </div>
+        </section>
 
-        {/* 8. Logo Upload Section */}
-        <div className="space-y-2 pt-2">
-          <Label className="mb-2" htmlFor="logoUrl">
-            {t("labelRestaurantLogo")}
-          </Label>
-          {currentLogoUrl && (
-            <div className="border-border relative mb-2 h-24 w-24 overflow-hidden rounded-md border">
-              <CustomImage
-                src={currentLogoUrl}
-                // Translated alt text
-                alt={t("logoPreviewAlt")}
-                className="h-full w-full object-cover"
-              />
-              <Button
-                variant="destructive"
-                size="icon"
-                className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
-                onClick={() => onLogoUrlChange(null)}
-              >
-                <XCircle className="h-4 w-4" />
-              </Button>
+        <section className="space-y-4 pt-4">
+          <h3 className="text-lg font-semibold border-b pb-2 flex items-center gap-2">
+            <ShoppingBag className="h-4 w-4" /> {t("sectionDelivery")}
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <Input placeholder="Yemeksepeti" value={currentDeliveryApps.yemeksepeti ?? ""} onChange={(e) => onDeliveryAppsChange("yemeksepeti", e.target.value)} />
+            <Input placeholder="Getir" value={currentDeliveryApps.getir ?? ""} onChange={(e) => onDeliveryAppsChange("getir", e.target.value)} />
+          </div>
+        </section>
+
+        <section className="space-y-4 pt-4">
+          <h3 className="text-lg font-semibold border-b pb-2 flex items-center gap-2">
+            <Search className="h-4 w-4" /> {t("sectionSEO")}
+          </h3>
+          <div className="space-y-3">
+            <div>
+              <Label className="text-xs uppercase text-muted-foreground">{t("labelMetaTitle")}</Label>
+              <Input value={currentMetaTitle} onChange={(e) => onMetaTitleChange(e.target.value)} />
             </div>
-          )}
-          {!currentLogoUrl && (
-            // Translated No Image fallback
-            <div className="border-border bg-muted text-muted-foreground flex h-24 w-24 items-center justify-center rounded-md border text-sm">
-              {t("noLogo")}
+            <div>
+              <Label className="text-xs uppercase text-muted-foreground">{t("labelMetaDescription")}</Label>
+              <Textarea value={currentMetaDescription} onChange={(e) => onMetaDescriptionChange(e.target.value)} rows={2} />
             </div>
-          )}
-          <UploadButton
-            endpoint="logoUploader"
-            // Apply theme overrides
-            className={cn(
-              "ut-button:bg-primary ut-button:hover:bg-primary/90 ut-button:text-primary-foreground",
-              "ut-allowed-content:text-muted-foreground",
-              "ut-container:bg-card ut-container:border-border ut-container:hover:bg-accent/10 ut-container:transition-colors",
-              "ut-readying:bg-muted ut-readying:text-muted-foreground",
-              "ut-label:text-foreground",
-            )}
-            onClientUploadComplete={(res) => {
-              if (res && res.length > 0 && res[0]) {
-                onLogoUrlChange(res[0].url);
-              }
-            }}
-            onUploadError={(error: Error) => {
-              console.error(`ERROR! ${error.message}`);
-            }}
-          />
-          <input type="hidden" name="logoUrl" value={currentLogoUrl ?? ""} />
-          {formErrors.logoUrl && (
-            <p className="text-destructive mt-1 text-sm">
-              {formErrors.logoUrl}
-            </p>
-          )}
-        </div>
+          </div>
+        </section>
       </div>
     </div>
   );

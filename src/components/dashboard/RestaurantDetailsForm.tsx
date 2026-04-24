@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { useTranslations } from "next-intl"; // Import next-intl hook
+import { useTranslations } from "next-intl";
 import { updateRestaurant } from "~/app/actions/restaurant";
 import { cn } from "~/lib/utils";
-import { restaurantSchema } from "~/lib/schemas";
+import { restaurantSchema, type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
-// 🛑 IMPORT THE REUSABLE FORM AND BUTTONS
 import { Button } from "~/components/ui/button";
 import { UserRestaurantForm } from "./UserRestaurantForm";
 
@@ -28,7 +27,6 @@ interface RestaurantDetailsFormProps {
   restaurant: Restaurant;
 }
 
-// --- Submit Button Component ---
 function SubmitButton() {
   const t = useTranslations("RestaurantForm");
   const { pending } = useFormStatus();
@@ -46,12 +44,10 @@ function SubmitButton() {
   );
 }
 
-// --- Form Wrapper Action ---
 async function formWrapperAction(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  // NOTE: Validation logic remains here.
   const values = {
     id: formData.get("id") as string,
     name: formData.get("name") as string,
@@ -67,6 +63,14 @@ async function formWrapperAction(
     description: formData.get("description") as string | null,
     theme: formData.get("theme") as string | null,
     typeOfEstablishment: formData.get("typeOfEstablishment") as string | null,
+    // --- VALIDATE NEW FIELDS ---
+    mapUrl: formData.get("mapUrl") as string | null,
+    metaTitle: formData.get("metaTitle") as string | null,
+    metaDescription: formData.get("metaDescription") as string | null,
+    // Note: Zod will handle these as objects once parsed in the logic below, 
+    // but for the sake of safeParse, we use the raw strings from FormData or keep as is.
+    socialMedia: JSON.parse(formData.get("socialMedia") as string || "{}"),
+    deliveryApps: JSON.parse(formData.get("deliveryApps") as string || "{}"),
   };
 
   const result = restaurantSchema.safeParse(values);
@@ -77,105 +81,84 @@ async function formWrapperAction(
         errors[_e.path[0]] = _e.message;
       }
     });
-    return {
-      success: false,
-      // Fixed key for validation message
-      message: "validationFailed",
-      errors,
-    };
+    return { success: false, message: "validationFailed", errors };
   }
 
   try {
     await updateRestaurant(formData);
-    return {
-      success: true,
-      // Fixed key for success message
-      message: "updateSuccess",
-      errors: {},
-    };
+    return { success: true, message: "updateSuccess", errors: {} };
   } catch (error) {
     const message = error instanceof Error ? error.message : "unknownError";
-    // Fixed key for failure message
-    return {
-      success: false,
-      message: `updateFailedPrefix:${message}`,
-      errors: {},
-    };
+    return { success: false, message: `updateFailedPrefix:${message}`, errors: {} };
   }
 }
 
-// --- Main Form Component ---
-export default function RestaurantDetailsForm({
-  restaurant,
-}: RestaurantDetailsFormProps) {
+export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsFormProps) {
   const t = useTranslations("RestaurantForm");
 
-  // State replication logic remains the same
-  const [isRestaurantActive, setIsRestaurantActive] = useState(
-    restaurant.isActive ?? true,
-  );
-  const [isRestaurantDisplayed, setIsRestaurantDisplayed] = useState(
-    restaurant.isDisplayed ?? true,
-  );
+  // Existing States
+  const [isRestaurantActive] = useState(restaurant.isActive ?? true);
+  const [isRestaurantDisplayed] = useState(restaurant.isDisplayed ?? true);
   const [logoUrl, setLogoUrl] = useState(restaurant.logoUrl ?? null);
-  const [currentCurrency, setCurrentCurrency] = useState(
-    restaurant.currency ?? "USD",
+  const [currentCurrency, setCurrentCurrency] = useState(restaurant.currency ?? "USD");
+  const [currentPhoneNumber, setCurrentPhoneNumber] = useState(restaurant.phoneNumber ?? "");
+  const [currentDescription, setCurrentDescription] = useState(restaurant.description ?? "");
+  const [currentTheme] = useState(restaurant.theme ?? "classic");
+  const [currentTypeOfEstablishment, setCurrentTypeOfEstablishment] = useState(restaurant.typeOfEstablishment ?? "");
+  const [currentCountry, setCurrentCountry] = useState(restaurant.country ?? "");
+
+  // --- NEW STATES FOR CLIENT DASHBOARD ---
+  const [currentMapUrl, setCurrentMapUrl] = useState(restaurant.mapUrl ?? "");
+  const [currentMetaTitle, setCurrentMetaTitle] = useState(restaurant.metaTitle ?? "");
+  const [currentMetaDescription, setCurrentMetaDescription] = useState(restaurant.metaDescription ?? "");
+  const [currentSocialMedia, setCurrentSocialMedia] = useState<SocialMediaLinks>(
+    (restaurant.socialMedia as SocialMediaLinks) ?? {}
   );
-  const [currentPhoneNumber, setCurrentPhoneNumber] = useState(
-    restaurant.phoneNumber ?? "",
-  );
-  const [currentDescription, setCurrentDescription] = useState(
-    restaurant.description ?? "",
-  );
-  const [currentFoodType, setCurrentFoodType] = useState(
-    restaurant.foodType ?? "",
-  );
-  const [currentTheme, setCurrentTheme] = useState(
-    restaurant.theme ?? "classic",
-  );
-  const [currentTypeOfEstablishment, setCurrentTypeOfEstablishment] = useState(
-    restaurant.typeOfEstablishment ?? "",
-  );
-  const [currentCountry, setCurrentCountry] = useState(
-    restaurant.country ?? "",
+  const [currentDeliveryApps, setCurrentDeliveryApps] = useState<DeliveryAppLinks>(
+    (restaurant.deliveryApps as DeliveryAppLinks) ?? {}
   );
 
   const [state, formAction] = useFormState(formWrapperAction, initialState);
 
-  // Clear success message after a delay (UX)
   useEffect(() => {
     if (state.success) {
       const timer = setTimeout(() => {
-        // Send a dummy action to reset useFormState without triggering validation/update
         formAction(new FormData());
       }, 3000);
       return () => clearTimeout(timer);
     }
   }, [state.success, formAction]);
 
+  const handleSocialMediaChange = (key: keyof SocialMediaLinks, value: string) => {
+    setCurrentSocialMedia((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleDeliveryAppsChange = (key: keyof DeliveryAppLinks, value: string) => {
+    setCurrentDeliveryApps((prev) => ({ ...prev, [key]: value }));
+  };
+
   const handleSubmitWrapper = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    // Inject all CONTROLLED STATE VALUES
+    formData.set("id", restaurant.id);
+    formData.set("slug", restaurant.slug);
     formData.set("isActive", isRestaurantActive ? "on" : "");
     formData.set("isDisplayed", isRestaurantDisplayed ? "on" : "");
     formData.set("logoUrl", logoUrl ?? "");
     formData.set("currency", currentCurrency);
     formData.set("phoneNumber", currentPhoneNumber);
     formData.set("description", currentDescription);
+    formData.set("theme", currentTheme);
     formData.set("typeOfEstablishment", currentTypeOfEstablishment);
     formData.set("country", currentCountry);
 
-    // CRITICAL: INJECT STATIC, READ-ONLY FIELDS required by Zod
-    formData.set("id", restaurant.id);
-    formData.set("slug", restaurant.slug);
-    formData.set("theme", restaurant.theme ?? "classic");
-    formData.set("foodType", restaurant.foodType ?? "");
-
-    // Ensure that isActive/isDisplayed are set even if not controlled by state explicitly in this code block
-    formData.set("isActive", isRestaurantActive ? "on" : "");
-    formData.set("isDisplayed", isRestaurantDisplayed ? "on" : "");
+    // --- INJECT NEW FIELDS ---
+    formData.set("mapUrl", currentMapUrl);
+    formData.set("metaTitle", currentMetaTitle);
+    formData.set("metaDescription", currentMetaDescription);
+    formData.set("socialMedia", JSON.stringify(currentSocialMedia));
+    formData.set("deliveryApps", JSON.stringify(currentDeliveryApps));
 
     formAction(formData);
   };
@@ -183,59 +166,54 @@ export default function RestaurantDetailsForm({
   const getTranslatedStatusMessage = (currentState: FormState) => {
     const key = currentState.message;
     if (key.startsWith("updateFailedPrefix")) {
-      // Extract the error code and translate it (e.g., "updateFailedPrefix:unknownError")
       const errorCode = key.split(":")[1] ?? "unknownError";
       return t("messages.updateFailed", { error: t(errorCode) });
     }
-    // Handle validation failure and success directly
     return t(`messages.${key}`);
   };
 
   return (
-    <div className="bg-card border-border max-w-4xl rounded-xl border p-6 shadow-lg">
+    <div className="bg-card border-border max-w-5xl rounded-xl border p-6 shadow-lg">
       <h2 className="text-foreground mb-6 text-2xl font-semibold">
         {t("mainTitle")}
       </h2>
 
-      {/* State Feedback Message */}
       {state.message && (
-        <div
-          className={cn(
-            "mb-4 rounded p-3 text-sm",
-            state.success
-              ? "bg-primary/10 text-primary"
-              : "bg-destructive/10 text-destructive",
-          )}
-        >
+        <div className={cn("mb-4 rounded p-3 text-sm", state.success ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive")}>
           {getTranslatedStatusMessage(state)}
         </div>
       )}
 
       <form onSubmit={handleSubmitWrapper} className="space-y-6">
-        {/* CRITICAL: Hidden ID for Authorization */}
-        <input type="hidden" name="id" defaultValue={restaurant.id} />
-
-        {/* RENDER THE REUSABLE FORM COMPONENT */}
         <UserRestaurantForm
           initialData={restaurant}
           formErrors={state.errors}
-          // Pass down all state and handler functions
           onLogoUrlChange={setLogoUrl}
           onCurrencyChange={setCurrentCurrency}
           onPhoneNumberChange={setCurrentPhoneNumber}
           onDescriptionChange={setCurrentDescription}
           onTypeOfEstablishmentChange={setCurrentTypeOfEstablishment}
           onCountryChange={setCurrentCountry}
-          // Pass current state values
           currentLogoUrl={logoUrl}
           currentCurrency={currentCurrency}
           currentPhoneNumber={currentPhoneNumber}
           currentDescription={currentDescription}
           currentTypeOfEstablishment={currentTypeOfEstablishment}
           currentCountry={currentCountry}
+          
+          // --- PASS NEW PROPS TO USER FORM ---
+          currentMapUrl={currentMapUrl}
+          onMapUrlChange={setCurrentMapUrl}
+          currentMetaTitle={currentMetaTitle}
+          onMetaTitleChange={setCurrentMetaTitle}
+          currentMetaDescription={currentMetaDescription}
+          onMetaDescriptionChange={setCurrentMetaDescription}
+          currentSocialMedia={currentSocialMedia}
+          onSocialMediaChange={handleSocialMediaChange}
+          currentDeliveryApps={currentDeliveryApps}
+          onDeliveryAppsChange={handleDeliveryAppsChange}
         />
 
-        {/* Save Button */}
         <div className="border-border flex justify-end border-t pt-4">
           <SubmitButton />
         </div>
