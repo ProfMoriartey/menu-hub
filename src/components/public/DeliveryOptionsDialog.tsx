@@ -23,14 +23,12 @@ export function DeliveryOptionsDialog({
   restaurantName,
   buttonLabel,
 }: DeliveryOptionsDialogProps) {
-  // Filter out empty or undefined links
   const availableApps = Object.entries(deliveryApps).filter(
     ([_, url]) => url && url.trim() !== ""
   );
 
   if (availableApps.length === 0) return null;
 
-  // Helper to format the key into a readable name
   const formatName = (key: string) => {
     const names: Record<string, string> = {
       yemeksepeti: "Yemeksepeti",
@@ -40,7 +38,7 @@ export function DeliveryOptionsDialog({
       uberEats: "UberEats",
       deliveroo: "Deliveroo",
     };
-    return names[key] || key;
+    return names[key] ?? key;
   };
 
   return (
@@ -66,7 +64,7 @@ export function DeliveryOptionsDialog({
               className="w-full justify-between h-14 text-lg"
               asChild
             >
-              <a href={url as string} target="_blank" rel="noopener noreferrer">
+              <a href={url} target="_blank" rel="noopener noreferrer">
                 {formatName(key)}
                 <ExternalLink className="h-5 w-5 text-muted-foreground" />
               </a>

@@ -44,6 +44,14 @@ export function SidebarListThemeSection({
     description: "Fresh, plant-based delights.",
     theme: "sidebar-list",
     typeOfEstablishment: "Cafe",
+    
+    socialMedia: "https://www.instagram.com",
+  deliveryApps: "https://www.yemeksepeti.com",
+  mapUrl: "https://www.google.maps.com",
+  metaTitle: "Restaurant",
+  metaDescription: "Amazing restaurant",
+  ogImage: "https://placehold.co/300x200/E0E0E0/333333?text=Cafe+Logo",
+    
     createdAt: new Date(),
     updatedAt: new Date(),
     categories: [],

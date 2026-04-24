@@ -9,14 +9,23 @@ import { checkAuthorization, isSystemAdmin } from "~/app/actions/auth";
 
 import { restaurantSchema } from "~/lib/schemas";
 
-// Helper to safely get string values from FormData
+type SocialMedia = {
+  facebook?: string;
+  instagram?: string;
+  twitter?: string;
+};
+
+type DeliveryApps = {
+  uberEats?: string;
+  doorDash?: string;
+};
+
 const getStringValue = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
   return typeof value === "string" ? value : null;
 };
 
-// Helper to safely parse JSON strings from FormData
-const getJsonValue = (formData: FormData, key: string): any => {
+const getJsonValue = (formData: FormData, key: string): unknown => {
   const value = formData.get(key);
   if (typeof value === "string" && value.trim() !== "") {
     try {
@@ -29,7 +38,6 @@ const getJsonValue = (formData: FormData, key: string): any => {
   return null;
 };
 
-// Server Action to add a new restaurant
 export async function addRestaurant(formData: FormData) {
   const restaurantId = formData.get("restaurantId") as string;
 
@@ -48,9 +56,8 @@ export async function addRestaurant(formData: FormData) {
     theme: getStringValue(formData, "theme"),
     typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
     
-    // --- NEW FIELDS ---
-    socialMedia: getJsonValue(formData, "socialMedia"),
-    deliveryApps: getJsonValue(formData, "deliveryApps"),
+    socialMedia: getJsonValue(formData, "socialMedia") as SocialMedia | null,
+    deliveryApps: getJsonValue(formData, "deliveryApps") as DeliveryApps | null,
     mapUrl: getStringValue(formData, "mapUrl"),
     metaTitle: getStringValue(formData, "metaTitle"),
     metaDescription: getStringValue(formData, "metaDescription"),
@@ -142,7 +149,6 @@ export async function addRestaurant(formData: FormData) {
   revalidatePath("/");
 }
 
-// Server Action to delete a restaurant
 export async function deleteRestaurant(restaurantId: string) {
   try {
     const isAdmin = await isSystemAdmin();
@@ -164,7 +170,6 @@ export async function deleteRestaurant(restaurantId: string) {
   }
 }
 
-// Server Action to update a restaurant
 export async function updateRestaurant(formData: FormData) {
   const restaurantId = getStringValue(formData, "id")!;
   
@@ -193,9 +198,8 @@ export async function updateRestaurant(formData: FormData) {
     theme: getStringValue(formData, "theme"),
     typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
     
-    // --- NEW FIELDS ---
-    socialMedia: getJsonValue(formData, "socialMedia"),
-    deliveryApps: getJsonValue(formData, "deliveryApps"),
+    socialMedia: getJsonValue(formData, "socialMedia") as SocialMedia | null,
+    deliveryApps: getJsonValue(formData, "deliveryApps") as DeliveryApps | null,
     mapUrl: getStringValue(formData, "mapUrl"),
     metaTitle: getStringValue(formData, "metaTitle"),
     metaDescription: getStringValue(formData, "metaDescription"),
