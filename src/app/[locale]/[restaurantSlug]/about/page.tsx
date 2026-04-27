@@ -7,7 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "~/components/ui/button"
 import { 
-  ChevronLeft, MapPin, Phone, Globe, Info, Tag, 
+  MapPin, Phone, Globe, Info, Tag, 
   Instagram, Facebook, Twitter, Music2, UtensilsCrossed 
 } from "lucide-react"
 import { cn } from "~/lib/utils"
@@ -16,6 +16,7 @@ import { getTranslations } from "next-intl/server"
 import type { Restaurant } from "~/types/restaurant"
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"
 import { DeliveryOptionsDialog } from "~/components/public/DeliveryOptionsDialog"
+import { ThemeToggle } from "~/components/shared/ThemeToggle"
 
 interface PageProps {
   params: Promise<{
@@ -51,27 +52,18 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
   const hasDelivery = Object.values(deliveryApps).some((url) => url && url.trim() !== "")
 
   const fallbackLogoUrl = `https://placehold.co/150x150/E0E0E0/333333?text=Logo`
+  const themeClass = `theme-${restaurantDetails.theme ?? "default"}`
 
   return (
-    <div className={cn("min-h-screen p-4 sm:p-8", "bg-background text-foreground")}>
-      <div className={cn("container mx-auto max-w-4xl rounded-lg p-6 shadow-lg sm:p-8", "bg-card")}>
-        
-        {/* Navigation row */}
-        <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <Link href={`/${restaurantSlug}`} passHref>
-            <Button
-              variant="outline"
-              className={cn(
-                "flex items-center",
-                "bg-background text-foreground border-border hover:bg-accent hover:text-accent-foreground",
-              )}
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              {t("backToMenu")}
-            </Button>
-          </Link>
-        </div>
+    <div className={cn("relative min-h-screen p-4 sm:p-8", "bg-background text-foreground", themeClass)}>
+      
+      {/* Theme Toggle - Top Right */}
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
 
+      <div className={cn("container mx-auto max-w-4xl rounded-lg p-6 shadow-lg sm:p-8 mt-12 sm:mt-0", "bg-card")}>
+        
         {/* Header section - centered for mobile and desktop */}
         <div className="mb-10 flex flex-col items-center border-b pb-8">
           <div className={cn("relative mb-6 h-32 w-32 overflow-hidden rounded-full border-4 shadow-md", "border-primary/50")}>
