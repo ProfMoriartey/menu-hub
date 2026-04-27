@@ -1,15 +1,15 @@
 // src/lib/schemas.ts
 import { z } from "zod";
 
-// Define a schema for the social media JSON structure
 export const socialMediaSchema = z.object({
   instagram: z.string().url().optional().or(z.literal("")),
   facebook: z.string().url().optional().or(z.literal("")),
   twitter: z.string().url().optional().or(z.literal("")),
   tiktok: z.string().url().optional().or(z.literal("")),
+  // --- NEW FIELD ---
+  website: z.string().url().optional().or(z.literal("")), 
 });
 
-// Define a schema for the delivery apps JSON structure
 export const deliveryAppsSchema = z.object({
   yemeksepeti: z.string().url().optional().or(z.literal("")),
   getir: z.string().url().optional().or(z.literal("")),
@@ -17,9 +17,10 @@ export const deliveryAppsSchema = z.object({
   migrosYemek: z.string().url().optional().or(z.literal("")),
   uberEats: z.string().url().optional().or(z.literal("")),
   deliveroo: z.string().url().optional().or(z.literal("")),
+  // --- NEW FIELD ---
+  customLink: z.string().url().optional().or(z.literal("")), 
 });
 
-// Export types if needed in components
 export type SocialMediaLinks = z.infer<typeof socialMediaSchema>;
 export type DeliveryAppLinks = z.infer<typeof deliveryAppsSchema>;
 
@@ -44,7 +45,6 @@ export const restaurantSchema = z.object({
   theme: z.string().nullable().optional(),
   typeOfEstablishment: z.string().nullable().optional(),
 
-  // --- NEW FIELDS ---
   socialMedia: socialMediaSchema.nullable().optional(),
   deliveryApps: deliveryAppsSchema.nullable().optional(),
   mapUrl: z.string().url("Invalid URL format.").nullable().optional().or(z.literal("")),
