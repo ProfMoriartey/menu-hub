@@ -166,12 +166,13 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
                 </div>
               )}
 
-              {restaurantDetails.phoneNumber && (
+{restaurantDetails.phoneNumber && (
                 <div className="flex items-center space-x-4">
                   <Phone className="text-primary h-6 w-6 shrink-0" />
                   <div>
                     <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{t("phoneLabel")}</p>
-                    <p className="text-lg">{restaurantDetails.phoneNumber}</p>
+                    {/* Add dir="ltr" and force left/right alignment based on language context if needed */}
+                    <p className="text-lg" dir="ltr">{restaurantDetails.phoneNumber}</p>
                   </div>
                 </div>
               )}
