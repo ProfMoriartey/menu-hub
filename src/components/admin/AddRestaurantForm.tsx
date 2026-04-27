@@ -51,10 +51,12 @@ export function AddRestaurantForm({
   const [newRestaurantCurrency, setNewRestaurantCurrency] = useState("USD");
   const [newRestaurantPhoneNumber, setNewRestaurantPhoneNumber] = useState("");
   const [newRestaurantDescription, setNewRestaurantDescription] = useState("");
-  const [newRestaurantTheme, setNewRestaurantTheme] = useState("");
+  const [newRestaurantTheme, setNewRestaurantTheme] = useState("classic");
   const [newRestaurantTypeOfEstablishment, setNewRestaurantTypeOfEstablishment] = useState("");
+  
+  // 🛑 ADDED: State for foodType
+  const [newRestaurantFoodType, setNewRestaurantFoodType] = useState("");
 
-  // --- NEW STATES ---
   const [currentMapUrl, setCurrentMapUrl] = useState("");
   const [currentMetaTitle, setCurrentMetaTitle] = useState("");
   const [currentMetaDescription, setCurrentMetaDescription] = useState("");
@@ -91,8 +93,10 @@ export function AddRestaurantForm({
     formData.set("description", newRestaurantDescription);
     formData.set("theme", newRestaurantTheme);
     formData.set("typeOfEstablishment", newRestaurantTypeOfEstablishment);
+    
+    // 🛑 ADDED: Inject foodType into FormData
+    formData.set("foodType", newRestaurantFoodType);
 
-    // --- APPEND NEW FIELDS ---
     formData.set("mapUrl", currentMapUrl);
     formData.set("metaTitle", currentMetaTitle);
     formData.set("metaDescription", currentMetaDescription);
@@ -113,7 +117,6 @@ export function AddRestaurantForm({
       description: formData.get("description") as string | null,
       theme: formData.get("theme") as string | null,
       typeOfEstablishment: formData.get("typeOfEstablishment") as string | null,
-      // --- VALIDATE NEW FIELDS ---
       mapUrl: formData.get("mapUrl") as string | null,
       metaTitle: formData.get("metaTitle") as string | null,
       metaDescription: formData.get("metaDescription") as string | null,
@@ -150,10 +153,10 @@ export function AddRestaurantForm({
       setNewRestaurantCurrency("USD");
       setNewRestaurantPhoneNumber("");
       setNewRestaurantDescription("");
-      setNewRestaurantTheme("");
+      setNewRestaurantTheme("classic");
       setNewRestaurantTypeOfEstablishment("");
+      setNewRestaurantFoodType("");
       
-      // RESET NEW FIELDS
       setCurrentMapUrl("");
       setCurrentMetaTitle("");
       setCurrentMetaDescription("");
@@ -179,17 +182,20 @@ export function AddRestaurantForm({
           Add New Restaurant
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl lg:max-w-[1000px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      {/* 🛑 FIX: Make Dialog Full Screen */}
+      <DialogContent className="max-w-[95vw] h-[95vh] flex flex-col overflow-hidden">
+        <DialogHeader className="shrink-0">
           <DialogTitle>Add New Restaurant</DialogTitle>
           <DialogDescription>
             Fill out the details below to create a new restaurant.
           </DialogDescription>
         </DialogHeader>
+        
+        {/* 🛑 FIX: Make form area scrollable */}
         <form
           ref={addFormRef}
           action={handleAddSubmit}
-          className="grid gap-4 py-4"
+          className="flex-1 overflow-y-auto pr-4 py-4"
         >
           <RestaurantForm
             formErrors={formErrors}
@@ -213,8 +219,11 @@ export function AddRestaurantForm({
             onThemeChange={setNewRestaurantTheme}
             currentTypeOfEstablishment={newRestaurantTypeOfEstablishment}
             onTypeOfEstablishmentChange={setNewRestaurantTypeOfEstablishment}
+            
+            // 🛑 ADDED: Pass the missing foodType props
+            currentFoodType={newRestaurantFoodType}
+            onFoodTypeChange={setNewRestaurantFoodType}
 
-            // --- PASS NEW PROPS ---
             currentMapUrl={currentMapUrl}
             onMapUrlChange={setCurrentMapUrl}
             currentMetaTitle={currentMetaTitle}
@@ -230,12 +239,12 @@ export function AddRestaurantForm({
           />
 
           {formErrors.general && (
-            <p className="text-destructive col-span-full mt-4 text-center text-sm">
+            <p className="text-destructive mt-4 text-center text-sm">
               {formErrors.general}
             </p>
           )}
 
-          <DialogFooter className="col-span-full pt-4">
+          <DialogFooter className="pt-8 pb-4 shrink-0 mt-auto">
             <SubmitButton />
           </DialogFooter>
         </form>

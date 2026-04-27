@@ -1,3 +1,4 @@
+// src/app/actions/menu-items.ts
 "use server";
 
 import { db } from "~/server/db";
@@ -21,6 +22,20 @@ const getStringValue = (formData: FormData, key: string): string | null => {
   return typeof value === "string" ? value : null;
 };
 
+// 🛑 ADDED: Helper to safely parse stringified arrays from FormData
+const getJsonArrayValue = (formData: FormData, key: string): unknown => {
+  const value = formData.get(key);
+  if (typeof value === "string" && value.trim() !== "") {
+    try {
+      return JSON.parse(value) as unknown;
+    } catch (e) {
+      console.error(`Failed to parse JSON array for ${key}:`, e);
+      return [];
+    }
+  }
+  return [];
+};
+
 const getFileKey = (url: string | null | undefined): string | null => {
   if (!url) return null;
   return url.split("/f/")[1] ?? null;
@@ -40,8 +55,9 @@ export async function addMenuItem(formData: FormData) {
     name: getStringValue(formData, "name"),
     description: getStringValue(formData, "description"),
     price: getStringValue(formData, "price"),
-    ingredients: getStringValue(formData, "ingredients"),
-    dietaryLabels: getStringValue(formData, "dietaryLabels"),
+    // 🛑 FIX: Parse arrays correctly before Zod validation
+    ingredients: getJsonArrayValue(formData, "ingredients"),
+    dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
     imageUrl: getStringValue(formData, "imageUrl"),
     restaurantId: restaurantId,
     categoryId: getStringValue(formData, "categoryId") ?? "",
@@ -82,8 +98,9 @@ export async function updateMenuItem(formData: FormData) {
     name: getStringValue(formData, "name"),
     description: getStringValue(formData, "description"),
     price: getStringValue(formData, "price"),
-    ingredients: getStringValue(formData, "ingredients"),
-    dietaryLabels: getStringValue(formData, "dietaryLabels"),
+    // 🛑 FIX: Parse arrays correctly before Zod validation
+    ingredients: getJsonArrayValue(formData, "ingredients"),
+    dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
     imageUrl: getStringValue(formData, "imageUrl"),
     restaurantId: restaurantId,
     categoryId: getStringValue(formData, "categoryId") ?? "",

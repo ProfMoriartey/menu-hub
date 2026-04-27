@@ -44,7 +44,6 @@ function SubmitButton() {
   );
 }
 
-// 🛑 FIX: Helper function to safely parse JSON without using `any`
 function safeJsonParse(jsonString: string | null): unknown {
   if (!jsonString) return {};
   try {
@@ -76,8 +75,6 @@ async function formWrapperAction(
     mapUrl: formData.get("mapUrl") as string | null,
     metaTitle: formData.get("metaTitle") as string | null,
     metaDescription: formData.get("metaDescription") as string | null,
-    
-    // 🛑 FIX: Use the safe parser to avoid `any`
     socialMedia: safeJsonParse(formData.get("socialMedia") as string),
     deliveryApps: safeJsonParse(formData.get("deliveryApps") as string),
   };
@@ -105,21 +102,23 @@ async function formWrapperAction(
 export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsFormProps) {
   const t = useTranslations("RestaurantForm");
 
+  // Keep these strictly for the submission payload so data is not lost
   const [isRestaurantActive] = useState(restaurant.isActive ?? true);
   const [isRestaurantDisplayed] = useState(restaurant.isDisplayed ?? true);
+  const [currentCurrency] = useState(restaurant.currency ?? "USD");
+  const [currentTheme] = useState(restaurant.theme ?? "classic");
+  const [currentTypeOfEstablishment] = useState(restaurant.typeOfEstablishment ?? "");
+  const [currentCountry] = useState(restaurant.country ?? "");
+  const [currentFoodType] = useState(restaurant.foodType ?? "");
+  const [currentMetaTitle] = useState(restaurant.metaTitle ?? "");
+  const [currentMetaDescription] = useState(restaurant.metaDescription ?? "");
+
+  // States controlled by the simplified client UI
   const [logoUrl, setLogoUrl] = useState(restaurant.logoUrl ?? null);
-  const [currentCurrency, setCurrentCurrency] = useState(restaurant.currency ?? "USD");
   const [currentPhoneNumber, setCurrentPhoneNumber] = useState(restaurant.phoneNumber ?? "");
   const [currentDescription, setCurrentDescription] = useState(restaurant.description ?? "");
-  const [currentTheme] = useState(restaurant.theme ?? "classic");
-  const [currentTypeOfEstablishment, setCurrentTypeOfEstablishment] = useState(restaurant.typeOfEstablishment ?? "");
-  const [currentCountry, setCurrentCountry] = useState(restaurant.country ?? "");
-
   const [currentMapUrl, setCurrentMapUrl] = useState(restaurant.mapUrl ?? "");
-  const [currentMetaTitle, setCurrentMetaTitle] = useState(restaurant.metaTitle ?? "");
-  const [currentMetaDescription, setCurrentMetaDescription] = useState(restaurant.metaDescription ?? "");
   
-  // 🛑 FIX: Cast the fallback object correctly
   const [currentSocialMedia, setCurrentSocialMedia] = useState<SocialMediaLinks>(
     restaurant.socialMedia ?? ({} as SocialMediaLinks)
   );
@@ -150,21 +149,26 @@ export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsF
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    // Essential IDs
     formData.set("id", restaurant.id);
     formData.set("slug", restaurant.slug);
+    
+    // Hidden values injected back into payload
     formData.set("isActive", isRestaurantActive ? "on" : "");
     formData.set("isDisplayed", isRestaurantDisplayed ? "on" : "");
-    formData.set("logoUrl", logoUrl ?? "");
     formData.set("currency", currentCurrency);
-    formData.set("phoneNumber", currentPhoneNumber);
-    formData.set("description", currentDescription);
     formData.set("theme", currentTheme);
     formData.set("typeOfEstablishment", currentTypeOfEstablishment);
     formData.set("country", currentCountry);
-
-    formData.set("mapUrl", currentMapUrl);
+    formData.set("foodType", currentFoodType);
     formData.set("metaTitle", currentMetaTitle);
     formData.set("metaDescription", currentMetaDescription);
+
+    // Controlled UI values
+    formData.set("logoUrl", logoUrl ?? "");
+    formData.set("phoneNumber", currentPhoneNumber);
+    formData.set("description", currentDescription);
+    formData.set("mapUrl", currentMapUrl);
     formData.set("socialMedia", JSON.stringify(currentSocialMedia));
     formData.set("deliveryApps", JSON.stringify(currentDeliveryApps));
 
@@ -197,28 +201,18 @@ export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsF
           initialData={restaurant}
           formErrors={state.errors}
           onLogoUrlChange={setLogoUrl}
-          onCurrencyChange={setCurrentCurrency}
           onPhoneNumberChange={setCurrentPhoneNumber}
           onDescriptionChange={setCurrentDescription}
-          onTypeOfEstablishmentChange={setCurrentTypeOfEstablishment}
-          onCountryChange={setCurrentCountry}
+          onMapUrlChange={setCurrentMapUrl}
+          onSocialMediaChange={handleSocialMediaChange}
+          onDeliveryAppsChange={handleDeliveryAppsChange}
+          
           currentLogoUrl={logoUrl}
-          currentCurrency={currentCurrency}
           currentPhoneNumber={currentPhoneNumber}
           currentDescription={currentDescription}
-          currentTypeOfEstablishment={currentTypeOfEstablishment}
-          currentCountry={currentCountry}
-          
           currentMapUrl={currentMapUrl}
-          onMapUrlChange={setCurrentMapUrl}
-          currentMetaTitle={currentMetaTitle}
-          onMetaTitleChange={setCurrentMetaTitle}
-          currentMetaDescription={currentMetaDescription}
-          onMetaDescriptionChange={setCurrentMetaDescription}
           currentSocialMedia={currentSocialMedia}
-          onSocialMediaChange={handleSocialMediaChange}
           currentDeliveryApps={currentDeliveryApps}
-          onDeliveryAppsChange={handleDeliveryAppsChange}
         />
 
         <div className="border-border flex justify-end border-t pt-4">

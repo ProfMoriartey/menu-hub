@@ -7,29 +7,20 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { checkAuthorization, isSystemAdmin } from "~/app/actions/auth";
 
-import { restaurantSchema } from "~/lib/schemas";
-
-type SocialMedia = {
-  facebook?: string;
-  instagram?: string;
-  twitter?: string;
-};
-
-type DeliveryApps = {
-  uberEats?: string;
-  doorDash?: string;
-};
+// 🛑 ADDED: Import the exported types directly from your schema
+import { restaurantSchema, type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
 
 const getStringValue = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
   return typeof value === "string" ? value : null;
 };
 
+// 🛑 FIX: Use explicit type to satisfy ESLint
 const getJsonValue = (formData: FormData, key: string): unknown => {
   const value = formData.get(key);
   if (typeof value === "string" && value.trim() !== "") {
     try {
-      return JSON.parse(value);
+      return JSON.parse(value) as unknown;
     } catch (e) {
       console.error(`Failed to parse JSON for ${key}:`, e);
       return null;
@@ -56,8 +47,10 @@ export async function addRestaurant(formData: FormData) {
     theme: getStringValue(formData, "theme"),
     typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
     
-    socialMedia: getJsonValue(formData, "socialMedia") as SocialMedia | null,
-    deliveryApps: getJsonValue(formData, "deliveryApps") as DeliveryApps | null,
+    // 🛑 FIX: Cast to the correct imported types
+    socialMedia: getJsonValue(formData, "socialMedia") as SocialMediaLinks | null,
+    deliveryApps: getJsonValue(formData, "deliveryApps") as DeliveryAppLinks | null,
+    
     mapUrl: getStringValue(formData, "mapUrl"),
     metaTitle: getStringValue(formData, "metaTitle"),
     metaDescription: getStringValue(formData, "metaDescription"),
@@ -198,8 +191,10 @@ export async function updateRestaurant(formData: FormData) {
     theme: getStringValue(formData, "theme"),
     typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
     
-    socialMedia: getJsonValue(formData, "socialMedia") as SocialMedia | null,
-    deliveryApps: getJsonValue(formData, "deliveryApps") as DeliveryApps | null,
+    // 🛑 FIX: Cast to the correct imported types
+    socialMedia: getJsonValue(formData, "socialMedia") as SocialMediaLinks | null,
+    deliveryApps: getJsonValue(formData, "deliveryApps") as DeliveryAppLinks | null,
+    
     mapUrl: getStringValue(formData, "mapUrl"),
     metaTitle: getStringValue(formData, "metaTitle"),
     metaDescription: getStringValue(formData, "metaDescription"),

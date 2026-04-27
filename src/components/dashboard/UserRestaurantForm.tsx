@@ -7,14 +7,19 @@ import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import { UploadButton } from "~/utils/uploadthing";
-import { XCircle, Instagram, Facebook, Twitter, MapPin, Search, ShoppingBag, Link as LinkIcon } from "lucide-react";
+import { 
+  XCircle, 
+  MapPin, 
+  ShoppingBag, 
+  Link as LinkIcon, 
+  Store,
+  Globe
+} from "lucide-react";
 import type { Restaurant } from "~/types/restaurant";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
-import { cn } from "~/lib/utils";
 
-// Local component to replace next/image
 const CustomImage = ({ src, alt, className }: { src: string; alt: string; className?: string }) => (
-  <img src={src} alt={alt} className={className} style={{ width: "100%", height: "100%" }} />
+  <img src={src} alt={alt} className={className} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
 );
 
 interface UserRestaurantFormProps {
@@ -23,31 +28,17 @@ interface UserRestaurantFormProps {
 
   // Handlers
   onLogoUrlChange: (url: string | null) => void;
-  onCurrencyChange: (value: string) => void;
   onPhoneNumberChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
-  onTypeOfEstablishmentChange: (value: string) => void;
-  onCountryChange: (value: string) => void;
-  
-  // NEW Handlers
   onMapUrlChange: (value: string) => void;
-  onMetaTitleChange: (value: string) => void;
-  onMetaDescriptionChange: (value: string) => void;
   onSocialMediaChange: (key: keyof SocialMediaLinks, value: string) => void;
   onDeliveryAppsChange: (key: keyof DeliveryAppLinks, value: string) => void;
 
-  // Current values
+  // Values
   currentLogoUrl: string | null;
-  currentCurrency: string;
   currentPhoneNumber: string;
   currentDescription: string;
-  currentTypeOfEstablishment: string;
-  currentCountry: string;
-  
-  // NEW Values
   currentMapUrl: string;
-  currentMetaTitle: string;
-  currentMetaDescription: string;
   currentSocialMedia: SocialMediaLinks;
   currentDeliveryApps: DeliveryAppLinks;
 }
@@ -56,25 +47,15 @@ export function UserRestaurantForm({
   initialData,
   formErrors,
   onLogoUrlChange,
-  onCurrencyChange,
   onPhoneNumberChange,
   onDescriptionChange,
-  onTypeOfEstablishmentChange,
-  onCountryChange,
   onMapUrlChange,
-  onMetaTitleChange,
-  onMetaDescriptionChange,
   onSocialMediaChange,
   onDeliveryAppsChange,
   currentLogoUrl,
-  currentCurrency,
   currentPhoneNumber,
   currentDescription,
-  currentTypeOfEstablishment,
-  currentCountry,
   currentMapUrl,
-  currentMetaTitle,
-  currentMetaDescription,
   currentSocialMedia,
   currentDeliveryApps,
 }: UserRestaurantFormProps) {
@@ -82,115 +63,173 @@ export function UserRestaurantForm({
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-      {/* LEFT COLUMN: Essential Details & Branding */}
+      {/* LEFT COLUMN: Essential Details */}
       <div className="space-y-6">
-        <section className="space-y-4">
-          <h3 className="text-lg font-semibold border-b pb-2">{t("sectionBasicInfo")}</h3>
+        <section className="space-y-4 rounded-lg border border-border bg-card p-6 shadow-sm">
+          <h3 className="flex items-center gap-2 border-b pb-2 text-lg font-semibold">
+            <Store className="h-5 w-5" /> Restaurant Profile
+          </h3>
           
           <div>
-            <Label className="mb-2" htmlFor="name">{t("labelName")}</Label>
-            <Input id="name" name="name" defaultValue={initialData.name ?? ""} readOnly className="bg-muted/50 text-muted-foreground cursor-not-allowed" />
+            <Label className="mb-2" htmlFor="name">Restaurant Name</Label>
+            <Input 
+              id="name" 
+              name="name" 
+              defaultValue={initialData.name ?? ""} 
+              readOnly 
+              className="cursor-not-allowed bg-muted/50 text-muted-foreground" 
+            />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label className="mb-2" htmlFor="country">{t("labelCountry")}</Label>
-              <Input id="country" name="country" value={currentCountry} onChange={(e) => onCountryChange(e.target.value)} required />
-            </div>
-            <div>
-              <Label className="mb-2" htmlFor="currency">{t("labelCurrency")}</Label>
-              <Input id="currency" name="currency" value={currentCurrency} onChange={(e) => onCurrencyChange(e.target.value)} required />
-            </div>
+          <div>
+            <Label className="mb-2" htmlFor="address">Address</Label>
+            <Input 
+              id="address" 
+              name="address" 
+              defaultValue={initialData.address ?? ""} 
+              placeholder="Full street address..."
+            />
           </div>
 
           <div>
             <Label className="mb-2" htmlFor="phoneNumber">{t("labelPhoneNumber")}</Label>
-            <Input id="phoneNumber" name="phoneNumber" value={currentPhoneNumber} onChange={(e) => onPhoneNumberChange(e.target.value)} type="tel" />
+            <Input 
+              id="phoneNumber" 
+              name="phoneNumber" 
+              value={currentPhoneNumber} 
+              onChange={(e) => onPhoneNumberChange(e.target.value)} 
+              type="tel" 
+              placeholder="+1 (555) 000-0000"
+            />
           </div>
 
           <div>
             <Label className="mb-2 flex items-center gap-2" htmlFor="mapUrl">
               <MapPin className="h-4 w-4" /> {t("labelMapUrl")}
             </Label>
-            <Input id="mapUrl" name="mapUrl" value={currentMapUrl} onChange={(e) => onMapUrlChange(e.target.value)} placeholder="Google Maps link..." />
+            <Input 
+              id="mapUrl" 
+              name="mapUrl" 
+              value={currentMapUrl} 
+              onChange={(e) => onMapUrlChange(e.target.value)} 
+              placeholder="Google or Apple Maps link..." 
+            />
           </div>
-        </section>
 
-        <section className="space-y-4 pt-4">
-          <h3 className="text-lg font-semibold border-b pb-2 flex items-center gap-2">
-            <LinkIcon className="h-4 w-4" /> {t("sectionSocialMedia")}
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-xs uppercase text-muted-foreground">Instagram</Label>
-              <Input value={currentSocialMedia.instagram ?? ""} onChange={(e) => onSocialMediaChange("instagram", e.target.value)} placeholder="https://..." />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs uppercase text-muted-foreground">Facebook</Label>
-              <Input value={currentSocialMedia.facebook ?? ""} onChange={(e) => onSocialMediaChange("facebook", e.target.value)} placeholder="https://..." />
-            </div>
+          <div>
+            <Label className="mb-2" htmlFor="description">About the Restaurant</Label>
+            <Textarea 
+              id="description" 
+              name="description" 
+              value={currentDescription} 
+              onChange={(e) => onDescriptionChange(e.target.value)} 
+              rows={4} 
+              placeholder="Describe your cuisine, atmosphere, and story..."
+            />
+          </div>
+
+          <div className="pt-2">
+            <Label className="mb-2 block">{t("labelLogo")}</Label>
+            {currentLogoUrl ? (
+              <div className="relative h-24 w-24 overflow-hidden rounded-md border">
+                <CustomImage src={currentLogoUrl} alt="Logo" />
+                <Button 
+                  type="button"
+                  variant="destructive" 
+                  size="icon" 
+                  className="absolute -right-2 -top-2 h-6 w-6 rounded-full" 
+                  onClick={() => onLogoUrlChange(null)}
+                >
+                  <XCircle className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <UploadButton 
+                endpoint="logoUploader" 
+                className="ut-button:h-10 ut-button:w-32 ut-button:text-sm" 
+                onClientUploadComplete={(res) => res?.[0] && onLogoUrlChange(res[0].url)} 
+                onUploadError={(error: Error) => console.error(error.message)}
+              />
+            )}
           </div>
         </section>
       </div>
 
-      {/* RIGHT COLUMN: Marketing, Delivery & SEO */}
+      {/* RIGHT COLUMN: Links & Delivery */}
       <div className="space-y-6">
-        <section className="space-y-4">
-          <h3 className="text-lg font-semibold border-b pb-2">{t("sectionBranding")}</h3>
-          
-          <div>
-            <Label className="mb-2" htmlFor="description">{t("labelShortDescription")}</Label>
-            <Textarea id="description" value={currentDescription} onChange={(e) => onDescriptionChange(e.target.value)} rows={3} />
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="flex-1">
-              <Label className="mb-2" htmlFor="typeOfEstablishment">{t("labelTypeOfEstablishment")}</Label>
-              <Input id="typeOfEstablishment" value={currentTypeOfEstablishment} onChange={(e) => onTypeOfEstablishmentChange(e.target.value)} />
+        <section className="space-y-4 rounded-lg border border-border bg-card p-6 shadow-sm">
+          <h3 className="flex items-center gap-2 border-b pb-2 text-lg font-semibold">
+            <LinkIcon className="h-5 w-5" /> Social & Website
+          </h3>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Instagram</Label>
+              <Input value={currentSocialMedia.instagram ?? ""} onChange={(e) => onSocialMediaChange("instagram", e.target.value)} placeholder="https://..." />
             </div>
-            <div className="space-y-2">
-              <Label>{t("labelLogo")}</Label>
-              {currentLogoUrl ? (
-                <div className="relative h-20 w-20 border rounded-md overflow-hidden">
-                  <CustomImage src={currentLogoUrl} alt="Logo" />
-                  <Button variant="destructive" size="icon" className="absolute -top-1 -right-1 h-5 w-5 rounded-full" onClick={() => onLogoUrlChange(null)}>
-                    <XCircle className="h-3 w-3" />
-                  </Button>
-                </div>
-              ) : (
-                <UploadButton 
-                  endpoint="logoUploader" 
-                  className="ut-button:h-20 ut-button:w-20 ut-button:text-[10px]" 
-                  onClientUploadComplete={(res) => res?.[0] && onLogoUrlChange(res[0].url)} 
-                />
-              )}
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Facebook</Label>
+              <Input value={currentSocialMedia.facebook ?? ""} onChange={(e) => onSocialMediaChange("facebook", e.target.value)} placeholder="https://..." />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Twitter</Label>
+              <Input value={currentSocialMedia.twitter ?? ""} onChange={(e) => onSocialMediaChange("twitter", e.target.value)} placeholder="https://..." />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">TikTok</Label>
+              <Input value={currentSocialMedia.tiktok ?? ""} onChange={(e) => onSocialMediaChange("tiktok", e.target.value)} placeholder="https://..." />
+            </div>
+          </div>
+          <div className="pt-2">
+            <Label className="mb-1 text-xs text-muted-foreground">Official Website</Label>
+            <div className="relative">
+              <Globe className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                className="pl-8"
+                value={currentSocialMedia.website ?? ""}
+                onChange={(e) => onSocialMediaChange("website", e.target.value)}
+                placeholder="https://..."
+              />
             </div>
           </div>
         </section>
 
-        <section className="space-y-4 pt-4">
-          <h3 className="text-lg font-semibold border-b pb-2 flex items-center gap-2">
-            <ShoppingBag className="h-4 w-4" /> {t("sectionDelivery")}
+        <section className="space-y-4 rounded-lg border border-border bg-card p-6 shadow-sm">
+          <h3 className="flex items-center gap-2 border-b pb-2 text-lg font-semibold">
+            <ShoppingBag className="h-5 w-5" /> Delivery Platforms
           </h3>
-          <div className="grid grid-cols-2 gap-4">
-            <Input placeholder="Yemeksepeti" value={currentDeliveryApps.yemeksepeti ?? ""} onChange={(e) => onDeliveryAppsChange("yemeksepeti", e.target.value)} />
-            <Input placeholder="Getir" value={currentDeliveryApps.getir ?? ""} onChange={(e) => onDeliveryAppsChange("getir", e.target.value)} />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Yemeksepeti</Label>
+              <Input value={currentDeliveryApps.yemeksepeti ?? ""} onChange={(e) => onDeliveryAppsChange("yemeksepeti", e.target.value)} placeholder="https://..." />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Getir</Label>
+              <Input value={currentDeliveryApps.getir ?? ""} onChange={(e) => onDeliveryAppsChange("getir", e.target.value)} placeholder="https://..." />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Trendyol Yemek</Label>
+              <Input value={currentDeliveryApps.trendyolYemek ?? ""} onChange={(e) => onDeliveryAppsChange("trendyolYemek", e.target.value)} placeholder="https://..." />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Migros Yemek</Label>
+              <Input value={currentDeliveryApps.migrosYemek ?? ""} onChange={(e) => onDeliveryAppsChange("migrosYemek", e.target.value)} placeholder="https://..." />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">UberEats</Label>
+              <Input value={currentDeliveryApps.uberEats ?? ""} onChange={(e) => onDeliveryAppsChange("uberEats", e.target.value)} placeholder="https://..." />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Deliveroo</Label>
+              <Input value={currentDeliveryApps.deliveroo ?? ""} onChange={(e) => onDeliveryAppsChange("deliveroo", e.target.value)} placeholder="https://..." />
+            </div>
           </div>
-        </section>
-
-        <section className="space-y-4 pt-4">
-          <h3 className="text-lg font-semibold border-b pb-2 flex items-center gap-2">
-            <Search className="h-4 w-4" /> {t("sectionSEO")}
-          </h3>
-          <div className="space-y-3">
-            <div>
-              <Label className="text-xs uppercase text-muted-foreground">{t("labelMetaTitle")}</Label>
-              <Input value={currentMetaTitle} onChange={(e) => onMetaTitleChange(e.target.value)} />
-            </div>
-            <div>
-              <Label className="text-xs uppercase text-muted-foreground">{t("labelMetaDescription")}</Label>
-              <Textarea value={currentMetaDescription} onChange={(e) => onMetaDescriptionChange(e.target.value)} rows={2} />
-            </div>
+          <div className="pt-2">
+            <Label className="mb-1 text-xs text-muted-foreground">Other Delivery Link</Label>
+            <Input
+              value={currentDeliveryApps.customLink ?? ""}
+              onChange={(e) => onDeliveryAppsChange("customLink", e.target.value)}
+              placeholder="https://..."
+            />
           </div>
         </section>
       </div>

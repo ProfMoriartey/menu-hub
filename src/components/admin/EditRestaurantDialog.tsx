@@ -59,12 +59,13 @@ export function EditRestaurantDialog({
   const [currentTypeOfEstablishment, setCurrentTypeOfEstablishment] = useState(restaurant.typeOfEstablishment ?? "");
   const [newRestaurantCountry, setNewRestaurantCountry] = useState(restaurant.country ?? "");
 
-  // --- NEW STATES ---
+  // 🛑 ADDED: Missing foodType state, seeded with the existing data
+  const [currentFoodType, setCurrentFoodType] = useState(restaurant.foodType ?? "");
+
   const [currentMapUrl, setCurrentMapUrl] = useState(restaurant.mapUrl ?? "");
   const [currentMetaTitle, setCurrentMetaTitle] = useState(restaurant.metaTitle ?? "");
   const [currentMetaDescription, setCurrentMetaDescription] = useState(restaurant.metaDescription ?? "");
   
-  // Cast existing JSON or provide empty objects to match the schema
   const [currentSocialMedia, setCurrentSocialMedia] = useState<SocialMediaLinks>(
     restaurant.socialMedia ?? ({} as SocialMediaLinks)
   );
@@ -73,7 +74,6 @@ export function EditRestaurantDialog({
     restaurant.deliveryApps ?? ({} as DeliveryAppLinks)
   );
   
-  // Helper handlers for nested objects
   const handleSocialMediaChange = (key: keyof SocialMediaLinks, value: string) => {
     setCurrentSocialMedia((prev) => ({ ...prev, [key]: value }));
   };
@@ -96,11 +96,12 @@ export function EditRestaurantDialog({
     formData.set("typeOfEstablishment", currentTypeOfEstablishment);
     formData.set("country", newRestaurantCountry);
 
-    // --- APPEND NEW FIELDS ---
+    // 🛑 ADDED: Inject foodType into FormData
+    formData.set("foodType", currentFoodType);
+
     formData.set("mapUrl", currentMapUrl);
     formData.set("metaTitle", currentMetaTitle);
     formData.set("metaDescription", currentMetaDescription);
-    // Stringify the JSON objects before sending
     formData.set("socialMedia", JSON.stringify(currentSocialMedia));
     formData.set("deliveryApps", JSON.stringify(currentDeliveryApps));
 
@@ -119,7 +120,6 @@ export function EditRestaurantDialog({
       description: formData.get("description") as string | null,
       theme: formData.get("theme") as string | null,
       typeOfEstablishment: formData.get("typeOfEstablishment") as string | null,
-      // --- VALIDATE NEW FIELDS ---
       mapUrl: formData.get("mapUrl") as string | null,
       metaTitle: formData.get("metaTitle") as string | null,
       metaDescription: formData.get("metaDescription") as string | null,
@@ -167,14 +167,17 @@ export function EditRestaurantDialog({
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl lg:max-w-[1000px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      {/* 🛑 FIX: Apply the Full Screen layout to match the Add Dialog */}
+      <DialogContent className="max-w-[95vw] h-[95vh] flex flex-col overflow-hidden">
+        <DialogHeader className="shrink-0">
           <DialogTitle>Edit Restaurant</DialogTitle>
           <DialogDescription>
             Update info for &quot;{restaurant.name}&quot;.
           </DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit} className="grid gap-4 py-4">
+        
+        {/* 🛑 FIX: Make form area scrollable */}
+        <form action={handleSubmit} className="flex-1 overflow-y-auto pr-4 py-4">
           <input type="hidden" name="id" value={restaurant.id} />
 
           <RestaurantForm
@@ -203,7 +206,10 @@ export function EditRestaurantDialog({
             currentCountry={newRestaurantCountry}
             onCountryChange={setNewRestaurantCountry}
 
-            // --- PASS NEW PROPS ---
+            // 🛑 ADDED: Pass the missing foodType props
+            currentFoodType={currentFoodType}
+            onFoodTypeChange={setCurrentFoodType}
+
             currentMapUrl={currentMapUrl}
             onMapUrlChange={setCurrentMapUrl}
             currentMetaTitle={currentMetaTitle}
@@ -219,12 +225,12 @@ export function EditRestaurantDialog({
           />
 
           {formErrors.general && (
-            <p className="text-destructive col-span-full mt-4 text-center text-sm">
+            <p className="text-destructive mt-4 text-center text-sm">
               {formErrors.general}
             </p>
           )}
 
-          <DialogFooter className="col-span-full pt-4">
+          <DialogFooter className="pt-8 pb-4 shrink-0 mt-auto">
             <SubmitButton />
           </DialogFooter>
         </form>
