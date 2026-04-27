@@ -46,8 +46,8 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
   } as Restaurant;
 
   // 3. Now the rest of your code will work without errors
-  const socials = (restaurantDetails.socialMedia as SocialMediaLinks) ?? {};
-  const deliveryApps = (restaurantDetails.deliveryApps as DeliveryAppLinks) ?? {};
+  const socials = restaurantDetails.socialMedia ?? ({} as SocialMediaLinks)
+  const deliveryApps = restaurantDetails.deliveryApps ?? ({} as DeliveryAppLinks)
   
   const hasSocials = Object.values(socials).some((url) => url && url.trim() !== "");
   const hasDelivery = Object.values(deliveryApps).some((url) => url && url.trim() !== "");

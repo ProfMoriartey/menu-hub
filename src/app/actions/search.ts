@@ -2,11 +2,12 @@
 "use server";
 
 import { db } from "~/server/db";
-// Ensure categories and menuItems are imported here for subqueries
 import { categories, menuItems } from "~/server/db/schema";
-// Import 'exists' and 'and' for complex subqueries
 import { eq, exists, and } from "drizzle-orm";
 import type { Restaurant } from "~/types/restaurant";
+
+// ADDED: Import schemas for casting
+import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 
 // NEW SERVER ACTION: Search Restaurants from the database
 export async function searchRestaurants(searchTerm: string): Promise<Restaurant[]> {
@@ -57,11 +58,14 @@ export async function searchRestaurants(searchTerm: string): Promise<Restaurant[
       },
     });
 
-    // The post-processing filter `finalResults` is now redundant because the Drizzle query
-    // directly fetches only the matching restaurants based on all criteria.
-    // We can directly return `results`.
+    // 🛑 FIX: Map and cast the JSONB fields before returning
+    const formattedResults: Restaurant[] = results.map((restaurant) => ({
+      ...restaurant,
+      socialMedia: restaurant.socialMedia as SocialMediaLinks,
+      deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
+    }));
 
-    return results;
+    return formattedResults;
 
   } catch (error) {
     console.error("Error searching restaurants:", error);

@@ -44,6 +44,16 @@ function SubmitButton() {
   );
 }
 
+// 🛑 FIX: Helper function to safely parse JSON without using `any`
+function safeJsonParse(jsonString: string | null): unknown {
+  if (!jsonString) return {};
+  try {
+    return JSON.parse(jsonString) as unknown;
+  } catch {
+    return {};
+  }
+}
+
 async function formWrapperAction(
   prevState: FormState,
   formData: FormData,
@@ -63,14 +73,13 @@ async function formWrapperAction(
     description: formData.get("description") as string | null,
     theme: formData.get("theme") as string | null,
     typeOfEstablishment: formData.get("typeOfEstablishment") as string | null,
-    // --- VALIDATE NEW FIELDS ---
     mapUrl: formData.get("mapUrl") as string | null,
     metaTitle: formData.get("metaTitle") as string | null,
     metaDescription: formData.get("metaDescription") as string | null,
-    // Note: Zod will handle these as objects once parsed in the logic below, 
-    // but for the sake of safeParse, we use the raw strings from FormData or keep as is.
-    socialMedia: JSON.parse(formData.get("socialMedia") as string || "{}"),
-    deliveryApps: JSON.parse(formData.get("deliveryApps") as string || "{}"),
+    
+    // 🛑 FIX: Use the safe parser to avoid `any`
+    socialMedia: safeJsonParse(formData.get("socialMedia") as string),
+    deliveryApps: safeJsonParse(formData.get("deliveryApps") as string),
   };
 
   const result = restaurantSchema.safeParse(values);
@@ -96,7 +105,6 @@ async function formWrapperAction(
 export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsFormProps) {
   const t = useTranslations("RestaurantForm");
 
-  // Existing States
   const [isRestaurantActive] = useState(restaurant.isActive ?? true);
   const [isRestaurantDisplayed] = useState(restaurant.isDisplayed ?? true);
   const [logoUrl, setLogoUrl] = useState(restaurant.logoUrl ?? null);
@@ -107,15 +115,16 @@ export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsF
   const [currentTypeOfEstablishment, setCurrentTypeOfEstablishment] = useState(restaurant.typeOfEstablishment ?? "");
   const [currentCountry, setCurrentCountry] = useState(restaurant.country ?? "");
 
-  // --- NEW STATES FOR CLIENT DASHBOARD ---
   const [currentMapUrl, setCurrentMapUrl] = useState(restaurant.mapUrl ?? "");
   const [currentMetaTitle, setCurrentMetaTitle] = useState(restaurant.metaTitle ?? "");
   const [currentMetaDescription, setCurrentMetaDescription] = useState(restaurant.metaDescription ?? "");
+  
+  // 🛑 FIX: Cast the fallback object correctly
   const [currentSocialMedia, setCurrentSocialMedia] = useState<SocialMediaLinks>(
-    (restaurant.socialMedia as SocialMediaLinks) ?? {}
+    restaurant.socialMedia ?? ({} as SocialMediaLinks)
   );
   const [currentDeliveryApps, setCurrentDeliveryApps] = useState<DeliveryAppLinks>(
-    (restaurant.deliveryApps as DeliveryAppLinks) ?? {}
+    restaurant.deliveryApps ?? ({} as DeliveryAppLinks)
   );
 
   const [state, formAction] = useFormState(formWrapperAction, initialState);
@@ -153,7 +162,6 @@ export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsF
     formData.set("typeOfEstablishment", currentTypeOfEstablishment);
     formData.set("country", currentCountry);
 
-    // --- INJECT NEW FIELDS ---
     formData.set("mapUrl", currentMapUrl);
     formData.set("metaTitle", currentMetaTitle);
     formData.set("metaDescription", currentMetaDescription);
@@ -201,7 +209,6 @@ export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsF
           currentTypeOfEstablishment={currentTypeOfEstablishment}
           currentCountry={currentCountry}
           
-          // --- PASS NEW PROPS TO USER FORM ---
           currentMapUrl={currentMapUrl}
           onMapUrlChange={setCurrentMapUrl}
           currentMetaTitle={currentMetaTitle}

@@ -45,8 +45,8 @@ export function CategoryCardsImageDominantThemeSection({
     theme: "category-cards-image-dominant",
     typeOfEstablishment: "Fine Dining",
     
-    socialMedia: "https://www.instagram.com",
-  deliveryApps: "https://www.yemeksepeti.com",
+    socialMedia: {},
+  deliveryApps: {},
   mapUrl: "https://www.google.maps.com",
   metaTitle: "Restaurant",
   metaDescription: "Amazing restaurant",

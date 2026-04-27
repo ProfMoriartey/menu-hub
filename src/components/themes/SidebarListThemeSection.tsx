@@ -45,8 +45,8 @@ export function SidebarListThemeSection({
     theme: "sidebar-list",
     typeOfEstablishment: "Cafe",
     
-    socialMedia: "https://www.instagram.com",
-  deliveryApps: "https://www.yemeksepeti.com",
+    socialMedia: {},
+  deliveryApps: {},
   mapUrl: "https://www.google.maps.com",
   metaTitle: "Restaurant",
   metaDescription: "Amazing restaurant",
