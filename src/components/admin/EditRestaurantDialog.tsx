@@ -66,13 +66,13 @@ export function EditRestaurantDialog({
   
   // Cast existing JSON or provide empty objects to match the schema
   const [currentSocialMedia, setCurrentSocialMedia] = useState<SocialMediaLinks>(
-    (restaurant.socialMedia as SocialMediaLinks) ?? {}
+    restaurant.socialMedia ?? ({} as SocialMediaLinks)
   );
   
   const [currentDeliveryApps, setCurrentDeliveryApps] = useState<DeliveryAppLinks>(
-    (restaurant.deliveryApps as DeliveryAppLinks) ?? {}
+    restaurant.deliveryApps ?? ({} as DeliveryAppLinks)
   );
-
+  
   // Helper handlers for nested objects
   const handleSocialMediaChange = (key: keyof SocialMediaLinks, value: string) => {
     setCurrentSocialMedia((prev) => ({ ...prev, [key]: value }));
