@@ -146,7 +146,7 @@
     "browseMenuDefault": "Browse our delicious menu",
     "noMenuItemsAvailable": "No menu items available for this restaurant yet.",
     "checkBackLater": "Please check back later!",
-    "restaurantDetailsButton": "Restaurant Details"  
+    "restaurantDetailsButton": "Details"  
   },
   "menuItemDetailPage": {
     "pageTitle": "Menu Item Details",
@@ -156,12 +156,17 @@
     "dietaryLabels": "Dietary Information"
   },
   "restaurantProfilePage": {
-    "backToMenu": "Back to Menu",
-    "foodTypeLabel": "Food Type:",
-    "establishmentTypeLabel": "Establishment Type:",
-    "phoneLabel": "Phone:",
-    "addressLabel": "Address:",
-    "countryLabel": "Country:"
+   "backToMenu": "Back to Menu",
+      "menuButton": "Menu",
+      "orderButton": "Order",
+      "informationHeading": "Information",
+      "locationHeading": "Location",
+      "foodTypeLabel": "Cuisine",
+      "establishmentTypeLabel": "Type",
+      "phoneLabel": "Contact",
+      "countryLabel": "Country",
+      "addressLabel": "Address",
+      "getDirections": "Get Directions"
   },
   "classicThemeExample": {
     "exampleTitle": "Example:",

@@ -146,7 +146,7 @@
     "browseMenuDefault": "Explora nuestro delicioso menú",
     "noMenuItemsAvailable": "Aún no hay elementos de menú disponibles para este restaurante.",
     "checkBackLater": "¡Por favor, vuelve a comprobarlo más tarde!",
-    "restaurantDetailsButton": "Detalles del restaurante" 
+    "restaurantDetailsButton": "Detalles" 
   },
   "menuItemDetailPage": {
     "pageTitle": "Detalles del Artículo del Menú",
@@ -155,14 +155,19 @@
     "ingredientsLabel": "Ingredientes",
     "dietaryLabels": "Información Dietética"
   },
-  "restaurantProfilePage": {
-    "backToMenu": "Volver al Menú",
-    "foodTypeLabel": "Tipo de Comida:",
-    "establishmentTypeLabel": "Tipo de Establecimiento:",
-    "phoneLabel": "Teléfono:",
-    "addressLabel": "Dirección:",
-    "countryLabel": "País:"
-  },
+"restaurantProfilePage": {
+      "backToMenu": "Volver al Menú",
+      "menuButton": "Menú",
+      "orderButton": "Pedir",
+      "informationHeading": "Información",
+      "locationHeading": "Ubicación",
+      "foodTypeLabel": "Cocina",
+      "establishmentTypeLabel": "Tipo",
+      "phoneLabel": "Contacto",
+      "countryLabel": "País",
+      "addressLabel": "Dirección",
+      "getDirections": "Cómo Llegar"
+    },
   "classicThemeExample": {
     "exampleTitle": "Ejemplo:",
     "noItemsMessage": "No hay elementos en esta categoría.",

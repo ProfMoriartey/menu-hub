@@ -156,13 +156,18 @@
     "dietaryLabels": "المعلومات الغذائية"
   },
   "restaurantProfilePage": {
-    "backToMenu": "العودة إلى القائمة",
-    "foodTypeLabel": "نوع الطعام:",
-    "establishmentTypeLabel": "نوع المنشأة:",
-    "phoneLabel": "الهاتف:",
-    "addressLabel": "العنوان:",
-    "countryLabel": "البلد:"
-  },
+      "backToMenu": "العودة إلى القائمة",
+      "menuButton": "القائمة",
+      "orderButton": "اطلب",
+      "informationHeading": "معلومات",
+      "locationHeading": "الموقع",
+      "foodTypeLabel": "المطبخ",
+      "establishmentTypeLabel": "النوع",
+      "phoneLabel": "اتصال",
+      "countryLabel": "البلد",
+      "addressLabel": "العنوان",
+      "getDirections": "احصل على الاتجاهات"
+    },
   "classicThemeExample": {
     "exampleTitle": "مثال:",
     "noItemsMessage": "لا توجد عناصر في هذه الفئة.",

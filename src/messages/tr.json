@@ -146,7 +146,7 @@
     "browseMenuDefault": "Lezzetli menümüzü inceleyin",
     "noMenuItemsAvailable": "Bu restoran için henüz menü öğesi bulunmamaktadır.",
     "checkBackLater": "Lütfen daha sonra tekrar kontrol edin!",
-    "restaurantDetailsButton": "Restoran Detayları" 
+    "restaurantDetailsButton": "Detaylar" 
   },
   "menuItemDetailPage": {
     "pageTitle": "Menü Öğesi Detayları",
@@ -155,14 +155,19 @@
     "ingredientsLabel": "İçerikler",
     "dietaryLabels": "Diyet Bilgileri"
   },
-  "restaurantProfilePage": {
-    "backToMenu": "Menüye Geri Dön",
-    "foodTypeLabel": "Yemek Türü:",
-    "establishmentTypeLabel": "Kuruluş Türü:",
-    "phoneLabel": "Telefon:",
-    "addressLabel": "Adres:",
-    "countryLabel": "Ülke:"
-  },
+"restaurantProfilePage": {
+      "backToMenu": "Menüye Dön",
+      "menuButton": "Menü",
+      "orderButton": "Sipariş Ver",
+      "informationHeading": "Bilgiler",
+      "locationHeading": "Konum",
+      "foodTypeLabel": "Mutfak",
+      "establishmentTypeLabel": "Tür",
+      "phoneLabel": "İletişim",
+      "countryLabel": "Ülke",
+      "addressLabel": "Adres",
+      "getDirections": "Yol Tarifi Al"
+    },
   "classicThemeExample": {
     "exampleTitle": "Örnek:",
     "noItemsMessage": "Bu kategoride öğe bulunmamaktadır.",

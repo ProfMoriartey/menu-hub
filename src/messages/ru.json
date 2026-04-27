@@ -146,7 +146,7 @@
     "browseMenuDefault": "Просмотрите наше вкусное меню",
     "noMenuItemsAvailable": "Пока нет пунктов меню для этого ресторана.",
     "checkBackLater": "Пожалуйста, проверьте позже!",
-    "restaurantDetailsButton": "Детали ресторана" 
+    "restaurantDetailsButton": "Детали" 
   },
   "menuItemDetailPage": {
     "pageTitle": "Детали Пункта Меню",
@@ -155,14 +155,19 @@
     "ingredientsLabel": "Ингредиенты",
     "dietaryLabels": "Диетическая Информация"
   },
-  "restaurantProfilePage": {
-    "backToMenu": "Назад в Меню",
-    "foodTypeLabel": "Тип Еды:",
-    "establishmentTypeLabel": "Тип Заведения:",
-    "phoneLabel": "Телефон:",
-    "addressLabel": "Адрес:",
-    "countryLabel": "Страна:"
-  },
+ "restaurantProfilePage": {
+      "backToMenu": "Вернуться к меню",
+      "menuButton": "Меню",
+      "orderButton": "Заказать",
+      "informationHeading": "Информация",
+      "locationHeading": "Расположение",
+      "foodTypeLabel": "Кухня",
+      "establishmentTypeLabel": "Тип",
+      "phoneLabel": "Контакты",
+      "countryLabel": "Страна",
+      "addressLabel": "Адрес",
+      "getDirections": "Проложить маршрут"
+    },
   "classicThemeExample": {
     "exampleTitle": "Пример:",
     "noItemsMessage": "В этой категории нет элементов.",
