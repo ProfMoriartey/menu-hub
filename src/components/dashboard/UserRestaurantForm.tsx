@@ -147,7 +147,7 @@ export function UserRestaurantForm({
               <UploadButton 
                 endpoint="logoUploader" 
                 className="ut-button:h-10 ut-button:w-32 ut-button:text-sm" 
-                onClientUploadComplete={(res) => res?.[0] && onLogoUrlChange(res[0].url)} 
+                onClientUploadComplete={(res) => res?.[0] && onLogoUrlChange(res[0].ufsUrl)} 
                 onUploadError={(error: Error) => console.error(error.message)}
               />
             )}

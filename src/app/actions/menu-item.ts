@@ -22,7 +22,7 @@ const getStringValue = (formData: FormData, key: string): string | null => {
   return typeof value === "string" ? value : null;
 };
 
-// 🛑 ADDED: Helper to safely parse stringified arrays from FormData
+// Helper to safely parse stringified arrays from FormData
 const getJsonArrayValue = (formData: FormData, key: string): unknown => {
   const value = formData.get(key);
   if (typeof value === "string" && value.trim() !== "") {
@@ -41,6 +41,17 @@ const getFileKey = (url: string | null | undefined): string | null => {
   return url.split("/f/")[1] ?? null;
 };
 
+// Best effort: a failed file cleanup should not fail the database change.
+const deleteUploadedFile = async (url: string | null | undefined) => {
+  const fileKey = getFileKey(url);
+  if (!fileKey) return;
+  try {
+    await utapi.deleteFiles(fileKey);
+  } catch (error) {
+    console.error("Failed to delete uploaded file:", fileKey, error);
+  }
+};
+
 export async function addMenuItem(formData: FormData) {
   const restaurantId = getStringValue(formData, "restaurantId")!;
   
@@ -55,8 +66,7 @@ export async function addMenuItem(formData: FormData) {
     name: getStringValue(formData, "name"),
     description: getStringValue(formData, "description"),
     price: getStringValue(formData, "price"),
-    // 🛑 FIX: Parse arrays correctly before Zod validation
-    ingredients: getJsonArrayValue(formData, "ingredients"),
+    ingredients: getStringValue(formData, "ingredients"),
     dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
     imageUrl: getStringValue(formData, "imageUrl"),
     restaurantId: restaurantId,
@@ -79,6 +89,7 @@ export async function addMenuItem(formData: FormData) {
       `/admin/restaurants/${validatedData.restaurantId}/categories/${validatedData.categoryId}/menu-items`,
     );
   } catch (error) {
+    console.error("Failed to add menu item.", error);
     throw new Error("Failed to add menu item.");
   }
 }
@@ -98,8 +109,7 @@ export async function updateMenuItem(formData: FormData) {
     name: getStringValue(formData, "name"),
     description: getStringValue(formData, "description"),
     price: getStringValue(formData, "price"),
-    // 🛑 FIX: Parse arrays correctly before Zod validation
-    ingredients: getJsonArrayValue(formData, "ingredients"),
+    ingredients: getStringValue(formData, "ingredients"),
     dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
     imageUrl: getStringValue(formData, "imageUrl"),
     restaurantId: restaurantId,
@@ -117,17 +127,15 @@ export async function updateMenuItem(formData: FormData) {
     const [existingItem] = await db
       .select()
       .from(menuItems)
-      .where(eq(menuItems.id, validatedData.id));
+      .where(
+        and(
+          eq(menuItems.id, validatedData.id),
+          eq(menuItems.restaurantId, restaurantId)
+        )
+      );
 
-    if (
-      existingItem?.imageUrl &&
-      validatedData.imageUrl &&
-      existingItem.imageUrl !== validatedData.imageUrl
-    ) {
-      const fileKey = getFileKey(existingItem.imageUrl);
-      if (fileKey) {
-        await utapi.deleteFiles(fileKey);
-      }
+    if (!existingItem) {
+      throw new Error("Menu item not found.");
     }
 
     await db
@@ -148,11 +156,20 @@ export async function updateMenuItem(formData: FormData) {
         )
       );
 
+    if (
+      existingItem.imageUrl &&
+      validatedData.imageUrl &&
+      existingItem.imageUrl !== validatedData.imageUrl
+    ) {
+      await deleteUploadedFile(existingItem.imageUrl);
+    }
+
     revalidatePath(`/dashboard/${restaurantId}/edit`);
     revalidatePath(
       `/admin/restaurants/${validatedData.restaurantId}/categories/${validatedData.categoryId}/menu-items`,
     );
   } catch (error) {
+    console.error("Failed to update menu item.", error);
     throw new Error("Failed to update menu item.");
   }
 }
@@ -173,13 +190,15 @@ export async function deleteMenuItem(
     const [existingItem] = await db
       .select()
       .from(menuItems)
-      .where(eq(menuItems.id, menuItemId));
+      .where(
+        and(
+          eq(menuItems.id, menuItemId),
+          eq(menuItems.restaurantId, restaurantId)
+        )
+      );
 
-    if (existingItem?.imageUrl) {
-      const fileKey = getFileKey(existingItem.imageUrl);
-      if (fileKey) {
-        await utapi.deleteFiles(fileKey);
-      }
+    if (!existingItem) {
+      throw new Error("Menu item not found.");
     }
 
     await db.delete(menuItems).where(
@@ -188,12 +207,15 @@ export async function deleteMenuItem(
         eq(menuItems.restaurantId, restaurantId)
       )
     );
-    
+
+    await deleteUploadedFile(existingItem.imageUrl);
+
     revalidatePath(`/dashboard/${restaurantId}/edit`);
     revalidatePath(
       `/admin/restaurants/${restaurantId}/categories/${categoryId}/menu-items`,
     );
   } catch (error) {
+    console.error("Failed to delete menu item.", error);
     throw new Error("Failed to delete menu item.");
   }
 }
@@ -204,18 +226,26 @@ export async function updateMenuItemOrder(
 ) {
   try {
     await checkAuthorization(restaurantId);
-    
-    await Promise.all(
-      items.map((item) =>
-        db
-          .update(menuItems)
-          .set({ order: item.order })
-          .where(eq(menuItems.id, item.id))
-      )
-    );
+
+    await db.transaction(async (tx) => {
+      await Promise.all(
+        items.map((item) =>
+          tx
+            .update(menuItems)
+            .set({ order: item.order })
+            .where(
+              and(
+                eq(menuItems.id, item.id),
+                eq(menuItems.restaurantId, restaurantId)
+              )
+            )
+        )
+      );
+    });
 
     revalidatePath(`/dashboard/${restaurantId}/edit`);
   } catch (error) {
+    console.error("Failed to update menu item order.", error);
     throw new Error("Failed to update menu item order.");
   }
 }

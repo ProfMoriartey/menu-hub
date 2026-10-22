@@ -269,7 +269,7 @@ export function AddMenuItemClient({
             )}
             onClientUploadComplete={(res) => {
               if (res && res.length > 0 && res[0]) {
-                setImageUrl(res[0].url);
+                setImageUrl(res[0].ufsUrl);
               }
             }}
             onUploadError={(error: Error) =>

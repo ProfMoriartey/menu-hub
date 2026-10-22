@@ -135,7 +135,8 @@ export function RestaurantSearchAndGrid({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
-            <Command>
+            {/* Results are already filtered on the server (including menu item names) */}
+            <Command shouldFilter={false}>
               <CommandInput
                 // UPDATED: Use translation for search placeholder
                 placeholder={t("searchPlaceholder")}
@@ -179,15 +180,7 @@ export function RestaurantSearchAndGrid({
                         }}
                       >
                         <CommandItem
-                          // Provide a comprehensive value for command item searching/filtering
-                          value={`${restaurant.name} ${restaurant.slug ?? ""} ${restaurant.country ?? ""} ${restaurant.foodType ?? ""} ${restaurant.address ?? ""} ${restaurant.categories?.map((cat) => cat.name).join(" ") ?? ""} ${
-                            restaurant.categories
-                              ?.flatMap((cat) =>
-                                cat.menuItems?.map((item) => item.name),
-                              )
-                              .filter(Boolean)
-                              .join(" ") ?? ""
-                          }`}
+                          value={restaurant.id}
                           className="text-foreground flex cursor-pointer items-center gap-2"
                         >
                           <Image

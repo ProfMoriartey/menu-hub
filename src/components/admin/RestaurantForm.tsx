@@ -328,7 +328,7 @@ export function RestaurantForm({
             className="ut-button:h-10 ut-button:w-32 ut-button:text-sm"
             onClientUploadComplete={(res) => {
               if (res && res.length > 0 && res[0]) {
-                onLogoUrlChange(res[0].url);
+                onLogoUrlChange(res[0].ufsUrl);
               }
             }}
             onUploadError={(error: Error) => console.error(`ERROR! ${error.message}`)}

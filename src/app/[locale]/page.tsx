@@ -19,7 +19,8 @@ export default async function HomePage() {
   // Fetch raw data without the strict type hint
   const rawRestaurants = await db.query.restaurants.findMany(
     {
-      where: (restaurant, { eq }) => eq(restaurant.isDisplayed, true),
+      where: (restaurant, { and, eq }) =>
+        and(eq(restaurant.isDisplayed, true), eq(restaurant.isActive, true)),
       limit: 6,
       orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
       with: {

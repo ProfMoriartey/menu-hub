@@ -24,6 +24,19 @@ export const deliveryAppsSchema = z.object({
 export type SocialMediaLinks = z.infer<typeof socialMediaSchema>;
 export type DeliveryAppLinks = z.infer<typeof deliveryAppsSchema>;
 
+// Restaurant pages live at /[locale]/[restaurantSlug], next to these fixed
+// routes. A restaurant using one of these slugs could never be reached.
+export const RESERVED_SLUGS = [
+  "about",
+  "admin",
+  "api",
+  "dashboard",
+  "restaurants",
+  "sign-in",
+  "sign-up",
+  "themes",
+];
+
 export const restaurantSchema = z.object({
   id: z.string().uuid().optional(),
   name: z.string().min(1, { message: "Restaurant name is required." }),
@@ -32,6 +45,9 @@ export const restaurantSchema = z.object({
     .min(1, { message: "Restaurant slug is required." })
     .regex(/^[a-z0-9-]+$/, {
       message: "Slug must be lowercase, alphanumeric, and can contain hyphens.",
+    })
+    .refine((slug) => !RESERVED_SLUGS.includes(slug), {
+      message: `This slug is reserved by the site. Avoid: ${RESERVED_SLUGS.join(", ")}.`,
     }),
   address: z.string().nullable().optional(),
   country: z.string().nullable().optional(),
