@@ -9,7 +9,7 @@ import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Geist } from "next/font/google";
 import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
-import { ThemeProvider } from "~/context/ThemeContext";
+import { ThemeProvider, themeInitScript } from "~/context/ThemeContext";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "~/i18n/routing";
@@ -77,7 +77,16 @@ export default async function LocaleLayout({
   }
   return (
     <ClerkProvider>
-      <html lang={locale} className={`${geist.variable}`}>
+      <html
+        lang={locale}
+        dir={locale === "ar" ? "rtl" : "ltr"}
+        className={`${geist.variable}`}
+        // themeInitScript adds the "dark" class before React hydrates
+        suppressHydrationWarning
+      >
+        <head>
+          <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        </head>
         <body>
           <NextIntlClientProvider>
             <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />

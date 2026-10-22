@@ -4,7 +4,7 @@
 import { usePathname } from "next/navigation";
 import { useLocale } from "next-intl"; // CORRECTED: Import useLocale directly from 'next-intl'
 import { Navbar } from "~/components/shared/Navbar"; // Import your Navbar component
-import React, { useEffect } from "react"; // Explicit import React and useEffect
+import type React from "react";
 
 interface LayoutWrapperProps {
   children: React.ReactNode;
@@ -32,18 +32,7 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
 
   const isPublicNavbarVisible = basePublicPaths.includes(cleanPathname);
 
-  // Effect to apply dir="rtl" to the <html> element for Arabic locale
-  useEffect(() => {
-    document.documentElement.setAttribute(
-      "dir",
-      locale === "ar" ? "rtl" : "ltr",
-    );
-
-    // Cleanup function: Set back to ltr when component unmounts or locale changes
-    return () => {
-      document.documentElement.setAttribute("dir", "ltr");
-    };
-  }, [locale]); // Rerun effect when locale changes
+  // Text direction (rtl for Arabic) is set on <html> by the server in [locale]/layout.tsx.
 
   return (
     <>
