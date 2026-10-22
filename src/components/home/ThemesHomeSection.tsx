@@ -1,6 +1,8 @@
 // src/components/home/ThemesHomeSection.tsx
 "use client";
 
+import type React from "react";
+
 import { Link } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
@@ -9,11 +11,15 @@ import { ClassicThemeExample } from "~/components/themes/ClassicThemeExample";
 import { AccordionCardThemeExample } from "~/components/themes/AccordionCardThemeExample";
 import { useTranslations } from "next-intl"; // Import useTranslations
 
-import SittingDoodle from "../svg/SittingDoodle";
 import { useEffect, useState } from "react";
 import { useParallax } from "react-scroll-parallax";
 
-export function ThemesHomeSection() {
+interface ThemesHomeSectionProps {
+  /** Illustration rendered on the server and passed in, keeping its SVG out of the client bundle. */
+  doodle: React.ReactNode;
+}
+
+export function ThemesHomeSection({ doodle }: ThemesHomeSectionProps) {
   // Initialize translations for the 'themes' namespace
   const t = useTranslations("themes");
 
@@ -88,13 +94,7 @@ export function ThemesHomeSection() {
             variants={itemVariants}
             className="w-full max-w-xs flex-shrink-0 lg:max-w-sm" // MODIFIED: Sizing for doodle
           >
-            <SittingDoodle
-              className="h-auto w-full"
-              doodleFillColorLight="text-attention"
-              doodleFillColorDark="dark:text-white"
-              doodleStrokeColorLight="text-foreground"
-              doodleStrokeColorDark="dark:text-black"
-            />
+            {doodle}
           </motion.div>
         </div>
 

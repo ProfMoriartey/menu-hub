@@ -1,17 +1,23 @@
 // src/components/home/HeroSection.tsx
 "use client";
 
+import type React from "react";
+
 import { useEffect, useState } from "react"; // ADDED: Import useEffect and useState
 import { Link } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
-import GroovySittingDoodle from "../svg/GroovySittingDoodle";
 
 import { useParallax } from "react-scroll-parallax";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  /** Illustration rendered on the server and passed in, keeping its SVG out of the client bundle. */
+  doodle: React.ReactNode;
+}
+
+export function HeroSection({ doodle }: HeroSectionProps) {
   const t = useTranslations("hero");
 
   // ADDED: State to track if parallax should be disabled
@@ -89,7 +95,7 @@ export function HeroSection() {
         transition={{ duration: 0.8, delay: 0.6 }}
         className="mt-8 w-full max-w-sm lg:mt-0 lg:max-w-lg"
       >
-        <GroovySittingDoodle className="text-background h-auto w-full" />
+        {doodle}
       </motion.div>
     </motion.section>
   );
