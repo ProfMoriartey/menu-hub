@@ -25,7 +25,7 @@ export const createMenuItemSchema = z.object({
     .union([z.string().url("Invalid URL format."), z.literal("")])
     .nullable()
     .optional()
-    .transform((val) => val || null),
+    .transform((val) => (val === "" ? null : (val ?? null))),
   restaurantId: z.string().uuid("Invalid restaurant ID format."),
   categoryId: z.string().uuid("Invalid category ID format."),
 });
