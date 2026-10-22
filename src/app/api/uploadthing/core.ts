@@ -22,10 +22,15 @@ export const ourFileRouter = {
       return { uploadedBy: metadata.userId, url: file.url };
     }),
 
-  imageUploader: f({ image: { maxFileSize: "2MB", maxFileCount: 1 } }) // Configure as needed
-    .onUploadComplete(async ({ file }) => {
-      console.log("Upload complete for menu item image:", file.url);
-      // You can add logic here to save the URL to your database if not already done on the client
+  imageUploader: f({ image: { maxFileSize: "2MB", maxFileCount: 1 } })
+    .middleware(async () => {
+      const { userId } = await auth();
+      if (!userId) throw new Error("Unauthorized");
+      return { userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Menu item image upload complete for userId:", metadata.userId);
+      return { uploadedBy: metadata.userId, url: file.url };
     }),
 } satisfies FileRouter;
 
