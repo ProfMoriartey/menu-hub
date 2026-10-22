@@ -5,32 +5,27 @@ import type { DietaryLabel } from "~/types/restaurant";
 
 export const ALL_DIETARY_LABELS: DietaryLabel[] = dietaryLabelEnum.enumValues;
 
+// Forms submit "" for untouched optional inputs; store those as null.
+const optionalText = z
+  .string()
+  .nullable()
+  .optional()
+  .transform((val) => (val?.trim() ? val.trim() : null));
+
 export const createMenuItemSchema = z.object({
-  name: z.string().min(1, "Name is required."),
-  description: z.string().nullable().optional(),
-  price: z.string().min(1, "Price is required."),
-  ingredients: z.string().nullable().optional(),
+  name: z.string().trim().min(1, "Name is required."),
+  description: optionalText,
+  price: z.string().trim().min(1, "Price is required."),
+  // Free text, e.g. "beef, cheese, lettuce".
+  ingredients: optionalText,
   dietaryLabels: z
-    .string()
-    .optional()
-    .transform(async (val) => {
-      if (!val) return null;
-
-      const dietaryLabelsArraySchema = z.array(
-        z.enum(ALL_DIETARY_LABELS as [DietaryLabel, ...DietaryLabel[]]),
-      );
-
-      try {
-        const parsed: unknown = JSON.parse(val);
-        const result = await dietaryLabelsArraySchema.safeParseAsync(parsed);
-        return result.success ? result.data : null;
-      } catch {
-        return null;
-      }
-    })
+    .array(z.enum(ALL_DIETARY_LABELS as [DietaryLabel, ...DietaryLabel[]]))
+    .default([]),
+  imageUrl: z
+    .union([z.string().url("Invalid URL format."), z.literal("")])
     .nullable()
-    .optional(),
-  imageUrl: z.string().url("Invalid URL format.").nullable().optional(),
+    .optional()
+    .transform((val) => val || null),
   restaurantId: z.string().uuid("Invalid restaurant ID format."),
   categoryId: z.string().uuid("Invalid category ID format."),
 });

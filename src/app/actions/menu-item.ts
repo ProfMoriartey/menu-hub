@@ -22,7 +22,7 @@ const getStringValue = (formData: FormData, key: string): string | null => {
   return typeof value === "string" ? value : null;
 };
 
-// 🛑 ADDED: Helper to safely parse stringified arrays from FormData
+// Helper to safely parse stringified arrays from FormData
 const getJsonArrayValue = (formData: FormData, key: string): unknown => {
   const value = formData.get(key);
   if (typeof value === "string" && value.trim() !== "") {
@@ -55,8 +55,7 @@ export async function addMenuItem(formData: FormData) {
     name: getStringValue(formData, "name"),
     description: getStringValue(formData, "description"),
     price: getStringValue(formData, "price"),
-    // 🛑 FIX: Parse arrays correctly before Zod validation
-    ingredients: getJsonArrayValue(formData, "ingredients"),
+    ingredients: getStringValue(formData, "ingredients"),
     dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
     imageUrl: getStringValue(formData, "imageUrl"),
     restaurantId: restaurantId,
@@ -98,8 +97,7 @@ export async function updateMenuItem(formData: FormData) {
     name: getStringValue(formData, "name"),
     description: getStringValue(formData, "description"),
     price: getStringValue(formData, "price"),
-    // 🛑 FIX: Parse arrays correctly before Zod validation
-    ingredients: getJsonArrayValue(formData, "ingredients"),
+    ingredients: getStringValue(formData, "ingredients"),
     dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
     imageUrl: getStringValue(formData, "imageUrl"),
     restaurantId: restaurantId,
