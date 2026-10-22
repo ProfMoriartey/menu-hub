@@ -2,9 +2,7 @@
 import { notFound } from "next/navigation";
 import { redirect } from "~/i18n/navigation";
 import { getLocale } from "next-intl/server";
-import { db } from "~/server/db";
-import * as schema from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import { getRestaurantBySlug } from "~/server/queries";
 
 interface DynamicPublicLayoutProps {
   children: React.ReactNode;
@@ -21,14 +19,8 @@ export default async function DynamicPublicLayout({
 }: DynamicPublicLayoutProps) {
   const restaurantSlug = (await params).restaurantSlug;
 
-  // 1. Fetch the restaurant's active status from the database
-  const restaurant = await db.query.restaurants.findFirst({
-    where: eq(schema.restaurants.slug, restaurantSlug),
-    columns: {
-      id: true,
-      isActive: true, // Only fetch what we need for the check
-    },
-  });
+  // 1. Fetch the restaurant (cached for this request; the pages reuse it)
+  const restaurant = await getRestaurantBySlug(restaurantSlug);
 
   // 2. Check existence
   if (!restaurant) {

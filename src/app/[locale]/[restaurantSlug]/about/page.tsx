@@ -1,7 +1,5 @@
 // app/[locale]/(public)/[restaurantSlug]/about/page.tsx
-import { db } from "~/server/db"
-import { restaurants } from "~/server/db/schema"
-import { eq } from "drizzle-orm"
+import { getRestaurantBySlug } from "~/server/queries"
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import { Link } from "~/i18n/navigation"
@@ -28,12 +26,7 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
   const { restaurantSlug } = await params
   const t = await getTranslations("restaurantProfilePage")
 
-  const rawData = await db.query.restaurants.findFirst({
-    where: eq(restaurants.slug, restaurantSlug),
-    with: {
-      categories: true,
-    },
-  })
+  const rawData = await getRestaurantBySlug(restaurantSlug)
 
   if (!rawData) {
     notFound()
@@ -41,6 +34,7 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
 
   const restaurantDetails = {
     ...rawData,
+    categories: [],
     socialMedia: rawData.socialMedia as SocialMediaLinks,
     deliveryApps: rawData.deliveryApps as DeliveryAppLinks,
   } as Restaurant
