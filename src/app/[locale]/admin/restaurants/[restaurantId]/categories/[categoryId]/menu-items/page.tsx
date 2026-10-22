@@ -11,7 +11,7 @@ import { eq, and } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { AddMenuItemForm } from "~/components/admin/AddMenuItemForm"
 import { MenuItemsTable } from "~/components/admin/MenuItemsTable"
-import Link from "next/link"
+import { Link } from "~/i18n/navigation"
 import { Button } from "~/components/ui/button"
 import { ChevronLeft } from "lucide-react"
 

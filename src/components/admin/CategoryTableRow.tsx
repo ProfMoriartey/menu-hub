@@ -1,7 +1,7 @@
 // src/components/admin/CategoryTableRow.tsx
 "use client"; // Keep this as it's a client component
 
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { TableCell } from "~/components/ui/table"; // REMOVE TableRow import
 import { EditCategoryDialog } from "~/components/admin/EditCategoryDialog";

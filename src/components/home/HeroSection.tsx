@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react"; // ADDED: Import useEffect and useState
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";

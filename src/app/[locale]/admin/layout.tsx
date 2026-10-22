@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { Link, redirect } from "~/i18n/navigation";
+import { getLocale } from "next-intl/server";
 import { UserButton } from "@clerk/nextjs"; // ClerkProvider removed, UserButton kept
-import Link from "next/link";
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle"; // Assuming this is correct
 
@@ -17,7 +17,7 @@ export default async function AdminDashboardLayout({
   // 1. Unauthenticated check
   if (!userId) {
     // Force sign-in
-    return redirect("/sign-in");
+    return redirect({ href: "/sign-in", locale: await getLocale() });
   }
 
   // 2. Authorization check (System-level RBAC)
@@ -34,7 +34,7 @@ export default async function AdminDashboardLayout({
   const isAdmin = role === "admin";
   if (!isAdmin) {
     // User is authenticated but not an admin
-    return redirect("/dashboard");
+    return redirect({ href: "/dashboard", locale: await getLocale() });
   }
 
   const navItems = [

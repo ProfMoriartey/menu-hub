@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
 import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
 import type { SocialMediaLinks } from "~/lib/schemas";
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import Image from "next/image";
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";

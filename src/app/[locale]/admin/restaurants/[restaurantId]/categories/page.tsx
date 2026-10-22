@@ -3,7 +3,7 @@ import { db } from "~/server/db";
 import { categories, restaurants } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import Link from "next/link"; // Import Link
+import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button"; // Import Button
 import { ChevronLeft } from "lucide-react"; // Import the back arrow icon
 

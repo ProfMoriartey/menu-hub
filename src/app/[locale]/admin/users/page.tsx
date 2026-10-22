@@ -3,7 +3,7 @@
 import { db } from "~/server/db";
 import * as schema from "~/server/db/schema";
 import { type Metadata } from "next";
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 // IMPORT Drizzle functions for querying and sorting
 import { desc, eq, sql } from "drizzle-orm";
 

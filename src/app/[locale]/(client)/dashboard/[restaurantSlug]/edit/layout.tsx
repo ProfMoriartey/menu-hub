@@ -1,7 +1,9 @@
 // app/[locale]/(app)/dashboard/[restaurantSlug]/edit/layout.tsx
 
 import { auth } from "@clerk/nextjs/server";
-import { redirect, notFound } from "next/navigation";
+import { redirect } from "~/i18n/navigation";
+import { getLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import * as schema from "~/server/db/schema";
 import { eq } from "drizzle-orm";
@@ -27,7 +29,7 @@ export default async function ResourceEditLayout({
   // --- 1. Authentication Check ---
   if (!userId) {
     // Force sign-in if unauthenticated
-    return redirect("/sign-in");
+    return redirect({ href: "/sign-in", locale: await getLocale() });
   }
 
   // --- 2. Resource-Based Authorization Check (ABAC) ---
@@ -58,7 +60,7 @@ export default async function ResourceEditLayout({
 
   if (!hasAccess) {
     // User is authenticated but does not have permission for this restaurant
-    return redirect("/dashboard");
+    return redirect({ href: "/dashboard", locale: await getLocale() });
   }
 
   // If checks pass, render the child route (edit/page.tsx), which loads its own data.

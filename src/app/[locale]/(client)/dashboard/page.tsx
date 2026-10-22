@@ -1,10 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server"; // 🛑 Import getTranslations for Server Component
+import { Link, redirect } from "~/i18n/navigation";
+import { getTranslations, getLocale } from "next-intl/server"; // 🛑 Import getTranslations for Server Component
 import { db } from "~/server/db";
 import { usersToRestaurants } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
-import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { SignedIn, UserButton } from "@clerk/nextjs";
@@ -24,7 +23,7 @@ export default async function ClientUserDashboardPage() {
   const { userId } = await auth();
 
   if (!userId) {
-    return redirect("/sign-in");
+    return redirect({ href: "/sign-in", locale: await getLocale() });
   }
 
   // 1. Fetch assigned restaurants

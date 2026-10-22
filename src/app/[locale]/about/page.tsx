@@ -3,7 +3,7 @@
 
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion"; // Import motion for animations
-import Link from "next/link"; // For the contact links
+import { Link } from "~/i18n/navigation";
 import { useTranslations } from "next-intl"; // Import useTranslations
 import SittingDoodle from "~/components/svg/SittingDoodle"; // Import your SittingDoodle SVG component
 

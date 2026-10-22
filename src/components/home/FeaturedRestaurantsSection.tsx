@@ -1,7 +1,7 @@
 // src/components/home/FeaturedRestaurantsSection.tsx
 "use client"; // ADDED: Ensure this is a client component for Framer Motion
 
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
 import {

@@ -1,5 +1,7 @@
 // app/[locale]/[restaurantSlug]/layout.tsx
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
+import { redirect } from "~/i18n/navigation";
+import { getLocale } from "next-intl/server";
 import { db } from "~/server/db";
 import * as schema from "~/server/db/schema";
 import { eq } from "drizzle-orm";
@@ -38,7 +40,7 @@ export default async function DynamicPublicLayout({
   if (!restaurant.isActive) {
     // If the restaurant is NOT active, redirect the user to the main restaurants page
     // The locale prefix is handled automatically by the router.
-    return redirect("/restaurants");
+    return redirect({ href: "/restaurants", locale: await getLocale() });
   }
 
   // 4. If active, render the child route (page.tsx, /about, /item)
