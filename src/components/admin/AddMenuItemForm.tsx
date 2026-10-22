@@ -264,8 +264,8 @@ export function AddMenuItemForm({
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 if (res && res.length > 0 && res[0]) {
-                  setImageUrl(res[0].url);
-                  setDisplayImageUrl(res[0].url);
+                  setImageUrl(res[0].ufsUrl);
+                  setDisplayImageUrl(res[0].ufsUrl);
                 } else {
                   setFormErrors([
                     {

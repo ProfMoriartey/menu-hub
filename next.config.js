@@ -9,6 +9,15 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
-const nextConfig = { images: { domains: ["utfs.io", "placehold.co"] } };
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      // UploadThing: legacy file URLs and current per-app URLs
+      { protocol: "https", hostname: "utfs.io" },
+      { protocol: "https", hostname: "*.ufs.sh" },
+      { protocol: "https", hostname: "placehold.co" },
+    ],
+  },
+};
 
 export default withNextIntl(nextConfig);

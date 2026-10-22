@@ -311,7 +311,7 @@ export function EditMenuItemDialog({
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 if (res && res.length > 0 && res[0]) {
-                  setCurrentImageUrl(res[0].url);
+                  setCurrentImageUrl(res[0].ufsUrl);
                 } else {
                   setFormErrors([
                     {
