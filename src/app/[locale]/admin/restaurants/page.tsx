@@ -11,20 +11,16 @@ import { type Restaurant } from "~/types/restaurant";
 import { type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
 
 export default async function AdminRestaurantsPage() {
+  // The management cards only need restaurant fields; categories and menu
+  // items are loaded on each restaurant's own admin pages.
   const rawRestaurants = await db.query.restaurants.findMany({
-    with: {
-      categories: {
-        with: {
-          menuItems: true,
-        },
-      },
-    },
     orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
   });
 
   // 🛑 FIX: Map through the raw results and cast the JSONB fields
   const allRestaurants: Restaurant[] = rawRestaurants.map((restaurant) => ({
     ...restaurant,
+    categories: [],
     socialMedia: restaurant.socialMedia as SocialMediaLinks,
     deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
   }));

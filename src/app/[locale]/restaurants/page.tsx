@@ -19,15 +19,13 @@ export default async function RestaurantsPage() {
   // Fetch active restaurants on the server. Menu items are not needed for the grid.
   const rawRestaurants = await db.query.restaurants.findMany({
     where: (restaurant, { eq }) => eq(restaurant.isActive, true),
-    with: {
-      categories: true,
-    },
     orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
   });
 
   // ADDED: Map through the raw results to cast the JSONB fields to the correct types
   const allRestaurants: Restaurant[] = rawRestaurants.map((restaurant) => ({
     ...restaurant,
+    categories: [],
     socialMedia: restaurant.socialMedia as SocialMediaLinks,
     deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
   }));

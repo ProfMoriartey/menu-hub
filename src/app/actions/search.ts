@@ -62,14 +62,12 @@ export async function searchRestaurants(
             ),
           ),
         ),
-      with: {
-        categories: true,
-      },
     });
 
     // 🛑 FIX: Map and cast the JSONB fields before returning
     const formattedResults: Restaurant[] = results.map((restaurant) => ({
       ...restaurant,
+      categories: [],
       socialMedia: restaurant.socialMedia as SocialMediaLinks,
       deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
     }));

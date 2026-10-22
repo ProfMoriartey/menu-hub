@@ -23,15 +23,13 @@ export default async function HomePage() {
         and(eq(restaurant.isDisplayed, true), eq(restaurant.isActive, true)),
       limit: 6,
       orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
-      with: {
-        categories: true, 
-      },
     },
   );
 
   // Map the results and cast the JSONB fields
   const featuredRestaurants: Restaurant[] = rawRestaurants.map((restaurant) => ({
     ...restaurant,
+    categories: [],
     socialMedia: restaurant.socialMedia as SocialMediaLinks,
     deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
   }));
