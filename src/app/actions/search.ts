@@ -10,7 +10,9 @@ import type { Restaurant } from "~/types/restaurant";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 
 // NEW SERVER ACTION: Search Restaurants from the database
-export async function searchRestaurants(searchTerm: string): Promise<Restaurant[]> {
+export async function searchRestaurants(
+  searchTerm: string,
+): Promise<Restaurant[]> {
   if (!searchTerm || searchTerm.trim() === "") {
     return []; // Return empty array if search term is empty
   }
@@ -19,42 +21,49 @@ export async function searchRestaurants(searchTerm: string): Promise<Restaurant[
 
   try {
     const results = await db.query.restaurants.findMany({
-      where: (restaurant, { or: drizzleOr, ilike: drizzleIlike }) =>
-        drizzleOr(
-          // Primary restaurant fields
-          drizzleIlike(restaurant.name, lowerCaseSearchTerm),
-          drizzleIlike(restaurant.slug, lowerCaseSearchTerm),
-          drizzleIlike(restaurant.country, lowerCaseSearchTerm),
-          drizzleIlike(restaurant.foodType, lowerCaseSearchTerm),
-          drizzleIlike(restaurant.address, lowerCaseSearchTerm),
+      where: (
+        restaurant,
+        { and: drizzleAnd, eq: drizzleEq, or: drizzleOr, ilike: drizzleIlike },
+      ) =>
+        drizzleAnd(
+          drizzleEq(restaurant.isActive, true),
+          drizzleOr(
+            // Primary restaurant fields
+            drizzleIlike(restaurant.name, lowerCaseSearchTerm),
+            drizzleIlike(restaurant.slug, lowerCaseSearchTerm),
+            drizzleIlike(restaurant.country, lowerCaseSearchTerm),
+            drizzleIlike(restaurant.foodType, lowerCaseSearchTerm),
+            drizzleIlike(restaurant.address, lowerCaseSearchTerm),
 
-          // Search within categories (by name)
-          exists(
-            db.select().from(categories).where(
-              and(
-                eq(categories.restaurantId, restaurant.id), // Link category to current restaurant
-                drizzleIlike(categories.name, lowerCaseSearchTerm) // Search category name
-              )
-            )
+            // Search within categories (by name)
+            exists(
+              db
+                .select()
+                .from(categories)
+                .where(
+                  and(
+                    eq(categories.restaurantId, restaurant.id), // Link category to current restaurant
+                    drizzleIlike(categories.name, lowerCaseSearchTerm), // Search category name
+                  ),
+                ),
+            ),
+
+            // Search within menu items (by name)
+            exists(
+              db
+                .select()
+                .from(menuItems)
+                .where(
+                  and(
+                    eq(menuItems.restaurantId, restaurant.id), // Link menu item to current restaurant
+                    drizzleIlike(menuItems.name, lowerCaseSearchTerm), // Search menu item name
+                  ),
+                ),
+            ),
           ),
-
-          // Search within menu items (by name)
-          exists(
-            db.select().from(menuItems).where(
-              and(
-                eq(menuItems.restaurantId, restaurant.id), // Link menu item to current restaurant
-                drizzleIlike(menuItems.name, lowerCaseSearchTerm) // Search menu item name
-              )
-            )
-          )
         ),
-      // Still fetch categories and menu items for popover display purposes
       with: {
-        categories: {
-          with: {
-            menuItems: true,
-          },
-        },
+        categories: true,
       },
     });
 
@@ -66,9 +75,10 @@ export async function searchRestaurants(searchTerm: string): Promise<Restaurant[
     }));
 
     return formattedResults;
-
   } catch (error) {
     console.error("Error searching restaurants:", error);
-    throw new Error(`Failed to search restaurants: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to search restaurants: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }

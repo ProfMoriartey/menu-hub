@@ -16,15 +16,11 @@ export default async function RestaurantsPage() {
   // ADDED: Initialize translations for the "restaurantsPage" namespace
   const t = await getTranslations("restaurantsPage");
 
-  // Fetch all restaurants on the server.
-  // This operation happens once when the page is requested.
+  // Fetch active restaurants on the server. Menu items are not needed for the grid.
   const rawRestaurants = await db.query.restaurants.findMany({
+    where: (restaurant, { eq }) => eq(restaurant.isActive, true),
     with: {
-      categories: {
-        with: {
-          menuItems: true,
-        },
-      },
+      categories: true,
     },
     orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
   });
