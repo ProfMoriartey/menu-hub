@@ -5,7 +5,7 @@
 "use client"; // This directive marks the component as a Client Component.
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
 

@@ -3,9 +3,14 @@
 
 import { motion } from "framer-motion"; // Import motion for animations
 import { useTranslations } from "next-intl"; // Import useTranslations
-import CoffeeDoodle from "../svg/CoffeeDoodle"; // Correct import path for your SVG component
+import type React from "react";
 
-export function ThemesHeader() {
+interface ThemesHeaderProps {
+  /** Illustration rendered on the server and passed in, keeping its SVG out of the client bundle. */
+  doodle: React.ReactNode;
+}
+
+export function ThemesHeader({ doodle }: ThemesHeaderProps) {
   const t = useTranslations("themesPage"); // Initialize translations for the 'themesPage' namespace
 
   // Animation variants for header elements
@@ -63,7 +68,7 @@ export function ThemesHeader() {
           className="flex-shrink-0" // Prevents the doodle from shrinking too much
         >
           {/* Apply Tailwind classes to control the doodle's size */}
-          <CoffeeDoodle className="h-56 w-56 md:h-80 md:w-80" />
+          {doodle}
         </motion.div>
       </div>
     </header>

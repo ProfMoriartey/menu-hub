@@ -10,6 +10,7 @@ import { SidebarListThemeSection } from "~/components/themes/SidebarListThemeSec
 import { AccordionCardThemeSection } from "~/components/themes/AccordionCardThemeSection";
 import { CategoryCardsImageDominantThemeSection } from "~/components/themes/CategoryCardsImageDominantThemeSection";
 import { ThemesHeader } from "~/components/themes/ThemesHeader";
+import CoffeeDoodle from "~/components/svg/CoffeeDoodle";
 
 import type { Restaurant } from "~/types/restaurant";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
@@ -54,7 +55,9 @@ export default async function ThemesPage() {
 
   return (
     <div>
-      <ThemesHeader />
+      <ThemesHeader
+        doodle={<CoffeeDoodle className="h-56 w-56 md:h-80 md:w-80" />}
+      />
 
       <main className="container mx-auto space-y-16 px-4 py-8">
         <ClassicThemeSection

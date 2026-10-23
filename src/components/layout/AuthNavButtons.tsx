@@ -1,7 +1,7 @@
 // src/components/layout/AuthNavButtons.tsx
 "use client";
 
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from "~/components/ui/button"; // Assuming Shadcn Button
 

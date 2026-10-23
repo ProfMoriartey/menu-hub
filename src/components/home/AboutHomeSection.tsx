@@ -1,16 +1,22 @@
 // src/components/home/AboutHomeSection.tsx
 "use client";
 
+import type React from "react";
+
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { Button } from "~/components/ui/button";
-import CoffeeDoodle from "~/components/svg/CoffeeDoodle";
 import { useTranslations } from "next-intl";
 import { useParallax } from "react-scroll-parallax";
 
-export function AboutHomeSection() {
+interface AboutHomeSectionProps {
+  /** Illustration rendered on the server and passed in, keeping its SVG out of the client bundle. */
+  doodle: React.ReactNode;
+}
+
+export function AboutHomeSection({ doodle }: AboutHomeSectionProps) {
   const t = useTranslations("about");
   const [isParallaxDisabled, setIsParallaxDisabled] = useState(false);
 
@@ -55,13 +61,7 @@ export function AboutHomeSection() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="w-full max-w-xs flex-shrink-0 lg:max-w-sm"
         >
-          <CoffeeDoodle
-            className="h-auto w-full"
-            doodleFillColorLight="text-attention"
-            doodleFillColorDark="dark:text-white"
-            doodleStrokeColorLight="text-foreground"
-            doodleStrokeColorDark="dark:text-black"
-          />
+          {doodle}
         </motion.div>
         {/* About Us Content on the Right */}
         <div className="max-w-xl text-center lg:text-left">

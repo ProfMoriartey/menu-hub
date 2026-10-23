@@ -13,21 +13,7 @@ import { Button } from "~/components/ui/button";
 import RestaurantDetailsForm from "./RestaurantDetailsForm";
 import CategoryManager from "./CategoryManager";
 import { ThemeToggle } from "../shared/ThemeToggle";
-
-// Local component to replace next/link
-const CustomLink = ({
-  href,
-  children,
-  className,
-}: {
-  href: string;
-  children: React.ReactNode;
-  className?: string;
-}) => (
-  <a href={href} className={className}>
-    {children}
-  </a>
-);
+import { Link } from "~/i18n/navigation";
 
 interface RestaurantEditorProps {
   initialRestaurantData: Restaurant;
@@ -78,13 +64,13 @@ export default function RestaurantEditor({
         </h1>
 
         <div className="flex justify-between gap-4">
-          <CustomLink href="/dashboard">
+          <Link href="/dashboard">
             <Button variant="outline" className="w-full sm:w-auto">
               <ChevronLeft className="mr-2 h-5 w-5" />
               {/* Translated Button Text */}
               {t("backToDashboard")}
             </Button>
-          </CustomLink>
+          </Link>
           <ThemeToggle />
         </div>
       </div>

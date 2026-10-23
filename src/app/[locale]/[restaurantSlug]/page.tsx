@@ -1,12 +1,13 @@
 // app/[restaurantSlug]/page.tsx
 import { db } from "~/server/db";
-import { restaurants, categories, menuItems } from "~/server/db/schema";
+import { categories, menuItems } from "~/server/db/schema";
+import { getRestaurantBySlug } from "~/server/queries";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
 import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
 import type { SocialMediaLinks } from "~/lib/schemas";
-import Link from "next/link";
+import { Link } from "~/i18n/navigation";
 import Image from "next/image";
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
@@ -29,12 +30,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
 
   const t = await getTranslations("restaurantMenuPage");
 
-  const rawData = await db.query.restaurants.findFirst({
-    where: eq(restaurants.slug, restaurantSlug),
-    with: {
-      categories: true,
-    },
-  });
+  const rawData = await getRestaurantBySlug(restaurantSlug);
 
   if (!rawData) {
     notFound();
@@ -43,6 +39,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
   // Cast JSON fields appropriately
   const restaurantDetails = {
     ...rawData,
+    categories: [],
     socialMedia: rawData.socialMedia as SocialMediaLinks,
   } as Restaurant;
 

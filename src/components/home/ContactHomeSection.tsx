@@ -1,14 +1,20 @@
 // src/components/home/ContactHomeSection.tsx
 "use client";
 
+import type React from "react";
+
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
-import ZombieingDoodle from "../svg/ZombieingDoodle";
 import { useTranslations } from "next-intl"; // Import useTranslations
 import { useEffect, useState } from "react";
 import { useParallax } from "react-scroll-parallax";
 
-export function ContactHomeSection() {
+interface ContactHomeSectionProps {
+  /** Illustration rendered on the server and passed in, keeping its SVG out of the client bundle. */
+  doodle: React.ReactNode;
+}
+
+export function ContactHomeSection({ doodle }: ContactHomeSectionProps) {
   // Initialize translations for the 'contact' namespace
   const t = useTranslations("contact");
 
@@ -65,13 +71,7 @@ export function ContactHomeSection() {
           variants={itemVariants}
           className="order-2 w-full max-w-xs flex-shrink-0 lg:order-1 lg:max-w-sm" /* Sets SVG to left on large screens */
         >
-          <ZombieingDoodle
-            className="h-auto w-full"
-            doodleFillColorLight="text-background" // Default light fill
-            doodleFillColorDark="dark:text-attention" // Default dark fill
-            doodleStrokeColorLight="text-foreground" // Default light stroke
-            doodleStrokeColorDark="dark:text-primary-foreground" // Default dark stroke
-          />
+          {doodle}
         </motion.div>
         {/* Right Column: Contact Information */}
         <div className="order-1 w-full text-center lg:order-2 lg:w-1/2 lg:text-left">

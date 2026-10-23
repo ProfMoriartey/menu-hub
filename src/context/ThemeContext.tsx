@@ -3,6 +3,7 @@
 
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -19,35 +20,44 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const STORAGE_KEY = "theme";
+
+/**
+ * Runs in <head> before the page paints, so a saved dark theme is applied
+ * without a light flash. Keep in sync with applyTheme() below.
+ */
+export const themeInitScript = `(function(){try{if(localStorage.getItem("${STORAGE_KEY}")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})();`;
+
+function applyTheme(theme: Theme) {
+  document.documentElement.classList.toggle("dark", theme === "dark");
+  try {
+    localStorage.setItem(STORAGE_KEY, theme);
+  } catch {
+    // Storage can be unavailable (private mode); the theme still applies.
+  }
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  // Initialize theme from localStorage, default to 'light'
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("theme") as Theme;
-      return savedTheme || "light";
-    }
-    return "light";
-  });
+  // The server can't know the saved theme, so render "light" first and
+  // pick up the real value (already applied by themeInitScript) on mount.
+  const [theme, setThemeState] = useState<Theme>("light");
 
-  // Apply or remove 'dark' class on the html element
   useEffect(() => {
-    const html = document.documentElement;
-    if (theme === "dark") {
-      html.classList.add("dark");
-    } else {
-      html.classList.remove("dark");
+    if (document.documentElement.classList.contains("dark")) {
+      setThemeState("dark");
     }
-    // Save preference to localStorage
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  }, []);
 
-  const setTheme = (newTheme: Theme) => {
+  const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
-  };
+    applyTheme(newTheme);
+  }, []);
 
-  const toggleTheme = () => {
-    setThemeState((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
+  const toggleTheme = useCallback(() => {
+    setTheme(
+      document.documentElement.classList.contains("dark") ? "light" : "dark",
+    );
+  }, [setTheme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>

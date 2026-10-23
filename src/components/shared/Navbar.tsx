@@ -1,8 +1,7 @@
 // src/components/shared/Navbar.tsx
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "~/i18n/navigation";
+import { Link, usePathname, useRouter } from "~/i18n/navigation";
 import { useState, useTransition } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "~/lib/utils";
@@ -12,6 +11,9 @@ import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import AuthNavButtons from "~/components/layout/AuthNavButtons"; // Assuming this path
+
+// Locale-aware client-side link that keeps the existing hover/enter animations
+const MotionLink = motion.create(Link);
 
 export function Navbar() {
   const pathname = usePathname();
@@ -72,7 +74,7 @@ export function Navbar() {
           {/* 1. Desktop Navigation Links (HIDDEN ON MOBILE) */}
           <div className="hidden items-center space-x-6 md:flex">
             {navLinks.map((link, index) => (
-              <motion.a
+              <MotionLink
                 key={link.name}
                 href={link.href}
                 variants={navItemVariants}
@@ -87,7 +89,7 @@ export function Navbar() {
                 )}
               >
                 {link.name}
-              </motion.a>
+              </MotionLink>
             ))}
           </div>
 
@@ -174,7 +176,7 @@ export function Navbar() {
 
             {/* Nav Links in Mobile Menu */}
             {navLinks.map((link, index) => (
-              <motion.a
+              <MotionLink
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -190,7 +192,7 @@ export function Navbar() {
                 )}
               >
                 {link.name}
-              </motion.a>
+              </MotionLink>
             ))}
 
             {/* Language Toggle in Mobile Menu (Moved here from main navbar row) */}

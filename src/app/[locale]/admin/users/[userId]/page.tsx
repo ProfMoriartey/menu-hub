@@ -3,7 +3,7 @@ import * as schema from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
-import Link from "next/link"; // Ensure Link is imported if needed for navigation
+import { Link } from "~/i18n/navigation";
 
 import {
   assignRestaurantToUser,

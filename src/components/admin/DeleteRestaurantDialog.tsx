@@ -29,8 +29,13 @@ export function DeleteRestaurantDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        {/* Button with destructive variant. Should pick up theme colors (bg-destructive, text-destructive-foreground). */}
-        <Button variant="destructive" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+          aria-label={`Delete ${restaurantName}`}
+          title="Delete restaurant"
+        >
           <Trash2 className="h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
