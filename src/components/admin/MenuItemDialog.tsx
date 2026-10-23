@@ -1,6 +1,7 @@
 // src/components/admin/MenuItemDialog.tsx
 "use client";
 
+import { unwrap } from "~/lib/action-result";
 import { useState, useTransition, type FormEvent } from "react";
 import Image from "next/image";
 import { Check, CircleAlert, ImagePlus, X } from "lucide-react";
@@ -135,7 +136,7 @@ function MenuItemForm({
       formData.set("imageUrl", values.imageUrl);
 
       try {
-        await (item ? updateMenuItem : addMenuItem)(formData);
+        unwrap(await (item ? updateMenuItem : addMenuItem)(formData));
         if (addAnother) {
           const empty = valuesFromItem();
           setInitial(empty);

@@ -6,6 +6,7 @@ import { menuItems } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth";
+import { ActionError, runAction, type ActionResult } from "~/lib/action-result";
 import { UTApi } from "uploadthing/server";
 
 import {
@@ -62,90 +63,67 @@ const deleteUploadedFile = async (url: string | null | undefined) => {
   }
 };
 
-export async function addMenuItem(formData: FormData) {
-  const restaurantId = getStringValue(formData, "restaurantId")!;
-  
-  try {
-    if (!restaurantId) throw new Error("Restaurant ID is required.");
+// Menus appear on public pages, the dashboard and the admin panel.
+const revalidateMenuPages = () => revalidatePath("/[locale]", "layout");
+
+export async function addMenuItem(formData: FormData): Promise<ActionResult> {
+  return runAction("Couldn't add the menu item.", async () => {
+    const restaurantId = getStringValue(formData, "restaurantId");
+    if (!restaurantId) throw new ActionError("Missing restaurant.");
     await checkAuthorization(restaurantId);
-  } catch (error) {
-    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
-  }
 
-  const rawData = {
-    name: getStringValue(formData, "name"),
-    description: getStringValue(formData, "description"),
-    price: getStringValue(formData, "price"),
-    ingredients: getStringValue(formData, "ingredients"),
-    dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
-    imageUrl: getStringValue(formData, "imageUrl"),
-    restaurantId: restaurantId,
-    categoryId: getStringValue(formData, "categoryId") ?? "",
-  };
+    const result = await createMenuItemSchema.safeParseAsync({
+      name: getStringValue(formData, "name"),
+      description: getStringValue(formData, "description"),
+      price: getStringValue(formData, "price"),
+      ingredients: getStringValue(formData, "ingredients"),
+      dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
+      imageUrl: getStringValue(formData, "imageUrl"),
+      restaurantId,
+      categoryId: getStringValue(formData, "categoryId") ?? "",
+    });
+    if (!result.success) {
+      throw new ActionError(result.error.errors.map((e) => e.message).join(", "));
+    }
 
-  const result = await createMenuItemSchema.safeParseAsync(rawData);
-  if (!result.success) {
-    throw new Error(result.error.errors.map((_e) => _e.message).join(", "));
-  }
-
-  const validatedData: CreateMenuItemData = result.data;
-
-  try {
+    const validatedData: CreateMenuItemData = result.data;
     await db.insert(menuItems).values({
       ...validatedData,
       slug: uniqueSlug(validatedData.name, await takenItemSlugs(restaurantId), "item"),
     });
-    revalidatePath(`/dashboard/${restaurantId}/edit`);
-    revalidatePath("/[locale]/admin/restaurants", "layout");
-  } catch (error) {
-    console.error("Failed to add menu item.", error);
-    throw new Error("Failed to add menu item.");
-  }
+
+    revalidateMenuPages();
+  });
 }
 
-export async function updateMenuItem(formData: FormData) {
-  const restaurantId = getStringValue(formData, "restaurantId")!;
-  
-  try {
-    if (!restaurantId) throw new Error("Restaurant ID is required.");
+export async function updateMenuItem(formData: FormData): Promise<ActionResult> {
+  return runAction("Couldn't save the menu item.", async () => {
+    const restaurantId = getStringValue(formData, "restaurantId");
+    if (!restaurantId) throw new ActionError("Missing restaurant.");
     await checkAuthorization(restaurantId);
-  } catch (error) {
-    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
-  }
 
-  const rawData = {
-    id: getStringValue(formData, "id"),
-    name: getStringValue(formData, "name"),
-    description: getStringValue(formData, "description"),
-    price: getStringValue(formData, "price"),
-    ingredients: getStringValue(formData, "ingredients"),
-    dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
-    imageUrl: getStringValue(formData, "imageUrl"),
-    restaurantId: restaurantId,
-    categoryId: getStringValue(formData, "categoryId") ?? "",
-  };
+    const result = await updateMenuItemSchema.safeParseAsync({
+      id: getStringValue(formData, "id"),
+      name: getStringValue(formData, "name"),
+      description: getStringValue(formData, "description"),
+      price: getStringValue(formData, "price"),
+      ingredients: getStringValue(formData, "ingredients"),
+      dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
+      imageUrl: getStringValue(formData, "imageUrl"),
+      restaurantId,
+      categoryId: getStringValue(formData, "categoryId") ?? "",
+    });
+    if (!result.success) {
+      throw new ActionError(result.error.errors.map((e) => e.message).join(", "));
+    }
 
-  const result = await updateMenuItemSchema.safeParseAsync(rawData);
-  if (!result.success) {
-    throw new Error(result.error.errors.map((_e) => _e.message).join(", "));
-  }
+    const validatedData: UpdateMenuItemData = result.data;
 
-  const validatedData: UpdateMenuItemData = result.data;
-
-  try {
     const [existingItem] = await db
       .select()
       .from(menuItems)
-      .where(
-        and(
-          eq(menuItems.id, validatedData.id),
-          eq(menuItems.restaurantId, restaurantId)
-        )
-      );
-
-    if (!existingItem) {
-      throw new Error("Menu item not found.");
-    }
+      .where(and(eq(menuItems.id, validatedData.id), eq(menuItems.restaurantId, restaurantId)));
+    if (!existingItem) throw new ActionError("Menu item not found.");
 
     // The slug is part of the public item URL, so only a rename changes it.
     const slug =
@@ -165,79 +143,48 @@ export async function updateMenuItem(formData: FormData) {
         imageUrl: validatedData.imageUrl,
         updatedAt: new Date(),
       })
-      .where(
-        and(
-          eq(menuItems.id, validatedData.id),
-          eq(menuItems.restaurantId, restaurantId)
-        )
-      );
+      .where(and(eq(menuItems.id, validatedData.id), eq(menuItems.restaurantId, restaurantId)));
 
     // Covers both a replaced photo and a removed one.
-    if (
-      existingItem.imageUrl &&
-      existingItem.imageUrl !== validatedData.imageUrl
-    ) {
+    if (existingItem.imageUrl && existingItem.imageUrl !== validatedData.imageUrl) {
       await deleteUploadedFile(existingItem.imageUrl);
     }
 
-    revalidatePath(`/dashboard/${restaurantId}/edit`);
-    revalidatePath("/[locale]/admin/restaurants", "layout");
-  } catch (error) {
-    console.error("Failed to update menu item.", error);
-    throw new Error("Failed to update menu item.");
-  }
+    revalidateMenuPages();
+  });
 }
 
 export async function deleteMenuItem(
   menuItemId: string,
   restaurantId: string,
-  // No longer needed (revalidation covers every admin restaurant page); kept for existing callers.
+  // No longer needed (revalidation covers every page); kept for existing callers.
   _categoryId?: string,
-) {
-  try {
-    if (!restaurantId) throw new Error("Restaurant ID is required.");
+): Promise<ActionResult> {
+  return runAction("Couldn't delete the menu item.", async () => {
+    if (!restaurantId) throw new ActionError("Missing restaurant.");
     await checkAuthorization(restaurantId);
-  } catch (error) {
-    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
-  }
-  
-  try {
+
     const [existingItem] = await db
       .select()
       .from(menuItems)
-      .where(
-        and(
-          eq(menuItems.id, menuItemId),
-          eq(menuItems.restaurantId, restaurantId)
-        )
-      );
+      .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)));
+    if (!existingItem) throw new ActionError("Menu item not found.");
 
-    if (!existingItem) {
-      throw new Error("Menu item not found.");
-    }
-
-    await db.delete(menuItems).where(
-      and(
-        eq(menuItems.id, menuItemId),
-        eq(menuItems.restaurantId, restaurantId)
-      )
-    );
+    await db
+      .delete(menuItems)
+      .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)));
 
     await deleteUploadedFile(existingItem.imageUrl);
 
-    revalidatePath(`/dashboard/${restaurantId}/edit`);
-    revalidatePath("/[locale]/admin/restaurants", "layout");
-  } catch (error) {
-    console.error("Failed to delete menu item.", error);
-    throw new Error("Failed to delete menu item.");
-  }
+    revalidateMenuPages();
+  });
 }
 
 export async function updateMenuItemOrder(
-  items: { id: string, order: number }[],
-  restaurantId: string
-) {
-  try {
+  items: { id: string; order: number }[],
+  restaurantId: string,
+): Promise<ActionResult> {
+  return runAction("Couldn't save the new order.", async () => {
     await checkAuthorization(restaurantId);
 
     await db.transaction(async (tx) => {
@@ -246,19 +193,11 @@ export async function updateMenuItemOrder(
           tx
             .update(menuItems)
             .set({ order: item.order })
-            .where(
-              and(
-                eq(menuItems.id, item.id),
-                eq(menuItems.restaurantId, restaurantId)
-              )
-            )
-        )
+            .where(and(eq(menuItems.id, item.id), eq(menuItems.restaurantId, restaurantId))),
+        ),
       );
     });
 
-    revalidatePath(`/dashboard/${restaurantId}/edit`);
-  } catch (error) {
-    console.error("Failed to update menu item order.", error);
-    throw new Error("Failed to update menu item order.");
-  }
+    revalidateMenuPages();
+  });
 }

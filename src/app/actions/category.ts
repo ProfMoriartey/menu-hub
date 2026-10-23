@@ -4,9 +4,9 @@
 import { db } from "~/server/db";
 import { categories } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
-// Removed unused 'sql' import
-import { and, eq } from "drizzle-orm"; 
+import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth";
+import { ActionError, runAction, type ActionResult } from "~/lib/action-result";
 
 import { createCategorySchema, updateCategorySchema } from "~/lib/schemas";
 import { uniqueSlug } from "~/lib/slug";
@@ -20,78 +20,53 @@ async function takenCategorySlugs(restaurantId: string, exceptId?: string) {
   return rows.filter((row) => row.id !== exceptId).map((row) => row.slug);
 }
 
-export async function addCategory(formData: FormData) {
-  const name = formData.get("name") as string;
-  const restaurantId = formData.get("restaurantId") as string;
+// Menus appear on public pages, the dashboard and the admin panel.
+const revalidateMenuPages = () => revalidatePath("/[locale]", "layout");
 
-  try {
+export async function addCategory(formData: FormData): Promise<ActionResult> {
+  return runAction("Couldn't add the category.", async () => {
+    const restaurantId = formData.get("restaurantId") as string;
     await checkAuthorization(restaurantId);
-  } catch (error) {
-    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
-  }
 
-  const validationResult = createCategorySchema.safeParse({
-    name,
-    restaurantId,
-  });
+    const validationResult = createCategorySchema.safeParse({
+      name: formData.get("name"),
+      restaurantId,
+    });
+    if (!validationResult.success) {
+      throw new ActionError(validationResult.error.errors.map((e) => e.message).join(", "));
+    }
 
-  if (!validationResult.success) {
-    console.error("Validation failed (addCategory):", validationResult.error.errors);
-    throw new Error("Invalid input for category creation.");
-  }
-
-  try {
+    const { name } = validationResult.data;
     await db.insert(categories).values({
-      name: validationResult.data.name,
-      slug: uniqueSlug(
-        validationResult.data.name,
-        await takenCategorySlugs(validationResult.data.restaurantId),
-        "category",
-      ),
-      restaurantId: validationResult.data.restaurantId,
+      name,
+      slug: uniqueSlug(name, await takenCategorySlugs(restaurantId), "category"),
+      restaurantId,
     });
 
-    revalidatePath("/[locale]/admin/restaurants", "layout");
-    revalidatePath(`/dashboard/${restaurantId}/edit`); 
-  } catch (error) {
-    console.error("Error adding category:", error);
-    throw new Error(
-      `Failed to add category: ${error instanceof Error ? error.message : String(error)}`,
-    );
-  }
+    revalidateMenuPages();
+  });
 }
 
-export async function updateCategory(formData: FormData) {
-  const id = formData.get("id") as string;
-  const name = formData.get("name") as string;
-  const restaurantId = formData.get("restaurantId") as string;
-
-  try {
+export async function updateCategory(formData: FormData): Promise<ActionResult> {
+  return runAction("Couldn't rename the category.", async () => {
+    const restaurantId = formData.get("restaurantId") as string;
     await checkAuthorization(restaurantId);
-  } catch (error) {
-    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
-  }
 
-  const validationResult = updateCategorySchema.safeParse({
-    id,
-    name,
-    restaurantId,
-  });
+    const validationResult = updateCategorySchema.safeParse({
+      id: formData.get("id"),
+      name: formData.get("name"),
+      restaurantId,
+    });
+    if (!validationResult.success) {
+      throw new ActionError(validationResult.error.errors.map((e) => e.message).join(", "));
+    }
 
-  if (!validationResult.success) {
-    console.error("Validation failed (updateCategory):", validationResult.error.errors);
-    throw new Error(
-      validationResult.error.errors.map((_e) => _e.message).join(", "),
-    );
-  }
-
-  try {
     const { id: categoryId, name: newName } = validationResult.data;
     const existing = await db.query.categories.findFirst({
       where: and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)),
       columns: { name: true, slug: true },
     });
-    if (!existing) throw new Error("Category not found.");
+    if (!existing) throw new ActionError("Category not found.");
 
     // The slug follows the name, so only a rename changes it.
     const slug =
@@ -101,101 +76,52 @@ export async function updateCategory(formData: FormData) {
 
     await db
       .update(categories)
-      .set({
-        name: newName,
-        slug,
-        updatedAt: new Date(),
-      })
-      // 🛑 FIX: Enforced the data integrity check
-      .where(
-        and(
-          eq(categories.id, validationResult.data.id),
-          eq(categories.restaurantId, validationResult.data.restaurantId)
-        )
-      );
+      .set({ name: newName, slug, updatedAt: new Date() })
+      .where(and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)));
 
-    revalidatePath("/[locale]/admin/restaurants", "layout");
-    revalidatePath(`/dashboard/${restaurantId}/edit`);
-  } catch (error) {
-    console.error("Error updating category:", error);
-    throw new Error(
-      `Failed to update category: ${error instanceof Error ? error.message : String(error)}`,
-    );
-  }
+    revalidateMenuPages();
+  });
 }
 
-export async function deleteCategory(categoryId: string, restaurantId: string) {
-  try {
+export async function deleteCategory(categoryId: string, restaurantId: string): Promise<ActionResult> {
+  return runAction("Couldn't delete the category.", async () => {
     await checkAuthorization(restaurantId);
-  } catch (error) {
-    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
-  }
 
-  try {
-    await db.delete(categories)
-      .where(
-        and(
-          eq(categories.id, categoryId),
-          eq(categories.restaurantId, restaurantId)
-        )
-      );
-      
-    revalidatePath("/[locale]/admin/restaurants", "layout");
-    revalidatePath(`/dashboard/${restaurantId}/edit`);
-    
-  } catch (error) {
-    console.error("Error deleting category:", error);
-    throw new Error("Failed to delete category.");
-  }
+    await db
+      .delete(categories)
+      .where(and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)));
+
+    revalidateMenuPages();
+  });
 }
 
-export async function reorderCategories(formData: FormData) {
-  const restaurantId = formData.get("restaurantId") as string;
-  const orderedIdsJson = formData.get("orderedIds") as string;
-  
-  try {
-    if (!restaurantId) throw new Error("Restaurant ID is required.");
+export async function reorderCategories(formData: FormData): Promise<ActionResult> {
+  return runAction("Couldn't save the new order.", async () => {
+    const restaurantId = formData.get("restaurantId") as string;
+    if (!restaurantId) throw new ActionError("Missing restaurant.");
     await checkAuthorization(restaurantId);
-  } catch (error) {
-    throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
-  }
-  
-  let orderedIds: unknown; 
 
-  try {
-    orderedIds = JSON.parse(orderedIdsJson); 
-  } catch (e) {
-    throw new Error("Invalid format for ordered IDs payload.");
-  }
-  
-  if (!Array.isArray(orderedIds) || orderedIds.some(id => typeof id !== 'string')) {
-    throw new Error("Invalid format for ordered IDs array. Expected string[].");
-  }
+    let orderedIds: unknown;
+    try {
+      orderedIds = JSON.parse(formData.get("orderedIds") as string);
+    } catch {
+      throw new ActionError("Invalid category order.");
+    }
+    if (!Array.isArray(orderedIds) || orderedIds.some((id) => typeof id !== "string")) {
+      throw new ActionError("Invalid category order.");
+    }
 
-  const finalOrderedIds: string[] = orderedIds as string[];
-
-  // 🛑 FIX: Build and execute queries inside the transaction
-  try {
     await db.transaction(async (tx) => {
       await Promise.all(
-        finalOrderedIds.map((id, index) =>
+        (orderedIds as string[]).map((id, index) =>
           tx
             .update(categories)
             .set({ order: index })
-            .where(
-              and(
-                eq(categories.id, id),
-                eq(categories.restaurantId, restaurantId)
-              )
-            )
-        )
+            .where(and(eq(categories.id, id), eq(categories.restaurantId, restaurantId))),
+        ),
       );
     });
 
-    revalidatePath(`/dashboard/${restaurantId}/edit`);
-    
-  } catch (error) {
-    console.error("Error reordering categories:", error);
-    throw new Error("Failed to reorder categories due to a database error.");
-  }
+    revalidateMenuPages();
+  });
 }

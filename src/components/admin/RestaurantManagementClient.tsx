@@ -9,6 +9,7 @@ import { Input } from "~/components/ui/input";
 import { RestaurantCard } from "~/components/admin/RestaurantCard";
 import { cn } from "~/lib/utils";
 
+import type { ActionResult } from "~/lib/action-result";
 import type { Restaurant } from "~/types/restaurant";
 
 const FILTERS = [
@@ -22,7 +23,7 @@ type FilterId = (typeof FILTERS)[number]["id"];
 
 interface RestaurantManagementClientProps {
   initialRestaurants: Restaurant[];
-  deleteRestaurantAction: (restaurantId: string) => Promise<void>;
+  deleteRestaurantAction: (restaurantId: string) => Promise<ActionResult>;
 }
 
 export function RestaurantManagementClient({

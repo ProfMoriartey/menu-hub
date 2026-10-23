@@ -1,6 +1,7 @@
 // src/components/admin/restaurant-form/AdminRestaurantForm.tsx
 "use client";
 
+import { unwrap, type ActionResult } from "~/lib/action-result";
 import {
   useEffect,
   useMemo,
@@ -79,7 +80,7 @@ const DELIVERY_FIELDS: { key: keyof DeliveryAppLinks; label: string }[] = [
 
 interface AdminRestaurantFormProps {
   restaurant?: Restaurant;
-  action: (formData: FormData) => Promise<void>;
+  action: (formData: FormData) => Promise<ActionResult>;
 }
 
 export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormProps) {
@@ -169,7 +170,7 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
 
     startTransition(async () => {
       try {
-        await action(toFormData(values, restaurant?.id));
+        unwrap(await action(toFormData(values, restaurant?.id)));
         if (isEditing) {
           setSavedValues(values);
           setJustSaved(true);

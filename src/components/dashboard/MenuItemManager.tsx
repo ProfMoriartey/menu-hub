@@ -1,5 +1,6 @@
 "use client";
 
+import { unwrap, type ActionResult } from "~/lib/action-result";
 import React, { useState, useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl";
@@ -64,7 +65,7 @@ function SubmitButton({ label }: { label: string }) {
   );
 }
 
-type ServerAction = (formData: FormData) => Promise<void>;
+type ServerAction = (formData: FormData) => Promise<ActionResult>;
 
 async function wrapMenuItemAction(
   action: ServerAction,
@@ -72,7 +73,7 @@ async function wrapMenuItemAction(
   formData: FormData,
 ): Promise<FormState> {
   try {
-    await action(formData);
+    unwrap(await action(formData));
     return { message: "Action completed successfully.", success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : "An unknown error occurred during submission.";
@@ -89,7 +90,7 @@ async function deleteWrapperAction(
     const rId = formData.get("restaurantId") as string;
     const cId = formData.get("categoryId") as string;
 
-    await deleteMenuItem(itemId, rId, cId);
+    unwrap(await deleteMenuItem(itemId, rId, cId));
 
     return { message: "Item deleted successfully.", success: true };
   } catch (error) {
@@ -232,8 +233,8 @@ export default function MenuItemManager({
           order: index,
         }));
 
-        updateMenuItemOrder(updatedOrderPayload, restaurantId).catch((err) => {
-          console.error("Failed to update menu item order:", err);
+        void updateMenuItemOrder(updatedOrderPayload, restaurantId).then((result) => {
+          if (!result.ok) console.error("Failed to update menu item order:", result.error);
         });
 
         return newItems;

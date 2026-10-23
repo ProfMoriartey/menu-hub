@@ -1,6 +1,7 @@
 // src/components/admin/CategoryList.tsx
 "use client";
 
+import { unwrap } from "~/lib/action-result";
 import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
 import Image from "next/image";
 import {
@@ -60,7 +61,7 @@ function AddCategoryRow({ restaurantId }: { restaurantId: string }) {
         const formData = new FormData();
         formData.set("restaurantId", restaurantId);
         formData.set("name", trimmed);
-        await addCategory(formData);
+        unwrap(await addCategory(formData));
         setName("");
         setError(null);
         inputRef.current?.focus();
@@ -138,7 +139,7 @@ function CategoryRow({
         formData.set("id", category.id);
         formData.set("restaurantId", restaurantId);
         formData.set("name", trimmed);
-        await updateCategory(formData);
+        unwrap(await updateCategory(formData));
         setIsRenaming(false);
         setError(null);
       } catch (err) {
@@ -279,7 +280,7 @@ export function CategoryList({ restaurantId, restaurantSlug, categories }: Categ
       const formData = new FormData();
       formData.set("restaurantId", restaurantId);
       formData.set("orderedIds", JSON.stringify(reordered.map((c) => c.id)));
-      await reorderCategories(formData);
+      unwrap(await reorderCategories(formData));
       setOrderStatus("saved");
     } catch {
       setItems(previous);

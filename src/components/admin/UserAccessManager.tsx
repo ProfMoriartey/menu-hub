@@ -1,6 +1,7 @@
 // src/components/admin/UserAccessManager.tsx
 "use client";
 
+import { unwrap } from "~/lib/action-result";
 import { useState, useTransition } from "react";
 import { Check, ChevronsUpDown, CircleAlert, Plus, ShieldCheck, Store } from "lucide-react";
 import { Link } from "~/i18n/navigation";
@@ -92,7 +93,7 @@ function AssignmentRow({
     onError(null);
     startTransition(async () => {
       try {
-        await assignRestaurantToUser(userId, restaurant.id, level);
+        unwrap(await assignRestaurantToUser(userId, restaurant.id, level));
       } catch (error) {
         onError(errorMessage(error, "Couldn't change the access level."));
       }
@@ -103,7 +104,7 @@ function AssignmentRow({
     onError(null);
     startTransition(async () => {
       try {
-        await revokeRestaurantAccess(userId, restaurant.id);
+        unwrap(await revokeRestaurantAccess(userId, restaurant.id));
       } catch (error) {
         onError(errorMessage(error, "Couldn't remove access."));
       }
@@ -244,7 +245,7 @@ export function UserAccessManager({ userId, userLabel, isAdmin, assigned, availa
     setError(null);
     startTransition(async () => {
       try {
-        await assignRestaurantToUser(userId, selected.id, level);
+        unwrap(await assignRestaurantToUser(userId, selected.id, level));
         setSelected(null);
       } catch (err) {
         setError(errorMessage(err, "Couldn't give access."));

@@ -1,5 +1,6 @@
 "use client";
 
+import { unwrap } from "~/lib/action-result";
 import React, { useState, useRef } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl"; // Import next-intl hook
@@ -97,7 +98,7 @@ async function wrapAddAction(
   formData.set("dietaryLabels", dietaryLabelsJson);
 
   try {
-    await addMenuItem(formData);
+    unwrap(await addMenuItem(formData));
     // Use fixed success key for server action success message
     return { message: "addSuccess", success: true };
   } catch (error) {

@@ -6,6 +6,7 @@ import { db } from "~/server/db";
 import { usersToRestaurants } from "~/server/db/schema";
 import { eq, and } from "drizzle-orm";
 import { canEditDetails, toAccessLevel, type RestaurantRole } from "~/lib/access";
+import { ActionError } from "~/lib/action-result";
 
 /**
  * Checks if the current user is a System Administrator (RBAC).
@@ -57,12 +58,12 @@ export async function checkAuthorization(restaurantId: string): Promise<Restaura
   const { userId } = await auth();
 
   if (!userId) {
-    throw new Error("401: Authentication required.");
+    throw new ActionError("Please sign in again to make changes.");
   }
 
   const role = await getRestaurantRole(restaurantId);
   if (!role) {
-    throw new Error("403: Not authorized to modify this restaurant.");
+    throw new ActionError("You don't have access to this restaurant.");
   }
   return role;
 }
@@ -74,7 +75,7 @@ export async function checkAuthorization(restaurantId: string): Promise<Restaura
 export async function checkOwnerAuthorization(restaurantId: string): Promise<RestaurantRole> {
   const role = await checkAuthorization(restaurantId);
   if (!canEditDetails(role)) {
-    throw new Error("403: Only the restaurant's owner can change its details.");
+    throw new ActionError("Only the restaurant's owner can change its details.");
   }
   return role;
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { unwrap, type ActionResult } from "~/lib/action-result";
 import React, { useMemo, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl"; // Import next-intl hook
@@ -84,7 +85,7 @@ function SubmitButton({ label, variant = "default" }: SubmitButtonProps) {
 }
 
 // --- 2. Wrapper Action for FormData Actions (Add/Update) ---
-type ServerAction = (formData: FormData) => Promise<void>;
+type ServerAction = (formData: FormData) => Promise<ActionResult>;
 
 async function wrapCategoryAction(
   action: ServerAction,
@@ -92,7 +93,7 @@ async function wrapCategoryAction(
   formData: FormData,
 ): Promise<FormState> {
   try {
-    await action(formData);
+    unwrap(await action(formData));
     // Use fixed success key
     return { message: "updateSuccess", success: true };
   } catch (error) {
@@ -111,7 +112,7 @@ async function deleteCategoryWrapperAction(
     const categoryId = formData.get("categoryId") as string;
     const restaurantId = formData.get("restaurantId") as string;
 
-    await deleteCategory(categoryId, restaurantId);
+    unwrap(await deleteCategory(categoryId, restaurantId));
 
     // Use fixed success key
     return { message: "deleteSuccess", success: true };
@@ -378,7 +379,7 @@ export default function CategoryManager({
         formData.set("restaurantId", restaurantId);
         formData.set("orderedIds", JSON.stringify(finalOrderedIds));
 
-        await reorderCategories(formData);
+        unwrap(await reorderCategories(formData));
       } catch (error) {
         console.error("Failed to save new category order:", error);
         // Optionally revert state on error

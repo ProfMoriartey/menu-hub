@@ -1,5 +1,6 @@
 "use client";
 
+import { unwrap } from "~/lib/action-result";
 import React, { useState, useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl";
@@ -91,7 +92,7 @@ async function formWrapperAction(
   }
 
   try {
-    await updateRestaurant(formData);
+    unwrap(await updateRestaurant(formData));
     return { success: true, message: "updateSuccess", errors: {} };
   } catch (error) {
     const message = error instanceof Error ? error.message : "unknownError";

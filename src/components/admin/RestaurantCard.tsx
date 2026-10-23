@@ -9,6 +9,7 @@ import { DeleteRestaurantDialog } from "~/components/admin/DeleteRestaurantDialo
 import { cn } from "~/lib/utils";
 import { formatDate } from "~/lib/format";
 
+import type { ActionResult } from "~/lib/action-result";
 import type { Restaurant } from "~/types/restaurant";
 
 export function RestaurantLogo({
@@ -83,7 +84,7 @@ export function StatusBadges({
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
-  deleteRestaurantAction: (restaurantId: string) => Promise<void>;
+  deleteRestaurantAction: (restaurantId: string) => Promise<ActionResult>;
 }
 
 export function RestaurantCard({

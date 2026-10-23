@@ -1,6 +1,7 @@
 // src/components/admin/MenuItemList.tsx
 "use client";
 
+import { unwrap } from "~/lib/action-result";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
@@ -22,17 +23,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Pencil, Plus, Trash2, UtensilsCrossed } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
+import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
 import { MenuItemDialog, type AdminMenuItem } from "~/components/admin/MenuItemDialog";
 import { ReorderStatus, useReorderState } from "~/components/admin/ReorderStatus";
 import { deleteMenuItem, updateMenuItemOrder } from "~/app/actions/menu-item";
@@ -51,8 +42,8 @@ function DeleteItemButton({
   categoryId: string;
 }) {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
+    <ConfirmDialog
+      trigger={
         <Button
           variant="ghost"
           size="icon"
@@ -62,30 +53,12 @@ function DeleteItemButton({
         >
           <Trash2 className="h-4 w-4" />
         </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete &quot;{item.name}&quot;?</AlertDialogTitle>
-          <AlertDialogDescription>
-            It will be removed from the menu, along with its photo. This can&apos;t be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <form
-              action={async () => {
-                await deleteMenuItem(item.id, restaurantId, categoryId);
-              }}
-            >
-              <Button variant="destructive" type="submit">
-                Delete item
-              </Button>
-            </form>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      }
+      title={<>Delete &quot;{item.name}&quot;?</>}
+      description="It will be removed from the menu, along with its photo. This can't be undone."
+      confirmLabel="Delete item"
+      onConfirm={() => deleteMenuItem(item.id, restaurantId, categoryId)}
+    />
   );
 }
 
@@ -221,9 +194,11 @@ export function MenuItemList({
     setOrderState("saving");
 
     try {
-      await updateMenuItemOrder(
-        reordered.map((item, index) => ({ id: item.id, order: index })),
-        restaurantId,
+      unwrap(
+        await updateMenuItemOrder(
+          reordered.map((item, index) => ({ id: item.id, order: index })),
+          restaurantId,
+        ),
       );
       setOrderState("saved");
     } catch {
