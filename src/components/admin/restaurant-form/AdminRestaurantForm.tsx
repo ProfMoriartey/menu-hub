@@ -8,7 +8,6 @@ import {
   useState,
   useTransition,
   type FormEvent,
-  type MouseEvent,
 } from "react";
 import Image from "next/image";
 import {
@@ -26,7 +25,8 @@ import {
   Twitter,
   type LucideIcon,
 } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { useUnsavedChangesGuard } from "~/lib/unsaved-changes";
 import { Link, useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -38,7 +38,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { UploadButton } from "~/utils/uploadthing";
+import { UploadButton, uploadButtonClass } from "~/utils/uploadthing";
+import { LOGO, resizeImages } from "~/lib/resize-image";
 import { cn } from "~/lib/utils";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
@@ -89,6 +90,7 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
   const router = useRouter();
   // Sent with logo uploads so upload errors come back in this language.
   const locale = useLocale();
+  const tUnsaved = useTranslations("UnsavedChanges");
   const [isPending, startTransition] = useTransition();
 
   const initialValues = useMemo(
@@ -128,13 +130,8 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
     clearError(`${group}.${key}`);
   };
 
-  // Warn before a refresh or tab close throws away edits.
-  useEffect(() => {
-    if (!isDirty || isPending) return;
-    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [isDirty, isPending]);
+  // Ask before a refresh, tab close or link (Cancel included) loses edits.
+  useUnsavedChangesGuard(isDirty && !isPending, tUnsaved("confirmLeave"));
 
   // Highlight the section currently in view in the side nav.
   useEffect(() => {
@@ -198,11 +195,6 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
     });
   };
 
-  const confirmLeave = (e: MouseEvent) => {
-    if (isDirty && !window.confirm("You have unsaved changes. Leave without saving?")) {
-      e.preventDefault();
-    }
-  };
 
   const currencyOptions = CURRENCIES.some((c) => c.value === values.currency)
     ? CURRENCIES
@@ -387,12 +379,20 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
                     input={{ restaurantId: restaurant?.id, locale }}
                     appearance={{ allowedContent: "hidden" }}
                     content={{ button: values.logoUrl ? "Replace logo" : "Upload logo" }}
-                    className="ut-button:bg-primary ut-button:text-primary-foreground ut-button:h-9 ut-button:w-auto ut-button:px-4 ut-button:text-sm ut-button:font-medium ut-button:rounded-md ut-button:after:bg-primary/70"
+                    className={cn(uploadButtonClass, "ut-button:w-auto")}
+                    // Shrink large images before they go up; the route allows 4 MB.
+                    onBeforeUploadBegin={resizeImages(LOGO)}
                     onClientUploadComplete={(res) => {
                       const url = res?.[0]?.ufsUrl;
                       if (url) set("logoUrl", url);
                     }}
-                    onUploadError={(error: Error) => setServerError(`Logo upload failed: ${error.message}`)}
+                    onUploadError={(error) =>
+                      setServerError(
+                        error.code === "TOO_LARGE"
+                          ? "This logo is too large, even after shrinking. Try a smaller image (up to 4 MB)."
+                          : `Logo upload failed: ${error.message}`,
+                      )
+                    }
                   />
                   {values.logoUrl && (
                     <Button type="button" variant="ghost" size="sm" onClick={() => set("logoUrl", "")}>
@@ -648,7 +648,7 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
               </Button>
             ) : (
               <Button type="button" variant="ghost" asChild>
-                <Link href="/admin/restaurants" onClick={confirmLeave}>
+                <Link href="/admin/restaurants">
                   Cancel
                 </Link>
               </Button>

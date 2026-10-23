@@ -392,7 +392,8 @@
       "saveChanges": "Save changes",
       "addItem": "Add item",
       "saveFailed": "Couldn't save the item.",
-      "category": "Category"
+      "category": "Category",
+      "photoTooLarge": "This photo is too large, even after shrinking. Try a smaller one (up to 2 MB)."
     }
   },
   "DashboardRestaurant": {
@@ -461,7 +462,8 @@
     "noChanges": "No changes yet",
     "discard": "Discard",
     "save": "Save changes",
-    "saveFailed": "Couldn't save the restaurant."
+    "saveFailed": "Couldn't save the restaurant.",
+    "logoTooLarge": "This logo is too large, even after shrinking. Try a smaller image (up to 4 MB)."
   },
   "ActionErrors": {
     "createRestaurantFailed": "Couldn't create the restaurant. Please try again.",
@@ -500,5 +502,8 @@
     "adminOnlyNewLogo": "Only administrators can upload a logo for a new restaurant.",
     "ownerOnlyLogo": "Only the restaurant's owner can change its logo.",
     "invalidCategory": "That category doesn't belong to this restaurant. Reload the page and try again."
+  },
+  "UnsavedChanges": {
+    "confirmLeave": "You have unsaved changes. Leave without saving them?"
   }
 }

@@ -1,7 +1,7 @@
 // src/components/dashboard/RestaurantDetailsEditor.tsx
 "use client";
 
-import { useEffect, useState, useTransition, type FormEvent } from "react";
+import { useState, useTransition, type FormEvent } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -21,10 +21,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { unwrap } from "~/lib/action-result";
+import { useUnsavedChangesGuard } from "~/lib/unsaved-changes";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { UploadButton } from "~/utils/uploadthing";
+import { UploadButton, uploadButtonClass } from "~/utils/uploadthing";
+import { cn } from "~/lib/utils";
+import { LOGO, resizeImages } from "~/lib/resize-image";
 import { updateRestaurant } from "~/app/actions/restaurant";
 import { CharCount, Field, FormSection, UrlInput } from "~/components/forms/fields";
 import {
@@ -69,6 +72,7 @@ const SHOWN_FIELDS = new Set([
 
 export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant }) {
   const t = useTranslations("RestaurantDetails");
+  const tUnsaved = useTranslations("UnsavedChanges");
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
 
@@ -104,13 +108,8 @@ export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant
     clearError(`${group}.${key}`);
   };
 
-  // Warn before a refresh or tab close throws away edits.
-  useEffect(() => {
-    if (!isDirty || isPending) return;
-    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [isDirty, isPending]);
+  // Ask before a refresh, tab close, link or language switch loses edits.
+  useUnsavedChangesGuard(isDirty && !isPending, tUnsaved("confirmLeave"));
 
   // Validation messages come from the shared schema in English; owners see
   // these instead. Fields this form doesn't show are left out: the server
@@ -255,12 +254,20 @@ export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant
                   input={{ restaurantId: restaurant.id, locale }}
                   appearance={{ allowedContent: "hidden" }}
                   content={{ button: values.logoUrl ? t("replaceLogo") : t("uploadLogo") }}
-                  className="ut-button:bg-primary ut-button:text-primary-foreground ut-button:h-9 ut-button:w-auto ut-button:px-4 ut-button:text-sm ut-button:font-medium ut-button:rounded-md ut-button:after:bg-primary/70"
+                  className={cn(uploadButtonClass, "ut-button:w-auto")}
+                  // Shrink large images before they go up; the route allows 4 MB.
+                  onBeforeUploadBegin={resizeImages(LOGO)}
                   onClientUploadComplete={(res) => {
                     const url = res?.[0]?.ufsUrl;
                     if (url) set("logoUrl", url);
                   }}
-                  onUploadError={(error: Error) => setServerError(t("uploadFailed", { error: error.message }))}
+                  onUploadError={(error) =>
+                    setServerError(
+                      error.code === "TOO_LARGE"
+                        ? t("logoTooLarge")
+                        : t("uploadFailed", { error: error.message }),
+                    )
+                  }
                 />
                 {values.logoUrl && (
                   <Button type="button" variant="ghost" size="sm" onClick={() => set("logoUrl", "")}>

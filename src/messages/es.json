@@ -392,7 +392,8 @@
       "saveChanges": "Guardar cambios",
       "addItem": "Añadir plato",
       "saveFailed": "No se pudo guardar el plato.",
-      "category": "Categoría"
+      "category": "Categoría",
+      "photoTooLarge": "Esta foto es demasiado grande incluso después de reducirla. Prueba con una más pequeña (hasta 2 MB)."
     }
   },
   "DashboardRestaurant": {
@@ -461,7 +462,8 @@
     "noChanges": "Aún no hay cambios",
     "discard": "Descartar",
     "save": "Guardar cambios",
-    "saveFailed": "No se pudo guardar el restaurante."
+    "saveFailed": "No se pudo guardar el restaurante.",
+    "logoTooLarge": "Este logo es demasiado grande incluso después de reducirlo. Prueba con una imagen más pequeña (hasta 4 MB)."
   },
   "ActionErrors": {
     "createRestaurantFailed": "No se pudo crear el restaurante. Inténtalo de nuevo.",
@@ -500,5 +502,8 @@
     "adminOnlyNewLogo": "Solo los administradores pueden subir el logo de un restaurante nuevo.",
     "ownerOnlyLogo": "Solo el propietario del restaurante puede cambiar su logo.",
     "invalidCategory": "Esa categoría no pertenece a este restaurante. Recarga la página e inténtalo de nuevo."
+  },
+  "UnsavedChanges": {
+    "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
   }
 }

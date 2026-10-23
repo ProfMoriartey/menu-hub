@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { hasUnsavedChanges } from "~/lib/unsaved-changes";
 import { cn } from "~/lib/utils";
 
 // Each language in its own name, so people can find theirs whatever the
@@ -31,6 +32,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
  */
 export function LanguageSwitcher({ className }: { className?: string }) {
   const t = useTranslations("LanguageSwitcher");
+  const tUnsaved = useTranslations("UnsavedChanges");
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
@@ -42,6 +44,9 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       disabled={isPending}
       onValueChange={(next) => {
         if (next === locale) return;
+        // Switching reloads the page in the new language, so unsaved
+        // edits would be lost. The select stays on the current language.
+        if (hasUnsavedChanges() && !window.confirm(tUnsaved("confirmLeave"))) return;
         startTransition(() => router.replace(pathname, { locale: next }));
       }}
     >

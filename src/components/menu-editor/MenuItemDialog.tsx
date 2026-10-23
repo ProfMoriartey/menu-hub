@@ -25,7 +25,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { UploadButton } from "~/utils/uploadthing";
+import { UploadButton, uploadButtonClass } from "~/utils/uploadthing";
+import { ITEM_PHOTO, resizeImages } from "~/lib/resize-image";
 import { addMenuItem, updateMenuItem } from "~/app/actions/menu-item";
 import { CharCount, Field } from "~/components/forms/fields";
 import { cn } from "~/lib/utils";
@@ -231,16 +232,26 @@ function MenuItemForm({
               input={{ restaurantId, locale }}
               appearance={{ allowedContent: "hidden" }}
               content={{ button: values.imageUrl ? t("itemDialog.replace") : t("itemDialog.upload") }}
-              className="ut-button:bg-secondary ut-button:text-secondary-foreground ut-button:h-8 ut-button:w-full ut-button:max-w-[160px] ut-button:text-sm ut-button:rounded-md ut-button:after:bg-primary/40 items-start"
-              onUploadBegin={() => setIsUploading(true)}
+              className={cn(uploadButtonClass, "items-start ut-button:w-full ut-button:max-w-[160px]")}
+              // Shrink phone photos before they go up; the route allows 2 MB.
+              onBeforeUploadBegin={(files) => {
+                setIsUploading(true);
+                return resizeImages(ITEM_PHOTO)(files);
+              }}
               onClientUploadComplete={(res) => {
                 setIsUploading(false);
                 const url = res?.[0]?.ufsUrl;
                 if (url) set("imageUrl", url);
               }}
-              onUploadError={(error: Error) => {
+              onUploadError={(error) => {
                 setIsUploading(false);
-                setErrors((prev) => ({ ...prev, imageUrl: t("itemDialog.uploadFailed", { error: error.message }) }));
+                setErrors((prev) => ({
+                  ...prev,
+                  imageUrl:
+                    error.code === "TOO_LARGE"
+                      ? t("itemDialog.photoTooLarge")
+                      : t("itemDialog.uploadFailed", { error: error.message }),
+                }));
               }}
             />
             {values.imageUrl && (

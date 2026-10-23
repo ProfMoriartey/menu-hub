@@ -392,7 +392,8 @@
       "saveChanges": "Değişiklikleri kaydet",
       "addItem": "Ürün ekle",
       "saveFailed": "Ürün kaydedilemedi.",
-      "category": "Kategori"
+      "category": "Kategori",
+      "photoTooLarge": "Bu fotoğraf küçültüldükten sonra bile çok büyük. Daha küçük bir fotoğraf deneyin (en fazla 2 MB)."
     }
   },
   "DashboardRestaurant": {
@@ -461,7 +462,8 @@
     "noChanges": "Henüz değişiklik yok",
     "discard": "Vazgeç",
     "save": "Değişiklikleri kaydet",
-    "saveFailed": "Restoran kaydedilemedi."
+    "saveFailed": "Restoran kaydedilemedi.",
+    "logoTooLarge": "Bu logo küçültüldükten sonra bile çok büyük. Daha küçük bir görsel deneyin (en fazla 4 MB)."
   },
   "ActionErrors": {
     "createRestaurantFailed": "Restoran oluşturulamadı. Lütfen tekrar deneyin.",
@@ -500,5 +502,8 @@
     "adminOnlyNewLogo": "Yeni bir restoranın logosunu yalnızca yöneticiler yükleyebilir.",
     "ownerOnlyLogo": "Restoranın logosunu yalnızca restoran sahibi değiştirebilir.",
     "invalidCategory": "Bu kategori bu restorana ait değil. Sayfayı yenileyip tekrar deneyin."
+  },
+  "UnsavedChanges": {
+    "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
   }
 }
