@@ -1,9 +1,9 @@
-// src/components/admin/MenuItemList.tsx
+// src/components/menu-editor/MenuItemList.tsx
 "use client";
 
-import { unwrap } from "~/lib/action-result";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import {
   closestCenter,
   DndContext,
@@ -22,15 +22,17 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Pencil, Plus, Trash2, UtensilsCrossed } from "lucide-react";
+import { unwrap } from "~/lib/action-result";
 import { Button } from "~/components/ui/button";
-import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
-import { MenuItemDialog, type AdminMenuItem } from "~/components/admin/MenuItemDialog";
-import { ReorderStatus, useReorderState } from "~/components/admin/ReorderStatus";
+import { ConfirmDialog } from "~/components/menu-editor/ConfirmDialog";
+import {
+  DIETARY_LABEL_KEYS,
+  MenuItemDialog,
+  type AdminMenuItem,
+} from "~/components/menu-editor/MenuItemDialog";
+import { ReorderStatus, useReorderState } from "~/components/menu-editor/ReorderStatus";
 import { deleteMenuItem, updateMenuItemOrder } from "~/app/actions/menu-item";
 import { cn } from "~/lib/utils";
-
-const formatLabel = (label: string) =>
-  label.charAt(0).toUpperCase() + label.slice(1).replace(/-/g, " ");
 
 function DeleteItemButton({
   item,
@@ -41,6 +43,8 @@ function DeleteItemButton({
   restaurantId: string;
   categoryId: string;
 }) {
+  const t = useTranslations("MenuEditor.items");
+
   return (
     <ConfirmDialog
       trigger={
@@ -48,15 +52,15 @@ function DeleteItemButton({
           variant="ghost"
           size="icon"
           className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-          aria-label={`Delete ${item.name}`}
-          title="Delete item"
+          aria-label={t("deleteLabel", { name: item.name })}
+          title={t("deleteTitle")}
         >
           <Trash2 className="h-4 w-4" />
         </Button>
       }
-      title={<>Delete &quot;{item.name}&quot;?</>}
-      description="It will be removed from the menu, along with its photo. This can't be undone."
-      confirmLabel="Delete item"
+      title={t("deleteConfirmTitle", { name: item.name })}
+      description={t("deleteConfirmText")}
+      confirmLabel={t("deleteButton")}
       onConfirm={() => deleteMenuItem(item.id, restaurantId, categoryId)}
     />
   );
@@ -75,6 +79,7 @@ function ItemRow({
   categoryId: string;
   onEdit: () => void;
 }) {
+  const t = useTranslations("MenuEditor");
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
     useSortable({ id: item.id });
 
@@ -92,8 +97,8 @@ function ItemRow({
         ref={setActivatorNodeRef}
         {...attributes}
         {...listeners}
-        aria-label={`Reorder ${item.name}`}
-        className="text-muted-foreground hover:text-foreground hover:bg-accent focus-visible:ring-ring/50 -ml-1 flex h-8 w-6 shrink-0 cursor-grab touch-none items-center justify-center rounded outline-none focus-visible:ring-[3px] active:cursor-grabbing"
+        aria-label={t("items.reorderLabel", { name: item.name })}
+        className="text-muted-foreground hover:text-foreground hover:bg-accent focus-visible:ring-ring/50 -ms-1 flex h-8 w-6 shrink-0 cursor-grab touch-none items-center justify-center rounded outline-none focus-visible:ring-[3px] active:cursor-grabbing"
       >
         <GripVertical className="h-4 w-4" />
       </button>
@@ -101,7 +106,7 @@ function ItemRow({
       <button
         type="button"
         onClick={onEdit}
-        className="group flex min-w-0 flex-1 items-center gap-3 text-left outline-none sm:gap-4"
+        className="group flex min-w-0 flex-1 items-center gap-3 text-start outline-none sm:gap-4"
       >
         <div className="bg-muted border-border relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border">
           {item.imageUrl ? (
@@ -124,13 +129,13 @@ function ItemRow({
                   key={label}
                   className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400"
                 >
-                  {formatLabel(label)}
+                  {t(`dietary.${DIETARY_LABEL_KEYS[label]}`)}
                 </span>
               ))}
             </div>
           )}
         </div>
-        <p className="shrink-0 text-right font-medium tabular-nums">
+        <p className="shrink-0 text-end font-medium tabular-nums">
           {item.price} <span className="text-muted-foreground text-sm font-normal">{currency}</span>
         </p>
       </button>
@@ -141,8 +146,8 @@ function ItemRow({
           variant="ghost"
           size="icon"
           onClick={onEdit}
-          aria-label={`Edit ${item.name}`}
-          title="Edit"
+          aria-label={t("items.editLabel", { name: item.name })}
+          title={t("items.edit")}
           className="hidden sm:inline-flex"
         >
           <Pencil className="h-4 w-4" />
@@ -168,6 +173,7 @@ export function MenuItemList({
   categoryName,
   currency,
 }: MenuItemListProps) {
+  const t = useTranslations("MenuEditor.items");
   const [items, setItems] = useState(initialItems);
   const [orderState, setOrderState] = useReorderState();
   // null = closed, "new" = adding, otherwise the item being edited.
@@ -211,7 +217,7 @@ export function MenuItemList({
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Button onClick={() => setDialogItem("new")}>
-          <Plus className="h-4 w-4" /> Add item
+          <Plus className="h-4 w-4" /> {t("add")}
         </Button>
         <ReorderStatus state={orderState} onDismiss={() => setOrderState("idle")} />
       </div>
@@ -219,12 +225,10 @@ export function MenuItemList({
       {items.length === 0 ? (
         <div className="border-border flex flex-col items-center rounded-xl border border-dashed px-6 py-14 text-center">
           <UtensilsCrossed className="text-muted-foreground mb-3 h-9 w-9" />
-          <p className="font-medium">No items in {categoryName} yet</p>
-          <p className="text-muted-foreground mt-1 mb-5 max-w-sm text-sm">
-            Add dishes or drinks with a price, and optionally a photo and description.
-          </p>
+          <p className="font-medium">{t("emptyTitle", { category: categoryName })}</p>
+          <p className="text-muted-foreground mt-1 mb-5 max-w-sm text-sm">{t("emptyText")}</p>
           <Button variant="outline" onClick={() => setDialogItem("new")}>
-            <Plus className="h-4 w-4" /> Add the first item
+            <Plus className="h-4 w-4" /> {t("addFirst")}
           </Button>
         </div>
       ) : (
@@ -247,11 +251,7 @@ export function MenuItemList({
               </SortableContext>
             </DndContext>
           </div>
-          {items.length > 1 && (
-            <p className="text-muted-foreground text-xs">
-              Drag the handle to change the order guests see. Click an item to edit it.
-            </p>
-          )}
+          {items.length > 1 && <p className="text-muted-foreground text-xs">{t("dragHint")}</p>}
         </>
       )}
 

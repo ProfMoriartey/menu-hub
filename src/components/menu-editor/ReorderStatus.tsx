@@ -1,7 +1,8 @@
-// src/components/admin/ReorderStatus.tsx
+// src/components/menu-editor/ReorderStatus.tsx
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Check, CircleAlert, X } from "lucide-react";
 
 export type ReorderState = "idle" | "saving" | "saved" | "error";
@@ -26,18 +27,20 @@ export function ReorderStatus({
   state: ReorderState;
   onDismiss: () => void;
 }) {
+  const t = useTranslations("MenuEditor.reorder");
+
   return (
     <p className="text-sm" role="status" aria-live="polite">
-      {state === "saving" && <span className="text-muted-foreground">Saving order…</span>}
+      {state === "saving" && <span className="text-muted-foreground">{t("saving")}</span>}
       {state === "saved" && (
         <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-          <Check className="h-4 w-4" /> Order saved
+          <Check className="h-4 w-4" /> {t("saved")}
         </span>
       )}
       {state === "error" && (
         <span className="text-destructive inline-flex items-center gap-1.5">
-          <CircleAlert className="h-4 w-4" /> Couldn&apos;t save the new order. Try again.
-          <button type="button" onClick={onDismiss} aria-label="Dismiss">
+          <CircleAlert className="h-4 w-4" /> {t("error")}
+          <button type="button" onClick={onDismiss} aria-label={t("dismiss")}>
             <X className="h-3.5 w-3.5" />
           </button>
         </span>

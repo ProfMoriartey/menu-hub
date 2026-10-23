@@ -276,79 +276,6 @@
       }
     }
   },
-  "MenuItemManager": {
-    "addItemButton": "إضافة صنف جديد للقائمة",
-    "hideFormButton": "إخفاء نموذج إضافة الصنف",
-    "emptyListMessage": "لا توجد أصناف في هذه الفئة.",
-    "item": {
-      "confirmDelete": "هل أنت متأكد من رغبتك في حذف صنف القائمة: {itemName}؟"
-    },
-    "addForm": {
-      "newTitle": "تفاصيل الصنف الجديد",
-      "placeholderName": "اسم الصنف",
-      "placeholderPrice": "السعر (مثال: 12.99)",
-      "placeholderDescription": "الوصف (اختياري)",
-      "placeholderIngredients": "المكونات (اختياري)",
-      "labelDietaryLabels": "ملصقات النظام الغذائي",
-      "labelItemImage": "صورة الصنف",
-      "imagePreviewAlt": "معاينة الصورة",
-      "createItemButton": "إنشاء الصنف",
-      "processing": "جاري المعالجة...",
-      "dietaryLabels": {
-        "vegan": "نباتي صرف (فيجان)",
-        "vegetarian": "نباتي",
-        "gluten-free": "خالٍ من الغلوتين",
-        "nut-free": "خالٍ من المكسرات"
-      },
-      "addSuccess": "تمت إضافة الصنف بنجاح.",
-      "addFailedPrefix": "فشل:",
-      "addUnknownError": "حدث خطأ غير معروف."
-    },
-    "editForm": {
-      "labelName": "الاسم",
-      "labelPrice": "السعر",
-      "labelDescription": "الوصف",
-      "labelIngredients": "المكونات",
-      "labelDietaryLabels": "ملصقات النظام الغذائي",
-      "labelItemImage": "صورة الصنف",
-      "placeholderPrice": "مثال: 12.99",
-      "placeholderDescription": "وصف قصير للقائمة.",
-      "placeholderIngredients": "قائمة مفصولة بفواصل (مثال: طحين، بيض، زبدة)",
-      "saveButton": "حفظ الصنف",
-      "saving": "جاري الحفظ...",
-      "cancelButton": "إلغاء",
-      "noImage": "لا توجد صورة",
-      "imagePreviewAlt": "معاينة صورة الصنف"
-    }
-  },
-  "CategoryManager": {
-    "processing": "جاري المعالجة...",
-    "addForm": {
-      "headerTitle": "إضافة فئة جديدة",
-      "placeholderName": "مثال: مقبلات، أطباق رئيسية، مشروبات",
-      "addButton": "إضافة فئة"
-    },
-    "listTitle": "الفئات الحالية",
-    "emptyListMessage": "لم يتم العثور على فئات. ابدأ بإضافة فئة أعلاه.",
-    "item": {
-      "itemCount": "({count} أصناف)",
-      "confirmDelete": "هل أنت متأكد من رغبتك في حذف الفئة: {categoryName}؟",
-      "placeholderName": "اسم الفئة",
-      "saveButton": "حفظ الفئة",
-      "cancelButton": "إلغاء"
-    },
-    "messages": {
-      "addSuccess": "تمت إضافة الفئة بنجاح.",
-      "addFailed": "فشل: {error}",
-      "updateSuccess": "تم تحديث الفئة بنجاح.",
-      "updateFailed": "فشل: {error}",
-      "deleteSuccess": "تم حذف الفئة بنجاح.",
-      "deleteFailed": "فشل: {error}"
-    },
-    "updateSuccess": "تمت العملية بنجاح.",
-    "deleteSuccess": "تم حذف الفئة بنجاح.",
-    "unknownError": "حدث خطأ غير معروف أثناء الإرسال."
-  },
   "RestaurantForm": {
     "mainTitle": "إعدادات المطعم",
     "labelName": "الاسم",
@@ -379,16 +306,6 @@
     "updateSuccess": "تم تحديث تفاصيل المطعم بنجاح.",
     "unknownError": "حدث خطأ غير معروف."
   },
-  "RestaurantEditor": {
-    "errorTitle": "خطأ في تحميل القائمة",
-    "errorMessage": "خطأ: لم يتم تحميل أو تعيين بيانات المطعم.",
-    "titlePrefix": "جاري التعديل",
-    "backToDashboard": "العودة إلى لوحة التحكم",
-    "selectPage": "اختر صفحة",
-    "detailsTab": "تفاصيل المطعم",
-    "categoriesTab": "الفئات والأصناف",
-    "editorNotice": "بصفتك محررًا، يمكنك إدارة فئات هذا المطعم وأصنافه. اطلب من مالك المطعم تغيير تفاصيل المطعم."
-  },
   "Dashboard": {
     "title": "قوائمك المُعيّنة",
     "emptyTitle": "لا توجد قوائم مُعيّنة",
@@ -404,5 +321,114 @@
       "owner": "يمكنه تعديل تفاصيل المطعم والقائمة",
       "editor": "يمكنه تعديل القائمة"
     }
+  },
+  "ConfirmDialog": {
+    "cancel": "إلغاء",
+    "deleting": "جارٍ الحذف…",
+    "typeToConfirm": "اكتب <b>{text}</b> للتأكيد"
+  },
+  "MenuEditor": {
+    "reorder": {
+      "saving": "جارٍ حفظ الترتيب…",
+      "saved": "تم حفظ الترتيب",
+      "error": "تعذّر حفظ الترتيب الجديد. حاول مرة أخرى.",
+      "dismiss": "إغلاق"
+    },
+    "dietary": {
+      "vegetarian": "نباتي",
+      "vegan": "نباتي صرف",
+      "glutenFree": "خالٍ من الغلوتين",
+      "dairyFree": "خالٍ من الألبان",
+      "nutFree": "خالٍ من المكسرات"
+    },
+    "categories": {
+      "newPlaceholder": "فئة جديدة، مثل: المقبلات",
+      "newLabel": "اسم الفئة الجديدة",
+      "add": "إضافة فئة",
+      "adding": "جارٍ الإضافة…",
+      "nameRequired": "أدخل اسمًا للفئة.",
+      "nameEmpty": "لا يمكن أن يكون الاسم فارغًا.",
+      "addFailed": "تعذّرت إضافة الفئة.",
+      "renameFailed": "تعذّرت إعادة تسمية الفئة.",
+      "reorderLabel": "تغيير ترتيب {name}",
+      "nameLabel": "اسم الفئة",
+      "save": "حفظ",
+      "saving": "جارٍ الحفظ…",
+      "cancel": "إلغاء",
+      "itemCount": "{count, plural, =0 {لا توجد أصناف بعد} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}}",
+      "rename": "إعادة تسمية",
+      "renameLabel": "إعادة تسمية {name}",
+      "open": "فتح الأصناف",
+      "openLabel": "فتح {name}",
+      "emptyTitle": "لا توجد فئات بعد",
+      "emptyText": "تنظّم الفئات القائمة، مثل المقبلات والأطباق الرئيسية والمشروبات. أضف أول فئة في الأعلى.",
+      "dragHint": "اسحب المقبض لتغيير الترتيب الذي يراه الضيوف في القائمة.",
+      "deleteLabel": "حذف {name}",
+      "deleteTitle": "حذف الفئة",
+      "deleteConfirmTitle": "حذف \"{name}\"؟",
+      "deleteEmpty": "هذه الفئة فارغة. لا يمكن التراجع عن ذلك.",
+      "deleteWithItems": "{count, plural, one {سيُحذف أيضًا الصنف الموجود فيها.} two {سيُحذف أيضًا الصنفان الموجودان فيها.} few {ستُحذف أيضًا الأصناف الـ# الموجودة فيها.} many {سيُحذف أيضًا الـ# صنفًا الموجودة فيها.} other {سيُحذف أيضًا الـ# صنف الموجودة فيها.}} لا يمكن التراجع عن ذلك.",
+      "deleteButton": "حذف الفئة",
+      "deleteWithItemsButton": "حذف الفئة وأصنافها"
+    },
+    "items": {
+      "add": "إضافة صنف",
+      "emptyTitle": "لا توجد أصناف في {category} بعد",
+      "emptyText": "أضف أطباقًا أو مشروبات مع السعر، ويمكنك إضافة صورة ووصف إن أردت.",
+      "addFirst": "إضافة أول صنف",
+      "dragHint": "اسحب المقبض لتغيير الترتيب الذي يراه الضيوف. انقر على صنف لتعديله.",
+      "reorderLabel": "تغيير ترتيب {name}",
+      "edit": "تعديل",
+      "editLabel": "تعديل {name}",
+      "deleteLabel": "حذف {name}",
+      "deleteTitle": "حذف الصنف",
+      "deleteConfirmTitle": "حذف \"{name}\"؟",
+      "deleteConfirmText": "سيُزال من القائمة مع صورته. لا يمكن التراجع عن ذلك.",
+      "deleteButton": "حذف الصنف"
+    },
+    "itemDialog": {
+      "close": "إغلاق",
+      "discardConfirm": "هل تريد تجاهل تغييراتك على هذا الصنف؟",
+      "editTitle": "تعديل {name}",
+      "newTitle": "صنف جديد",
+      "editDescription": "ضمن {category}.",
+      "newDescription": "يُضاف إلى {category}. الاسم والسعر فقط مطلوبان.",
+      "photo": "الصورة",
+      "photoAlt": "صورة الصنف",
+      "upload": "رفع صورة",
+      "replace": "استبدال",
+      "removePhoto": "إزالة الصورة",
+      "uploadFailed": "فشل الرفع: {error}",
+      "uploading": "جارٍ رفع الصورة…",
+      "name": "الاسم",
+      "namePlaceholder": "مثل: مارغريتا",
+      "nameRequired": "أدخل اسمًا للصنف.",
+      "price": "السعر",
+      "priceRequired": "أدخل السعر.",
+      "description": "الوصف",
+      "descriptionPlaceholder": "ما الذي يميّزه، في جملة أو جملتين.",
+      "ingredients": "المكونات",
+      "ingredientsHint": "افصل بينها بفواصل.",
+      "ingredientsPlaceholder": "طماطم، موزاريلا، ريحان",
+      "dietaryLabels": "الملصقات الغذائية",
+      "added": "{count, plural, one {تمت إضافة صنف واحد} two {تمت إضافة صنفين} few {تمت إضافة # أصناف} many {تمت إضافة # صنفًا} other {تمت إضافة # صنف}}",
+      "done": "تم",
+      "cancel": "إلغاء",
+      "saveAndAddAnother": "حفظ وإضافة آخر",
+      "saving": "جارٍ الحفظ…",
+      "saveChanges": "حفظ التغييرات",
+      "addItem": "إضافة صنف",
+      "saveFailed": "تعذّر حفظ الصنف."
+    }
+  },
+  "DashboardRestaurant": {
+    "dashboard": "لوحة التحكم",
+    "viewLive": "عرض القائمة المباشرة",
+    "menuTab": "القائمة",
+    "detailsTab": "التفاصيل",
+    "categoriesTitle": "الفئات",
+    "categoriesSummary": "{categories, plural, =0 {لا فئات} one {فئة واحدة} two {فئتان} few {# فئات} many {# فئة} other {# فئة}} · {items, plural, =0 {لا أصناف} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}}. افتح فئة لإدارة أصنافها.",
+    "categoriesNav": "الفئات",
+    "itemsSummary": "{count, plural, =0 {لا أصناف} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}} · الأسعار بعملة {currency}"
   }
 }

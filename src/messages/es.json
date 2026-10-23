@@ -276,79 +276,6 @@
       }
     }
   },
-  "MenuItemManager": {
-    "addItemButton": "Añadir nuevo artículo de menú",
-    "hideFormButton": "Ocultar formulario de artículo",
-    "emptyListMessage": "No hay artículos en esta categoría.",
-    "item": {
-      "confirmDelete": "¿Está seguro de que desea eliminar el artículo del menú: {itemName}?"
-    },
-    "addForm": {
-      "newTitle": "Detalles del nuevo artículo",
-      "placeholderName": "Nombre del artículo",
-      "placeholderPrice": "Precio (ej: 12.99)",
-      "placeholderDescription": "Descripción (opcional)",
-      "placeholderIngredients": "Ingredientes (opcional)",
-      "labelDietaryLabels": "Etiquetas Dietéticas",
-      "labelItemImage": "Imagen del artículo",
-      "imagePreviewAlt": "Vista previa de la imagen",
-      "createItemButton": "Crear artículo",
-      "processing": "Procesando...",
-      "dietaryLabels": {
-        "vegan": "Vegano",
-        "vegetarian": "Vegetariano",
-        "gluten-free": "Sin Gluten",
-        "nut-free": "Sin Frutos Secos"
-      },
-      "addSuccess": "Artículo añadido con éxito.",
-      "addFailedPrefix": "Fallo:",
-      "addUnknownError": "Ocurrió un error desconocido."
-    },
-    "editForm": {
-      "labelName": "Nombre",
-      "labelPrice": "Precio",
-      "labelDescription": "Descripción",
-      "labelIngredients": "Ingredientes",
-      "labelDietaryLabels": "Etiquetas Dietéticas",
-      "labelItemImage": "Imagen del artículo",
-      "placeholderPrice": "ej: 12.99",
-      "placeholderDescription": "Descripción corta para el menú.",
-      "placeholderIngredients": "Lista separada por comas (ej.: harina, huevos, mantequilla)",
-      "saveButton": "Guardar artículo",
-      "saving": "Guardando...",
-      "cancelButton": "Cancelar",
-      "noImage": "Sin imagen",
-      "imagePreviewAlt": "Vista previa de la imagen del artículo"
-    }
-  },
-  "CategoryManager": {
-    "processing": "Procesando...",
-    "addForm": {
-      "headerTitle": "Añadir nueva categoría",
-      "placeholderName": "ej.: Entrantes, Platos Principales, Bebidas",
-      "addButton": "Añadir categoría"
-    },
-    "listTitle": "Categorías existentes",
-    "emptyListMessage": "No se encontraron categorías. Comience por añadir una arriba.",
-    "item": {
-      "itemCount": "({count} artículos)",
-      "confirmDelete": "¿Está seguro de que desea eliminar la categoría: {categoryName}?",
-      "placeholderName": "Nombre de la categoría",
-      "saveButton": "Guardar categoría",
-      "cancelButton": "Cancelar"
-    },
-    "messages": {
-      "addSuccess": "Categoría añadida con éxito.",
-      "addFailed": "Fallo: {error}",
-      "updateSuccess": "Categoría actualizada con éxito.",
-      "updateFailed": "Fallo: {error}",
-      "deleteSuccess": "Categoría eliminada con éxito.",
-      "deleteFailed": "Fallo: {error}"
-    },
-    "updateSuccess": "Acción completada con éxito.",
-    "deleteSuccess": "Categoría eliminada con éxito.",
-    "unknownError": "Ocurrió un error desconocido al enviar."
-  },
   "RestaurantForm": {
     "mainTitle": "Configuración del restaurante",
     "labelName": "Nombre",
@@ -379,16 +306,6 @@
     "updateSuccess": "Detalles del restaurante actualizados con éxito.",
     "unknownError": "Ocurrió un error desconocido."
   },
-  "RestaurantEditor": {
-    "errorTitle": "Error al cargar el menú",
-    "errorMessage": "Error: Los datos del restaurante no se cargaron o asignaron.",
-    "titlePrefix": "Editando",
-    "backToDashboard": "Volver al panel de control",
-    "selectPage": "Seleccionar una página",
-    "detailsTab": "Detalles del restaurante",
-    "categoriesTab": "Categorías y artículos",
-    "editorNotice": "Como editor, puedes gestionar las categorías y los platos de este restaurante. Pide al propietario que cambie los datos del restaurante."
-  },
   "Dashboard": {
     "title": "Sus Menús Asignados",
     "emptyTitle": "No hay menús asignados",
@@ -404,5 +321,114 @@
       "owner": "Puede editar los datos del restaurante y el menú",
       "editor": "Puede editar el menú"
     }
+  },
+  "ConfirmDialog": {
+    "cancel": "Cancelar",
+    "deleting": "Eliminando…",
+    "typeToConfirm": "Escribe <b>{text}</b> para confirmar"
+  },
+  "MenuEditor": {
+    "reorder": {
+      "saving": "Guardando el orden…",
+      "saved": "Orden guardado",
+      "error": "No se pudo guardar el nuevo orden. Inténtalo de nuevo.",
+      "dismiss": "Cerrar"
+    },
+    "dietary": {
+      "vegetarian": "Vegetariano",
+      "vegan": "Vegano",
+      "glutenFree": "Sin gluten",
+      "dairyFree": "Sin lácteos",
+      "nutFree": "Sin frutos secos"
+    },
+    "categories": {
+      "newPlaceholder": "Nueva categoría, p. ej. Entrantes",
+      "newLabel": "Nombre de la nueva categoría",
+      "add": "Añadir categoría",
+      "adding": "Añadiendo…",
+      "nameRequired": "Ponle un nombre a la categoría.",
+      "nameEmpty": "El nombre no puede estar vacío.",
+      "addFailed": "No se pudo añadir la categoría.",
+      "renameFailed": "No se pudo cambiar el nombre de la categoría.",
+      "reorderLabel": "Reordenar {name}",
+      "nameLabel": "Nombre de la categoría",
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "cancel": "Cancelar",
+      "itemCount": "{count, plural, =0 {Aún no hay platos} one {# plato} other {# platos}}",
+      "rename": "Cambiar nombre",
+      "renameLabel": "Cambiar el nombre de {name}",
+      "open": "Abrir platos",
+      "openLabel": "Abrir {name}",
+      "emptyTitle": "Aún no hay categorías",
+      "emptyText": "Las categorías agrupan el menú, como Entrantes, Principales y Bebidas. Añade la primera arriba.",
+      "dragHint": "Arrastra el asa para cambiar el orden que ven los clientes en el menú.",
+      "deleteLabel": "Eliminar {name}",
+      "deleteTitle": "Eliminar categoría",
+      "deleteConfirmTitle": "¿Eliminar \"{name}\"?",
+      "deleteEmpty": "Esta categoría está vacía. No se puede deshacer.",
+      "deleteWithItems": "{count, plural, one {También se eliminará el plato que contiene.} other {También se eliminarán los # platos que contiene.}} No se puede deshacer.",
+      "deleteButton": "Eliminar categoría",
+      "deleteWithItemsButton": "Eliminar categoría y platos"
+    },
+    "items": {
+      "add": "Añadir plato",
+      "emptyTitle": "Aún no hay platos en {category}",
+      "emptyText": "Añade platos o bebidas con su precio y, si quieres, una foto y una descripción.",
+      "addFirst": "Añadir el primer plato",
+      "dragHint": "Arrastra el asa para cambiar el orden que ven los clientes. Haz clic en un plato para editarlo.",
+      "reorderLabel": "Reordenar {name}",
+      "edit": "Editar",
+      "editLabel": "Editar {name}",
+      "deleteLabel": "Eliminar {name}",
+      "deleteTitle": "Eliminar plato",
+      "deleteConfirmTitle": "¿Eliminar \"{name}\"?",
+      "deleteConfirmText": "Se quitará del menú junto con su foto. No se puede deshacer.",
+      "deleteButton": "Eliminar plato"
+    },
+    "itemDialog": {
+      "close": "Cerrar",
+      "discardConfirm": "¿Descartar los cambios en este plato?",
+      "editTitle": "Editar {name}",
+      "newTitle": "Nuevo plato",
+      "editDescription": "En {category}.",
+      "newDescription": "Se añade a {category}. Solo el nombre y el precio son obligatorios.",
+      "photo": "Foto",
+      "photoAlt": "Foto del plato",
+      "upload": "Subir foto",
+      "replace": "Cambiar",
+      "removePhoto": "Quitar foto",
+      "uploadFailed": "Error al subir: {error}",
+      "uploading": "Subiendo foto…",
+      "name": "Nombre",
+      "namePlaceholder": "p. ej. Margarita",
+      "nameRequired": "Ponle un nombre al plato.",
+      "price": "Precio",
+      "priceRequired": "Añade un precio.",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Qué lo hace especial, en una o dos frases.",
+      "ingredients": "Ingredientes",
+      "ingredientsHint": "Sepáralos con comas.",
+      "ingredientsPlaceholder": "Tomate, mozzarella, albahaca",
+      "dietaryLabels": "Etiquetas alimentarias",
+      "added": "{count, plural, one {# plato añadido} other {# platos añadidos}}",
+      "done": "Listo",
+      "cancel": "Cancelar",
+      "saveAndAddAnother": "Guardar y añadir otro",
+      "saving": "Guardando…",
+      "saveChanges": "Guardar cambios",
+      "addItem": "Añadir plato",
+      "saveFailed": "No se pudo guardar el plato."
+    }
+  },
+  "DashboardRestaurant": {
+    "dashboard": "Panel",
+    "viewLive": "Ver el menú publicado",
+    "menuTab": "Menú",
+    "detailsTab": "Datos",
+    "categoriesTitle": "Categorías",
+    "categoriesSummary": "{categories, plural, one {# categoría} other {# categorías}} · {items, plural, one {# plato} other {# platos}}. Abre una categoría para gestionar sus platos.",
+    "categoriesNav": "Categorías",
+    "itemsSummary": "{count, plural, one {# plato} other {# platos}} · Precios en {currency}"
   }
 }

@@ -276,79 +276,6 @@
       }
     }
   },
-  "MenuItemManager": {
-    "addItemButton": "Yeni Menü Öğesi Ekle",
-    "hideFormButton": "Öğe Ekleme Formunu Gizle",
-    "emptyListMessage": "Bu kategoride hiç öğe bulunmamaktadır.",
-    "item": {
-      "confirmDelete": "Menü öğesini silmek istediğinizden emin misiniz: {itemName}?"
-    },
-    "addForm": {
-      "newTitle": "Yeni Öğe Detayları",
-      "placeholderName": "Öğe Adı",
-      "placeholderPrice": "Fiyat (ör: 12.99)",
-      "placeholderDescription": "Açıklama (isteğe bağlı)",
-      "placeholderIngredients": "İçindekiler (isteğe bağlı)",
-      "labelDietaryLabels": "Beslenme Etiketleri",
-      "labelItemImage": "Öğe Görseli",
-      "imagePreviewAlt": "Görsel önizleme",
-      "createItemButton": "Öğe Oluştur",
-      "processing": "İşleniyor...",
-      "dietaryLabels": {
-        "vegan": "Vegan",
-        "vegetarian": "Vejetaryen",
-        "gluten-free": "Glutensiz",
-        "nut-free": "Fındıksız"
-      },
-      "addSuccess": "Öğe başarıyla eklendi.",
-      "addFailedPrefix": "Başarısız:",
-      "addUnknownError": "Bilinmeyen bir hata oluştu."
-    },
-    "editForm": {
-      "labelName": "Ad",
-      "labelPrice": "Fiyat",
-      "labelDescription": "Açıklama",
-      "labelIngredients": "İçindekiler",
-      "labelDietaryLabels": "Beslenme Etiketleri",
-      "labelItemImage": "Öğe Görseli",
-      "placeholderPrice": "ör: 12.99",
-      "placeholderDescription": "Menü için kısa açıklama.",
-      "placeholderIngredients": "Virgülle ayrılmış liste (ör: un, yumurta, tereyağı)",
-      "saveButton": "Öğeyi Kaydet",
-      "saving": "Kaydediliyor...",
-      "cancelButton": "İptal",
-      "noImage": "Görsel Yok",
-      "imagePreviewAlt": "Öğe görseli önizlemesi"
-    }
-  },
-  "CategoryManager": {
-    "processing": "İşleniyor...",
-    "addForm": {
-      "headerTitle": "Yeni Kategori Ekle",
-      "placeholderName": "ör: Başlangıçlar, Ana Yemekler, İçecekler",
-      "addButton": "Kategori Ekle"
-    },
-    "listTitle": "Mevcut Kategoriler",
-    "emptyListMessage": "Kategori bulunamadı. Lütfen yukarıdan bir tane ekleyin.",
-    "item": {
-      "itemCount": "({count} Öğe)",
-      "confirmDelete": "Kategoriyi silmek istediğinizden emin misiniz: {categoryName}?",
-      "placeholderName": "Kategori Adı",
-      "saveButton": "Kategoriyi Kaydet",
-      "cancelButton": "İptal"
-    },
-    "messages": {
-      "addSuccess": "Kategori başarıyla eklendi.",
-      "addFailed": "Başarısız: {error}",
-      "updateSuccess": "Kategori başarıyla güncellendi.",
-      "updateFailed": "Başarısız: {error}",
-      "deleteSuccess": "Kategori başarıyla silindi.",
-      "deleteFailed": "Başarısız: {error}"
-    },
-    "updateSuccess": "İşlem başarıyla tamamlandı.",
-    "deleteSuccess": "Kategori başarıyla silindi.",
-    "unknownError": "Bilinmeyen bir hata oluştu."
-  },
   "RestaurantForm": {
     "mainTitle": "Restoran Ayarları",
     "labelName": "Ad",
@@ -379,16 +306,6 @@
     "updateSuccess": "Restoran detayları başarıyla güncellendi.",
     "unknownError": "Bilinmeyen bir hata oluştu."
   },
-  "RestaurantEditor": {
-    "errorTitle": "Menü Yüklenirken Hata",
-    "errorMessage": "Hata: Restoran verisi yüklenemedi veya atanmadı.",
-    "titlePrefix": "Düzenleniyor",
-    "backToDashboard": "Kontrol Paneline Geri Dön",
-    "selectPage": "Bir sayfa seçin",
-    "detailsTab": "Restoran Detayları",
-    "categoriesTab": "Kategoriler ve Öğeler",
-    "editorNotice": "Düzenleyici olarak bu restoranın kategorilerini ve ürünlerini yönetebilirsiniz. Restoran bilgilerini değiştirmek için restoran sahibine başvurun."
-  },
   "Dashboard": {
     "title": "Atanmış Menüleriniz",
     "emptyTitle": "Atanmış Menü Yok",
@@ -404,5 +321,114 @@
       "owner": "Restoran bilgilerini ve menüyü düzenleyebilir",
       "editor": "Menüyü düzenleyebilir"
     }
+  },
+  "ConfirmDialog": {
+    "cancel": "İptal",
+    "deleting": "Siliniyor…",
+    "typeToConfirm": "Onaylamak için <b>{text}</b> yazın"
+  },
+  "MenuEditor": {
+    "reorder": {
+      "saving": "Sıralama kaydediliyor…",
+      "saved": "Sıralama kaydedildi",
+      "error": "Yeni sıralama kaydedilemedi. Tekrar deneyin.",
+      "dismiss": "Kapat"
+    },
+    "dietary": {
+      "vegetarian": "Vejetaryen",
+      "vegan": "Vegan",
+      "glutenFree": "Glutensiz",
+      "dairyFree": "Süt ürünsüz",
+      "nutFree": "Kuruyemişsiz"
+    },
+    "categories": {
+      "newPlaceholder": "Yeni kategori, ör. Başlangıçlar",
+      "newLabel": "Yeni kategori adı",
+      "add": "Kategori ekle",
+      "adding": "Ekleniyor…",
+      "nameRequired": "Kategoriye bir ad verin.",
+      "nameEmpty": "Ad boş olamaz.",
+      "addFailed": "Kategori eklenemedi.",
+      "renameFailed": "Kategori yeniden adlandırılamadı.",
+      "reorderLabel": "{name} sırasını değiştir",
+      "nameLabel": "Kategori adı",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor…",
+      "cancel": "İptal",
+      "itemCount": "{count, plural, =0 {Henüz ürün yok} other {# ürün}}",
+      "rename": "Yeniden adlandır",
+      "renameLabel": "{name} kategorisini yeniden adlandır",
+      "open": "Ürünleri aç",
+      "openLabel": "{name} kategorisini aç",
+      "emptyTitle": "Henüz kategori yok",
+      "emptyText": "Kategoriler menüyü gruplar; örneğin Başlangıçlar, Ana Yemekler ve İçecekler. İlkini yukarıdan ekleyin.",
+      "dragHint": "Misafirlerin menüde gördüğü sırayı değiştirmek için tutamacı sürükleyin.",
+      "deleteLabel": "{name} kategorisini sil",
+      "deleteTitle": "Kategoriyi sil",
+      "deleteConfirmTitle": "\"{name}\" silinsin mi?",
+      "deleteEmpty": "Bu kategori boş. Bu işlem geri alınamaz.",
+      "deleteWithItems": "İçindeki {count} ürün de silinecek. Bu işlem geri alınamaz.",
+      "deleteButton": "Kategoriyi sil",
+      "deleteWithItemsButton": "Kategoriyi ve ürünleri sil"
+    },
+    "items": {
+      "add": "Ürün ekle",
+      "emptyTitle": "{category} kategorisinde henüz ürün yok",
+      "emptyText": "Fiyatıyla birlikte yemek veya içecek ekleyin; isterseniz fotoğraf ve açıklama da ekleyebilirsiniz.",
+      "addFirst": "İlk ürünü ekle",
+      "dragHint": "Misafirlerin gördüğü sırayı değiştirmek için tutamacı sürükleyin. Düzenlemek için bir ürüne tıklayın.",
+      "reorderLabel": "{name} sırasını değiştir",
+      "edit": "Düzenle",
+      "editLabel": "{name} ürününü düzenle",
+      "deleteLabel": "{name} ürününü sil",
+      "deleteTitle": "Ürünü sil",
+      "deleteConfirmTitle": "\"{name}\" silinsin mi?",
+      "deleteConfirmText": "Ürün, fotoğrafıyla birlikte menüden kaldırılacak. Bu işlem geri alınamaz.",
+      "deleteButton": "Ürünü sil"
+    },
+    "itemDialog": {
+      "close": "Kapat",
+      "discardConfirm": "Bu üründeki değişiklikleriniz silinsin mi?",
+      "editTitle": "{name} ürününü düzenle",
+      "newTitle": "Yeni ürün",
+      "editDescription": "{category} kategorisinde.",
+      "newDescription": "{category} kategorisine eklenir. Yalnızca ad ve fiyat zorunludur.",
+      "photo": "Fotoğraf",
+      "photoAlt": "Ürün fotoğrafı",
+      "upload": "Fotoğraf yükle",
+      "replace": "Değiştir",
+      "removePhoto": "Fotoğrafı kaldır",
+      "uploadFailed": "Yükleme başarısız: {error}",
+      "uploading": "Fotoğraf yükleniyor…",
+      "name": "Ad",
+      "namePlaceholder": "ör. Margherita",
+      "nameRequired": "Ürüne bir ad verin.",
+      "price": "Fiyat",
+      "priceRequired": "Bir fiyat ekleyin.",
+      "description": "Açıklama",
+      "descriptionPlaceholder": "Bir iki cümleyle ürünü özel kılan şey.",
+      "ingredients": "İçindekiler",
+      "ingredientsHint": "Virgülle ayırın.",
+      "ingredientsPlaceholder": "Domates, mozzarella, fesleğen",
+      "dietaryLabels": "Beslenme etiketleri",
+      "added": "{count} ürün eklendi",
+      "done": "Bitti",
+      "cancel": "İptal",
+      "saveAndAddAnother": "Kaydet ve yenisini ekle",
+      "saving": "Kaydediliyor…",
+      "saveChanges": "Değişiklikleri kaydet",
+      "addItem": "Ürün ekle",
+      "saveFailed": "Ürün kaydedilemedi."
+    }
+  },
+  "DashboardRestaurant": {
+    "dashboard": "Panel",
+    "viewLive": "Canlı menüyü gör",
+    "menuTab": "Menü",
+    "detailsTab": "Bilgiler",
+    "categoriesTitle": "Kategoriler",
+    "categoriesSummary": "{categories} kategori · {items} ürün. Ürünlerini yönetmek için bir kategori açın.",
+    "categoriesNav": "Kategoriler",
+    "itemsSummary": "{count} ürün · Fiyatlar {currency} cinsinden"
   }
 }

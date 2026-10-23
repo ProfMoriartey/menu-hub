@@ -276,79 +276,6 @@
       }
     }
   },
-  "MenuItemManager": {
-    "addItemButton": "Добавить новый пункт меню",
-    "hideFormButton": "Скрыть форму добавления пункта",
-    "emptyListMessage": "В этой категории нет пунктов.",
-    "item": {
-      "confirmDelete": "Вы уверены, что хотите удалить пункт меню: {itemName}?"
-    },
-    "addForm": {
-      "newTitle": "Детали нового пункта",
-      "placeholderName": "Название пункта",
-      "placeholderPrice": "Цена (напр. 12.99)",
-      "placeholderDescription": "Описание (необязательно)",
-      "placeholderIngredients": "Ингредиенты (необязательно)",
-      "labelDietaryLabels": "Диетические метки",
-      "labelItemImage": "Изображение пункта",
-      "imagePreviewAlt": "Предпросмотр изображения",
-      "createItemButton": "Создать пункт",
-      "processing": "Обработка...",
-      "dietaryLabels": {
-        "vegan": "Веганский",
-        "vegetarian": "Вегетарианский",
-        "gluten-free": "Без глютена",
-        "nut-free": "Без орехов"
-      },
-      "addSuccess": "Пункт успешно добавлен.",
-      "addFailedPrefix": "Ошибка:",
-      "addUnknownError": "Произошла неизвестная ошибка."
-    },
-    "editForm": {
-      "labelName": "Название",
-      "labelPrice": "Цена",
-      "labelDescription": "Описание",
-      "labelIngredients": "Ингредиенты",
-      "labelDietaryLabels": "Диетические метки",
-      "labelItemImage": "Изображение пункта",
-      "placeholderPrice": "напр. 12.99",
-      "placeholderDescription": "Краткое описание для меню.",
-      "placeholderIngredients": "Список через запятую (напр.: мука, яйца, масло)",
-      "saveButton": "Сохранить пункт",
-      "saving": "Сохранение...",
-      "cancelButton": "Отмена",
-      "noImage": "Нет изображения",
-      "imagePreviewAlt": "Предпросмотр изображения пункта"
-    }
-  },
-  "CategoryManager": {
-    "processing": "Обработка...",
-    "addForm": {
-      "headerTitle": "Добавить новую категорию",
-      "placeholderName": "напр.: Закуски, Основные блюда, Напитки",
-      "addButton": "Добавить категорию"
-    },
-    "listTitle": "Существующие категории",
-    "emptyListMessage": "Категории не найдены. Начните с добавления одной выше.",
-    "item": {
-      "itemCount": "({count} пунктов)",
-      "confirmDelete": "Вы уверены, что хотите удалить категорию: {categoryName}?",
-      "placeholderName": "Название категории",
-      "saveButton": "Сохранить категорию",
-      "cancelButton": "Отмена"
-    },
-    "messages": {
-      "addSuccess": "Категория успешно добавлена.",
-      "addFailed": "Ошибка: {error}",
-      "updateSuccess": "Категория успешно обновлена.",
-      "updateFailed": "Ошибка: {error}",
-      "deleteSuccess": "Категория успешно удалена.",
-      "deleteFailed": "Ошибка: {error}"
-    },
-    "updateSuccess": "Действие успешно завершено.",
-    "deleteSuccess": "Категория успешно удалена.",
-    "unknownError": "Произошла неизвестная ошибка при отправке."
-  },
   "RestaurantForm": {
     "mainTitle": "Настройки ресторана",
     "labelName": "Название",
@@ -379,16 +306,6 @@
     "updateSuccess": "Детали ресторана успешно обновлены.",
     "unknownError": "Произошла неизвестная ошибка."
   },
-  "RestaurantEditor": {
-    "errorTitle": "Ошибка загрузки меню",
-    "errorMessage": "Ошибка: Данные ресторана не загружены или не назначены.",
-    "titlePrefix": "Редактирование",
-    "backToDashboard": "Назад к панели управления",
-    "selectPage": "Выбрать страницу",
-    "detailsTab": "Детали ресторана",
-    "categoriesTab": "Категории и пункты",
-    "editorNotice": "Как редактор, вы можете управлять категориями и блюдами этого ресторана. Чтобы изменить данные ресторана, обратитесь к владельцу."
-  },
   "Dashboard": {
     "title": "Назначенные Вам Меню",
     "emptyTitle": "Меню не назначены",
@@ -404,5 +321,114 @@
       "owner": "Может изменять данные ресторана и меню",
       "editor": "Может изменять меню"
     }
+  },
+  "ConfirmDialog": {
+    "cancel": "Отмена",
+    "deleting": "Удаление…",
+    "typeToConfirm": "Введите <b>{text}</b> для подтверждения"
+  },
+  "MenuEditor": {
+    "reorder": {
+      "saving": "Сохраняем порядок…",
+      "saved": "Порядок сохранён",
+      "error": "Не удалось сохранить новый порядок. Попробуйте ещё раз.",
+      "dismiss": "Закрыть"
+    },
+    "dietary": {
+      "vegetarian": "Вегетарианское",
+      "vegan": "Веганское",
+      "glutenFree": "Без глютена",
+      "dairyFree": "Без молочных продуктов",
+      "nutFree": "Без орехов"
+    },
+    "categories": {
+      "newPlaceholder": "Новая категория, например «Закуски»",
+      "newLabel": "Название новой категории",
+      "add": "Добавить категорию",
+      "adding": "Добавляем…",
+      "nameRequired": "Укажите название категории.",
+      "nameEmpty": "Название не может быть пустым.",
+      "addFailed": "Не удалось добавить категорию.",
+      "renameFailed": "Не удалось переименовать категорию.",
+      "reorderLabel": "Изменить порядок: {name}",
+      "nameLabel": "Название категории",
+      "save": "Сохранить",
+      "saving": "Сохраняем…",
+      "cancel": "Отмена",
+      "itemCount": "{count, plural, =0 {Пока нет блюд} one {# блюдо} few {# блюда} many {# блюд} other {# блюда}}",
+      "rename": "Переименовать",
+      "renameLabel": "Переименовать {name}",
+      "open": "Открыть блюда",
+      "openLabel": "Открыть {name}",
+      "emptyTitle": "Пока нет категорий",
+      "emptyText": "Категории делят меню на разделы, например «Закуски», «Основные блюда» и «Напитки». Добавьте первую выше.",
+      "dragHint": "Перетащите за ручку, чтобы изменить порядок, который видят гости в меню.",
+      "deleteLabel": "Удалить {name}",
+      "deleteTitle": "Удалить категорию",
+      "deleteConfirmTitle": "Удалить «{name}»?",
+      "deleteEmpty": "Эта категория пуста. Действие нельзя отменить.",
+      "deleteWithItems": "{count, plural, one {Будет удалено и # блюдо в ней.} few {Будут удалены и # блюда в ней.} many {Будут удалены и # блюд в ней.} other {Будут удалены и # блюда в ней.}} Действие нельзя отменить.",
+      "deleteButton": "Удалить категорию",
+      "deleteWithItemsButton": "Удалить категорию и блюда"
+    },
+    "items": {
+      "add": "Добавить блюдо",
+      "emptyTitle": "В категории «{category}» пока нет блюд",
+      "emptyText": "Добавьте блюда или напитки с ценой, а при желании — фото и описание.",
+      "addFirst": "Добавить первое блюдо",
+      "dragHint": "Перетащите за ручку, чтобы изменить порядок, который видят гости. Нажмите на блюдо, чтобы изменить его.",
+      "reorderLabel": "Изменить порядок: {name}",
+      "edit": "Изменить",
+      "editLabel": "Изменить {name}",
+      "deleteLabel": "Удалить {name}",
+      "deleteTitle": "Удалить блюдо",
+      "deleteConfirmTitle": "Удалить «{name}»?",
+      "deleteConfirmText": "Блюдо будет удалено из меню вместе с фото. Действие нельзя отменить.",
+      "deleteButton": "Удалить блюдо"
+    },
+    "itemDialog": {
+      "close": "Закрыть",
+      "discardConfirm": "Отменить изменения в этом блюде?",
+      "editTitle": "Изменить {name}",
+      "newTitle": "Новое блюдо",
+      "editDescription": "В категории «{category}».",
+      "newDescription": "Добавляется в категорию «{category}». Обязательны только название и цена.",
+      "photo": "Фото",
+      "photoAlt": "Фото блюда",
+      "upload": "Загрузить фото",
+      "replace": "Заменить",
+      "removePhoto": "Удалить фото",
+      "uploadFailed": "Ошибка загрузки: {error}",
+      "uploading": "Загружаем фото…",
+      "name": "Название",
+      "namePlaceholder": "например, Маргарита",
+      "nameRequired": "Укажите название блюда.",
+      "price": "Цена",
+      "priceRequired": "Укажите цену.",
+      "description": "Описание",
+      "descriptionPlaceholder": "Чем оно хорошо — в одном-двух предложениях.",
+      "ingredients": "Состав",
+      "ingredientsHint": "Через запятую.",
+      "ingredientsPlaceholder": "Томаты, моцарелла, базилик",
+      "dietaryLabels": "Пищевые метки",
+      "added": "{count, plural, one {Добавлено # блюдо} few {Добавлено # блюда} many {Добавлено # блюд} other {Добавлено # блюда}}",
+      "done": "Готово",
+      "cancel": "Отмена",
+      "saveAndAddAnother": "Сохранить и добавить ещё",
+      "saving": "Сохраняем…",
+      "saveChanges": "Сохранить изменения",
+      "addItem": "Добавить блюдо",
+      "saveFailed": "Не удалось сохранить блюдо."
+    }
+  },
+  "DashboardRestaurant": {
+    "dashboard": "Панель",
+    "viewLive": "Открыть меню на сайте",
+    "menuTab": "Меню",
+    "detailsTab": "Данные",
+    "categoriesTitle": "Категории",
+    "categoriesSummary": "{categories, plural, one {# категория} few {# категории} many {# категорий} other {# категории}} · {items, plural, one {# блюдо} few {# блюда} many {# блюд} other {# блюда}}. Откройте категорию, чтобы управлять блюдами.",
+    "categoriesNav": "Категории",
+    "itemsSummary": "{count, plural, one {# блюдо} few {# блюда} many {# блюд} other {# блюда}} · Цены в {currency}"
   }
 }

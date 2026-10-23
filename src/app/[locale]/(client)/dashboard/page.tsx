@@ -88,7 +88,7 @@ export default async function ClientUserDashboardPage() {
                 </p>
               </CardHeader>
               <CardContent className="flex justify-end pt-0">
-                <Link href={`/dashboard/${restaurant.slug}/edit`}>
+                <Link href={`/dashboard/${restaurant.slug}/menu`}>
                   {/* Translated Button */}
                   <Button className="w-full">{t("manageMenuButton")}</Button>
                 </Link>

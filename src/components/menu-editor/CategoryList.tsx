@@ -1,9 +1,9 @@
-// src/components/admin/CategoryList.tsx
+// src/components/menu-editor/CategoryList.tsx
 "use client";
 
-import { unwrap } from "~/lib/action-result";
 import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import {
   closestCenter,
   DndContext,
@@ -22,11 +22,12 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Check, ChevronRight, GripVertical, LayoutList, Pencil, Plus } from "lucide-react";
+import { unwrap } from "~/lib/action-result";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { DeleteCategoryDialog } from "~/components/admin/DeleteCategoryDialog";
-import { ReorderStatus, useReorderState } from "~/components/admin/ReorderStatus";
+import { DeleteCategoryDialog } from "~/components/menu-editor/DeleteCategoryDialog";
+import { ReorderStatus, useReorderState } from "~/components/menu-editor/ReorderStatus";
 import { addCategory, reorderCategories, updateCategory } from "~/app/actions/category";
 import { cn } from "~/lib/utils";
 
@@ -43,6 +44,7 @@ const errorMessage = (error: unknown, fallback: string) =>
   error instanceof Error ? error.message : fallback;
 
 function AddCategoryRow({ restaurantId }: { restaurantId: string }) {
+  const t = useTranslations("MenuEditor.categories");
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -52,7 +54,7 @@ function AddCategoryRow({ restaurantId }: { restaurantId: string }) {
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) {
-      setError("Give the category a name.");
+      setError(t("nameRequired"));
       inputRef.current?.focus();
       return;
     }
@@ -66,7 +68,7 @@ function AddCategoryRow({ restaurantId }: { restaurantId: string }) {
         setError(null);
         inputRef.current?.focus();
       } catch (err) {
-        setError(errorMessage(err, "Couldn't add the category."));
+        setError(errorMessage(err, t("addFailed")));
       }
     });
   };
@@ -81,15 +83,15 @@ function AddCategoryRow({ restaurantId }: { restaurantId: string }) {
             setName(e.target.value);
             setError(null);
           }}
-          placeholder="New category, e.g. Starters"
-          aria-label="New category name"
+          placeholder={t("newPlaceholder")}
+          aria-label={t("newLabel")}
           aria-invalid={error ? true : undefined}
           disabled={isPending}
           className="max-w-sm"
         />
         <Button type="submit" disabled={isPending}>
           <Plus className="h-4 w-4" />
-          {isPending ? "Adding…" : "Add category"}
+          {isPending ? t("adding") : t("add")}
         </Button>
       </div>
       {error && <p className="text-destructive text-sm">{error}</p>}
@@ -100,12 +102,13 @@ function AddCategoryRow({ restaurantId }: { restaurantId: string }) {
 function CategoryRow({
   category,
   restaurantId,
-  restaurantSlug,
+  basePath,
 }: {
   category: CategorySummary;
   restaurantId: string;
-  restaurantSlug: string;
+  basePath: string;
 }) {
+  const t = useTranslations("MenuEditor.categories");
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
     useSortable({ id: category.id });
 
@@ -114,7 +117,7 @@ function CategoryRow({
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const itemsHref = `/admin/restaurants/${restaurantSlug}/menu/${category.slug}`;
+  const itemsHref = `${basePath}/${category.slug}`;
 
   const cancelRename = () => {
     setIsRenaming(false);
@@ -126,7 +129,7 @@ function CategoryRow({
     e.preventDefault();
     const trimmed = draft.trim();
     if (!trimmed) {
-      setError("Name can't be empty.");
+      setError(t("nameEmpty"));
       return;
     }
     if (trimmed === category.name) {
@@ -143,7 +146,7 @@ function CategoryRow({
         setIsRenaming(false);
         setError(null);
       } catch (err) {
-        setError(errorMessage(err, "Couldn't rename the category."));
+        setError(errorMessage(err, t("renameFailed")));
       }
     });
   };
@@ -162,8 +165,8 @@ function CategoryRow({
         ref={setActivatorNodeRef}
         {...attributes}
         {...listeners}
-        aria-label={`Reorder ${category.name}`}
-        className="text-muted-foreground hover:text-foreground hover:bg-accent focus-visible:ring-ring/50 -ml-1 flex h-8 w-6 shrink-0 cursor-grab touch-none items-center justify-center rounded outline-none focus-visible:ring-[3px] active:cursor-grabbing"
+        aria-label={t("reorderLabel", { name: category.name })}
+        className="text-muted-foreground hover:text-foreground hover:bg-accent focus-visible:ring-ring/50 -ms-1 flex h-8 w-6 shrink-0 cursor-grab touch-none items-center justify-center rounded outline-none focus-visible:ring-[3px] active:cursor-grabbing"
       >
         <GripVertical className="h-4 w-4" />
       </button>
@@ -177,17 +180,17 @@ function CategoryRow({
               setError(null);
             }}
             onKeyDown={(e) => e.key === "Escape" && cancelRename()}
-            aria-label="Category name"
+            aria-label={t("nameLabel")}
             aria-invalid={error ? true : undefined}
             disabled={isPending}
             autoFocus
             className="h-8 max-w-xs"
           />
           <Button type="submit" size="sm" disabled={isPending}>
-            <Check className="h-3.5 w-3.5" /> {isPending ? "Saving…" : "Save"}
+            <Check className="h-3.5 w-3.5" /> {isPending ? t("saving") : t("save")}
           </Button>
           <Button type="button" size="sm" variant="ghost" onClick={cancelRename} disabled={isPending}>
-            Cancel
+            {t("cancel")}
           </Button>
           {error && <p className="text-destructive w-full text-sm">{error}</p>}
         </form>
@@ -197,15 +200,11 @@ function CategoryRow({
             <div className="min-w-0 flex-1">
               <p className="truncate font-medium group-hover:underline">{category.name}</p>
               <p className="text-muted-foreground text-sm">
-                {category.itemCount === 0
-                  ? "No items yet"
-                  : category.itemCount === 1
-                    ? "1 item"
-                    : `${category.itemCount} items`}
+                {t("itemCount", { count: category.itemCount })}
               </p>
             </div>
             {category.thumbnails.length > 0 && (
-              <div className="hidden -space-x-2 sm:flex" aria-hidden>
+              <div className="hidden -space-x-2 sm:flex rtl:space-x-reverse" aria-hidden>
                 {category.thumbnails.map((src) => (
                   <div key={src} className="ring-card relative h-8 w-8 overflow-hidden rounded-full ring-2">
                     <Image src={src} alt="" fill sizes="32px" className="object-cover" />
@@ -223,8 +222,8 @@ function CategoryRow({
                 setDraft(category.name);
                 setIsRenaming(true);
               }}
-              aria-label={`Rename ${category.name}`}
-              title="Rename"
+              aria-label={t("renameLabel", { name: category.name })}
+              title={t("rename")}
             >
               <Pencil className="h-4 w-4" />
             </Button>
@@ -235,8 +234,8 @@ function CategoryRow({
               restaurantId={restaurantId}
             />
             <Button variant="ghost" size="icon" asChild>
-              <Link href={itemsHref} aria-label={`Open ${category.name}`} title="Open items">
-                <ChevronRight className="h-4 w-4" />
+              <Link href={itemsHref} aria-label={t("openLabel", { name: category.name })} title={t("open")}>
+                <ChevronRight className="h-4 w-4 rtl:rotate-180" />
               </Link>
             </Button>
           </div>
@@ -248,11 +247,14 @@ function CategoryRow({
 
 interface CategoryListProps {
   restaurantId: string;
-  restaurantSlug: string;
+  // Where this restaurant's menu pages live, e.g. "/dashboard/marios/menu";
+  // a category's items are at `${basePath}/${category.slug}`.
+  basePath: string;
   categories: CategorySummary[];
 }
 
-export function CategoryList({ restaurantId, restaurantSlug, categories }: CategoryListProps) {
+export function CategoryList({ restaurantId, basePath, categories }: CategoryListProps) {
+  const t = useTranslations("MenuEditor.categories");
   const [items, setItems] = useState(categories);
   const [orderStatus, setOrderStatus] = useReorderState();
 
@@ -298,10 +300,8 @@ export function CategoryList({ restaurantId, restaurantSlug, categories }: Categ
       {items.length === 0 ? (
         <div className="border-border flex flex-col items-center rounded-xl border border-dashed px-6 py-14 text-center">
           <LayoutList className="text-muted-foreground mb-3 h-9 w-9" />
-          <p className="font-medium">No categories yet</p>
-          <p className="text-muted-foreground mt-1 max-w-sm text-sm">
-            Categories group the menu, like Starters, Mains and Drinks. Add the first one above.
-          </p>
+          <p className="font-medium">{t("emptyTitle")}</p>
+          <p className="text-muted-foreground mt-1 max-w-sm text-sm">{t("emptyText")}</p>
         </div>
       ) : (
         <div className="border-border overflow-hidden rounded-xl border shadow-sm">
@@ -313,7 +313,7 @@ export function CategoryList({ restaurantId, restaurantSlug, categories }: Categ
                     key={category.id}
                     category={category}
                     restaurantId={restaurantId}
-                    restaurantSlug={restaurantSlug}
+                    basePath={basePath}
                   />
                 ))}
               </ul>
@@ -321,11 +321,7 @@ export function CategoryList({ restaurantId, restaurantSlug, categories }: Categ
           </DndContext>
         </div>
       )}
-      {items.length > 1 && (
-        <p className="text-muted-foreground text-xs">
-          Drag the handle to change the order guests see on the menu.
-        </p>
-      )}
+      {items.length > 1 && <p className="text-muted-foreground text-xs">{t("dragHint")}</p>}
     </div>
   );
 }

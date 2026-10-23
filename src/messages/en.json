@@ -276,79 +276,6 @@
       }
     }
   },
-  "MenuItemManager": {
-    "addItemButton": "Add New Menu Item",
-    "hideFormButton": "Hide Add Item Form",
-    "emptyListMessage": "No items in this category.",
-    "item": {
-      "confirmDelete": "Are you sure you want to delete the menu item: {itemName}?"
-    },
-    "addForm": {
-      "newTitle": "New Item Details",
-      "placeholderName": "Item Name",
-      "placeholderPrice": "Price (e.g., 12.99)",
-      "placeholderDescription": "Description (optional)",
-      "placeholderIngredients": "Ingredients (optional)",
-      "labelDietaryLabels": "Dietary Labels",
-      "labelItemImage": "Item Image",
-      "imagePreviewAlt": "Image preview",
-      "createItemButton": "Create Item",
-      "processing": "Processing...",
-      "dietaryLabels": {
-        "vegan": "Vegan",
-        "vegetarian": "Vegetarian",
-        "gluten-free": "Gluten-Free",
-        "nut-free": "Nut-Free"
-      },
-      "addSuccess": "Item added successfully.",
-      "addFailedPrefix": "Failed:",
-      "addUnknownError": "An unknown error occurred."
-    },
-    "editForm": {
-      "labelName": "Name",
-      "labelPrice": "Price",
-      "labelDescription": "Description",
-      "labelIngredients": "Ingredients",
-      "labelDietaryLabels": "Dietary Labels",
-      "labelItemImage": "Item Image",
-      "placeholderPrice": "e.g., 12.99",
-      "placeholderDescription": "Short description for the menu.",
-      "placeholderIngredients": "Comma-separated list (e.g., flour, eggs, butter)",
-      "saveButton": "Save Item",
-      "saving": "Saving...",
-      "cancelButton": "Cancel",
-      "noImage": "No Image",
-      "imagePreviewAlt": "Item image preview"
-    }
-  },
-  "CategoryManager": {
-    "processing": "Processing...",
-    "addForm": {
-      "headerTitle": "Add New Category",
-      "placeholderName": "e.g., Appetizers, Main Dishes, Drinks",
-      "addButton": "Add Category"
-    },
-    "listTitle": "Existing Categories",
-    "emptyListMessage": "No categories found. Start by adding one above.",
-    "item": {
-      "itemCount": "({count} Items)",
-      "confirmDelete": "Are you sure you want to delete the category: {categoryName}?",
-      "placeholderName": "Category Name",
-      "saveButton": "Save Category",
-      "cancelButton": "Cancel"
-    },
-    "messages": {
-      "addSuccess": "Category added successfully.",
-      "addFailed": "Failed: {error}",
-      "updateSuccess": "Category updated successfully.",
-      "updateFailed": "Failed: {error}",
-      "deleteSuccess": "Category deleted successfully.",
-      "deleteFailed": "Failed: {error}"
-    },
-    "updateSuccess": "Action completed successfully.",
-    "deleteSuccess": "Category deleted successfully.",
-    "unknownError": "An unknown error occurred during submission."
-  },
   "RestaurantForm": {
     "mainTitle": "Restaurant Settings",
     
@@ -384,16 +311,6 @@
     "updateSuccess": "Restaurant details updated successfully.",
     "unknownError": "An unknown error occurred."
   },
-  "RestaurantEditor": {
-    "errorTitle": "Error Loading Menu",
-    "errorMessage": "Error: No restaurant data loaded or assigned.",
-    "titlePrefix": "Editing",
-    "backToDashboard": "Back to Dashboard",
-    "selectPage": "Select a page",
-    "detailsTab": "Restaurant Details",
-    "categoriesTab": "Categories & Items",
-    "editorNotice": "As an editor you can manage this restaurant's categories and items. Ask the owner to change the restaurant's details."
-  },
   "Dashboard": {
     "title": "Your Assigned Menus",
     "emptyTitle": "No Menus Assigned",
@@ -409,5 +326,114 @@
       "owner": "Can edit restaurant details and the menu",
       "editor": "Can edit the menu"
     }
+  },
+  "ConfirmDialog": {
+    "cancel": "Cancel",
+    "deleting": "Deleting…",
+    "typeToConfirm": "Type <b>{text}</b> to confirm"
+  },
+  "MenuEditor": {
+    "reorder": {
+      "saving": "Saving order…",
+      "saved": "Order saved",
+      "error": "Couldn't save the new order. Try again.",
+      "dismiss": "Dismiss"
+    },
+    "dietary": {
+      "vegetarian": "Vegetarian",
+      "vegan": "Vegan",
+      "glutenFree": "Gluten-free",
+      "dairyFree": "Dairy-free",
+      "nutFree": "Nut-free"
+    },
+    "categories": {
+      "newPlaceholder": "New category, e.g. Starters",
+      "newLabel": "New category name",
+      "add": "Add category",
+      "adding": "Adding…",
+      "nameRequired": "Give the category a name.",
+      "nameEmpty": "Name can't be empty.",
+      "addFailed": "Couldn't add the category.",
+      "renameFailed": "Couldn't rename the category.",
+      "reorderLabel": "Reorder {name}",
+      "nameLabel": "Category name",
+      "save": "Save",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "itemCount": "{count, plural, =0 {No items yet} one {# item} other {# items}}",
+      "rename": "Rename",
+      "renameLabel": "Rename {name}",
+      "open": "Open items",
+      "openLabel": "Open {name}",
+      "emptyTitle": "No categories yet",
+      "emptyText": "Categories group the menu, like Starters, Mains and Drinks. Add the first one above.",
+      "dragHint": "Drag the handle to change the order guests see on the menu.",
+      "deleteLabel": "Delete {name}",
+      "deleteTitle": "Delete category",
+      "deleteConfirmTitle": "Delete \"{name}\"?",
+      "deleteEmpty": "This category is empty. This can't be undone.",
+      "deleteWithItems": "{count, plural, one {This also deletes the # item in it.} other {This also deletes the # items in it.}} This can't be undone.",
+      "deleteButton": "Delete category",
+      "deleteWithItemsButton": "Delete category and items"
+    },
+    "items": {
+      "add": "Add item",
+      "emptyTitle": "No items in {category} yet",
+      "emptyText": "Add dishes or drinks with a price, and optionally a photo and description.",
+      "addFirst": "Add the first item",
+      "dragHint": "Drag the handle to change the order guests see. Click an item to edit it.",
+      "reorderLabel": "Reorder {name}",
+      "edit": "Edit",
+      "editLabel": "Edit {name}",
+      "deleteLabel": "Delete {name}",
+      "deleteTitle": "Delete item",
+      "deleteConfirmTitle": "Delete \"{name}\"?",
+      "deleteConfirmText": "It will be removed from the menu, along with its photo. This can't be undone.",
+      "deleteButton": "Delete item"
+    },
+    "itemDialog": {
+      "close": "Close",
+      "discardConfirm": "Discard your changes to this item?",
+      "editTitle": "Edit {name}",
+      "newTitle": "New item",
+      "editDescription": "In {category}.",
+      "newDescription": "Adds to {category}. Only name and price are required.",
+      "photo": "Photo",
+      "photoAlt": "Item photo",
+      "upload": "Upload photo",
+      "replace": "Replace",
+      "removePhoto": "Remove photo",
+      "uploadFailed": "Upload failed: {error}",
+      "uploading": "Uploading photo…",
+      "name": "Name",
+      "namePlaceholder": "e.g. Margherita",
+      "nameRequired": "Give the item a name.",
+      "price": "Price",
+      "priceRequired": "Add a price.",
+      "description": "Description",
+      "descriptionPlaceholder": "What makes it good, in a sentence or two.",
+      "ingredients": "Ingredients",
+      "ingredientsHint": "Separate with commas.",
+      "ingredientsPlaceholder": "Tomato, mozzarella, basil",
+      "dietaryLabels": "Dietary labels",
+      "added": "{count, plural, one {# item added} other {# items added}}",
+      "done": "Done",
+      "cancel": "Cancel",
+      "saveAndAddAnother": "Save and add another",
+      "saving": "Saving…",
+      "saveChanges": "Save changes",
+      "addItem": "Add item",
+      "saveFailed": "Couldn't save the item."
+    }
+  },
+  "DashboardRestaurant": {
+    "dashboard": "Dashboard",
+    "viewLive": "View live menu",
+    "menuTab": "Menu",
+    "detailsTab": "Details",
+    "categoriesTitle": "Categories",
+    "categoriesSummary": "{categories, plural, one {# category} other {# categories}} · {items, plural, one {# item} other {# items}}. Open a category to manage its items.",
+    "categoriesNav": "Categories",
+    "itemsSummary": "{count, plural, one {# item} other {# items}} · Prices in {currency}"
   }
 }

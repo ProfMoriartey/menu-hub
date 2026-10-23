@@ -3,7 +3,7 @@
 
 import { Button } from "~/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
+import { ConfirmDialog } from "~/components/menu-editor/ConfirmDialog";
 import type { ActionResult } from "~/lib/action-result";
 
 interface DeleteRestaurantDialogProps {
