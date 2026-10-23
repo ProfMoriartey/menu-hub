@@ -2,39 +2,66 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight, Search, Users } from "lucide-react";
+import Image from "next/image";
+import { ChevronRight, Search, ShieldCheck, Users } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { formatDate } from "~/lib/format";
 import { cn } from "~/lib/utils";
+import type { AccessLevel } from "~/lib/access";
 
 export interface UserSummary {
   id: string;
   email: string | null;
+  name: string | null;
+  imageUrl: string | null;
+  isAdmin: boolean;
   createdAt: Date;
-  restaurants: { id: string; name: string }[];
+  lastSignInAt: number | null;
+  restaurants: { id: string; name: string; accessLevel: AccessLevel }[];
 }
 
 const FILTERS = [
   { id: "all", label: "All", test: () => true },
   { id: "with-access", label: "Has access", test: (u: UserSummary) => u.restaurants.length > 0 },
-  { id: "no-access", label: "No access", test: (u: UserSummary) => u.restaurants.length === 0 },
+  { id: "no-access", label: "No access", test: (u: UserSummary) => u.restaurants.length === 0 && !u.isAdmin },
 ] as const;
 
 type FilterId = (typeof FILTERS)[number]["id"];
 
-export function UserAvatar({ email, size = "md" }: { email: string | null; size?: "md" | "lg" }) {
+export function UserAvatar({
+  user,
+  size = "md",
+}: {
+  user: Pick<UserSummary, "email" | "name" | "imageUrl">;
+  size?: "md" | "lg";
+}) {
+  const initial = (user.name ?? user.email)?.[0] ?? "?";
+  const px = size === "lg" ? 56 : 40;
+
   return (
     <div
       aria-hidden
       className={cn(
-        "bg-primary/10 text-primary flex shrink-0 items-center justify-center rounded-full font-semibold uppercase",
+        "bg-primary/10 text-primary relative flex shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold uppercase",
         size === "lg" ? "h-14 w-14 text-xl" : "h-10 w-10 text-sm",
       )}
     >
-      {email?.[0] ?? "?"}
+      {user.imageUrl ? (
+        <Image src={user.imageUrl} alt="" fill sizes={`${px}px`} className="object-cover" />
+      ) : (
+        initial
+      )}
     </div>
+  );
+}
+
+export function AdminBadge() {
+  return (
+    <span className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium">
+      <ShieldCheck className="h-3 w-3" /> Admin
+    </span>
   );
 }
 
@@ -44,9 +71,8 @@ export function UserList({ users }: { users: UserSummary[] }) {
 
   const term = query.trim().toLowerCase();
   const searched = term
-    ? users.filter(
-        (user) =>
-          user.email?.toLowerCase().includes(term) ?? user.id.toLowerCase().includes(term),
+    ? users.filter((user) =>
+        [user.email, user.name, user.id].some((value) => value?.toLowerCase().includes(term)),
       )
     : users;
   const activeFilter = FILTERS.find((f) => f.id === filter)!;
@@ -71,8 +97,8 @@ export function UserList({ users }: { users: UserSummary[] }) {
           <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <Input
             type="search"
-            placeholder="Search by email…"
-            aria-label="Search users by email"
+            placeholder="Search by email or name…"
+            aria-label="Search users by email or name"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="pl-9"
@@ -132,24 +158,37 @@ export function UserList({ users }: { users: UserSummary[] }) {
                   href={`/admin/users/${user.id}`}
                   className="hover:bg-accent/40 focus-visible:bg-accent/40 flex items-center gap-4 px-4 py-3 outline-none sm:px-5"
                 >
-                  <UserAvatar email={user.email} />
+                  <UserAvatar user={user} />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">{user.email ?? "No email on file"}</p>
-                    <p className="text-muted-foreground text-xs">Joined {formatDate(user.createdAt)}</p>
+                    <div className="flex min-w-0 items-center gap-2">
+                      <p className="truncate font-medium">{user.name ?? user.email ?? "No email on file"}</p>
+                      {user.isAdmin && <AdminBadge />}
+                    </div>
+                    <p className="text-muted-foreground truncate text-xs">
+                      {user.name && user.email ? `${user.email} · ` : ""}
+                      {user.lastSignInAt
+                        ? `Last sign-in ${formatDate(new Date(user.lastSignInAt))}`
+                        : `Joined ${formatDate(user.createdAt)}`}
+                    </p>
                   </div>
                   <div className="hidden min-w-0 flex-wrap justify-end gap-1.5 sm:flex">
                     {user.restaurants.length === 0 ? (
-                      <span className="bg-attention/15 text-foreground rounded-full px-2.5 py-0.5 text-xs font-medium">
-                        No access yet
-                      </span>
+                      !user.isAdmin && (
+                        <span className="bg-attention/15 text-foreground rounded-full px-2.5 py-0.5 text-xs font-medium">
+                          No access yet
+                        </span>
+                      )
                     ) : (
                       <>
                         {shown.map((r) => (
                           <span
                             key={r.id}
-                            className="bg-muted text-foreground max-w-40 truncate rounded-full px-2.5 py-0.5 text-xs font-medium"
+                            className="bg-muted text-foreground inline-flex max-w-48 items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
                           >
-                            {r.name}
+                            <span className="truncate">{r.name}</span>
+                            <span className="text-muted-foreground font-normal">
+                              · {r.accessLevel === "owner" ? "Owner" : "Editor"}
+                            </span>
                           </span>
                         ))}
                         {more > 0 && (

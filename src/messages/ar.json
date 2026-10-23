@@ -355,6 +355,7 @@
     "labelCountry": "البلد",
     "labelCurrency": "رمز العملة",
     "labelPhoneNumber": "رقم الهاتف",
+    "labelMapUrl": "رابط الخريطة",
     "labelAddress": "العنوان",
     "labelShortDescription": "وصف مختصر",
     "labelTypeOfEstablishment": "نوع المنشأة",
@@ -385,7 +386,8 @@
     "backToDashboard": "العودة إلى لوحة التحكم",
     "selectPage": "اختر صفحة",
     "detailsTab": "تفاصيل المطعم",
-    "categoriesTab": "الفئات والأصناف"
+    "categoriesTab": "الفئات والأصناف",
+    "editorNotice": "بصفتك محررًا، يمكنك إدارة فئات هذا المطعم وأصنافه. اطلب من مالك المطعم تغيير تفاصيل المطعم."
   },
   "Dashboard": {
     "title": "قوائمك المُعيّنة",
@@ -397,6 +399,10 @@
       "editor": "محرر",
       "owner": "مالك",
       "viewer": "مشاهد"
+    },
+    "accessLevelHints": {
+      "owner": "يمكنه تعديل تفاصيل المطعم والقائمة",
+      "editor": "يمكنه تعديل القائمة"
     }
   }
 }

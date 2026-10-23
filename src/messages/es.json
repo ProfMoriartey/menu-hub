@@ -355,6 +355,7 @@
     "labelCountry": "País",
     "labelCurrency": "Código de moneda",
     "labelPhoneNumber": "Número de teléfono",
+    "labelMapUrl": "Enlace del mapa",
     "labelAddress": "Dirección",
     "labelShortDescription": "Descripción corta",
     "labelTypeOfEstablishment": "Tipo de establecimiento",
@@ -385,7 +386,8 @@
     "backToDashboard": "Volver al panel de control",
     "selectPage": "Seleccionar una página",
     "detailsTab": "Detalles del restaurante",
-    "categoriesTab": "Categorías y artículos"
+    "categoriesTab": "Categorías y artículos",
+    "editorNotice": "Como editor, puedes gestionar las categorías y los platos de este restaurante. Pide al propietario que cambie los datos del restaurante."
   },
   "Dashboard": {
     "title": "Sus Menús Asignados",
@@ -397,6 +399,10 @@
       "editor": "Editor",
       "owner": "Propietario",
       "viewer": "Visualizador"
+    },
+    "accessLevelHints": {
+      "owner": "Puede editar los datos del restaurante y el menú",
+      "editor": "Puede editar el menú"
     }
   }
 }

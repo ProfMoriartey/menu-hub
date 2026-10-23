@@ -2,6 +2,8 @@
 
 import { db } from "~/server/db";
 import { type Metadata } from "next";
+import { getClerkProfiles } from "~/server/clerk-profiles";
+import { toAccessLevel } from "~/lib/access";
 import { UserList, type UserSummary } from "~/components/admin/UserList";
 
 export const metadata: Metadata = {
@@ -19,16 +21,25 @@ export default async function AdminUsersPage() {
     },
   });
 
-  const users: UserSummary[] = rows.map((user) => ({
-    id: user.id,
-    email: user.email,
-    createdAt: user.createdAt,
-    restaurants: user.usersToRestaurants
-      .map((link) => link.restaurant)
-      .sort((a, b) => a.name.localeCompare(b.name)),
-  }));
+  const profiles = await getClerkProfiles(rows.map((user) => user.id));
 
-  const withoutAccess = users.filter((u) => u.restaurants.length === 0).length;
+  const users: UserSummary[] = rows.map((user) => {
+    const profile = profiles.get(user.id);
+    return {
+      id: user.id,
+      email: user.email ?? profile?.email ?? null,
+      name: profile?.name ?? null,
+      imageUrl: profile?.imageUrl ?? null,
+      isAdmin: profile?.isAdmin ?? false,
+      createdAt: user.createdAt,
+      lastSignInAt: profile?.lastSignInAt ?? null,
+      restaurants: user.usersToRestaurants
+        .map((link) => ({ ...link.restaurant, accessLevel: toAccessLevel(link.accessLevel) }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    };
+  });
+
+  const withoutAccess = users.filter((u) => u.restaurants.length === 0 && !u.isAdmin).length;
 
   return (
     <div className="space-y-8">

@@ -5,7 +5,8 @@ import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { checkAuthorization, isSystemAdmin } from "~/app/actions/auth";
+import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
+import type { RestaurantRole } from "~/lib/access";
 
 // 🛑 ADDED: Import the exported types directly from your schema
 import { restaurantSchema, type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
@@ -165,17 +166,18 @@ export async function deleteRestaurant(restaurantId: string) {
 
 export async function updateRestaurant(formData: FormData) {
   const restaurantId = getStringValue(formData, "id")!;
-  
+
+  let role: RestaurantRole;
   try {
     if (!restaurantId) {
       throw new Error("400: Restaurant ID is required for authorization.");
     }
-    await checkAuthorization(restaurantId);
+    role = await checkOwnerAuthorization(restaurantId);
   } catch (error) {
     throw new Error(`Unauthorized: ${error instanceof Error ? error.message : "Access denied."}`);
   }
 
-  const rawData = {
+  const submitted = {
     id: getStringValue(formData, "id"),
     name: getStringValue(formData, "name"),
     slug: getStringValue(formData, "slug"),
@@ -200,7 +202,32 @@ export async function updateRestaurant(formData: FormData) {
     metaDescription: getStringValue(formData, "metaDescription"),
     ogImage: getStringValue(formData, "ogImage"),
   };
- 
+
+  // Owners edit what their dashboard shows (name, address, contact, logo,
+  // links). The slug, visibility, theme, cuisine and SEO settings stay
+  // admin-only, whatever the request contains.
+  let rawData = submitted;
+  if (role !== "admin") {
+    const current = await db.query.restaurants.findFirst({
+      where: eq(restaurants.id, restaurantId),
+      columns: {
+        slug: true,
+        isActive: true,
+        isDisplayed: true,
+        currency: true,
+        theme: true,
+        typeOfEstablishment: true,
+        country: true,
+        foodType: true,
+        metaTitle: true,
+        metaDescription: true,
+        ogImage: true,
+      },
+    });
+    if (!current) throw new Error("Restaurant not found.");
+    rawData = { ...submitted, ...current };
+  }
+
   const parsedRawData = {
     ...rawData,
     currency: rawData.currency ?? "USD",

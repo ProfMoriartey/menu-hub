@@ -4,6 +4,7 @@
 import { db } from '~/server/db';
 import { usersToRestaurants } from '~/server/db/schema';
 import { isSystemAdmin } from '~/app/actions/auth';
+import { ACCESS_LEVELS, type AccessLevel } from '~/lib/access';
 
 import { revalidatePath } from 'next/cache';
 import { and, eq } from 'drizzle-orm';
@@ -14,9 +15,22 @@ async function requireAdmin() {
   }
 }
 
+function requireAccessLevel(value: string): AccessLevel {
+  if (!(ACCESS_LEVELS as readonly string[]).includes(value)) {
+    throw new Error('Unknown access level.');
+  }
+  return value as AccessLevel;
+}
+
 // Errors are thrown so the admin page can show them next to the action.
-export async function assignRestaurantToUser(clerkUserId: string, restaurantId: string) {
+// Assigning an existing pair updates its access level instead.
+export async function assignRestaurantToUser(
+  clerkUserId: string,
+  restaurantId: string,
+  accessLevel: string,
+) {
   await requireAdmin();
+  const level = requireAccessLevel(accessLevel);
 
   if (!clerkUserId || !restaurantId) {
     throw new Error('Pick a restaurant to give access to.');
@@ -27,12 +41,11 @@ export async function assignRestaurantToUser(clerkUserId: string, restaurantId: 
       .values({
         userId: clerkUserId,
         restaurantId: restaurantId,
-        accessLevel: 'editor', // Default access
+        accessLevel: level,
       })
-      // Use onConflictDoUpdate to handle cases where a user is already assigned
       .onConflictDoUpdate({
         target: [usersToRestaurants.userId, usersToRestaurants.restaurantId],
-        set: { accessLevel: 'editor' },
+        set: { accessLevel: level },
       });
   } catch (error) {
     console.error('Assignment error:', error);

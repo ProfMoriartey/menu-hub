@@ -17,11 +17,13 @@ import { Link } from "~/i18n/navigation";
 
 interface RestaurantEditorProps {
   initialRestaurantData: Restaurant;
+  // Owners and admins; editors manage the menu only.
+  canEditDetails: boolean;
 }
 
 // --- TAB DATA (Use translation keys for names) ---
 // Note: We use t() dynamically on the name property in the map function below.
-const tabIds = [
+const allTabs = [
   { id: "details", key: "detailsTab" },
   { id: "categories", key: "categoriesTab" },
 ];
@@ -29,8 +31,10 @@ const tabIds = [
 // --- MAIN COMPONENT ---
 export default function RestaurantEditor({
   initialRestaurantData,
+  canEditDetails,
 }: RestaurantEditorProps) {
   const t = useTranslations("RestaurantEditor");
+  const tabIds = canEditDetails ? allTabs : allTabs.filter((tab) => tab.id !== "details");
 
   const [activeTab, setActiveTab] = useState<"details" | "categories">(
     "categories",
@@ -129,7 +133,13 @@ export default function RestaurantEditor({
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
-            {activeTab === "details" && (
+            {!canEditDetails && (
+              <p className="bg-muted text-muted-foreground mb-6 rounded-lg px-4 py-3 text-sm">
+                {t("editorNotice")}
+              </p>
+            )}
+
+            {activeTab === "details" && canEditDetails && (
               <RestaurantDetailsForm restaurant={initialRestaurantData} />
             )}
 

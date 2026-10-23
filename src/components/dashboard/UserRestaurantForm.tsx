@@ -129,7 +129,7 @@ export function UserRestaurantForm({
           </div>
 
           <div className="pt-2">
-            <Label className="mb-2 block">{t("labelLogo")}</Label>
+            <Label className="mb-2 block">{t("labelRestaurantLogo")}</Label>
             {currentLogoUrl ? (
               <div className="relative h-24 w-24 overflow-hidden rounded-md border">
                 <CustomImage src={currentLogoUrl} alt="Logo" />

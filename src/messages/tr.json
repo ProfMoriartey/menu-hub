@@ -355,6 +355,7 @@
     "labelCountry": "Ülke",
     "labelCurrency": "Para Birimi Kodu",
     "labelPhoneNumber": "Telefon Numarası",
+    "labelMapUrl": "Harita Bağlantısı",
     "labelAddress": "Adres",
     "labelShortDescription": "Kısa Açıklama",
     "labelTypeOfEstablishment": "Kuruluş Türü",
@@ -385,7 +386,8 @@
     "backToDashboard": "Kontrol Paneline Geri Dön",
     "selectPage": "Bir sayfa seçin",
     "detailsTab": "Restoran Detayları",
-    "categoriesTab": "Kategoriler ve Öğeler"
+    "categoriesTab": "Kategoriler ve Öğeler",
+    "editorNotice": "Düzenleyici olarak bu restoranın kategorilerini ve ürünlerini yönetebilirsiniz. Restoran bilgilerini değiştirmek için restoran sahibine başvurun."
   },
   "Dashboard": {
     "title": "Atanmış Menüleriniz",
@@ -397,6 +399,10 @@
       "editor": "Düzenleyici",
       "owner": "Sahip",
       "viewer": "Görüntüleyici"
+    },
+    "accessLevelHints": {
+      "owner": "Restoran bilgilerini ve menüyü düzenleyebilir",
+      "editor": "Menüyü düzenleyebilir"
     }
   }
 }
