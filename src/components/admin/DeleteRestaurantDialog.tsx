@@ -30,14 +30,16 @@ export function DeleteRestaurantDialog({
           <Trash2 className="h-4 w-4" />
         </Button>
       }
-      title="Are you sure?"
+      title={`Delete ${restaurantName}?`}
       description={
         <>
-          This will permanently delete{" "}
-          <strong className="text-foreground">{restaurantName}</strong> and all its data.
+          This permanently deletes <strong className="text-foreground">{restaurantName}</strong>,
+          its whole menu, all its photos and everyone&apos;s access to it. Its public page stops
+          working. This can&apos;t be undone.
         </>
       }
-      confirmLabel="Delete"
+      confirmLabel="Delete restaurant"
+      confirmText={restaurantName}
       onConfirm={() => deleteRestaurantAction(restaurantId)}
     />
   );

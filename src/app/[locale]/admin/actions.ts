@@ -50,7 +50,7 @@ export async function assignRestaurantToUser(
         set: { accessLevel: level },
       });
 
-    revalidatePath('/[locale]/admin/users', 'layout');
+    revalidatePath('/[locale]/admin', 'layout');
   });
 }
 
@@ -73,7 +73,7 @@ export async function revokeRestaurantAccess(
         )
       );
 
-    revalidatePath('/[locale]/admin/users', 'layout');
+    revalidatePath('/[locale]/admin', 'layout');
   });
 }
 

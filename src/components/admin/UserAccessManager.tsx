@@ -48,7 +48,7 @@ export type AssignedRestaurant = AccessRestaurant & { accessLevel: AccessLevel }
 const errorMessage = (error: unknown, fallback: string) =>
   error instanceof Error ? error.message : fallback;
 
-function RoleSelect({
+export function RoleSelect({
   value,
   onChange,
   disabled,
