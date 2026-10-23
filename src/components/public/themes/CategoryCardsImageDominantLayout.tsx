@@ -8,10 +8,9 @@ import { useTranslations } from "next-intl";
 
 import { ChevronLeft, UtensilsCrossed } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { motion } from "framer-motion";
 import { cn } from "~/lib/utils";
 
-import { categorySectionId } from "~/components/public/CategoryNav";
+import { categorySectionId } from "~/lib/category-section";
 import { DietaryBadges } from "~/components/public/MenuItemCard";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
 import type { PublicMenuData } from "~/components/public/menu-types";
@@ -51,11 +50,7 @@ export function CategoryCardsImageDominantLayout({
   if (selectedCategory) {
     return (
       <div className="space-y-6">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
-        >
+        <div>
           <Button
             variant="outline"
             className="bg-background text-foreground border-border mb-6"
@@ -64,21 +59,17 @@ export function CategoryCardsImageDominantLayout({
             <ChevronLeft className="h-4 w-4 rtl:rotate-180" aria-hidden />
             {t("allCategories")}
           </Button>
-        </motion.div>
+        </div>
 
         <h2 className="text-foreground mb-4 text-3xl font-semibold">
           {selectedCategory.name}
         </h2>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {selectedCategory.menuItems.map((item, itemIndex) => (
-            <motion.div
+          {selectedCategory.menuItems.map((item) => (
+            <div
               key={item.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: itemIndex * 0.05, duration: 0.3 }}
-              whileHover={{ scale: 1.02 }}
-              className="block h-full"
+              className="block h-full transition-transform duration-200 motion-safe:hover:scale-[1.02]"
             >
               <Link
                 href={`/${menuData.restaurant.slug}/item/${item.slug}`}
@@ -119,7 +110,7 @@ export function CategoryCardsImageDominantLayout({
                   </p>
                 </div>
               </Link>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
@@ -128,19 +119,15 @@ export function CategoryCardsImageDominantLayout({
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {menuData.categories.map((category, categoryIndex) => {
+      {menuData.categories.map((category) => {
         const coverUrl = category.menuItems.find(
           (item) => item.imageUrl,
         )?.imageUrl;
 
         return (
-          <motion.div
+          <div
             key={category.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: categoryIndex * 0.1, duration: 0.5 }}
-            whileHover={{ scale: 1.03 }}
-            className="block"
+            className="block transition-transform duration-200 motion-safe:hover:scale-[1.03]"
           >
             <button
               type="button"
@@ -177,7 +164,7 @@ export function CategoryCardsImageDominantLayout({
                 </p>
               </div>
             </button>
-          </motion.div>
+          </div>
         );
       })}
     </div>

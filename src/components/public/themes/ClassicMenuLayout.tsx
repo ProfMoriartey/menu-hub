@@ -3,9 +3,9 @@
 
 import {
   CategoryNav,
-  categorySectionId,
   useCategoryScrollSpy,
 } from "~/components/public/CategoryNav";
+import { categorySectionId } from "~/lib/category-section";
 import { MenuItemCard } from "~/components/public/MenuItemCard";
 import type { PublicMenuData } from "~/components/public/menu-types";
 

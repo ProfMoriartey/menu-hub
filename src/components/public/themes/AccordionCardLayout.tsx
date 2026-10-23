@@ -5,10 +5,9 @@ import { useState } from "react";
 import { Link } from "~/i18n/navigation";
 import Image from "next/image";
 
-import { motion } from "framer-motion";
 import { cn } from "~/lib/utils";
 
-import { categorySectionId } from "~/components/public/CategoryNav";
+import { categorySectionId } from "~/lib/category-section";
 import { DietaryBadges } from "~/components/public/MenuItemCard";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
 import type { PublicMenuData } from "~/components/public/menu-types";
@@ -53,13 +52,10 @@ export function AccordionCardLayout({
         {...accordionProps}
         className="w-full"
       >
-        {menuData.categories.map((category, categoryIndex) => (
-          <motion.div
+        {menuData.categories.map((category) => (
+          <div
             key={category.id}
             id={categorySectionId(category.slug)}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: categoryIndex * 0.1, duration: 0.5 }}
             className="mb-4 scroll-mt-4"
           >
             <AccordionItem
@@ -71,14 +67,10 @@ export function AccordionCardLayout({
               </AccordionTrigger>
               <AccordionContent className="p-4 pt-0">
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {category.menuItems.map((item, itemIndex) => (
-                    <motion.div
+                  {category.menuItems.map((item) => (
+                    <div
                       key={item.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: itemIndex * 0.05, duration: 0.3 }}
-                      whileHover={{ scale: 1.02 }}
-                      className="block"
+                      className="block transition-transform duration-200 motion-safe:hover:scale-[1.02]"
                     >
                       <Link
                         href={`/${menuData.restaurant.slug}/item/${item.slug}`}
@@ -115,12 +107,12 @@ export function AccordionCardLayout({
                           <SoldOutBadge availability={item.availability} />
                         </p>
                       </Link>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </AccordionContent>
             </AccordionItem>
-          </motion.div>
+          </div>
         ))}
       </Accordion>
     </div>

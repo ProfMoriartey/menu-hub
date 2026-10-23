@@ -1,52 +1,35 @@
-// src/components/public/MenuItemDisplayClient.tsx
-"use client";
-
+// src/components/public/MenuItemDetail.tsx
 import { Link } from "~/i18n/navigation";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { categorySectionId } from "~/components/public/CategoryNav";
+import { categorySectionId } from "~/lib/category-section";
 import { DietaryBadges } from "~/components/public/MenuItemCard";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
 import { PublicPageControls } from "~/components/public/PublicPageControls";
-import type { MenuItem, Category } from "~/types/restaurant";
 
-interface RestaurantForMenuItemDisplay {
-  id: string;
-  name: string;
-  slug: string;
-  currency: string;
-  theme: string | null;
+import type { PublicMenuItem } from "~/components/public/menu-types";
+import type { Category, Restaurant } from "~/types/restaurant";
+
+interface MenuItemDetailProps {
+  item: PublicMenuItem & { category: Pick<Category, "name" | "slug"> };
+  restaurant: Pick<Restaurant, "name" | "slug" | "theme">;
 }
 
-interface MenuItemDisplayClientProps {
-  item: MenuItem & {
-    restaurant: RestaurantForMenuItemDisplay;
-    category: Category;
-  };
-  // Formatted on the server for the guest's language (lib/format-price).
-  displayPrice: string;
-  restaurantSlug: string;
-  theme: string;
-}
-
-export function MenuItemDisplayClient({
-  item,
-  displayPrice,
-  restaurantSlug,
-  theme,
-}: MenuItemDisplayClientProps) {
+// A single item's page. Rendered on the server: nothing on it needs to run in
+// the browser except the language and theme switches.
+export function MenuItemDetail({ item, restaurant }: MenuItemDetailProps) {
   const t = useTranslations("menuItemDetailPage");
   // Back to the item's own category, not the top of the menu.
-  const menuHref = `/${restaurantSlug}#${categorySectionId(item.category.slug)}`;
+  const menuHref = `/${restaurant.slug}#${categorySectionId(item.category.slug)}`;
 
   return (
     <div
       className={cn(
         "bg-background text-foreground min-h-screen",
-        `theme-${theme}`,
+        `theme-${restaurant.theme ?? "default"}`,
       )}
     >
       <div className="container mx-auto max-w-3xl px-4 py-4 sm:py-8">
@@ -78,10 +61,10 @@ export function MenuItemDisplayClient({
             <div>
               <p className="text-muted-foreground text-sm font-medium">
                 <Link
-                  href={`/${restaurantSlug}`}
+                  href={`/${restaurant.slug}`}
                   className="hover:text-foreground hover:underline"
                 >
-                  {item.restaurant.name}
+                  {restaurant.name}
                 </Link>
                 <span aria-hidden> · </span>
                 <Link
@@ -97,7 +80,7 @@ export function MenuItemDisplayClient({
             </div>
 
             <p className="text-primary text-2xl font-bold">
-              {displayPrice}
+              {item.displayPrice}
               <SoldOutBadge availability={item.availability} />
             </p>
 

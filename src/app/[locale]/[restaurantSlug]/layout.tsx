@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { redirect } from "~/i18n/navigation";
 import { getLocale } from "next-intl/server";
-import { getRestaurantBySlug } from "~/server/queries";
+import { getRestaurantBySlug } from "~/server/public-menu";
 import { getRestaurantRole } from "~/app/actions/auth";
 import { PreviewBanner } from "~/components/public/PreviewBanner";
 

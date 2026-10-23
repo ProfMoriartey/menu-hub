@@ -1,13 +1,14 @@
 // app/[restaurantSlug]/item/[itemSlug]/page.tsx
 import { db } from "~/server/db";
-import { menuItems, restaurants } from "~/server/db/schema";
-import { and, eq, ne } from "drizzle-orm";
+import { menuItems } from "~/server/db/schema";
+import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { permanentRedirect } from "~/i18n/navigation";
 import { isUuid } from "~/lib/slug";
 import { formatPrice } from "~/lib/format-price";
-import { MenuItemDisplayClient } from "~/components/public/MenuItemDisplayClient";
+import { getPublicMenuItem, getRestaurantBySlug } from "~/server/public-menu";
+import { MenuItemDetail } from "~/components/public/MenuItemDetail";
 
 interface PageProps {
   params: Promise<{
@@ -22,30 +23,21 @@ interface PageProps {
 export default async function MenuItemDetailPage({ params }: PageProps) {
   const { restaurantSlug, itemSlug } = await params;
 
-  const restaurant = await db.query.restaurants.findFirst({
-    where: eq(restaurants.slug, restaurantSlug),
-    columns: { id: true },
-  });
+  const restaurant = await getRestaurantBySlug(restaurantSlug);
   if (!restaurant) notFound();
 
   // Hidden items have no public page; sold-out ones do, marked as such.
-  const itemDetails = await db.query.menuItems.findFirst({
-    where: and(
-      eq(menuItems.restaurantId, restaurant.id),
-      eq(menuItems.slug, itemSlug),
-      ne(menuItems.availability, "hidden"),
-    ),
-    with: {
-      restaurant: true,
-      category: true,
-    },
-  });
+  const item = await getPublicMenuItem(restaurant.id, itemSlug);
 
-  if (!itemDetails) {
+  if (!item) {
     // Item links used to end in the item's id; send those to the slug URL.
+    // Rare, so this lookup isn't cached.
     if (isUuid(itemSlug)) {
       const legacy = await db.query.menuItems.findFirst({
-        where: and(eq(menuItems.restaurantId, restaurant.id), eq(menuItems.id, itemSlug)),
+        where: and(
+          eq(menuItems.restaurantId, restaurant.id),
+          eq(menuItems.id, itemSlug),
+        ),
         columns: { slug: true },
       });
       if (legacy) {
@@ -58,17 +50,17 @@ export default async function MenuItemDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  // The item view brings its own layout: back link, photo and details.
   return (
-    <MenuItemDisplayClient
-      item={itemDetails}
-      displayPrice={formatPrice(
-        itemDetails.price,
-        itemDetails.restaurant.currency,
-        await getLocale(),
-      )}
-      restaurantSlug={restaurantSlug}
-      theme={itemDetails.restaurant.theme ?? "default"}
+    <MenuItemDetail
+      item={{
+        ...item,
+        displayPrice: formatPrice(
+          item.price,
+          restaurant.currency,
+          await getLocale(),
+        ),
+      }}
+      restaurant={restaurant}
     />
   );
 }

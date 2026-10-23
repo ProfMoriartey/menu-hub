@@ -1,11 +1,8 @@
 // app/[restaurantSlug]/page.tsx
-import { db } from "~/server/db";
-import { categories, menuItems } from "~/server/db/schema";
-import { getRestaurantBySlug } from "~/server/queries";
-import { and, eq, ne } from "drizzle-orm";
+import { getPublicMenu, getRestaurantBySlug } from "~/server/public-menu";
 import { notFound } from "next/navigation";
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
-import type { Restaurant, MenuItem } from "~/types/restaurant";
+import type { MenuItem } from "~/types/restaurant";
 import type { PublicMenuData } from "~/components/public/menu-types";
 import { formatPrice } from "~/lib/format-price";
 import type { SocialMediaLinks } from "~/lib/schemas";
@@ -39,29 +36,15 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
     notFound();
   }
 
-  // Cast JSON fields appropriately
+  // The JSON column is untyped in the database schema.
   const restaurantDetails = {
     ...rawData,
-    categories: [],
-    socialMedia: rawData.socialMedia as SocialMediaLinks,
-  } as Restaurant;
-
-  const categoriesWithMenuItems = await db.query.categories.findMany({
-    where: eq(categories.restaurantId, restaurantDetails.id),
-    orderBy: (categories, { asc }) => [asc(categories.order)],
-    with: {
-      menuItems: {
-        // Hidden items aren't on the public menu; sold-out ones are, marked.
-        where: and(
-          eq(menuItems.restaurantId, restaurantDetails.id),
-          ne(menuItems.availability, "hidden"),
-        ),
-        orderBy: (menuItems, { asc }) => [asc(menuItems.order)],
-      },
-    },
-  });
+    socialMedia: rawData.socialMedia as SocialMediaLinks | null,
+  };
 
   const locale = await getLocale();
+  const menu = await getPublicMenu(restaurantDetails.id);
+
   // Sold-out items stay on the menu but move after everything still
   // available; otherwise the owner's order is kept.
   const availableFirst = (item: { availability: MenuItem["availability"] }) =>
@@ -76,33 +59,15 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
       description: restaurantDetails.description,
     },
     // Guests only see categories that have something in them.
-    categories: categoriesWithMenuItems
-      .filter((cat) => cat.menuItems.length > 0)
-      .map((cat) => ({
-        id: cat.id,
-        name: cat.name,
-        slug: cat.slug,
-        order: cat.order,
-        restaurantId: cat.restaurantId,
-        createdAt: cat.createdAt,
-        updatedAt: cat.updatedAt,
-        menuItems: [...cat.menuItems]
+    categories: menu
+      .filter((category) => category.menuItems.length > 0)
+      .map((category) => ({
+        ...category,
+        menuItems: [...category.menuItems]
           .sort((x, y) => availableFirst(x) - availableFirst(y))
           .map((item) => ({
-            id: item.id,
-            name: item.name,
-            slug: item.slug,
-            description: item.description,
-            price: item.price,
+            ...item,
             displayPrice: formatPrice(item.price, restaurantDetails.currency, locale),
-            ingredients: item.ingredients,
-            dietaryLabels: item.dietaryLabels,
-            availability: item.availability,
-            imageUrl: item.imageUrl,
-            createdAt: item.createdAt,
-            updatedAt: item.updatedAt,
-            restaurantId: item.restaurantId,
-            categoryId: item.categoryId,
           })),
       })),
   };

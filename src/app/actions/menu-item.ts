@@ -3,7 +3,7 @@
 
 import { db } from "~/server/db";
 import { categories, menuItems } from "~/server/db/schema";
-import { revalidatePath } from "next/cache";
+import { revalidatePublicMenu } from "~/server/public-menu";
 import { and, eq, gt, sql } from "drizzle-orm";
 import { getTranslations } from "next-intl/server";
 import { checkAuthorization } from "~/app/actions/auth";
@@ -68,9 +68,6 @@ async function nextItemOrder(categoryId: string) {
   return (row?.max ?? -1) + 1;
 }
 
-// Menus appear on public pages, the dashboard and the admin panel.
-const revalidateMenuPages = () => revalidatePath("/[locale]", "layout");
-
 export async function addMenuItem(formData: FormData): Promise<ActionResult> {
   return runAction("addItemFailed", async () => {
     const restaurantId = getStringValue(formData, "restaurantId");
@@ -101,7 +98,7 @@ export async function addMenuItem(formData: FormData): Promise<ActionResult> {
       order: await nextItemOrder(validatedData.categoryId),
     });
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
   });
 }
 
@@ -172,7 +169,7 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
       await deleteUploadedFiles([existingItem.imageUrl]);
     }
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
   });
 }
 
@@ -198,7 +195,7 @@ export async function deleteMenuItem(
 
     await deleteUploadedFiles([existingItem.imageUrl]);
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
   });
 }
 
@@ -252,7 +249,7 @@ export async function duplicateMenuItem(
       return row!;
     });
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
     return copy;
   });
 }
@@ -281,7 +278,7 @@ export async function setMenuItemAvailability(
       .returning({ id: menuItems.id });
     if (!updated) throw new ActionError("itemNotFound");
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
   });
 }
 
@@ -303,6 +300,6 @@ export async function updateMenuItemOrder(
       );
     });
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
   });
 }

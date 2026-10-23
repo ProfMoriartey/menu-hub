@@ -4,12 +4,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "~/lib/utils";
+import { categorySectionId } from "~/lib/category-section";
 
 import type { Category } from "~/types/restaurant";
 
-// Every category is a section on one scrolling page; its element id is built
-// from the slug so item pages can link back to the right place.
-export const categorySectionId = (slug: string) => `category-${slug}`;
 
 // How far below the top of the screen a section's heading must be scrolled
 // before it counts as the one being read. Clears the sticky category bar.

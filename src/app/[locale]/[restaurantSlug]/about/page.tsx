@@ -1,5 +1,5 @@
 // app/[locale]/(public)/[restaurantSlug]/about/page.tsx
-import { getRestaurantBySlug } from "~/server/queries"
+import { getRestaurantBySlug } from "~/server/public-menu"
 import { notFound } from "next/navigation"
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo"
 import { Link } from "~/i18n/navigation"
@@ -11,7 +11,6 @@ import {
 import { cn } from "~/lib/utils"
 import { getTranslations } from "next-intl/server"
 
-import type { Restaurant } from "~/types/restaurant"
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"
 import { DeliveryOptionsDialog } from "~/components/public/DeliveryOptionsDialog"
 import { PublicPageControls } from "~/components/public/PublicPageControls"
@@ -33,12 +32,12 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
     notFound()
   }
 
+  // The JSON columns are untyped in the database schema.
   const restaurantDetails = {
     ...rawData,
-    categories: [],
-    socialMedia: rawData.socialMedia as SocialMediaLinks,
-    deliveryApps: rawData.deliveryApps as DeliveryAppLinks,
-  } as Restaurant
+    socialMedia: rawData.socialMedia as SocialMediaLinks | null,
+    deliveryApps: rawData.deliveryApps as DeliveryAppLinks | null,
+  }
 
   const socials = restaurantDetails.socialMedia ?? ({} as SocialMediaLinks)
   const deliveryApps = restaurantDetails.deliveryApps ?? ({} as DeliveryAppLinks)
