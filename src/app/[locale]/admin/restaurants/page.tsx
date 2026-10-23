@@ -1,12 +1,10 @@
 // app/admin/restaurants/page.tsx
+import { Plus } from "lucide-react";
 import { db } from "~/server/db";
+import { Link } from "~/i18n/navigation";
+import { Button } from "~/components/ui/button";
 import { RestaurantManagementClient } from "~/components/admin/RestaurantManagementClient";
-import {
-  addRestaurant,
-  deleteRestaurant,
-  updateRestaurant,
-} from "~/app/actions/restaurant";
-import { cn } from "~/lib/utils";
+import { deleteRestaurant } from "~/app/actions/restaurant";
 import { type Restaurant } from "~/types/restaurant";
 import { type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
 
@@ -25,16 +23,26 @@ export default async function AdminRestaurantsPage() {
     deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
   }));
 
+  const activeCount = allRestaurants.filter((r) => r.isActive).length;
+
   return (
     <div className="space-y-8">
-      <h1 className={cn("text-3xl font-bold", "text-foreground")}>
-        Manage Restaurants
-      </h1>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-foreground text-3xl font-bold tracking-tight">Restaurants</h1>
+          <p className="text-muted-foreground mt-1">
+            {allRestaurants.length} total · {activeCount} active
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/restaurants/new">
+            <Plus className="h-4 w-4" /> New restaurant
+          </Link>
+        </Button>
+      </div>
       <RestaurantManagementClient
         initialRestaurants={allRestaurants}
-        addRestaurantAction={addRestaurant}
         deleteRestaurantAction={deleteRestaurant}
-        updateRestaurantAction={updateRestaurant}
       />
     </div>
   );
