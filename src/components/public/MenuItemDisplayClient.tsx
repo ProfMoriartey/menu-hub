@@ -10,7 +10,7 @@ import { cn } from "~/lib/utils";
 import { categorySectionId } from "~/components/public/CategoryNav";
 import { DietaryBadges } from "~/components/public/MenuItemCard";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
-import { ThemeToggle } from "~/components/shared/ThemeToggle";
+import { PublicPageControls } from "~/components/public/PublicPageControls";
 import type { MenuItem, Category } from "~/types/restaurant";
 
 interface RestaurantForMenuItemDisplay {
@@ -26,12 +26,15 @@ interface MenuItemDisplayClientProps {
     restaurant: RestaurantForMenuItemDisplay;
     category: Category;
   };
+  // Formatted on the server for the guest's language (lib/format-price).
+  displayPrice: string;
   restaurantSlug: string;
   theme: string;
 }
 
 export function MenuItemDisplayClient({
   item,
+  displayPrice,
   restaurantSlug,
   theme,
 }: MenuItemDisplayClientProps) {
@@ -54,7 +57,7 @@ export function MenuItemDisplayClient({
               {t("backToMenu")}
             </Link>
           </Button>
-          <ThemeToggle />
+          <PublicPageControls />
         </div>
 
         <article className="bg-card border-border overflow-hidden rounded-xl border shadow-sm">
@@ -94,7 +97,7 @@ export function MenuItemDisplayClient({
             </div>
 
             <p className="text-primary text-2xl font-bold">
-              {item.price} {item.restaurant.currency}
+              {displayPrice}
               <SoldOutBadge availability={item.availability} />
             </p>
 

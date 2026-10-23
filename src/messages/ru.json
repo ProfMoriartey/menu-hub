@@ -629,6 +629,13 @@
     "allCategories": "Все категории",
     "itemCount": "{count, plural, one {# позиция} few {# позиции} many {# позиций} other {# позиции}}",
     "mapLabel": "Открыть на карте",
-    "websiteLabel": "Сайт"
+    "websiteLabel": "Сайт",
+    "searchLabel": "Поиск по меню",
+    "searchPlaceholder": "Найти блюда и напитки",
+    "clearSearch": "Очистить поиск",
+    "dietaryFilters": "Фильтры по питанию",
+    "resultCount": "{count, plural, one {Найдена # позиция} few {Найдено # позиции} many {Найдено # позиций} other {Найдено # позиции}}",
+    "noResults": "В меню ничего не найдено.",
+    "clearFilters": "Сбросить поиск и фильтры"
   }
 }

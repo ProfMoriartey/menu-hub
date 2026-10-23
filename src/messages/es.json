@@ -629,6 +629,13 @@
     "allCategories": "Todas las categorías",
     "itemCount": "{count, plural, one {# plato} other {# platos}}",
     "mapLabel": "Abrir en el mapa",
-    "websiteLabel": "Sitio web"
+    "websiteLabel": "Sitio web",
+    "searchLabel": "Buscar en el menú",
+    "searchPlaceholder": "Busca platos y bebidas",
+    "clearSearch": "Borrar búsqueda",
+    "dietaryFilters": "Filtros de dieta",
+    "resultCount": "{count, plural, one {# plato encontrado} other {# platos encontrados}}",
+    "noResults": "No hay nada en el menú que coincida.",
+    "clearFilters": "Borrar búsqueda y filtros"
   }
 }

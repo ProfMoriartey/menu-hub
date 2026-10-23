@@ -5,12 +5,14 @@ import { getRestaurantBySlug } from "~/server/queries";
 import { and, eq, ne } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
-import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
+import type { Restaurant, MenuItem } from "~/types/restaurant";
+import type { PublicMenuData } from "~/components/public/menu-types";
+import { formatPrice } from "~/lib/format-price";
 import type { SocialMediaLinks } from "~/lib/schemas";
 import { Link } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
-import { ThemeToggle } from "~/components/shared/ThemeToggle";
-import { getTranslations } from "next-intl/server";
+import { PublicPageControls } from "~/components/public/PublicPageControls";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Button } from "~/components/ui/button";
 import { Info, MapPin, Instagram, Facebook, Twitter, Music2, Globe } from "lucide-react";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
@@ -59,15 +61,13 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
     },
   });
 
-  const menuData: {
-    restaurant: Pick<
-      Restaurant,
-      "id" | "name" | "slug" | "currency" | "description"
-    >;
-    categories: (Category & {
-      menuItems: MenuItem[];
-    })[];
-  } = {
+  const locale = await getLocale();
+  // Sold-out items stay on the menu but move after everything still
+  // available; otherwise the owner's order is kept.
+  const availableFirst = (item: { availability: MenuItem["availability"] }) =>
+    item.availability === "sold_out" ? 1 : 0;
+
+  const menuData: PublicMenuData = {
     restaurant: {
       id: restaurantDetails.id,
       name: restaurantDetails.name,
@@ -79,29 +79,32 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
     categories: categoriesWithMenuItems
       .filter((cat) => cat.menuItems.length > 0)
       .map((cat) => ({
-      id: cat.id,
-      name: cat.name,
-      slug: cat.slug,
-      order: cat.order,
-      restaurantId: cat.restaurantId,
-      createdAt: cat.createdAt,
-      updatedAt: cat.updatedAt,
-      menuItems: cat.menuItems.map((item) => ({
-        id: item.id,
-        name: item.name,
-        slug: item.slug,
-        description: item.description,
-        price: item.price,
-        ingredients: item.ingredients,
-        dietaryLabels: item.dietaryLabels,
-        availability: item.availability,
-        imageUrl: item.imageUrl,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
-        restaurantId: item.restaurantId,
-        categoryId: item.categoryId,
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+        order: cat.order,
+        restaurantId: cat.restaurantId,
+        createdAt: cat.createdAt,
+        updatedAt: cat.updatedAt,
+        menuItems: [...cat.menuItems]
+          .sort((x, y) => availableFirst(x) - availableFirst(y))
+          .map((item) => ({
+            id: item.id,
+            name: item.name,
+            slug: item.slug,
+            description: item.description,
+            price: item.price,
+            displayPrice: formatPrice(item.price, restaurantDetails.currency, locale),
+            ingredients: item.ingredients,
+            dietaryLabels: item.dietaryLabels,
+            availability: item.availability,
+            imageUrl: item.imageUrl,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+            restaurantId: item.restaurantId,
+            categoryId: item.categoryId,
+          })),
       })),
-    })),
   };
 
   const socials = restaurantDetails.socialMedia ?? ({} as SocialMediaLinks);
@@ -118,9 +121,9 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
 
   return (
     <div className={cn("relative min-h-screen", themeClass)}>
-      {/* Phones: the theme toggle sits in the corner above the header. */}
+      {/* Phones: language and theme switches sit in the corner above the header. */}
       <div className="absolute end-4 top-4 z-50 md:hidden">
-        <ThemeToggle />
+        <PublicPageControls />
       </div>
 
       <header className="bg-card relative p-4 pt-14 shadow-sm md:pt-4">
@@ -194,7 +197,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
           </div>
 
           <div className="hidden shrink-0 sm:self-center md:flex md:items-center">
-            <ThemeToggle />
+            <PublicPageControls />
           </div>
         </div>
       </header>

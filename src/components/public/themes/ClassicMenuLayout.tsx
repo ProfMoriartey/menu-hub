@@ -7,21 +7,10 @@ import {
   useCategoryScrollSpy,
 } from "~/components/public/CategoryNav";
 import { MenuItemCard } from "~/components/public/MenuItemCard";
-import type { MenuItem, Category } from "~/types/restaurant";
-
-interface RestaurantMenuData {
-  restaurant: {
-    id: string;
-    name: string;
-    slug: string;
-    currency: string;
-    description: string | null;
-  };
-  categories: (Category & { menuItems: MenuItem[] })[];
-}
+import type { PublicMenuData } from "~/components/public/menu-types";
 
 interface ClassicMenuLayoutProps {
-  menuData: RestaurantMenuData;
+  menuData: PublicMenuData;
 }
 
 // The whole menu on one page, one section per category, with a sticky bar of
@@ -59,7 +48,6 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
                 key={item.id}
                 item={item}
                 restaurantSlug={menuData.restaurant.slug}
-                currency={menuData.restaurant.currency}
               />
             ))}
           </div>

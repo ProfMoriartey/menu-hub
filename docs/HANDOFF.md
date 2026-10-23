@@ -239,7 +239,13 @@ applied (checked 2026-10-23). Production must run `pnpm db:migrate`.
 - Upload buttons use `uploadButtonClass`, resize images with
   `onBeforeUploadBegin={resizeImages(ITEM_PHOTO | LOGO)}` and pass the locale.
 - Forms with a save bar use `useUnsavedChangesGuard(isDirty && !isPending, …)`.
-- Prices show `"{price} {currency}"`, never a hardcoded `$`.
+- Prices are free text plus the restaurant's currency (often "TL" or
+  "دينار", not ISO codes), never a hardcoded `$`. Public pages show them via
+  `lib/format-price.ts`, **on the server only** (Node and browsers format
+  some currencies differently → hydration mismatches). It only reformats
+  unambiguous prices (`459`, `12.50`) in a known currency (`TL` → TRY);
+  anything else ("3.000 دينار", "10-12 TL") shows exactly as typed. The
+  editors show the raw `"{price} {currency}"`.
 - Colors come from theme tokens; charts were validated with the dataviz
   method (bar color `#D97706` passes on both theme surfaces).
 

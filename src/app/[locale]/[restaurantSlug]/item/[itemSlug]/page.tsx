@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { permanentRedirect } from "~/i18n/navigation";
 import { isUuid } from "~/lib/slug";
+import { formatPrice } from "~/lib/format-price";
 import { MenuItemDisplayClient } from "~/components/public/MenuItemDisplayClient";
 
 interface PageProps {
@@ -61,6 +62,11 @@ export default async function MenuItemDetailPage({ params }: PageProps) {
   return (
     <MenuItemDisplayClient
       item={itemDetails}
+      displayPrice={formatPrice(
+        itemDetails.price,
+        itemDetails.restaurant.currency,
+        await getLocale(),
+      )}
       restaurantSlug={restaurantSlug}
       theme={itemDetails.restaurant.theme ?? "default"}
     />

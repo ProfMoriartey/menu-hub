@@ -7,21 +7,10 @@ import {
   useCategoryScrollSpy,
 } from "~/components/public/CategoryNav";
 import { MenuItemCard } from "~/components/public/MenuItemCard";
-import type { MenuItem, Category } from "~/types/restaurant";
-
-interface RestaurantMenuData {
-  restaurant: {
-    id: string;
-    name: string;
-    slug: string;
-    currency: string;
-    description: string | null;
-  };
-  categories: (Category & { menuItems: MenuItem[] })[];
-}
+import type { PublicMenuData } from "~/components/public/menu-types";
 
 interface SidebarListLayoutProps {
-  menuData: RestaurantMenuData;
+  menuData: PublicMenuData;
 }
 
 // The whole menu as one list, with the categories in a sticky sidebar on wide
@@ -65,7 +54,6 @@ export function SidebarListLayout({ menuData }: SidebarListLayoutProps) {
                   key={item.id}
                   item={item}
                   restaurantSlug={menuData.restaurant.slug}
-                  currency={menuData.restaurant.currency}
                   imagePosition="start"
                 />
               ))}

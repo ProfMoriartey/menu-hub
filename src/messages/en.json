@@ -629,6 +629,13 @@
     "allCategories": "All categories",
     "itemCount": "{count, plural, one {# item} other {# items}}",
     "mapLabel": "Open in maps",
-    "websiteLabel": "Website"
+    "websiteLabel": "Website",
+    "searchLabel": "Search the menu",
+    "searchPlaceholder": "Search dishes and drinks",
+    "clearSearch": "Clear search",
+    "dietaryFilters": "Dietary filters",
+    "resultCount": "{count, plural, one {# item found} other {# items found}}",
+    "noResults": "Nothing on the menu matches.",
+    "clearFilters": "Clear search and filters"
   }
 }

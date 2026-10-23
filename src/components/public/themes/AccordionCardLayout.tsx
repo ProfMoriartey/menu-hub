@@ -1,15 +1,17 @@
 // src/components/public/themes/AccordionCardLayout.tsx
 "use client";
 
+import { useState } from "react";
 import { Link } from "~/i18n/navigation";
 import Image from "next/image";
 
 import { motion } from "framer-motion";
+import { cn } from "~/lib/utils";
 
 import { categorySectionId } from "~/components/public/CategoryNav";
 import { DietaryBadges } from "~/components/public/MenuItemCard";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
-import type { MenuItem, Category } from "~/types/restaurant";
+import type { PublicMenuData } from "~/components/public/menu-types";
 
 import {
   Accordion,
@@ -18,27 +20,39 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 
-interface RestaurantMenuData {
-  restaurant: {
-    id: string;
-    name: string;
-    slug: string;
-    currency: string;
-    description: string | null;
-  };
-  categories: (Category & { menuItems: MenuItem[] })[];
-}
-
 interface AccordionCardLayoutProps {
-  menuData: RestaurantMenuData;
+  menuData: PublicMenuData;
+  // True while the guest searches or filters: every matching category opens,
+  // so results aren't hidden in closed panels.
+  expandAll?: boolean;
 }
 
 // The menu page only passes categories that have items, so there are no
 // empty states to handle here.
-export function AccordionCardLayout({ menuData }: AccordionCardLayoutProps) {
+export function AccordionCardLayout({
+  menuData,
+  expandAll = false,
+}: AccordionCardLayoutProps) {
+  const [openId, setOpenId] = useState("");
+  const accordionProps = expandAll
+    ? ({
+        type: "multiple",
+        value: menuData.categories.map((c) => c.id),
+      } as const)
+    : ({
+        type: "single",
+        collapsible: true,
+        value: openId,
+        onValueChange: setOpenId,
+      } as const);
+
   return (
     <div className="space-y-6">
-      <Accordion type="single" collapsible className="w-full">
+      <Accordion
+        key={expandAll ? "all" : "one"}
+        {...accordionProps}
+        className="w-full"
+      >
         {menuData.categories.map((category, categoryIndex) => (
           <motion.div
             key={category.id}
@@ -68,7 +82,10 @@ export function AccordionCardLayout({ menuData }: AccordionCardLayoutProps) {
                     >
                       <Link
                         href={`/${menuData.restaurant.slug}/item/${item.slug}`}
-                        className="group bg-background border-border flex h-full flex-col items-center rounded-lg border p-4 text-center shadow-sm transition-shadow duration-200 hover:shadow-md"
+                        className={cn(
+                          "group bg-background border-border flex h-full flex-col items-center rounded-lg border p-4 text-center shadow-sm transition-shadow duration-200 hover:shadow-md",
+                          item.availability === "sold_out" && "opacity-70",
+                        )}
                       >
                         {item.imageUrl && (
                           <div className="relative mb-4 h-32 w-full overflow-hidden rounded-md">
@@ -94,7 +111,7 @@ export function AccordionCardLayout({ menuData }: AccordionCardLayoutProps) {
                           className="mt-2 mb-2 justify-center"
                         />
                         <p className="text-primary mt-auto pt-2 text-lg font-bold">
-                          {item.price} {menuData.restaurant.currency}
+                          {item.displayPrice}
                           <SoldOutBadge availability={item.availability} />
                         </p>
                       </Link>

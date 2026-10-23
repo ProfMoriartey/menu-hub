@@ -8,7 +8,8 @@ import { cn } from "~/lib/utils";
 import { DIETARY_LABEL_KEYS } from "~/lib/dietary-labels";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
 
-import type { DietaryLabel, MenuItem } from "~/types/restaurant";
+import type { PublicMenuItem } from "~/components/public/menu-types";
+import type { DietaryLabel } from "~/types/restaurant";
 
 export function DietaryBadges({
   labels,
@@ -42,18 +43,20 @@ export function DietaryBadges({
 export function MenuItemCard({
   item,
   restaurantSlug,
-  currency,
   imagePosition = "end",
 }: {
-  item: MenuItem;
+  item: PublicMenuItem;
   restaurantSlug: string;
-  currency: string;
   imagePosition?: "start" | "end";
 }) {
   return (
     <Link
       href={`/${restaurantSlug}/item/${item.slug}`}
-      className="group bg-card flex h-full items-start gap-4 rounded-lg p-4 shadow-md transition-shadow duration-200 hover:shadow-lg"
+      className={cn(
+        "group bg-card flex h-full items-start gap-4 rounded-lg p-4 shadow-md transition-shadow duration-200 hover:shadow-lg",
+        // Sold-out items stay readable but step back from the rest.
+        item.availability === "sold_out" && "opacity-70",
+      )}
     >
       <div className="min-w-0 flex-grow">
         <h3 className="text-foreground group-hover:text-primary text-lg font-semibold transition-colors duration-200 sm:text-xl">
@@ -66,7 +69,7 @@ export function MenuItemCard({
         )}
         <DietaryBadges labels={item.dietaryLabels} className="mt-2" />
         <p className="text-primary mt-2 text-lg font-bold">
-          {item.price} {currency}
+          {item.displayPrice}
           <SoldOutBadge availability={item.availability} />
         </p>
       </div>

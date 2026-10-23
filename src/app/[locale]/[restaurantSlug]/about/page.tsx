@@ -14,7 +14,7 @@ import { getTranslations } from "next-intl/server"
 import type { Restaurant } from "~/types/restaurant"
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"
 import { DeliveryOptionsDialog } from "~/components/public/DeliveryOptionsDialog"
-import { ThemeToggle } from "~/components/shared/ThemeToggle"
+import { PublicPageControls } from "~/components/public/PublicPageControls"
 
 interface PageProps {
   params: Promise<{
@@ -53,10 +53,10 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
       
       {/* Theme Toggle - Top Right */}
       <div className="absolute end-4 top-4 z-50">
-        <ThemeToggle />
+        <PublicPageControls />
       </div>
 
-      <div className={cn("container mx-auto max-w-4xl rounded-lg p-6 shadow-lg sm:p-8 mt-12 sm:mt-0", "bg-card")}>
+      <div className={cn("container mx-auto max-w-4xl rounded-lg p-6 shadow-lg sm:p-8 mt-12", "bg-card")}>
         
         {/* Header section - centered for mobile and desktop */}
         <div className="mb-10 flex flex-col items-center border-b pb-8">

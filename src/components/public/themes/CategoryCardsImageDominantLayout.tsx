@@ -9,25 +9,15 @@ import { useTranslations } from "next-intl";
 import { ChevronLeft, UtensilsCrossed } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { motion } from "framer-motion";
+import { cn } from "~/lib/utils";
 
 import { categorySectionId } from "~/components/public/CategoryNav";
 import { DietaryBadges } from "~/components/public/MenuItemCard";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
-import type { MenuItem, Category } from "~/types/restaurant";
-
-interface RestaurantMenuData {
-  restaurant: {
-    id: string;
-    name: string;
-    slug: string;
-    currency: string;
-    description: string | null;
-  };
-  categories: (Category & { menuItems: MenuItem[] })[];
-}
+import type { PublicMenuData } from "~/components/public/menu-types";
 
 interface CategoryCardsImageDominantLayoutProps {
-  menuData: RestaurantMenuData;
+  menuData: PublicMenuData;
 }
 
 // Category cards first; picking one shows its items. The menu page only
@@ -92,7 +82,10 @@ export function CategoryCardsImageDominantLayout({
             >
               <Link
                 href={`/${menuData.restaurant.slug}/item/${item.slug}`}
-                className="group bg-card border-border flex h-full flex-col overflow-hidden rounded-lg border shadow-md transition-shadow duration-200 hover:shadow-lg"
+                className={cn(
+                  "group bg-card border-border flex h-full flex-col overflow-hidden rounded-lg border shadow-md transition-shadow duration-200 hover:shadow-lg",
+                  item.availability === "sold_out" && "opacity-70",
+                )}
               >
                 {item.imageUrl && (
                   <div className="relative h-64 w-full overflow-hidden sm:h-80">
@@ -121,7 +114,7 @@ export function CategoryCardsImageDominantLayout({
                     />
                   </div>
                   <p className="text-primary mt-4 text-lg font-bold">
-                    {item.price} {menuData.restaurant.currency}
+                    {item.displayPrice}
                     <SoldOutBadge availability={item.availability} />
                   </p>
                 </div>

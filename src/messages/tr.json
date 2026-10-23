@@ -629,6 +629,13 @@
     "allCategories": "Tüm kategoriler",
     "itemCount": "{count} ürün",
     "mapLabel": "Haritada aç",
-    "websiteLabel": "Web sitesi"
+    "websiteLabel": "Web sitesi",
+    "searchLabel": "Menüde ara",
+    "searchPlaceholder": "Yemek ve içecek ara",
+    "clearSearch": "Aramayı temizle",
+    "dietaryFilters": "Beslenme filtreleri",
+    "resultCount": "{count} ürün bulundu",
+    "noResults": "Menüde eşleşen bir şey yok.",
+    "clearFilters": "Aramayı ve filtreleri temizle"
   }
 }
