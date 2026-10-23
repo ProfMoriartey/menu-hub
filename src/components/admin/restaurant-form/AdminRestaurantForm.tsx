@@ -379,6 +379,7 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
                 <div className="flex flex-wrap items-center gap-2">
                   <UploadButton
                     endpoint="logoUploader"
+                    input={{ restaurantId: restaurant?.id }}
                     appearance={{ allowedContent: "hidden" }}
                     content={{ button: values.logoUrl ? "Replace logo" : "Upload logo" }}
                     className="ut-button:bg-primary ut-button:text-primary-foreground ut-button:h-9 ut-button:w-auto ut-button:px-4 ut-button:text-sm ut-button:font-medium ut-button:rounded-md ut-button:after:bg-primary/70"

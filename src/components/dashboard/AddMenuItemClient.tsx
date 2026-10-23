@@ -260,6 +260,7 @@ export function AddMenuItemClient({
           )}
           <UploadButton
             endpoint="imageUploader"
+            input={{ restaurantId: restaurantId }}
             // Apply UploadThing semantic theme overrides
             className={cn(
               "ut-button:bg-primary ut-button:hover:bg-primary/90 ut-button:text-primary-foreground",

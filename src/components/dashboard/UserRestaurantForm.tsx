@@ -145,7 +145,8 @@ export function UserRestaurantForm({
               </div>
             ) : (
               <UploadButton 
-                endpoint="logoUploader" 
+                endpoint="logoUploader"
+                input={{ restaurantId: initialData.id }}
                 className="ut-button:h-10 ut-button:w-32 ut-button:text-sm" 
                 onClientUploadComplete={(res) => res?.[0] && onLogoUrlChange(res[0].ufsUrl)} 
                 onUploadError={(error: Error) => console.error(error.message)}

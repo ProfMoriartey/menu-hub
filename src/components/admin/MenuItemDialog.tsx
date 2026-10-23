@@ -205,6 +205,7 @@ function MenuItemForm({
             </div>
             <UploadButton
               endpoint="imageUploader"
+              input={{ restaurantId: restaurantId }}
               appearance={{ allowedContent: "hidden" }}
               content={{ button: values.imageUrl ? "Replace" : "Upload photo" }}
               className="ut-button:bg-secondary ut-button:text-secondary-foreground ut-button:h-8 ut-button:w-full ut-button:max-w-[160px] ut-button:text-sm ut-button:rounded-md ut-button:after:bg-primary/40 items-start"
