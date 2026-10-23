@@ -5,7 +5,8 @@ import { db } from '~/server/db';
 import { users, usersToRestaurants } from '~/server/db/schema';
 import { isSystemAdmin } from '~/app/actions/auth';
 import { ACCESS_LEVELS, type AccessLevel } from '~/lib/access';
-import { ActionError, runAction, type ActionResult } from '~/lib/action-result';
+import { ActionError, type ActionResult } from '~/lib/action-result';
+import { runAction } from '~/server/run-action';
 
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import { isClerkAPIResponseError } from '@clerk/nextjs/errors';
@@ -14,13 +15,13 @@ import { and, eq } from 'drizzle-orm';
 
 async function requireAdmin() {
   if (!(await isSystemAdmin())) {
-    throw new ActionError('Only system administrators can change restaurant access.');
+    throw new ActionError('adminOnly');
   }
 }
 
 function requireAccessLevel(value: string): AccessLevel {
   if (!(ACCESS_LEVELS as readonly string[]).includes(value)) {
-    throw new ActionError('Unknown access level.');
+    throw new ActionError('unknownAccessLevel');
   }
   return value as AccessLevel;
 }
@@ -31,12 +32,12 @@ export async function assignRestaurantToUser(
   restaurantId: string,
   accessLevel: string,
 ): Promise<ActionResult> {
-  return runAction("Couldn't give access to that restaurant.", async () => {
+  return runAction("grantAccessFailed", async () => {
     await requireAdmin();
     const level = requireAccessLevel(accessLevel);
 
     if (!clerkUserId || !restaurantId) {
-      throw new ActionError('Pick a restaurant to give access to.');
+      throw new ActionError('pickRestaurant');
     }
 
     await db.insert(usersToRestaurants)
@@ -58,11 +59,11 @@ export async function revokeRestaurantAccess(
   clerkUserId: string,
   restaurantId: string,
 ): Promise<ActionResult> {
-  return runAction("Couldn't remove access.", async () => {
+  return runAction("removeAccessFailed", async () => {
     await requireAdmin();
 
     if (!clerkUserId || !restaurantId) {
-      throw new ActionError('Missing user or restaurant.');
+      throw new ActionError('missingRestaurant');
     }
 
     await db.delete(usersToRestaurants)
@@ -83,22 +84,20 @@ export async function revokeRestaurantAccess(
  * The user.deleted webhook that Clerk sends afterwards finds nothing left.
  */
 export async function deleteUser(clerkUserId: string): Promise<ActionResult> {
-  return runAction("Couldn't delete the user.", async () => {
+  return runAction("deleteUserFailed", async () => {
     await requireAdmin();
-    if (!clerkUserId) throw new ActionError('Missing user.');
+    if (!clerkUserId) throw new ActionError('missingUser');
 
     const { userId: currentUserId } = await auth();
     if (clerkUserId === currentUserId) {
-      throw new ActionError("You can't delete your own account from here.");
+      throw new ActionError("cantDeleteSelf");
     }
 
     const client = await clerkClient();
     try {
       const clerkUser = await client.users.getUser(clerkUserId);
       if (clerkUser.publicMetadata?.role === 'admin') {
-        throw new ActionError(
-          'This user is a system admin. Remove their admin role in Clerk before deleting them.',
-        );
+        throw new ActionError('cantDeleteAdmin');
       }
       await client.users.deleteUser(clerkUserId);
     } catch (error) {

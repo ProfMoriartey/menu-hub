@@ -3,7 +3,7 @@
 
 import { useEffect, useState, useTransition, type FormEvent } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Bike,
   Check,
@@ -69,6 +69,7 @@ const SHOWN_FIELDS = new Set([
 
 export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant }) {
   const t = useTranslations("RestaurantDetails");
+  const locale = useLocale();
   const [isPending, startTransition] = useTransition();
 
   // The full set of values goes back on save: the server keeps the
@@ -251,7 +252,7 @@ export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant
               <div className="flex flex-wrap items-center gap-2">
                 <UploadButton
                   endpoint="logoUploader"
-                  input={{ restaurantId: restaurant.id }}
+                  input={{ restaurantId: restaurant.id, locale }}
                   appearance={{ allowedContent: "hidden" }}
                   content={{ button: values.logoUrl ? t("replaceLogo") : t("uploadLogo") }}
                   className="ut-button:bg-primary ut-button:text-primary-foreground ut-button:h-9 ut-button:w-auto ut-button:px-4 ut-button:text-sm ut-button:font-medium ut-button:rounded-md ut-button:after:bg-primary/70"

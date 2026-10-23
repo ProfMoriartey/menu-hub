@@ -6,7 +6,8 @@ import { menuItems } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth";
-import { ActionError, runAction, type ActionResult } from "~/lib/action-result";
+import { ActionError, type ActionResult } from "~/lib/action-result";
+import { runAction } from "~/server/run-action";
 
 import {
   createMenuItemSchema,
@@ -49,9 +50,9 @@ const getJsonArrayValue = (formData: FormData, key: string): unknown => {
 const revalidateMenuPages = () => revalidatePath("/[locale]", "layout");
 
 export async function addMenuItem(formData: FormData): Promise<ActionResult> {
-  return runAction("Couldn't add the menu item.", async () => {
+  return runAction("addItemFailed", async () => {
     const restaurantId = getStringValue(formData, "restaurantId");
-    if (!restaurantId) throw new ActionError("Missing restaurant.");
+    if (!restaurantId) throw new ActionError("missingRestaurant");
     await checkAuthorization(restaurantId);
 
     const result = await createMenuItemSchema.safeParseAsync({
@@ -65,7 +66,7 @@ export async function addMenuItem(formData: FormData): Promise<ActionResult> {
       categoryId: getStringValue(formData, "categoryId") ?? "",
     });
     if (!result.success) {
-      throw new ActionError(result.error.errors.map((e) => e.message).join(", "));
+      throw new ActionError("invalidItem");
     }
 
     const validatedData: CreateMenuItemData = result.data;
@@ -79,9 +80,9 @@ export async function addMenuItem(formData: FormData): Promise<ActionResult> {
 }
 
 export async function updateMenuItem(formData: FormData): Promise<ActionResult> {
-  return runAction("Couldn't save the menu item.", async () => {
+  return runAction("saveItemFailed", async () => {
     const restaurantId = getStringValue(formData, "restaurantId");
-    if (!restaurantId) throw new ActionError("Missing restaurant.");
+    if (!restaurantId) throw new ActionError("missingRestaurant");
     await checkAuthorization(restaurantId);
 
     const result = await updateMenuItemSchema.safeParseAsync({
@@ -96,7 +97,7 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
       categoryId: getStringValue(formData, "categoryId") ?? "",
     });
     if (!result.success) {
-      throw new ActionError(result.error.errors.map((e) => e.message).join(", "));
+      throw new ActionError("invalidItem");
     }
 
     const validatedData: UpdateMenuItemData = result.data;
@@ -105,7 +106,7 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
       .select()
       .from(menuItems)
       .where(and(eq(menuItems.id, validatedData.id), eq(menuItems.restaurantId, restaurantId)));
-    if (!existingItem) throw new ActionError("Menu item not found.");
+    if (!existingItem) throw new ActionError("itemNotFound");
 
     // The slug is part of the public item URL, so only a rename changes it.
     const slug =
@@ -142,15 +143,15 @@ export async function deleteMenuItem(
   // No longer needed (revalidation covers every page); kept for existing callers.
   _categoryId?: string,
 ): Promise<ActionResult> {
-  return runAction("Couldn't delete the menu item.", async () => {
-    if (!restaurantId) throw new ActionError("Missing restaurant.");
+  return runAction("deleteItemFailed", async () => {
+    if (!restaurantId) throw new ActionError("missingRestaurant");
     await checkAuthorization(restaurantId);
 
     const [existingItem] = await db
       .select()
       .from(menuItems)
       .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)));
-    if (!existingItem) throw new ActionError("Menu item not found.");
+    if (!existingItem) throw new ActionError("itemNotFound");
 
     await db
       .delete(menuItems)
@@ -166,7 +167,7 @@ export async function updateMenuItemOrder(
   items: { id: string; order: number }[],
   restaurantId: string,
 ): Promise<ActionResult> {
-  return runAction("Couldn't save the new order.", async () => {
+  return runAction("reorderFailed", async () => {
     await checkAuthorization(restaurantId);
 
     await db.transaction(async (tx) => {

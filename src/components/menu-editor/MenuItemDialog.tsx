@@ -3,7 +3,7 @@
 
 import { useState, useTransition, type FormEvent } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { unwrap } from "~/lib/action-result";
 import { Check, CircleAlert, ImagePlus, X } from "lucide-react";
 import type { InferSelectModel } from "drizzle-orm";
@@ -89,6 +89,7 @@ function MenuItemForm({
   currency,
 }: MenuItemDialogProps) {
   const t = useTranslations("MenuEditor");
+  const locale = useLocale();
   const isEditing = Boolean(item);
   const [initial, setInitial] = useState(() => valuesFromItem(item));
   const [values, setValues] = useState(initial);
@@ -211,7 +212,7 @@ function MenuItemForm({
             </div>
             <UploadButton
               endpoint="imageUploader"
-              input={{ restaurantId: restaurantId }}
+              input={{ restaurantId, locale }}
               appearance={{ allowedContent: "hidden" }}
               content={{ button: values.imageUrl ? t("itemDialog.replace") : t("itemDialog.upload") }}
               className="ut-button:bg-secondary ut-button:text-secondary-foreground ut-button:h-8 ut-button:w-full ut-button:max-w-[160px] ut-button:text-sm ut-button:rounded-md ut-button:after:bg-primary/40 items-start"

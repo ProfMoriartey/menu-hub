@@ -1,7 +1,7 @@
 // src/components/admin/restaurant-form/AdminRestaurantForm.tsx
 "use client";
 
-import { unwrap, type ActionResult } from "~/lib/action-result";
+import { ActionFailure, unwrap, type ActionResult } from "~/lib/action-result";
 import {
   useEffect,
   useMemo,
@@ -26,6 +26,7 @@ import {
   Twitter,
   type LucideIcon,
 } from "lucide-react";
+import { useLocale } from "next-intl";
 import { Link, useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -86,6 +87,8 @@ interface AdminRestaurantFormProps {
 export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormProps) {
   const isEditing = Boolean(restaurant);
   const router = useRouter();
+  // Sent with logo uploads so upload errors come back in this language.
+  const locale = useLocale();
   const [isPending, startTransition] = useTransition();
 
   const initialValues = useMemo(
@@ -183,7 +186,9 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : "Something went wrong while saving.";
-        if (/slug/i.test(message)) {
+        // Match on the code: the message is translated.
+        const code = error instanceof ActionFailure ? error.code : null;
+        if (code === "slugTaken" || code === "slugInvalid") {
           setErrors({ slug: message });
           focusFirstError({ slug: message });
         } else {
@@ -379,7 +384,7 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
                 <div className="flex flex-wrap items-center gap-2">
                   <UploadButton
                     endpoint="logoUploader"
-                    input={{ restaurantId: restaurant?.id }}
+                    input={{ restaurantId: restaurant?.id, locale }}
                     appearance={{ allowedContent: "hidden" }}
                     content={{ button: values.logoUrl ? "Replace logo" : "Upload logo" }}
                     className="ut-button:bg-primary ut-button:text-primary-foreground ut-button:h-9 ut-button:w-auto ut-button:px-4 ut-button:text-sm ut-button:font-medium ut-button:rounded-md ut-button:after:bg-primary/70"

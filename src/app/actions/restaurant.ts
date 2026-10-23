@@ -8,7 +8,8 @@ import { and, eq, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import type { ZodIssue } from "zod";
 import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
-import { ActionError, runAction, type ActionResult } from "~/lib/action-result";
+import { ActionError, type ActionResult } from "~/lib/action-result";
+import { runAction } from "~/server/run-action";
 
 // 🛑 ADDED: Import the exported types directly from your schema
 import { restaurantSchema, type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
@@ -57,17 +58,18 @@ const readRestaurantFields = (formData: FormData) => ({
 // The id comes from the request target, never from the submitted fields.
 const restaurantFields = restaurantSchema.omit({ id: true });
 
+// The forms validate first, so this mostly catches a bad slug sent by hand.
 const invalidInput = (issues: ZodIssue[]) =>
-  new ActionError("Invalid input: " + issues.map((issue) => issue.message).join(", "));
+  new ActionError(issues.some((issue) => issue.path[0] === "slug") ? "slugInvalid" : "invalidInput");
 
 // Restaurant data shows up on public pages, the dashboard and the admin
 // panel, so refresh every page under the locale segment.
 const revalidateRestaurantPages = () => revalidatePath("/[locale]", "layout");
 
 export async function addRestaurant(formData: FormData): Promise<ActionResult> {
-  return runAction("Couldn't create the restaurant.", async () => {
+  return runAction("createRestaurantFailed", async () => {
     if (!(await isSystemAdmin())) {
-      throw new ActionError("Only system administrators can add new restaurants.");
+      throw new ActionError("adminOnly");
     }
 
     const fields = readRestaurantFields(formData);
@@ -86,7 +88,7 @@ export async function addRestaurant(formData: FormData): Promise<ActionResult> {
       columns: { id: true },
     });
     if (existing) {
-      throw new ActionError("Slug already exists.");
+      throw new ActionError("slugTaken");
     }
 
     await db.insert(restaurants).values(data);
@@ -95,9 +97,9 @@ export async function addRestaurant(formData: FormData): Promise<ActionResult> {
 }
 
 export async function deleteRestaurant(restaurantId: string): Promise<ActionResult> {
-  return runAction("Couldn't delete the restaurant.", async () => {
+  return runAction("deleteRestaurantFailed", async () => {
     if (!(await isSystemAdmin())) {
-      throw new ActionError("Only system administrators can delete restaurants.");
+      throw new ActionError("adminOnly");
     }
 
     // Collect the files first: the delete cascades to categories and items,
@@ -112,7 +114,7 @@ export async function deleteRestaurant(restaurantId: string): Promise<ActionResu
         columns: { imageUrl: true },
       }),
     ]);
-    if (!restaurant) throw new ActionError("Restaurant not found.");
+    if (!restaurant) throw new ActionError("restaurantNotFound");
 
     await db.delete(restaurants).where(eq(restaurants.id, restaurantId));
     await deleteUploadedFiles([
@@ -126,10 +128,10 @@ export async function deleteRestaurant(restaurantId: string): Promise<ActionResu
 }
 
 export async function updateRestaurant(formData: FormData): Promise<ActionResult> {
-  return runAction("Couldn't save the restaurant.", async () => {
+  return runAction("saveRestaurantFailed", async () => {
     const restaurantId = getStringValue(formData, "id");
     if (!restaurantId) {
-      throw new ActionError("Missing restaurant.");
+      throw new ActionError("missingRestaurant");
     }
     const role = await checkOwnerAuthorization(restaurantId);
 
@@ -153,7 +155,7 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
         ogImage: true,
       },
     });
-    if (!current) throw new ActionError("Restaurant not found.");
+    if (!current) throw new ActionError("restaurantNotFound");
     const { logoUrl: previousLogoUrl, ...adminOnly } = current;
 
     // Owners edit what their dashboard shows (name, address, contact, logo,
@@ -176,7 +178,7 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
       columns: { id: true },
     });
     if (existing) {
-      throw new ActionError("Slug already exists for another restaurant.");
+      throw new ActionError("slugTaken");
     }
 
     await db

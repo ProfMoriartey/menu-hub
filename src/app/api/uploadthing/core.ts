@@ -3,23 +3,33 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
+import { hasLocale } from "next-intl";
 import { getRestaurantRole, isSystemAdmin } from "~/app/actions/auth";
 import { canEditDetails } from "~/lib/access";
+import type { ActionErrorCode } from "~/lib/action-result";
+import { routing } from "~/i18n/routing";
+import { translateActionError } from "~/server/run-action";
 
 const f = createUploadthing();
 
-// Uploads go to our UploadThing account, so they follow the same rules as
-// the edits they're for. Each upload button sends the restaurant it's for.
+// Upload buttons send the page's language: /api routes skip the next-intl
+// middleware, so the request alone doesn't say which language to answer in.
+const localeInput = z.string().optional();
+
 // Only UploadThingError messages reach the browser; anything else becomes
 // "Failed to run middleware". It is an Error subclass the lint rule can't see.
-function deny(message: string): never {
+async function deny(code: ActionErrorCode, locale: string | undefined): Promise<never> {
+  const known = hasLocale(routing.locales, locale) ? locale : routing.defaultLocale;
+  const message = await translateActionError(code, undefined, known);
   // eslint-disable-next-line @typescript-eslint/only-throw-error
   throw new UploadThingError(message);
 }
 
-async function requireSignedIn() {
+// Uploads go to our UploadThing account, so they follow the same rules as
+// the edits they're for. Each upload button sends the restaurant it's for.
+async function requireSignedIn(locale: string | undefined) {
   const { userId } = await auth();
-  if (!userId) deny("Please sign in to upload files.");
+  if (!userId) return deny("signInToUpload", locale);
   return userId;
 }
 
@@ -32,19 +42,17 @@ export const ourFileRouter = {
       maxFileCount: 1,
     },
   })
-    .input(z.object({ restaurantId: z.string().uuid().optional() }))
+    .input(z.object({ restaurantId: z.string().uuid().optional(), locale: localeInput }))
     .middleware(async ({ input }) => {
-      const userId = await requireSignedIn();
+      const userId = await requireSignedIn(input.locale);
 
       if (!input.restaurantId) {
-        if (!(await isSystemAdmin())) {
-          deny("Only administrators can upload a logo for a new restaurant.");
-        }
+        if (!(await isSystemAdmin())) await deny("adminOnlyNewLogo", input.locale);
         return { userId };
       }
 
       if (!canEditDetails(await getRestaurantRole(input.restaurantId))) {
-        deny("Only the restaurant's owner can change its logo.");
+        await deny("ownerOnlyLogo", input.locale);
       }
       return { userId, restaurantId: input.restaurantId };
     })
@@ -55,11 +63,11 @@ export const ourFileRouter = {
 
   // Menu item photos: anyone who can edit the restaurant's menu.
   imageUploader: f({ image: { maxFileSize: "2MB", maxFileCount: 1 } })
-    .input(z.object({ restaurantId: z.string().uuid() }))
+    .input(z.object({ restaurantId: z.string().uuid(), locale: localeInput }))
     .middleware(async ({ input }) => {
-      const userId = await requireSignedIn();
+      const userId = await requireSignedIn(input.locale);
       if (!(await getRestaurantRole(input.restaurantId))) {
-        deny("You don't have access to this restaurant.");
+        await deny("noAccess", input.locale);
       }
       return { userId, restaurantId: input.restaurantId };
     })
