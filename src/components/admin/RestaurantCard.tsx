@@ -107,7 +107,7 @@ export function RestaurantCard({
           <div className="min-w-0 flex-1">
             <h3 className="truncate font-semibold">
               <Link
-                href={`/admin/restaurants/${restaurant.id}/edit`}
+                href={`/admin/restaurants/${restaurant.slug}/edit`}
                 className="hover:underline"
               >
                 {restaurant.name}
@@ -149,12 +149,12 @@ export function RestaurantCard({
 
       <div className="border-border flex items-center gap-2 border-t px-5 py-3">
         <Button variant="outline" size="sm" asChild>
-          <Link href={`/admin/restaurants/${restaurant.id}/edit`}>
+          <Link href={`/admin/restaurants/${restaurant.slug}/edit`}>
             <Pencil className="h-3.5 w-3.5" /> Edit
           </Link>
         </Button>
         <Button variant="ghost" size="sm" asChild>
-          <Link href={`/admin/restaurants/${restaurant.id}/categories`}>Menu</Link>
+          <Link href={`/admin/restaurants/${restaurant.slug}/menu`}>Menu</Link>
         </Button>
         <div className="ml-auto flex items-center">
           {restaurant.isActive && (

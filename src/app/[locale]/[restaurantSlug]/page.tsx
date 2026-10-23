@@ -73,6 +73,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
     categories: categoriesWithMenuItems.map((cat) => ({
       id: cat.id,
       name: cat.name,
+      slug: cat.slug,
       order: cat.order,
       restaurantId: cat.restaurantId,
       createdAt: cat.createdAt,
@@ -80,6 +81,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
       menuItems: cat.menuItems.map((item) => ({
         id: item.id,
         name: item.name,
+        slug: item.slug,
         description: item.description,
         price: item.price,
         ingredients: item.ingredients,

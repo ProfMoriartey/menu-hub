@@ -14,8 +14,18 @@ import {
   type CreateMenuItemData,
   type UpdateMenuItemData,
 } from "~/lib/menu-item-schemas";
+import { uniqueSlug } from "~/lib/slug";
 
 const utapi = new UTApi();
+
+// Slugs used by the restaurant's other menu items.
+async function takenItemSlugs(restaurantId: string, exceptId?: string) {
+  const rows = await db
+    .select({ id: menuItems.id, slug: menuItems.slug })
+    .from(menuItems)
+    .where(eq(menuItems.restaurantId, restaurantId));
+  return rows.filter((row) => row.id !== exceptId).map((row) => row.slug);
+}
 
 const getStringValue = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -83,11 +93,10 @@ export async function addMenuItem(formData: FormData) {
   try {
     await db.insert(menuItems).values({
       ...validatedData,
+      slug: uniqueSlug(validatedData.name, await takenItemSlugs(restaurantId), "item"),
     });
     revalidatePath(`/dashboard/${restaurantId}/edit`);
-    revalidatePath(
-      `/admin/restaurants/${validatedData.restaurantId}/categories/${validatedData.categoryId}/menu-items`,
-    );
+    revalidatePath("/[locale]/admin/restaurants", "layout");
   } catch (error) {
     console.error("Failed to add menu item.", error);
     throw new Error("Failed to add menu item.");
@@ -138,10 +147,17 @@ export async function updateMenuItem(formData: FormData) {
       throw new Error("Menu item not found.");
     }
 
+    // The slug is part of the public item URL, so only a rename changes it.
+    const slug =
+      existingItem.name === validatedData.name
+        ? existingItem.slug
+        : uniqueSlug(validatedData.name, await takenItemSlugs(restaurantId, existingItem.id), "item");
+
     await db
       .update(menuItems)
       .set({
         name: validatedData.name,
+        slug,
         description: validatedData.description,
         price: validatedData.price,
         ingredients: validatedData.ingredients,
@@ -156,18 +172,16 @@ export async function updateMenuItem(formData: FormData) {
         )
       );
 
+    // Covers both a replaced photo and a removed one.
     if (
       existingItem.imageUrl &&
-      validatedData.imageUrl &&
       existingItem.imageUrl !== validatedData.imageUrl
     ) {
       await deleteUploadedFile(existingItem.imageUrl);
     }
 
     revalidatePath(`/dashboard/${restaurantId}/edit`);
-    revalidatePath(
-      `/admin/restaurants/${validatedData.restaurantId}/categories/${validatedData.categoryId}/menu-items`,
-    );
+    revalidatePath("/[locale]/admin/restaurants", "layout");
   } catch (error) {
     console.error("Failed to update menu item.", error);
     throw new Error("Failed to update menu item.");
@@ -177,7 +191,8 @@ export async function updateMenuItem(formData: FormData) {
 export async function deleteMenuItem(
   menuItemId: string,
   restaurantId: string,
-  categoryId: string,
+  // No longer needed (revalidation covers every admin restaurant page); kept for existing callers.
+  _categoryId?: string,
 ) {
   try {
     if (!restaurantId) throw new Error("Restaurant ID is required.");
@@ -211,9 +226,7 @@ export async function deleteMenuItem(
     await deleteUploadedFile(existingItem.imageUrl);
 
     revalidatePath(`/dashboard/${restaurantId}/edit`);
-    revalidatePath(
-      `/admin/restaurants/${restaurantId}/categories/${categoryId}/menu-items`,
-    );
+    revalidatePath("/[locale]/admin/restaurants", "layout");
   } catch (error) {
     console.error("Failed to delete menu item.", error);
     throw new Error("Failed to delete menu item.");

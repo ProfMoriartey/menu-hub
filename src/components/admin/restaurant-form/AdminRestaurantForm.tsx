@@ -40,6 +40,7 @@ import { UploadButton } from "~/utils/uploadthing";
 import { cn } from "~/lib/utils";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
+import { slugify } from "~/lib/slug";
 import { CharCount, Field, FormSection, ToggleRow, UrlInput } from "./fields";
 import {
   COUNTRY_SUGGESTIONS,
@@ -50,7 +51,6 @@ import {
   SECTIONS,
   THEMES,
   sectionHasError,
-  slugify,
   toFormData,
   validate,
   valuesFromRestaurant,
@@ -173,6 +173,10 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
         if (isEditing) {
           setSavedValues(values);
           setJustSaved(true);
+          // The page URL contains the slug, so follow it to its new address.
+          if (values.slug !== savedValues.slug) {
+            router.replace(`/admin/restaurants/${values.slug}/edit`);
+          }
         } else {
           router.push("/admin/restaurants");
         }

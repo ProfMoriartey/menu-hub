@@ -85,7 +85,7 @@ export function AccordionCardLayout({ menuData }: AccordionCardLayoutProps) {
                               className="block" // Ensure it remains a block
                             >
                               <Link
-                                href={`/${menuData.restaurant.slug}/item/${item.id}`}
+                                href={`/${menuData.restaurant.slug}/item/${item.slug}`}
                                 passHref
                                 className="group block h-full" // Ensure link takes full height of motion.div
                               >

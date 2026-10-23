@@ -9,6 +9,16 @@ import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth";
 
 import { createCategorySchema, updateCategorySchema } from "~/lib/schemas";
+import { uniqueSlug } from "~/lib/slug";
+
+// Slugs used by the restaurant's other categories.
+async function takenCategorySlugs(restaurantId: string, exceptId?: string) {
+  const rows = await db
+    .select({ id: categories.id, slug: categories.slug })
+    .from(categories)
+    .where(eq(categories.restaurantId, restaurantId));
+  return rows.filter((row) => row.id !== exceptId).map((row) => row.slug);
+}
 
 export async function addCategory(formData: FormData) {
   const name = formData.get("name") as string;
@@ -33,10 +43,15 @@ export async function addCategory(formData: FormData) {
   try {
     await db.insert(categories).values({
       name: validationResult.data.name,
+      slug: uniqueSlug(
+        validationResult.data.name,
+        await takenCategorySlugs(validationResult.data.restaurantId),
+        "category",
+      ),
       restaurantId: validationResult.data.restaurantId,
     });
 
-    revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
+    revalidatePath("/[locale]/admin/restaurants", "layout");
     revalidatePath(`/dashboard/${restaurantId}/edit`); 
   } catch (error) {
     console.error("Error adding category:", error);
@@ -71,10 +86,24 @@ export async function updateCategory(formData: FormData) {
   }
 
   try {
+    const { id: categoryId, name: newName } = validationResult.data;
+    const existing = await db.query.categories.findFirst({
+      where: and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)),
+      columns: { name: true, slug: true },
+    });
+    if (!existing) throw new Error("Category not found.");
+
+    // The slug follows the name, so only a rename changes it.
+    const slug =
+      existing.name === newName
+        ? existing.slug
+        : uniqueSlug(newName, await takenCategorySlugs(restaurantId, categoryId), "category");
+
     await db
       .update(categories)
       .set({
-        name: validationResult.data.name,
+        name: newName,
+        slug,
         updatedAt: new Date(),
       })
       // 🛑 FIX: Enforced the data integrity check
@@ -85,7 +114,7 @@ export async function updateCategory(formData: FormData) {
         )
       );
 
-    revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
+    revalidatePath("/[locale]/admin/restaurants", "layout");
     revalidatePath(`/dashboard/${restaurantId}/edit`);
   } catch (error) {
     console.error("Error updating category:", error);
@@ -111,7 +140,7 @@ export async function deleteCategory(categoryId: string, restaurantId: string) {
         )
       );
       
-    revalidatePath(`/admin/restaurants/${restaurantId}/categories`);
+    revalidatePath("/[locale]/admin/restaurants", "layout");
     revalidatePath(`/dashboard/${restaurantId}/edit`);
     
   } catch (error) {

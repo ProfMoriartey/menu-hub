@@ -1,0 +1,37 @@
+// app/admin/restaurants/[restaurantSlug]/edit/page.tsx
+import { eq } from "drizzle-orm";
+import { notFound } from "next/navigation";
+import { db } from "~/server/db";
+import { restaurants } from "~/server/db/schema";
+import { updateRestaurant } from "~/app/actions/restaurant";
+import { AdminRestaurantForm } from "~/components/admin/restaurant-form/AdminRestaurantForm";
+import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
+import type { Restaurant } from "~/types/restaurant";
+import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
+
+export default async function EditRestaurantPage({
+  params,
+}: {
+  params: Promise<{ restaurantSlug: string }>;
+}) {
+  const { restaurantSlug } = await params;
+
+  const row = await db.query.restaurants.findFirst({
+    where: eq(restaurants.slug, restaurantSlug),
+  });
+  if (!row) notFound();
+
+  const restaurant: Restaurant = {
+    ...row,
+    categories: [],
+    socialMedia: row.socialMedia as SocialMediaLinks,
+    deliveryApps: row.deliveryApps as DeliveryAppLinks,
+  };
+
+  return (
+    <div className="space-y-8">
+      <RestaurantAdminHeader restaurant={restaurant} activeTab="details" />
+      <AdminRestaurantForm restaurant={restaurant} action={updateRestaurant} />
+    </div>
+  );
+}
