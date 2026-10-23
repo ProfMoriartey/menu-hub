@@ -20,7 +20,7 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { UploadButton } from "~/utils/uploadthing";
 import { addMenuItem, updateMenuItem } from "~/app/actions/menu-item";
-import { CharCount, Field } from "~/components/admin/restaurant-form/fields";
+import { CharCount, Field } from "~/components/forms/fields";
 import { cn } from "~/lib/utils";
 import type { menuItems } from "~/server/db/schema";
 import type { DietaryLabel } from "~/types/restaurant";

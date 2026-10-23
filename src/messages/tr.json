@@ -276,36 +276,6 @@
       }
     }
   },
-  "RestaurantForm": {
-    "mainTitle": "Restoran Ayarları",
-    "labelName": "Ad",
-    "labelCountry": "Ülke",
-    "labelCurrency": "Para Birimi Kodu",
-    "labelPhoneNumber": "Telefon Numarası",
-    "labelMapUrl": "Harita Bağlantısı",
-    "labelAddress": "Adres",
-    "labelShortDescription": "Kısa Açıklama",
-    "labelTypeOfEstablishment": "Kuruluş Türü",
-    "labelRestaurantLogo": "Restoran Logosu",
-    "placeholderCountry": "ör: Amerika Birleşik Devletleri",
-    "placeholderCurrency": "ör: USD, EUR",
-    "placeholderPhoneNumber": "+1 555-123-4567",
-    "placeholderAddress": "Cadde, Şehir, Posta Kodu",
-    "placeholderDescription": "Restoranınızın kısa ve ilgi çekici bir özeti.",
-    "placeholderTypeOfEstablishment": "ör: Günlük Restoran, Kafe, Fine Dining",
-    "logoPreviewAlt": "Logo Önizlemesi",
-    "noLogo": "Logo Yok",
-    "buttonSaveChanges": "Değişiklikleri Kaydet",
-    "buttonSaving": "Kaydediliyor...",
-    "messages": {
-      "updateSuccess": "Restoran detayları başarıyla güncellendi.",
-      "updateFailed": "Güncelleme başarısız: {error}",
-      "validationFailed": "Doğrulama başarısız. Alanları kontrol edin."
-    },
-    "validationFailed": "Doğrulama başarısız. Alanları kontrol edin.",
-    "updateSuccess": "Restoran detayları başarıyla güncellendi.",
-    "unknownError": "Bilinmeyen bir hata oluştu."
-  },
   "Dashboard": {
     "title": "Atanmış Menüleriniz",
     "emptyTitle": "Atanmış Menü Yok",
@@ -430,5 +400,63 @@
     "categoriesSummary": "{categories} kategori · {items} ürün. Ürünlerini yönetmek için bir kategori açın.",
     "categoriesNav": "Kategoriler",
     "itemsSummary": "{count} ürün · Fiyatlar {currency} cinsinden"
+  },
+  "LanguageSwitcher": {
+    "label": "Dil"
+  },
+  "DashboardShell": {
+    "home": "Panel"
+  },
+  "DashboardHome": {
+    "title": "Restoranlarınız",
+    "subtitle": "Menüsünü veya bilgilerini güncellemek için bir restoran seçin.",
+    "counts": "{categories, plural, =0 {Kategori yok} other {# kategori}} · {items, plural, =0 {ürün yok} other {# ürün}}",
+    "editMenu": "Menüyü düzenle",
+    "details": "Bilgiler",
+    "viewLive": "Canlı menüyü gör",
+    "adminTitle": "Yöneticisiniz",
+    "adminText": "Tüm restoranları yönetim panelinden yönetebilirsiniz.",
+    "adminLink": "Yönetim panelini aç"
+  },
+  "RestaurantDetails": {
+    "adminOnlyNote": "Menü adresiniz, görünürlük, tema ve arama ayarlarınız bir yönetici tarafından yönetilir.",
+    "basicsTitle": "Temel bilgiler",
+    "basicsDescription": "Restoranın adı ve misafirlere kendinizi nasıl tanıttığınız.",
+    "contactTitle": "İletişim ve konum",
+    "contactDescription": "Misafirlerin sizi bulmasına ve size ulaşmasına yardımcı olur.",
+    "logoTitle": "Logo",
+    "logoDescription": "Menünüzün en üstünde gösterilir.",
+    "linksTitle": "Web sitesi ve sosyal medya",
+    "linksDescription": "Menünüzde düğme olarak gösterilir. Gizlemek için boş bırakın.",
+    "deliveryTitle": "Teslimat uygulamaları",
+    "deliveryDescription": "Misafirlerin sizden sipariş verebileceği yerler. Gizlemek için boş bırakın.",
+    "name": "Ad",
+    "description": "Açıklama",
+    "descriptionHint": "Restoranın hakkında sayfasında gösterilir.",
+    "descriptionPlaceholder": "Mekân, yemekleri ve hikâyesi hakkında birkaç cümle.",
+    "address": "Adres",
+    "addressPlaceholder": "Sokak, numara, semt, şehir",
+    "phone": "Telefon numarası",
+    "mapUrl": "Harita bağlantısı",
+    "mapUrlHint": "Google Haritalar veya Apple Haritalar paylaşım bağlantısını yapıştırın.",
+    "testLink": "Bağlantıyı dene",
+    "logoHint": "En iyi sonuç için en az 256 × 256 piksel kare bir görsel kullanın.",
+    "logoPreview": "Logo önizlemesi",
+    "uploadLogo": "Logo yükle",
+    "replaceLogo": "Logoyu değiştir",
+    "removeLogo": "Kaldır",
+    "uploadFailed": "Logo yüklenemedi: {error}",
+    "website": "Web sitesi",
+    "otherDelivery": "Diğer teslimat bağlantısı",
+    "nameRequired": "Restoranın adını girin.",
+    "invalidUrl": "https:// ile başlayan tam bir bağlantı girin",
+    "saving": "Kaydediliyor…",
+    "needAttention": "{count} alan kontrol edilmeli",
+    "saved": "Tüm değişiklikler kaydedildi",
+    "unsaved": "Kaydedilmemiş değişiklikler",
+    "noChanges": "Henüz değişiklik yok",
+    "discard": "Vazgeç",
+    "save": "Değişiklikleri kaydet",
+    "saveFailed": "Restoran kaydedilemedi."
   }
 }

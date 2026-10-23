@@ -1,10 +1,8 @@
 // src/components/dashboard/DashboardRestaurantHeader.tsx
 import { getTranslations } from "next-intl/server";
-import { UserButton } from "@clerk/nextjs";
 import { ChevronRight, ExternalLink } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
-import { ThemeToggle } from "~/components/shared/ThemeToggle";
 import { RestaurantLogo } from "~/components/admin/RestaurantCard";
 import { canEditDetails, type RestaurantRole } from "~/lib/access";
 import { cn } from "~/lib/utils";
@@ -31,12 +29,17 @@ export async function DashboardRestaurantHeader({
   const tabs = [
     { id: "menu", label: t("menuTab"), href: `${base}/menu` },
     // Editors manage the menu only, so they don't get a details tab.
-    ...(canEditDetails(role) ? [{ id: "details", label: t("detailsTab"), href: `${base}/edit` }] : []),
+    ...(canEditDetails(role)
+      ? [{ id: "details", label: t("detailsTab"), href: `${base}/edit` }]
+      : []),
   ];
 
   const crumbs = [
     { label: t("dashboard"), href: "/dashboard" },
-    { label: restaurant.name, href: trail.length > 0 ? `${base}/menu` : undefined },
+    {
+      label: restaurant.name,
+      href: trail.length > 0 ? `${base}/menu` : undefined,
+    },
     ...trail,
   ];
 
@@ -45,30 +48,32 @@ export async function DashboardRestaurantHeader({
 
   return (
     <div className="mb-8 space-y-5">
-      <div className="flex items-center justify-between gap-4">
-        <nav aria-label="Breadcrumb" className="min-w-0">
-          <ol className="text-muted-foreground flex flex-wrap items-center gap-1 text-sm">
-            {crumbs.map((crumb, i) => (
-              <li key={i} className="flex min-w-0 items-center gap-1">
-                {i > 0 && <ChevronRight className="h-3.5 w-3.5 shrink-0 rtl:rotate-180" aria-hidden />}
-                {crumb.href ? (
-                  <Link href={crumb.href} className="hover:text-foreground truncate">
-                    {crumb.label}
-                  </Link>
-                ) : (
-                  <span className="text-foreground truncate" aria-current="page">
-                    {crumb.label}
-                  </span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
-        <div className="flex shrink-0 items-center gap-3">
-          <ThemeToggle />
-          <UserButton afterSignOutUrl="/" />
-        </div>
-      </div>
+      <nav aria-label="Breadcrumb" className="min-w-0">
+        <ol className="text-muted-foreground flex flex-wrap items-center gap-1 text-sm">
+          {crumbs.map((crumb, i) => (
+            <li key={i} className="flex min-w-0 items-center gap-1">
+              {i > 0 && (
+                <ChevronRight
+                  className="h-3.5 w-3.5 shrink-0 rtl:rotate-180"
+                  aria-hidden
+                />
+              )}
+              {crumb.href ? (
+                <Link
+                  href={crumb.href}
+                  className="hover:text-foreground truncate"
+                >
+                  {crumb.label}
+                </Link>
+              ) : (
+                <span className="text-foreground truncate" aria-current="page">
+                  {crumb.label}
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-4">
@@ -78,7 +83,10 @@ export async function DashboardRestaurantHeader({
               {restaurant.name}
             </h1>
             <div className="mt-1 flex flex-wrap items-center gap-2">
-              <span className="text-muted-foreground font-mono text-sm" dir="ltr">
+              <span
+                className="text-muted-foreground font-mono text-sm"
+                dir="ltr"
+              >
                 /{restaurant.slug}
               </span>
               <span className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs font-medium">
@@ -96,7 +104,10 @@ export async function DashboardRestaurantHeader({
         )}
       </div>
 
-      <nav aria-label={t("menuTab")} className="border-border flex gap-1 border-b">
+      <nav
+        aria-label={t("menuTab")}
+        className="border-border flex gap-1 border-b"
+      >
         {tabs.map((tab) => (
           <Link
             key={tab.id}

@@ -276,36 +276,6 @@
       }
     }
   },
-  "RestaurantForm": {
-    "mainTitle": "إعدادات المطعم",
-    "labelName": "الاسم",
-    "labelCountry": "البلد",
-    "labelCurrency": "رمز العملة",
-    "labelPhoneNumber": "رقم الهاتف",
-    "labelMapUrl": "رابط الخريطة",
-    "labelAddress": "العنوان",
-    "labelShortDescription": "وصف مختصر",
-    "labelTypeOfEstablishment": "نوع المنشأة",
-    "labelRestaurantLogo": "شعار المطعم",
-    "placeholderCountry": "مثال: المملكة العربية السعودية",
-    "placeholderCurrency": "مثال: SAR, AED",
-    "placeholderPhoneNumber": "+966 500 000 000",
-    "placeholderAddress": "الشارع، المدينة، الرمز البريدي",
-    "placeholderDescription": "ملخص موجز وجذاب لمطعمك.",
-    "placeholderTypeOfEstablishment": "مثال: مطعم عادي، مقهى، مطعم فاخر",
-    "logoPreviewAlt": "معاينة الشعار",
-    "noLogo": "لا يوجد شعار",
-    "buttonSaveChanges": "حفظ التغييرات",
-    "buttonSaving": "جاري الحفظ...",
-    "messages": {
-      "updateSuccess": "تم تحديث تفاصيل المطعم بنجاح.",
-      "updateFailed": "فشل التحديث: {error}",
-      "validationFailed": "فشل التحقق من الصحة. يرجى مراجعة الحقول."
-    },
-    "validationFailed": "فشل التحقق من الصحة. يرجى مراجعة الحقول.",
-    "updateSuccess": "تم تحديث تفاصيل المطعم بنجاح.",
-    "unknownError": "حدث خطأ غير معروف."
-  },
   "Dashboard": {
     "title": "قوائمك المُعيّنة",
     "emptyTitle": "لا توجد قوائم مُعيّنة",
@@ -430,5 +400,63 @@
     "categoriesSummary": "{categories, plural, =0 {لا فئات} one {فئة واحدة} two {فئتان} few {# فئات} many {# فئة} other {# فئة}} · {items, plural, =0 {لا أصناف} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}}. افتح فئة لإدارة أصنافها.",
     "categoriesNav": "الفئات",
     "itemsSummary": "{count, plural, =0 {لا أصناف} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}} · الأسعار بعملة {currency}"
+  },
+  "LanguageSwitcher": {
+    "label": "اللغة"
+  },
+  "DashboardShell": {
+    "home": "لوحة التحكم"
+  },
+  "DashboardHome": {
+    "title": "مطاعمك",
+    "subtitle": "اختر مطعمًا لتحديث قائمته أو تفاصيله.",
+    "counts": "{categories, plural, =0 {لا فئات} one {فئة واحدة} two {فئتان} few {# فئات} many {# فئة} other {# فئة}} · {items, plural, =0 {لا أصناف} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}}",
+    "editMenu": "تعديل القائمة",
+    "details": "التفاصيل",
+    "viewLive": "عرض القائمة المباشرة",
+    "adminTitle": "أنت مسؤول",
+    "adminText": "يمكنك إدارة جميع المطاعم من لوحة الإدارة.",
+    "adminLink": "فتح لوحة الإدارة"
+  },
+  "RestaurantDetails": {
+    "adminOnlyNote": "يدير المسؤول عنوان قائمتك وإعدادات الظهور والمظهر والبحث.",
+    "basicsTitle": "المعلومات الأساسية",
+    "basicsDescription": "اسم المطعم وكيف تعرّف الضيوف به.",
+    "contactTitle": "التواصل والموقع",
+    "contactDescription": "يساعد الضيوف على الوصول إليك والتواصل معك.",
+    "logoTitle": "الشعار",
+    "logoDescription": "يظهر في أعلى قائمتك.",
+    "linksTitle": "الموقع الإلكتروني ووسائل التواصل",
+    "linksDescription": "تظهر كأزرار في قائمتك. اتركها فارغة لإخفائها.",
+    "deliveryTitle": "تطبيقات التوصيل",
+    "deliveryDescription": "حيث يمكن للضيوف الطلب منك. اتركها فارغة لإخفائها.",
+    "name": "الاسم",
+    "description": "الوصف",
+    "descriptionHint": "يظهر في صفحة «عن المطعم».",
+    "descriptionPlaceholder": "بضع جمل عن المكان وطعامه وقصته.",
+    "address": "العنوان",
+    "addressPlaceholder": "الشارع، الرقم، الحي، المدينة",
+    "phone": "رقم الهاتف",
+    "mapUrl": "رابط الخريطة",
+    "mapUrlHint": "الصق رابط المشاركة من خرائط Google أو خرائط Apple.",
+    "testLink": "تجربة الرابط",
+    "logoHint": "يُفضّل استخدام صورة مربعة لا تقل عن 256 × 256 بكسل.",
+    "logoPreview": "معاينة الشعار",
+    "uploadLogo": "رفع الشعار",
+    "replaceLogo": "استبدال الشعار",
+    "removeLogo": "إزالة",
+    "uploadFailed": "فشل رفع الشعار: {error}",
+    "website": "الموقع الإلكتروني",
+    "otherDelivery": "رابط توصيل آخر",
+    "nameRequired": "أدخل اسم المطعم.",
+    "invalidUrl": "أدخل رابطًا كاملًا يبدأ بـ https://",
+    "saving": "جارٍ الحفظ…",
+    "needAttention": "{count, plural, one {حقل واحد يحتاج إلى مراجعة} two {حقلان يحتاجان إلى مراجعة} few {# حقول تحتاج إلى مراجعة} many {# حقلًا يحتاج إلى مراجعة} other {# حقل يحتاج إلى مراجعة}}",
+    "saved": "تم حفظ جميع التغييرات",
+    "unsaved": "تغييرات غير محفوظة",
+    "noChanges": "لا توجد تغييرات بعد",
+    "discard": "تجاهل",
+    "save": "حفظ التغييرات",
+    "saveFailed": "تعذّر حفظ المطعم."
   }
 }

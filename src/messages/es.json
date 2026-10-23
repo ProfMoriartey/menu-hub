@@ -276,36 +276,6 @@
       }
     }
   },
-  "RestaurantForm": {
-    "mainTitle": "Configuración del restaurante",
-    "labelName": "Nombre",
-    "labelCountry": "País",
-    "labelCurrency": "Código de moneda",
-    "labelPhoneNumber": "Número de teléfono",
-    "labelMapUrl": "Enlace del mapa",
-    "labelAddress": "Dirección",
-    "labelShortDescription": "Descripción corta",
-    "labelTypeOfEstablishment": "Tipo de establecimiento",
-    "labelRestaurantLogo": "Logo del restaurante",
-    "placeholderCountry": "ej.: España",
-    "placeholderCurrency": "ej.: EUR, MXN",
-    "placeholderPhoneNumber": "+34 600 000 000",
-    "placeholderAddress": "Calle, Ciudad, Código Postal",
-    "placeholderDescription": "Un resumen breve y atractivo de su restaurante.",
-    "placeholderTypeOfEstablishment": "ej.: Comida Informal, Cafetería, Cena de Lujo",
-    "logoPreviewAlt": "Vista previa del logo",
-    "noLogo": "Sin Logo",
-    "buttonSaveChanges": "Guardar cambios",
-    "buttonSaving": "Guardando...",
-    "messages": {
-      "updateSuccess": "Detalles del restaurante actualizados con éxito.",
-      "updateFailed": "Fallo de actualización: {error}",
-      "validationFailed": "Fallo de validación. Compruebe los campos."
-    },
-    "validationFailed": "Fallo de validación. Compruebe los campos.",
-    "updateSuccess": "Detalles del restaurante actualizados con éxito.",
-    "unknownError": "Ocurrió un error desconocido."
-  },
   "Dashboard": {
     "title": "Sus Menús Asignados",
     "emptyTitle": "No hay menús asignados",
@@ -430,5 +400,63 @@
     "categoriesSummary": "{categories, plural, one {# categoría} other {# categorías}} · {items, plural, one {# plato} other {# platos}}. Abre una categoría para gestionar sus platos.",
     "categoriesNav": "Categorías",
     "itemsSummary": "{count, plural, one {# plato} other {# platos}} · Precios en {currency}"
+  },
+  "LanguageSwitcher": {
+    "label": "Idioma"
+  },
+  "DashboardShell": {
+    "home": "Panel"
+  },
+  "DashboardHome": {
+    "title": "Tus restaurantes",
+    "subtitle": "Elige un restaurante para actualizar su menú o sus datos.",
+    "counts": "{categories, plural, =0 {Sin categorías} one {# categoría} other {# categorías}} · {items, plural, =0 {sin platos} one {# plato} other {# platos}}",
+    "editMenu": "Editar menú",
+    "details": "Datos",
+    "viewLive": "Ver el menú publicado",
+    "adminTitle": "Eres administrador",
+    "adminText": "Puedes gestionar todos los restaurantes desde el panel de administración.",
+    "adminLink": "Abrir el panel de administración"
+  },
+  "RestaurantDetails": {
+    "adminOnlyNote": "La dirección de tu menú, la visibilidad, el tema y los ajustes de búsqueda los gestiona un administrador.",
+    "basicsTitle": "Lo básico",
+    "basicsDescription": "El nombre del restaurante y cómo lo presentas a los clientes.",
+    "contactTitle": "Contacto y ubicación",
+    "contactDescription": "Ayuda a los clientes a encontrarte y contactarte.",
+    "logoTitle": "Logo",
+    "logoDescription": "Aparece en la parte superior de tu menú.",
+    "linksTitle": "Web y redes sociales",
+    "linksDescription": "Aparecen como botones en tu menú. Déjalos vacíos para ocultarlos.",
+    "deliveryTitle": "Apps de reparto",
+    "deliveryDescription": "Dónde pueden pedirte los clientes. Déjalos vacíos para ocultarlos.",
+    "name": "Nombre",
+    "description": "Descripción",
+    "descriptionHint": "Aparece en la página «Acerca de» del restaurante.",
+    "descriptionPlaceholder": "Unas frases sobre el local, su comida y su historia.",
+    "address": "Dirección",
+    "addressPlaceholder": "Calle, número, barrio, ciudad",
+    "phone": "Teléfono",
+    "mapUrl": "Enlace del mapa",
+    "mapUrlHint": "Pega el enlace para compartir de Google Maps o Apple Maps.",
+    "testLink": "Probar enlace",
+    "logoHint": "Funciona mejor una imagen cuadrada de al menos 256 × 256 px.",
+    "logoPreview": "Vista previa del logo",
+    "uploadLogo": "Subir logo",
+    "replaceLogo": "Cambiar logo",
+    "removeLogo": "Quitar",
+    "uploadFailed": "No se pudo subir el logo: {error}",
+    "website": "Sitio web",
+    "otherDelivery": "Otro enlace de reparto",
+    "nameRequired": "Escribe el nombre del restaurante.",
+    "invalidUrl": "Escribe un enlace completo que empiece por https://",
+    "saving": "Guardando…",
+    "needAttention": "{count, plural, one {# campo necesita revisión} other {# campos necesitan revisión}}",
+    "saved": "Todos los cambios guardados",
+    "unsaved": "Cambios sin guardar",
+    "noChanges": "Aún no hay cambios",
+    "discard": "Descartar",
+    "save": "Guardar cambios",
+    "saveFailed": "No se pudo guardar el restaurante."
   }
 }

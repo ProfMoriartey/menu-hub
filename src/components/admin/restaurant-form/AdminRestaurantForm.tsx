@@ -42,7 +42,7 @@ import { cn } from "~/lib/utils";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 import { slugify } from "~/lib/slug";
-import { CharCount, Field, FormSection, ToggleRow, UrlInput } from "./fields";
+import { CharCount, Field, FormSection, ToggleRow, UrlInput } from "~/components/forms/fields";
 import {
   COUNTRY_SUGGESTIONS,
   CURRENCIES,

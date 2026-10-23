@@ -1,4 +1,4 @@
-// src/components/admin/restaurant-form/fields.tsx
+// src/components/forms/fields.tsx
 "use client";
 
 import type { ComponentProps, ReactNode } from "react";
@@ -7,7 +7,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { cn } from "~/lib/utils";
-import { normalizeUrl } from "./form-state";
+import { normalizeUrl } from "~/components/admin/restaurant-form/form-state";
 
 export function FormSection({
   id,
@@ -109,9 +109,10 @@ export function UrlInput({
   icon?: LucideIcon;
 }) {
   return (
-    <div className="relative">
+    // Links read left to right even on Arabic pages; the icon follows suit.
+    <div className="relative" dir="ltr">
       {Icon && (
-        <Icon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+        <Icon className="text-muted-foreground pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2" />
       )}
       <Input
         id={id}
@@ -122,7 +123,7 @@ export function UrlInput({
         onBlur={(e) => onValueChange(normalizeUrl(e.target.value))}
         aria-invalid={error ? true : undefined}
         aria-describedby={error && id ? `${id}-error` : undefined}
-        className={cn(Icon && "pl-9", className)}
+        className={cn(Icon && "ps-9", className)}
         {...props}
       />
     </div>

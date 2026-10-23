@@ -5,7 +5,7 @@ import { redirect } from "~/i18n/navigation";
 import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
-import RestaurantDetailsForm from "~/components/dashboard/RestaurantDetailsForm";
+import { RestaurantDetailsEditor } from "~/components/dashboard/RestaurantDetailsEditor";
 import type { DeliveryAppLinks, SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
@@ -38,7 +38,7 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
   return (
     <>
       <DashboardRestaurantHeader restaurant={restaurant} role={role} activeTab="details" />
-      <RestaurantDetailsForm restaurant={restaurant} />
+      <RestaurantDetailsEditor restaurant={restaurant} />
     </>
   );
 }

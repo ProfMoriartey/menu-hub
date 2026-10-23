@@ -276,41 +276,6 @@
       }
     }
   },
-  "RestaurantForm": {
-    "mainTitle": "Restaurant Settings",
-    
-    "labelName": "Name",
-    "labelCountry": "Country",
-    "labelCurrency": "Currency Code",
-    "labelPhoneNumber": "Phone Number",
-    "labelMapUrl": "Map Link",
-    "labelAddress": "Address",
-    "labelShortDescription": "Short Description",
-    "labelTypeOfEstablishment": "Type of Establishment",
-    "labelRestaurantLogo": "Restaurant Logo",
-    
-    "placeholderCountry": "e.g., United States",
-    "placeholderCurrency": "e.g., USD, EUR",
-    "placeholderPhoneNumber": "+1 555-123-4567",
-    "placeholderAddress": "Street, City, Postal Code",
-    "placeholderDescription": "A brief, engaging summary of your restaurant.",
-    "placeholderTypeOfEstablishment": "e.g., Casual Dining, Cafe, Fine Dining",
-    
-    "logoPreviewAlt": "Logo Preview",
-    "noLogo": "No Logo",
-    
-    "buttonSaveChanges": "Save Changes",
-    "buttonSaving": "Saving...",
-    
-    "messages": {
-      "updateSuccess": "Restaurant details updated successfully.",
-      "updateFailed": "Update failed: {error}",
-      "validationFailed": "Validation failed. Check the fields."
-    },
-    "validationFailed": "Validation failed. Check the fields.",
-    "updateSuccess": "Restaurant details updated successfully.",
-    "unknownError": "An unknown error occurred."
-  },
   "Dashboard": {
     "title": "Your Assigned Menus",
     "emptyTitle": "No Menus Assigned",
@@ -435,5 +400,63 @@
     "categoriesSummary": "{categories, plural, one {# category} other {# categories}} · {items, plural, one {# item} other {# items}}. Open a category to manage its items.",
     "categoriesNav": "Categories",
     "itemsSummary": "{count, plural, one {# item} other {# items}} · Prices in {currency}"
+  },
+  "LanguageSwitcher": {
+    "label": "Language"
+  },
+  "DashboardShell": {
+    "home": "Dashboard"
+  },
+  "DashboardHome": {
+    "title": "Your restaurants",
+    "subtitle": "Pick a restaurant to update its menu or details.",
+    "counts": "{categories, plural, =0 {No categories} one {# category} other {# categories}} · {items, plural, =0 {no items} one {# item} other {# items}}",
+    "editMenu": "Edit menu",
+    "details": "Details",
+    "viewLive": "View live menu",
+    "adminTitle": "You're an administrator",
+    "adminText": "You can manage every restaurant from the admin panel.",
+    "adminLink": "Open admin panel"
+  },
+  "RestaurantDetails": {
+    "adminOnlyNote": "Your menu address, visibility, theme and search settings are managed by an administrator.",
+    "basicsTitle": "Basics",
+    "basicsDescription": "The restaurant's name and how you describe it to guests.",
+    "contactTitle": "Contact & location",
+    "contactDescription": "Helps guests find and reach you.",
+    "logoTitle": "Logo",
+    "logoDescription": "Shown at the top of your menu.",
+    "linksTitle": "Website & social",
+    "linksDescription": "Shown as buttons on your menu. Leave empty to hide.",
+    "deliveryTitle": "Delivery apps",
+    "deliveryDescription": "Where guests can order from you. Leave empty to hide.",
+    "name": "Name",
+    "description": "Description",
+    "descriptionHint": "Shown on the restaurant's about page.",
+    "descriptionPlaceholder": "A few sentences about the place, its food and its story.",
+    "address": "Address",
+    "addressPlaceholder": "Street, number, district, city",
+    "phone": "Phone number",
+    "mapUrl": "Map link",
+    "mapUrlHint": "Paste the share link from Google Maps or Apple Maps.",
+    "testLink": "Test link",
+    "logoHint": "A square image works best, at least 256 × 256 px.",
+    "logoPreview": "Logo preview",
+    "uploadLogo": "Upload logo",
+    "replaceLogo": "Replace logo",
+    "removeLogo": "Remove",
+    "uploadFailed": "Logo upload failed: {error}",
+    "website": "Website",
+    "otherDelivery": "Other delivery link",
+    "nameRequired": "Enter the restaurant's name.",
+    "invalidUrl": "Enter a full link, starting with https://",
+    "saving": "Saving…",
+    "needAttention": "{count, plural, one {# field needs attention} other {# fields need attention}}",
+    "saved": "All changes saved",
+    "unsaved": "Unsaved changes",
+    "noChanges": "No changes yet",
+    "discard": "Discard",
+    "save": "Save changes",
+    "saveFailed": "Couldn't save the restaurant."
   }
 }

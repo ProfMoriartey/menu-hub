@@ -276,36 +276,6 @@
       }
     }
   },
-  "RestaurantForm": {
-    "mainTitle": "Настройки ресторана",
-    "labelName": "Название",
-    "labelCountry": "Страна",
-    "labelCurrency": "Код валюты",
-    "labelPhoneNumber": "Номер телефона",
-    "labelMapUrl": "Ссылка на карту",
-    "labelAddress": "Адрес",
-    "labelShortDescription": "Краткое описание",
-    "labelTypeOfEstablishment": "Тип заведения",
-    "labelRestaurantLogo": "Логотип ресторана",
-    "placeholderCountry": "напр.: Россия",
-    "placeholderCurrency": "напр.: RUB, USD",
-    "placeholderPhoneNumber": "+7 900 000 00 00",
-    "placeholderAddress": "Улица, Город, Почтовый индекс",
-    "placeholderDescription": "Краткий, привлекательный обзор вашего ресторана.",
-    "placeholderTypeOfEstablishment": "напр.: Обычное кафе, Кофейня, Ресторан высокой кухни",
-    "logoPreviewAlt": "Предпросмотр логотипа",
-    "noLogo": "Нет логотипа",
-    "buttonSaveChanges": "Сохранить изменения",
-    "buttonSaving": "Сохранение...",
-    "messages": {
-      "updateSuccess": "Детали ресторана успешно обновлены.",
-      "updateFailed": "Ошибка обновления: {error}",
-      "validationFailed": "Ошибка валидации. Проверьте поля."
-    },
-    "validationFailed": "Ошибка валидации. Проверьте поля.",
-    "updateSuccess": "Детали ресторана успешно обновлены.",
-    "unknownError": "Произошла неизвестная ошибка."
-  },
   "Dashboard": {
     "title": "Назначенные Вам Меню",
     "emptyTitle": "Меню не назначены",
@@ -430,5 +400,63 @@
     "categoriesSummary": "{categories, plural, one {# категория} few {# категории} many {# категорий} other {# категории}} · {items, plural, one {# блюдо} few {# блюда} many {# блюд} other {# блюда}}. Откройте категорию, чтобы управлять блюдами.",
     "categoriesNav": "Категории",
     "itemsSummary": "{count, plural, one {# блюдо} few {# блюда} many {# блюд} other {# блюда}} · Цены в {currency}"
+  },
+  "LanguageSwitcher": {
+    "label": "Язык"
+  },
+  "DashboardShell": {
+    "home": "Панель"
+  },
+  "DashboardHome": {
+    "title": "Ваши рестораны",
+    "subtitle": "Выберите ресторан, чтобы обновить меню или данные.",
+    "counts": "{categories, plural, =0 {Нет категорий} one {# категория} few {# категории} many {# категорий} other {# категории}} · {items, plural, =0 {нет блюд} one {# блюдо} few {# блюда} many {# блюд} other {# блюда}}",
+    "editMenu": "Редактировать меню",
+    "details": "Данные",
+    "viewLive": "Открыть меню на сайте",
+    "adminTitle": "Вы администратор",
+    "adminText": "Все рестораны можно настраивать в панели администратора.",
+    "adminLink": "Открыть панель администратора"
+  },
+  "RestaurantDetails": {
+    "adminOnlyNote": "Адрес меню, видимость, тему и настройки поиска задаёт администратор.",
+    "basicsTitle": "Основное",
+    "basicsDescription": "Название ресторана и то, как вы представляете его гостям.",
+    "contactTitle": "Контакты и адрес",
+    "contactDescription": "Помогает гостям найти вас и связаться с вами.",
+    "logoTitle": "Логотип",
+    "logoDescription": "Показывается в верхней части меню.",
+    "linksTitle": "Сайт и соцсети",
+    "linksDescription": "Показываются кнопками в вашем меню. Оставьте пустыми, чтобы скрыть.",
+    "deliveryTitle": "Сервисы доставки",
+    "deliveryDescription": "Где гости могут заказать у вас. Оставьте пустыми, чтобы скрыть.",
+    "name": "Название",
+    "description": "Описание",
+    "descriptionHint": "Показывается на странице «О ресторане».",
+    "descriptionPlaceholder": "Пара предложений о заведении, его кухне и истории.",
+    "address": "Адрес",
+    "addressPlaceholder": "Улица, дом, район, город",
+    "phone": "Номер телефона",
+    "mapUrl": "Ссылка на карту",
+    "mapUrlHint": "Вставьте ссылку «Поделиться» из Google Карт или Apple Карт.",
+    "testLink": "Проверить ссылку",
+    "logoHint": "Лучше всего подойдёт квадратное изображение не меньше 256 × 256 пикселей.",
+    "logoPreview": "Предпросмотр логотипа",
+    "uploadLogo": "Загрузить логотип",
+    "replaceLogo": "Заменить логотип",
+    "removeLogo": "Удалить",
+    "uploadFailed": "Не удалось загрузить логотип: {error}",
+    "website": "Сайт",
+    "otherDelivery": "Другая ссылка на доставку",
+    "nameRequired": "Укажите название ресторана.",
+    "invalidUrl": "Укажите полную ссылку, начиная с https://",
+    "saving": "Сохраняем…",
+    "needAttention": "{count, plural, one {# поле требует внимания} few {# поля требуют внимания} many {# полей требуют внимания} other {# поля требуют внимания}}",
+    "saved": "Все изменения сохранены",
+    "unsaved": "Есть несохранённые изменения",
+    "noChanges": "Изменений пока нет",
+    "discard": "Отменить",
+    "save": "Сохранить изменения",
+    "saveFailed": "Не удалось сохранить ресторан."
   }
 }
