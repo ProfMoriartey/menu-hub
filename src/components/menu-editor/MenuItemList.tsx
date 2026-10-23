@@ -1,7 +1,7 @@
 // src/components/menu-editor/MenuItemList.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
@@ -21,7 +21,15 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ArrowRightLeft, GripVertical, Pencil, Plus, Trash2, UtensilsCrossed, X } from "lucide-react";
+import {
+  ArrowRightLeft,
+  GripVertical,
+  Pencil,
+  Plus,
+  Trash2,
+  UtensilsCrossed,
+  X,
+} from "lucide-react";
 import { unwrap } from "~/lib/action-result";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
@@ -31,8 +39,20 @@ import {
   MenuItemDialog,
   type AdminMenuItem,
 } from "~/components/menu-editor/MenuItemDialog";
-import { ReorderStatus, useReorderState } from "~/components/menu-editor/ReorderStatus";
-import { deleteMenuItem, updateMenuItemOrder } from "~/app/actions/menu-item";
+import {
+  ReorderStatus,
+  useReorderState,
+} from "~/components/menu-editor/ReorderStatus";
+import {
+  deleteMenuItem,
+  setMenuItemAvailability,
+  updateMenuItemOrder,
+} from "~/app/actions/menu-item";
+import {
+  AvailabilityBadge,
+  AvailabilitySelect,
+} from "~/components/menu-editor/availability";
+import type { ItemAvailability } from "~/lib/menu-item-schemas";
 import { cn } from "~/lib/utils";
 
 function DeleteItemButton({
@@ -81,8 +101,38 @@ function ItemRow({
   onEdit: () => void;
 }) {
   const t = useTranslations("MenuEditor");
-  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
-    useSortable({ id: item.id });
+  const tAvailability = useTranslations("Availability");
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id });
+
+  // Shown at once; put back if saving fails. Follows the server data after.
+  const [availability, setAvailability] = useState(item.availability);
+  const [availabilityError, setAvailabilityError] = useState<string | null>(
+    null,
+  );
+  const [isSavingAvailability, startAvailabilityTransition] = useTransition();
+  useEffect(() => setAvailability(item.availability), [item.availability]);
+
+  const changeAvailability = (next: ItemAvailability) => {
+    if (next === availability) return;
+    const previous = availability;
+    setAvailability(next);
+    setAvailabilityError(null);
+    startAvailabilityTransition(async () => {
+      const result = await setMenuItemAvailability(item.id, restaurantId, next);
+      if (!result.ok) {
+        setAvailability(previous);
+        setAvailabilityError(result.error);
+      }
+    });
+  };
 
   return (
     <li
@@ -111,17 +161,36 @@ function ItemRow({
       >
         <div className="bg-muted border-border relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border">
           {item.imageUrl ? (
-            <Image src={item.imageUrl} alt="" fill sizes="56px" className="object-cover" />
+            <Image
+              src={item.imageUrl}
+              alt=""
+              fill
+              sizes="56px"
+              className="object-cover"
+            />
           ) : (
-            <UtensilsCrossed className="text-muted-foreground h-5 w-5" aria-hidden />
+            <UtensilsCrossed
+              className="text-muted-foreground h-5 w-5"
+              aria-hidden
+            />
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate font-medium group-hover:underline group-focus-visible:underline">
-            {item.name}
-          </p>
+          <div className="flex min-w-0 items-center gap-2">
+            <p
+              className={cn(
+                "truncate font-medium group-hover:underline group-focus-visible:underline",
+                availability === "hidden" && "text-muted-foreground",
+              )}
+            >
+              {item.name}
+            </p>
+            <AvailabilityBadge availability={availability} />
+          </div>
           {item.description && (
-            <p className="text-muted-foreground line-clamp-1 text-sm">{item.description}</p>
+            <p className="text-muted-foreground line-clamp-1 text-sm">
+              {item.description}
+            </p>
           )}
           {item.dietaryLabels && item.dietaryLabels.length > 0 && (
             <div className="mt-1 flex flex-wrap gap-1">
@@ -137,23 +206,47 @@ function ItemRow({
           )}
         </div>
         <p className="shrink-0 text-end font-medium tabular-nums">
-          {item.price} <span className="text-muted-foreground text-sm font-normal">{currency}</span>
+          {item.price}{" "}
+          <span className="text-muted-foreground text-sm font-normal">
+            {currency}
+          </span>
         </p>
       </button>
 
-      <div className="flex shrink-0 items-center">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={onEdit}
-          aria-label={t("items.editLabel", { name: item.name })}
-          title={t("items.edit")}
-          className="hidden sm:inline-flex"
-        >
-          <Pencil className="h-4 w-4" />
-        </Button>
-        <DeleteItemButton item={item} restaurantId={restaurantId} categoryId={categoryId} />
+      <div className="flex shrink-0 flex-col items-end gap-1">
+        <div className="flex items-center">
+          <AvailabilitySelect
+            value={availability}
+            onChange={changeAvailability}
+            disabled={isSavingAvailability}
+            label={tAvailability("changeLabel", { name: item.name })}
+            className="h-8 w-auto gap-1.5 px-2 text-xs"
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={onEdit}
+            aria-label={t("items.editLabel", { name: item.name })}
+            title={t("items.edit")}
+            className="hidden sm:inline-flex"
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <DeleteItemButton
+            item={item}
+            restaurantId={restaurantId}
+            categoryId={categoryId}
+          />
+        </div>
+        {availabilityError && (
+          <p
+            className="text-destructive max-w-56 text-end text-xs"
+            role="alert"
+          >
+            {availabilityError}
+          </p>
+        )}
       </div>
     </li>
   );
@@ -185,12 +278,17 @@ export function MenuItemList({
   const [items, setItems] = useState(initialItems);
   const [orderState, setOrderState] = useReorderState();
   // null = closed, "new" = adding, otherwise the item being edited.
-  const [dialogItem, setDialogItem] = useState<AdminMenuItem | "new" | null>(null);
-  // An item saved into another category leaves this list; say where it went.
-  const [elsewhere, setElsewhere] = useState<{ name: string; categoryId: string; isNew: boolean } | null>(
+  const [dialogItem, setDialogItem] = useState<AdminMenuItem | "new" | null>(
     null,
   );
-  const elsewhereCategory = elsewhere && categories.find((c) => c.id === elsewhere.categoryId);
+  // An item saved into another category leaves this list; say where it went.
+  const [elsewhere, setElsewhere] = useState<{
+    name: string;
+    categoryId: string;
+    isNew: boolean;
+  } | null>(null);
+  const elsewhereCategory =
+    elsewhere && categories.find((c) => c.id === elsewhere.categoryId);
 
   // Adds, edits and deletes refresh the server data; pick it up here.
   useEffect(() => {
@@ -199,7 +297,9 @@ export function MenuItemList({
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
   );
 
   const handleDragEnd = async ({ active, over }: DragEndEvent) => {
@@ -232,7 +332,10 @@ export function MenuItemList({
         <Button onClick={() => setDialogItem("new")}>
           <Plus className="h-4 w-4" /> {t("add")}
         </Button>
-        <ReorderStatus state={orderState} onDismiss={() => setOrderState("idle")} />
+        <ReorderStatus
+          state={orderState}
+          onDismiss={() => setOrderState("idle")}
+        />
       </div>
 
       {elsewhereCategory && (
@@ -240,14 +343,20 @@ export function MenuItemList({
           role="status"
           className="bg-primary/5 border-primary/20 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border px-4 py-2.5 text-sm"
         >
-          <ArrowRightLeft className="text-primary h-4 w-4 shrink-0" aria-hidden />
+          <ArrowRightLeft
+            className="text-primary h-4 w-4 shrink-0"
+            aria-hidden
+          />
           <span>
             {t(elsewhere.isNew ? "addedElsewhereNotice" : "movedNotice", {
               name: elsewhere.name,
               category: elsewhereCategory.name,
             })}
           </span>
-          <Link href={`${basePath}/${elsewhereCategory.slug}`} className="text-primary font-medium hover:underline">
+          <Link
+            href={`${basePath}/${elsewhereCategory.slug}`}
+            className="text-primary font-medium hover:underline"
+          >
             {t("openCategory", { category: elsewhereCategory.name })}
           </Link>
           <button
@@ -264,8 +373,12 @@ export function MenuItemList({
       {items.length === 0 ? (
         <div className="border-border flex flex-col items-center rounded-xl border border-dashed px-6 py-14 text-center">
           <UtensilsCrossed className="text-muted-foreground mb-3 h-9 w-9" />
-          <p className="font-medium">{t("emptyTitle", { category: categoryName })}</p>
-          <p className="text-muted-foreground mt-1 mb-5 max-w-sm text-sm">{t("emptyText")}</p>
+          <p className="font-medium">
+            {t("emptyTitle", { category: categoryName })}
+          </p>
+          <p className="text-muted-foreground mt-1 mb-5 max-w-sm text-sm">
+            {t("emptyText")}
+          </p>
           <Button variant="outline" onClick={() => setDialogItem("new")}>
             <Plus className="h-4 w-4" /> {t("addFirst")}
           </Button>
@@ -273,8 +386,15 @@ export function MenuItemList({
       ) : (
         <>
           <div className="border-border overflow-hidden rounded-xl border shadow-sm">
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-              <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={items.map((item) => item.id)}
+                strategy={verticalListSortingStrategy}
+              >
                 <ul>
                   {items.map((item) => (
                     <ItemRow
@@ -290,7 +410,9 @@ export function MenuItemList({
               </SortableContext>
             </DndContext>
           </div>
-          {items.length > 1 && <p className="text-muted-foreground text-xs">{t("dragHint")}</p>}
+          {items.length > 1 && (
+            <p className="text-muted-foreground text-xs">{t("dragHint")}</p>
+          )}
         </>
       )}
 
@@ -303,7 +425,9 @@ export function MenuItemList({
         categoryName={categoryName}
         currency={currency}
         categories={categories}
-        onSaved={(saved) => setElsewhere(saved.categoryId === categoryId ? null : saved)}
+        onSaved={(saved) =>
+          setElsewhere(saved.categoryId === categoryId ? null : saved)
+        }
       />
     </div>
   );

@@ -1,0 +1,2 @@
+CREATE TYPE "public"."item_availability" AS ENUM('available', 'sold_out', 'hidden');--> statement-breakpoint
+ALTER TABLE "menu-hub_menu_items" ADD COLUMN "availability" "item_availability" DEFAULT 'available' NOT NULL;

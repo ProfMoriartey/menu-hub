@@ -566,5 +566,15 @@
     "dayColumn": "Gün",
     "scansColumn": "Okutma",
     "scansNote": "Yalnızca QR kod okutmaları sayılır, yazılan bağlantıdan gelen ziyaretler sayılmaz. Aynı telefondan 30 dakika içindeki tekrar okutmalar bir kez sayılır ve sohbet uygulamalarındaki bağlantı önizlemeleri sayılmaz. Günler UTC saatine göredir. Hiçbir kişisel veri saklanmaz."
+  },
+  "Availability": {
+    "label": "Durum",
+    "available": "Mevcut",
+    "soldOut": "Tükendi",
+    "hidden": "Gizli",
+    "availableHint": "Menüde her zamanki gibi gösterilir.",
+    "soldOutHint": "Menüde kalır, tükendi olarak işaretlenir.",
+    "hiddenHint": "Menüde hiç gösterilmez.",
+    "changeLabel": "{name} durumu"
   }
 }

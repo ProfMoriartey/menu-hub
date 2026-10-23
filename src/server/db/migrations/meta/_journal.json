@@ -22,6 +22,13 @@
       "when": 1792758028690,
       "tag": "0003_add_qr_scan_days",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792758624565,
+      "tag": "0004_add_item_availability",
+      "breakpoints": true
     }
   ]
 }

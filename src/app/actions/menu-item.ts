@@ -11,8 +11,10 @@ import { runAction } from "~/server/run-action";
 
 import {
   createMenuItemSchema,
+  ITEM_AVAILABILITY,
   updateMenuItemSchema,
   type CreateMenuItemData,
+  type ItemAvailability,
   type UpdateMenuItemData,
 } from "~/lib/menu-item-schemas";
 import { uniqueSlug } from "~/lib/slug";
@@ -80,6 +82,7 @@ export async function addMenuItem(formData: FormData): Promise<ActionResult> {
       price: getStringValue(formData, "price"),
       ingredients: getStringValue(formData, "ingredients"),
       dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
+      availability: getStringValue(formData, "availability") ?? undefined,
       imageUrl: getStringValue(formData, "imageUrl"),
       restaurantId,
       categoryId: getStringValue(formData, "categoryId") ?? "",
@@ -114,6 +117,7 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
       price: getStringValue(formData, "price"),
       ingredients: getStringValue(formData, "ingredients"),
       dietaryLabels: getJsonArrayValue(formData, "dietaryLabels"),
+      availability: getStringValue(formData, "availability") ?? undefined,
       imageUrl: getStringValue(formData, "imageUrl"),
       restaurantId,
       categoryId: getStringValue(formData, "categoryId") ?? "",
@@ -150,6 +154,9 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
         price: validatedData.price,
         ingredients: validatedData.ingredients,
         dietaryLabels: validatedData.dietaryLabels,
+        // Only when sent, so a form without the field can't put a sold-out
+        // item back on sale.
+        availability: formData.has("availability") ? validatedData.availability : existingItem.availability,
         imageUrl: validatedData.imageUrl,
         ...(moved && {
           categoryId: validatedData.categoryId,
@@ -189,6 +196,34 @@ export async function deleteMenuItem(
       .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)));
 
     await deleteUploadedFiles([existingItem.imageUrl]);
+
+    revalidateMenuPages();
+  });
+}
+
+/**
+ * Marks an item available, sold out or hidden: the quick change from the
+ * item list, for things like "we ran out of soup". Editors can do it too.
+ */
+export async function setMenuItemAvailability(
+  menuItemId: string,
+  restaurantId: string,
+  availability: string,
+): Promise<ActionResult> {
+  return runAction("saveItemFailed", async () => {
+    if (!restaurantId) throw new ActionError("missingRestaurant");
+    await checkAuthorization(restaurantId);
+
+    if (!(ITEM_AVAILABILITY as readonly string[]).includes(availability)) {
+      throw new ActionError("invalidItem");
+    }
+
+    const [updated] = await db
+      .update(menuItems)
+      .set({ availability: availability as ItemAvailability, updatedAt: new Date() })
+      .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)))
+      .returning({ id: menuItems.id });
+    if (!updated) throw new ActionError("itemNotFound");
 
     revalidateMenuPages();
   });

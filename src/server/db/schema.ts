@@ -24,6 +24,10 @@ export const dietaryLabelEnum = pgEnum("dietary_label", [
   "nut-free",
 ]);
 
+// Whether guests see a menu item: listed normally, listed as sold out, or not
+// shown at all (e.g. seasonal items, or ones still being prepared).
+export const itemAvailabilityEnum = pgEnum("item_availability", ["available", "sold_out", "hidden"]);
+
 // Define a TypeScript type for the values of the dietaryLabelEnum
 type DietaryLabelValue = typeof dietaryLabelEnum.enumValues[number];
 
@@ -105,6 +109,7 @@ export const menuItems = pgTable(
     price: varchar("price", { length: 50 }).notNull(),
     ingredients: varchar("ingredients", { length: 512 }),
     dietaryLabels: jsonb("dietary_labels").$type<DietaryLabelValue[]>().default([]),
+    availability: itemAvailabilityEnum("availability").notNull().default("available"),
     imageUrl: varchar("image_url", { length: 256 }),
     order: integer("order").notNull().default(0), // Ensure this line exists
     createdAt: timestamp("created_at").defaultNow().notNull(),

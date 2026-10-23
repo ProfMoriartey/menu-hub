@@ -1,9 +1,12 @@
 // src/lib/menu-item-schemas.ts
 import { z } from "zod";
-import { dietaryLabelEnum } from "~/server/db/schema";
+import { dietaryLabelEnum, itemAvailabilityEnum } from "~/server/db/schema";
 import type { DietaryLabel } from "~/types/restaurant";
 
 export const ALL_DIETARY_LABELS: DietaryLabel[] = dietaryLabelEnum.enumValues;
+
+export const ITEM_AVAILABILITY = itemAvailabilityEnum.enumValues;
+export type ItemAvailability = (typeof ITEM_AVAILABILITY)[number];
 
 // Forms submit "" for untouched optional inputs; store those as null.
 const optionalText = z
@@ -21,6 +24,8 @@ export const createMenuItemSchema = z.object({
   dietaryLabels: z
     .array(z.enum(ALL_DIETARY_LABELS as [DietaryLabel, ...DietaryLabel[]]))
     .default([]),
+  // Forms that don't send it (older clients) get "available".
+  availability: z.enum(ITEM_AVAILABILITY).default("available"),
   imageUrl: z
     .union([z.string().url("Invalid URL format."), z.literal("")])
     .nullable()

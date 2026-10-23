@@ -566,5 +566,15 @@
     "dayColumn": "Día",
     "scansColumn": "Escaneos",
     "scansNote": "Solo cuenta los escaneos del código QR, no las visitas desde el enlace escrito. Los escaneos repetidos desde el mismo móvil en 30 minutos cuentan una vez, y las vistas previas de enlaces en apps de chat no se cuentan. Los días siguen la hora UTC. No se guarda ningún dato personal."
+  },
+  "Availability": {
+    "label": "Disponibilidad",
+    "available": "Disponible",
+    "soldOut": "Agotado",
+    "hidden": "Oculto",
+    "availableHint": "Se muestra en el menú como siempre.",
+    "soldOutHint": "Sigue en el menú, marcado como agotado.",
+    "hiddenHint": "No aparece en el menú.",
+    "changeLabel": "Disponibilidad de {name}"
   }
 }

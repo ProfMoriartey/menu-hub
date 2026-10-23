@@ -29,6 +29,8 @@ import { UploadButton, uploadButtonClass } from "~/utils/uploadthing";
 import { ITEM_PHOTO, resizeImages } from "~/lib/resize-image";
 import { addMenuItem, updateMenuItem } from "~/app/actions/menu-item";
 import { CharCount, Field } from "~/components/forms/fields";
+import { AVAILABILITY_OPTIONS, AvailabilitySelect } from "~/components/menu-editor/availability";
+import type { ItemAvailability } from "~/lib/menu-item-schemas";
 import { cn } from "~/lib/utils";
 import type { menuItems } from "~/server/db/schema";
 import type { DietaryLabel } from "~/types/restaurant";
@@ -58,6 +60,7 @@ interface ItemValues {
   dietaryLabels: DietaryLabel[];
   imageUrl: string;
   categoryId: string;
+  availability: ItemAvailability;
 }
 
 const valuesFromItem = (item: AdminMenuItem | undefined, categoryId: string): ItemValues => ({
@@ -68,6 +71,7 @@ const valuesFromItem = (item: AdminMenuItem | undefined, categoryId: string): It
   dietaryLabels: item?.dietaryLabels ?? [],
   imageUrl: item?.imageUrl ?? "",
   categoryId: item?.categoryId ?? categoryId,
+  availability: item?.availability ?? "available",
 });
 
 interface MenuItemDialogProps {
@@ -104,6 +108,7 @@ function MenuItemForm({
   onSaved,
 }: MenuItemDialogProps) {
   const t = useTranslations("MenuEditor");
+  const tAvailability = useTranslations("Availability");
   const locale = useLocale();
   const isEditing = Boolean(item);
   const [initial, setInitial] = useState(() => valuesFromItem(item, categoryId));
@@ -154,6 +159,7 @@ function MenuItemForm({
       formData.set("ingredients", values.ingredients);
       formData.set("dietaryLabels", JSON.stringify(values.dietaryLabels));
       formData.set("imageUrl", values.imageUrl);
+      formData.set("availability", values.availability);
 
       try {
         unwrap(await (item ? updateMenuItem : addMenuItem)(formData));
@@ -304,22 +310,38 @@ function MenuItemForm({
               </Field>
             </div>
 
-            {categories.length > 1 && (
-              <Field label={t("itemDialog.category")} htmlFor="item-category" className="sm:max-w-xs">
-                <Select value={values.categoryId} onValueChange={(v) => set("categoryId", v)}>
-                  <SelectTrigger id="item-category" className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <div className="grid gap-5 sm:grid-cols-2">
+              {categories.length > 1 && (
+                <Field label={t("itemDialog.category")} htmlFor="item-category">
+                  <Select value={values.categoryId} onValueChange={(v) => set("categoryId", v)}>
+                    <SelectTrigger id="item-category" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+              )}
+              <Field
+                label={tAvailability("label")}
+                htmlFor="item-availability"
+                hint={tAvailability(
+                  `${AVAILABILITY_OPTIONS.find((o) => o.value === values.availability)?.key ?? "available"}Hint`,
+                )}
+              >
+                <AvailabilitySelect
+                  id="item-availability"
+                  value={values.availability}
+                  onChange={(v) => set("availability", v)}
+                  className="w-full"
+                />
               </Field>
-            )}
+            </div>
 
             <Field
               label={t("itemDialog.description")}

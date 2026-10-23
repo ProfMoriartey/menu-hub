@@ -566,5 +566,15 @@
     "dayColumn": "Day",
     "scansColumn": "Scans",
     "scansNote": "Counts scans of the QR code only, not visits from the typed link. Repeat scans from the same phone within 30 minutes count once, and link previews in chat apps aren't counted. Days follow UTC time. No personal data is stored."
+  },
+  "Availability": {
+    "label": "Availability",
+    "available": "Available",
+    "soldOut": "Sold out",
+    "hidden": "Hidden",
+    "availableHint": "Shown on the menu as usual.",
+    "soldOutHint": "Stays on the menu, marked as sold out.",
+    "hiddenHint": "Not shown on the menu at all.",
+    "changeLabel": "Availability of {name}"
   }
 }
