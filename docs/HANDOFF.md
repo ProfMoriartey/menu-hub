@@ -1,0 +1,375 @@
+# menu-hub: handoff brief
+
+Read this before changing anything. It records how the app is built, the
+rules the code follows, what has been done, what is open, and the traps
+that cost time before. Last updated 2026-10-23, at commit `67113b8` on
+branch `perf/users-dashboard`.
+
+---
+
+## 1. What the product is
+
+**Menupedia / menu-hub** is a digital menu platform for restaurants. Guests
+scan a QR code on the table and get the restaurant's menu in their own
+language. Restaurants manage their menu in a dashboard. The owner of the
+project runs an admin panel.
+
+**The long-term goal is a self-running SaaS:** restaurants sign up and manage
+themselves without the owner doing routine work. That isn't built yet
+(no billing, plans or self-sign-up), but design choices should hold up for
+many tenants. Keep data strictly per restaurant, prefer self-serve flows over
+"ask the admin", and mention SaaS-relevant gaps when you see them. Don't
+build billing or sign-up unless asked.
+
+There are three audiences:
+
+| Audience | Where | Language |
+|---|---|---|
+| Guests | public menu `/<slug>`, item pages, `/restaurants` | 5 languages |
+| Restaurant staff (owners, editors) | `/dashboard/...` | 5 languages |
+| The project owner (system admin) | `/admin/...` | English (shared components follow the URL locale) |
+
+---
+
+## 2. Stack
+
+- **Next.js 15.2** (App Router, server actions, `after()`), **React 19**, TypeScript.
+  Dev runs with Turbopack (`next dev --turbo`).
+- **Tailwind CSS v4** (CSS-first config in `src/styles/globals.css`), shadcn/ui
+  components on Radix (`src/components/ui`), `lucide-react` icons, `framer-motion`
+  on the public pages.
+- **Drizzle ORM** on **PostgreSQL** (driver `postgres`). Schema in
+  `src/server/db/schema.ts`, migrations in `src/server/db/migrations`.
+- **Clerk** for auth (`@clerk/nextjs` v6). The admin role comes from the Clerk
+  session claims (`sessionClaims.metadata.role === "admin"`, set via
+  `publicMetadata`).
+- **next-intl v4** for i18n: locales `en, tr, ar, es, ru`, default `en`,
+  always-prefixed URLs (`/en/...`). Arabic is right to left (`dir` is set on
+  `<html>` in `src/app/[locale]/layout.tsx`).
+- **UploadThing v7** for images (logos, item photos).
+- **dnd-kit** for drag-and-drop ordering, **zod 3** for validation,
+  **qrcode** for QR codes.
+- **Package manager: pnpm** (`pnpm-lock.yaml` is the maintained lockfile;
+  `package-lock.json` is stale and should be ignored or removed).
+
+### Environment variables (`.env`, documented in `.env.example`)
+
+`DATABASE_URL`, `CLERK_SECRET_KEY`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`,
+`CLERK_WEBHOOK_SECRET`, `UPLOADTHING_TOKEN`, `NEXT_PUBLIC_APP_URL` (public
+address used in QR codes and share links; must be the production domain in
+production; optional, falls back to the request's address), `ADMIN_USER_ID`
+(present in `.env` but not referenced anywhere in `src`; the admin role
+comes from Clerk). `src/env.js` validates the server ones and
+`NEXT_PUBLIC_APP_URL`.
+
+### Commands
+
+| Command | What it does |
+|---|---|
+| `pnpm dev` | dev server |
+| `pnpm typecheck` / `pnpm lint` / `pnpm check` | `tsc --noEmit` / `next lint` / both |
+| `pnpm i18n:check` | every literal `t("key")` exists in all 5 locales, every message formats (ICU, plurals), every server error code has a message |
+| `pnpm db:generate` | generate a migration from schema changes (always read and, if needed, edit the SQL before applying) |
+| `pnpm db:migrate` | apply migrations. **Use this, not `db:push`**: some migrations backfill data that `push` skips |
+| `pnpm uploads:cleanup` | dry run: list UploadThing files nothing references; add `-- --delete` to delete (see §9) |
+
+---
+
+## 3. Map of the code
+
+### Routes (`src/app`)
+
+```
+[locale]/
+  page.tsx, restaurants/, themes/, about/          public marketing + directory
+  [restaurantSlug]/                                 public menu of one restaurant
+    layout.tsx        gate: active → everyone; inactive → preview for people
+                      with access (PreviewBanner, noindex), else redirect
+    page.tsx          the menu (hidden items excluded)
+    about/, item/[itemSlug]/   (id-based item URLs permanently redirect to slugs)
+  (client)/dashboard/                               restaurant staff
+    layout.tsx        top bar: dashboard link, LanguageSwitcher, ThemeToggle, UserButton
+    page.tsx          "Your restaurants" cards (+ setup progress)
+    [restaurantSlug]/
+      layout.tsx      access check for every page below (owner/editor/admin)
+      menu/           categories + SetupChecklist;  menu/[categorySlug]/ items
+      edit/           owner details form (editors are redirected to menu)
+      share/          QR code, link, scan stats;  share/print/ table cards
+  admin/                                            system admin only (layout checks role)
+    restaurants/      list (filters incl. "Ready to go live"), new/
+      [restaurantSlug]/edit | menu | menu/[categorySlug] | share | share/print | people
+    users/, users/[userId]/   user list (search, Clerk profiles), access + roles, delete user
+  sign-in/
+r/[restaurantId]/route.ts   permanent QR link: counts the scan, 307 → /<current slug>
+api/uploadthing/            upload routes (per-restaurant permission checks)
+api/webhooks/clerk/         user.created / user.updated / user.deleted → users table
+actions/                    server actions: auth, restaurant, category, menu-item, search
+[locale]/admin/actions.ts   admin actions: assign/revoke access, delete user
+```
+
+`src/middleware.ts` runs Clerk + next-intl. It skips `/api`, `/trpc` and `/r/`
+(those have no locale prefix).
+
+### Key modules
+
+| File | Role |
+|---|---|
+| `lib/action-result.ts` | `ActionResult<T>`, `ActionError(code)`, `ACTION_ERROR_CODES`, `unwrap()`, `ActionFailure`. Browser-safe |
+| `server/run-action.ts` | `runAction(fallbackCode, body)`: translates errors with the request locale; server-only |
+| `app/actions/auth.ts` | `isSystemAdmin`, `getRestaurantRole`, `checkAuthorization` (any access), `checkOwnerAuthorization` (owner/admin) |
+| `lib/access.ts` | `ACCESS_LEVELS` (`owner`, `editor`), `RestaurantRole` (+ `admin`), `canEditDetails` |
+| `server/menu-data.ts` | category summaries / category with items, shared by admin + dashboard |
+| `server/dashboard-restaurant.ts` | `getDashboardRestaurant(slug)` → restaurant + viewer's role (React `cache`) |
+| `server/setup-facts.ts` + `lib/setup-checklist.ts` | getting-started checklist data (grouped queries) and rules |
+| `server/qr-scans.ts` | record scans, bot filter, 7/30/all-time stats |
+| `server/uploads.ts` | `deleteUploadedFiles(urls)`: only deletes files no restaurant/item still references |
+| `server/public-origin.ts` | public origin + share links (`menuUrl`, `permanentUrl`) |
+| `server/clerk-profiles.ts` | batch Clerk profile lookup (name, photo, last sign-in, admin) |
+| `lib/slug.ts` | `slugify`, `uniqueSlug`, `isUuid` |
+| `lib/schemas.ts` | restaurant zod schema, `RESERVED_SLUGS` |
+| `lib/menu-item-schemas.ts` | item zod schemas, `ITEM_AVAILABILITY` |
+| `lib/resize-image.ts` | browser-side image shrinking before upload |
+| `lib/qr-code.ts` | QR to SVG/PNG (logo in the middle), logo loading via `/_next/image` |
+| `lib/unsaved-changes.ts` | `useUnsavedChangesGuard`, `hasUnsavedChanges` |
+| `lib/table-card-text.ts` | printed card headlines per language (not in messages; chosen per print) |
+| `utils/uploadthing.ts` | `UploadButton`, shared `uploadButtonClass` |
+
+### Shared component folders
+
+- `components/menu-editor/`: **shared by admin and dashboard**: `CategoryList`
+  (takes `basePath`), `MenuItemList`, `MenuItemDialog`, `CategorySwitcher`,
+  `ReorderStatus`, `ConfirmDialog` (optional `confirmText` = type to confirm),
+  `DeleteCategoryDialog`, `availability.tsx`.
+- `components/share/`: `SharePanel`, `TableCardSheet`, `ScanStats` (both sides).
+- `components/forms/fields.tsx`: `FormSection`, `Field`, `UrlInput`,
+  `CharCount`, `ToggleRow`.
+- `components/admin/`: admin-only (English): restaurant form, list, cards,
+  headers, people/user access, `RestaurantLogo`, `StatusBadges`.
+- `components/dashboard/`: `DashboardRestaurantHeader`,
+  `RestaurantDetailsEditor`, `SetupChecklist`.
+- `components/public/`: menu themes (`themes/*Layout.tsx`, four themes:
+  classic, sidebar-list, accordion-card, category-cards-image-dominant),
+  `MenuItemDisplayClient`, `PreviewBanner`, `SoldOutBadge`.
+- `components/shared/`: `Navbar`, `ThemeToggle`, `LanguageSwitcher`.
+
+---
+
+## 4. Data model (`src/server/db/schema.ts`)
+
+| Table | Notes |
+|---|---|
+| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social/delivery links (jsonb), SEO fields |
+| `menu-hub_categories` | `slug` unique per restaurant; `order` |
+| `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text |
+| `menu-hub_users` | Clerk user id + email (synced by the webhook) |
+| `menu-hub_users_to_restaurants` | `accessLevel` `owner` / `editor` (unknown values count as editor) |
+| `menu-hub_qr_scan_days` | `(restaurantId, day UTC)` → `count`; no personal data |
+
+Deleting a restaurant cascades to its categories, items, access rows and scan
+counts. Deleting a user cascades to their access rows.
+
+**Migrations:** `0001` (old), `0002` slugs (with backfill SQL), `0003` QR scan
+days, `0004` item availability. The development database has all of them
+applied (checked 2026-10-23). Production must run `pnpm db:migrate`.
+
+**Reserved slugs** (`RESERVED_SLUGS`): app routes like `admin`, `dashboard`,
+`restaurants`, … plus `new` (admin route) and `r` (QR link route).
+
+---
+
+## 5. Access model
+
+- **System admin**: Clerk role `admin`. Full access everywhere; the only one
+  who sees `/admin`, publishes restaurants (`isActive`), and manages users.
+- **Owner**: restaurant details (name, address, phone, map link,
+  description, logo, social/delivery links) **and** the menu.
+- **Editor**: the menu only (categories, items, availability, duplicate,
+  reorder) plus the Share tab.
+- Admin-only restaurant fields (slug, active, featured, currency, theme,
+  cuisine/type, country, SEO, og image) are **kept server-side** when a
+  non-admin saves (`updateRestaurant`), whatever the request contains.
+- Every server action checks access itself (`checkAuthorization` /
+  `checkOwnerAuthorization` / `isSystemAdmin`), and every query that takes an
+  id also filters by `restaurantId` (tenant isolation). `addMenuItem` /
+  `updateMenuItem` verify the category belongs to the restaurant.
+- Uploads (`api/uploadthing/core.ts`): item photos need any access to that
+  restaurant; logos need owner/admin; a logo without a restaurant (admin "new
+  restaurant" form) needs admin. Buttons send `{ restaurantId, locale }`.
+- Inactive restaurants: public pages are visible as a **preview** to anyone
+  with access (`PreviewBanner`, `noindex`); others are redirected.
+
+---
+
+## 6. Rules the code follows (keep following them)
+
+### Server actions and errors
+- Actions **return** `ActionResult` and never throw to the client: in
+  production Next.js hides thrown error messages.
+- User-facing failures are `throw new ActionError("code")` inside
+  `runAction(fallbackCode, async () => …)`. The code must be in
+  `ACTION_ERROR_CODES` (typed) **and** have a message under `ActionErrors` in
+  all 5 locales; `pnpm i18n:check` verifies both. The server translates using
+  the request locale; results also carry `code` for logic (e.g. the admin form
+  maps `slugTaken`/`slugInvalid` to the slug field).
+- To return data: `runAction<T>` → `ActionResult<T>` with `data`
+  (see `duplicateMenuItem`).
+- Client code either checks `result.ok` or wraps in try/catch with
+  `unwrap(await action(...))`.
+- Revalidate with `revalidatePath("/[locale]", "layout")` (or
+  `"/[locale]/admin", "layout"`). Plain `"/admin/..."` paths never match
+  because of the locale prefix.
+
+### i18n
+- Every user-facing string in public pages, the dashboard and shared
+  components goes through next-intl in **all five** locales, with proper ICU
+  plurals (Arabic zero/one/two/few/many/other, Russian one/few/many/other,
+  Turkish no plural after numbers). Admin-only pages may stay English.
+- Use the scripts in `scripts/i18n/` to edit `src/messages/*.json` (§7). They
+  keep the files' formatting; don't rewrite the files with `JSON.stringify`.
+- Brand names (Instagram, Getir, Uber Eats …) stay untranslated.
+- Use logical CSS (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`,
+  `text-start`), flip directional icons with `rtl:rotate-180`, and keep URLs,
+  phone numbers and slugs `dir="ltr"`.
+
+### UI conventions
+- Shared menu editing lives in `components/menu-editor` (admin and
+  dashboard render the same components with different `basePath`).
+- Destructive actions use `ConfirmDialog` (shows errors, stays open while
+  running). Restaurant deletion requires typing its name.
+- Upload buttons use `uploadButtonClass`, resize images with
+  `onBeforeUploadBegin={resizeImages(ITEM_PHOTO | LOGO)}` and pass the locale.
+- Forms with a save bar use `useUnsavedChangesGuard(isDirty && !isPending, …)`.
+- Prices show `"{price} {currency}"`, never a hardcoded `$`.
+- Colors come from theme tokens; charts were validated with the dataviz
+  method (bar color `#D97706` passes on both theme surfaces).
+
+### Code style
+- Match the surrounding code; comments explain *why*, in plain sentences.
+- Files in this repo mix LF and CRLF line endings: prefer the Edit tool over
+  regex/`sed` for multi-line changes, and check that a scripted edit actually
+  matched.
+
+---
+
+## 7. Translation workflow
+
+1. Write the new messages for all five locales into a JSON file outside the
+   repo (e.g. a scratch folder):
+   - new namespace: `{ "en": { "Ns": { … } }, "tr": { … }, … }` →
+     `node scripts/i18n/add-namespaces.cjs src/messages <file>`
+   - keys inside an existing namespace: `{ "en": { "Ns.path.key": "…" }, … }` →
+     `node scripts/i18n/set-keys.cjs src/messages <file>` (refuses namespaces
+     that aren't in the standard layout instead of reformatting them)
+   - removing unused namespaces: `node scripts/i18n/remove-namespaces.cjs src/messages Ns1 Ns2`
+2. Run `pnpm i18n:check`. Keys built at runtime (`` t(`dietary.${key}`) ``) aren't
+   covered by the key scan; check those by hand.
+3. **Restart `next dev` after changing message files.** Turbopack keeps stale
+   copies per compiled page, so new keys show as `Namespace.key` on pages
+   compiled earlier. If a restart isn't enough, delete `.next`. Production
+   builds aren't affected.
+
+Namespaces of note: `MenuEditor`, `ConfirmDialog`, `Availability`, `Share`,
+`Setup`, `ActionErrors`, `UnsavedChanges`, `LanguageSwitcher`,
+`DashboardShell`, `DashboardHome`, `DashboardRestaurant`, `RestaurantDetails`,
+`MenuPreview`, `Dashboard` (role labels/hints), plus the older public ones
+(`hero`, `restaurantMenuPage`, `menuItemDetailPage`, …).
+
+---
+
+## 8. Features as they stand
+
+**Admin:** restaurant list (search, filters All/Active/Inactive/Ready to go
+live/Featured, setup progress badges); full-page restaurant form with
+sections, sticky save bar, slug auto-generation; Details / Menu / Share /
+People tabs; users list with Clerk names/photos, access + Owner/Editor role,
+delete user (Clerk + DB; not self, not admins).
+
+**Dashboard:** home cards (logo, role, counts, setup progress, menu/details/
+share/preview buttons, admin banner); Menu (checklist, categories:
+add/rename/reorder/delete; items: sortable list, availability picker,
+duplicate, delete, item dialog with photo, price, category move,
+availability, dietary chips, "save and add another"); Details (owners);
+Share (status, QR with logo switch, PNG/SVG downloads, link copy, permanent
+link note, printable A4/A6 table cards with card language + second line, scan
+stats); language switcher; unsaved-changes guard.
+
+**Public:** four themes; sold-out badge; hidden items excluded (menu, item
+page, search); preview of inactive restaurants for staff; permanent QR links
+`/r/<id>` that forward to the current slug, count scans after the redirect,
+skip bots/HEAD/repeats within 30 minutes (path-scoped cookie).
+
+**Infrastructure:** Clerk webhook syncs users (created/updated/deleted);
+UploadThing cleanup only deletes unreferenced files; `scripts/cleanup-uploads.mjs`
+removes orphans (dry run first).
+
+Git history (`git log`) has a detailed commit message for each change.
+
+---
+
+## 9. Open items and decisions
+
+**Next feature, waiting on the owner's decision: owners managing their own editors.**
+Questions asked: should owners be able to invite and remove editors for
+their own restaurant? Invite by email (needs an invite flow for people who
+haven't signed up) or only pick existing users? It matters for the SaaS goal
+(less admin work). Admin side already has the People tab and access actions
+(`assignRestaurantToUser`, `revokeRestaurantAccess`, admin-only today).
+
+**Ideas raised and deferred:**
+- Store a time zone per restaurant (scan days are UTC now; Turkey is UTC+3).
+- Owner self-publishing ("Publish" button, maybe with admin review), building
+  on preview + the "Ready to go live" queue.
+- Translating the remaining hardcoded English on public pages and the
+  admin-only pages.
+
+**Things the owner was asked to do. Confirm they're done before relying on them:**
+- Subscribe the Clerk webhook endpoint to `user.updated` and `user.deleted`.
+- Set `NEXT_PUBLIC_APP_URL` to the production domain in production.
+- Run `pnpm db:migrate` in production for migrations 0002–0004.
+- Set owners on each restaurant's People tab (all old assignments became editors).
+- Run `pnpm uploads:cleanup -- --delete` after a dry run. The dry run found 32
+  unused files, including some sensitive-looking photos (a SIM card PIN, a
+  profile picture); UploadThing URLs are public.
+
+**Known leftovers:**
+- `package-lock.json` is stale (pnpm is canonical).
+- `next lint` still warns in four files nobody has reworked yet:
+  `app/[locale]/layout.tsx`, `app/[locale]/page.tsx`,
+  `components/about/AboutPageClient.tsx`, `components/svg/GroovySittingDoodle.tsx`.
+- The public themes hardcode "No items in this category yet." in English.
+
+---
+
+## 10. How to verify work here
+
+- Always run `pnpm typecheck`, `pnpm lint` (or targeted `next lint --file …`),
+  and `pnpm i18n:check` when messages changed.
+- Pages behind Clerk can't be opened from a script; say so and tell the owner
+  exactly what to click to check.
+- **Don't start a second `next dev`** while the owner's is running: both write
+  `.next` and corrupt each other. Same for deleting `.next`.
+- Read-only database checks work with
+  `node --env-file=.env --input-type=module -e '…'` using `postgres`. Never
+  write to the database or apply migrations without being asked.
+- Pure logic (QR codes, checklist rules, bot filter) was tested by transpiling the
+  TypeScript file with `typescript.transpileModule` into a temp `.mjs`; delete
+  temp files afterwards. ESM scripts resolve imports from the script's folder,
+  so pipe them via stdin (`node --input-type=module < file`) to resolve from the project.
+- Some packages are only nested under `node_modules/.pnpm` (e.g. `sharp`);
+  import them by path.
+- Shell gotchas: an apostrophe inside a `node -e '…'` script ends the bash
+  string; use the Write tool for scripts with prose comments.
+
+---
+
+## 11. Working with the owner
+
+- Explain changes in plain language with a short summary of what changed and
+  what to test; flag anything not verified.
+- **End every finished change set with a ready-to-paste commit message**
+  (imperative subject, body grouped into changes and fixes, plus any deploy
+  steps such as migrations). **Don't commit unless asked**; the owner commits.
+- The owner prefers recommendations with reasons, then decides ("let's do
+  your way"). Ask only when the choice is genuinely theirs.
+- Keep admin and dashboard in step: features added to shared components
+  should appear on both sides; say so explicitly.

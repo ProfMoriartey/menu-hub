@@ -18,7 +18,8 @@
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "uploads:cleanup": "node --env-file=.env scripts/cleanup-uploads.mjs"
+    "uploads:cleanup": "node --env-file=.env scripts/cleanup-uploads.mjs",
+    "i18n:check": "node scripts/i18n/check-keys.cjs && node scripts/i18n/check-format.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.24.0",
