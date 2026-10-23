@@ -58,12 +58,12 @@ export async function checkAuthorization(restaurantId: string): Promise<Restaura
   const { userId } = await auth();
 
   if (!userId) {
-    throw new ActionError("Please sign in again to make changes.");
+    throw new ActionError("signInAgain");
   }
 
   const role = await getRestaurantRole(restaurantId);
   if (!role) {
-    throw new ActionError("You don't have access to this restaurant.");
+    throw new ActionError("noAccess");
   }
   return role;
 }
@@ -75,7 +75,7 @@ export async function checkAuthorization(restaurantId: string): Promise<Restaura
 export async function checkOwnerAuthorization(restaurantId: string): Promise<RestaurantRole> {
   const role = await checkAuthorization(restaurantId);
   if (!canEditDetails(role)) {
-    throw new ActionError("Only the restaurant's owner can change its details.");
+    throw new ActionError("ownerOnly");
   }
   return role;
 }

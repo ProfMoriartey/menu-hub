@@ -1,5 +1,5 @@
 // src/components/admin/RestaurantAdminHeader.tsx
-import { ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronRight, ExternalLink, Eye } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { RestaurantLogo, StatusBadges } from "~/components/admin/RestaurantCard";
@@ -13,7 +13,7 @@ type HeaderRestaurant = Pick<
 
 interface RestaurantAdminHeaderProps {
   restaurant: HeaderRestaurant;
-  activeTab: "details" | "menu" | "people";
+  activeTab: "details" | "menu" | "share" | "people";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
   trail?: { label: string; href?: string }[];
 }
@@ -26,6 +26,7 @@ export function RestaurantAdminHeader({
   const tabs = [
     { id: "details", label: "Details", href: `/admin/restaurants/${restaurant.slug}/edit` },
     { id: "menu", label: "Menu", href: `/admin/restaurants/${restaurant.slug}/menu` },
+    { id: "share", label: "Share", href: `/admin/restaurants/${restaurant.slug}/share` },
     { id: "people", label: "People", href: `/admin/restaurants/${restaurant.slug}/people` },
   ] as const;
 
@@ -69,13 +70,20 @@ export function RestaurantAdminHeader({
             </div>
           </div>
         </div>
-        {restaurant.isActive && (
-          <Button variant="outline" asChild>
-            <Link href={`/${restaurant.slug}`} target="_blank">
-              View live menu <ExternalLink className="h-4 w-4" />
-            </Link>
-          </Button>
-        )}
+        {/* Inactive restaurants open as a preview only people with access see. */}
+        <Button variant="outline" asChild>
+          <Link href={`/${restaurant.slug}`} target="_blank">
+            {restaurant.isActive ? (
+              <>
+                View live menu <ExternalLink className="h-4 w-4" />
+              </>
+            ) : (
+              <>
+                Preview menu <Eye className="h-4 w-4" />
+              </>
+            )}
+          </Link>
+        </Button>
       </div>
 
       <nav aria-label="Restaurant sections" className="border-border flex gap-1 border-b">

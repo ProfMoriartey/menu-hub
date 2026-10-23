@@ -52,7 +52,8 @@ export interface MenuItem {
   description: string | null;
   price: string; 
   ingredients: string | null;
-  dietaryLabels: DietaryLabel[] | null; 
+  dietaryLabels: DietaryLabel[] | null;
+  availability: "available" | "sold_out" | "hidden";
   imageUrl: string | null;
   createdAt: Date;
   updatedAt: Date | null;

@@ -2,7 +2,7 @@
 import { db } from "~/server/db";
 import { categories, menuItems } from "~/server/db/schema";
 import { getRestaurantBySlug } from "~/server/queries";
-import { eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
 import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
@@ -48,7 +48,11 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
     orderBy: (categories, { asc }) => [asc(categories.order)],
     with: {
       menuItems: {
-        where: eq(menuItems.restaurantId, restaurantDetails.id),
+        // Hidden items aren't on the public menu; sold-out ones are, marked.
+        where: and(
+          eq(menuItems.restaurantId, restaurantDetails.id),
+          ne(menuItems.availability, "hidden"),
+        ),
         orderBy: (menuItems, { asc }) => [asc(menuItems.order)],
       },
     },
@@ -86,6 +90,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
         price: item.price,
         ingredients: item.ingredients,
         dietaryLabels: item.dietaryLabels,
+        availability: item.availability,
         imageUrl: item.imageUrl,
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,

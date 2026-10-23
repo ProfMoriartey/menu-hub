@@ -8,6 +8,7 @@ import {
   jsonb,
   pgEnum,
   integer,
+  date,
   primaryKey,
   uniqueIndex,
   text, // IMPORTANT: Add 'text' import for longer string fields like description
@@ -22,6 +23,10 @@ export const dietaryLabelEnum = pgEnum("dietary_label", [
   "dairy-free",
   "nut-free",
 ]);
+
+// Whether guests see a menu item: listed normally, listed as sold out, or not
+// shown at all (e.g. seasonal items, or ones still being prepared).
+export const itemAvailabilityEnum = pgEnum("item_availability", ["available", "sold_out", "hidden"]);
 
 // Define a TypeScript type for the values of the dietaryLabelEnum
 type DietaryLabelValue = typeof dietaryLabelEnum.enumValues[number];
@@ -104,6 +109,7 @@ export const menuItems = pgTable(
     price: varchar("price", { length: 50 }).notNull(),
     ingredients: varchar("ingredients", { length: 512 }),
     dietaryLabels: jsonb("dietary_labels").$type<DietaryLabelValue[]>().default([]),
+    availability: itemAvailabilityEnum("availability").notNull().default("available"),
     imageUrl: varchar("image_url", { length: 256 }),
     order: integer("order").notNull().default(0), // Ensure this line exists
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -178,3 +184,16 @@ export const usersToRestaurantsRelations = relations(
 export const usersRelations = relations(users, ({ many }) => ({
   usersToRestaurants: many(usersToRestaurants),
 }));
+// QR code scans: one row per restaurant per day (UTC), counting visits to
+// the permanent /r/<id> link. No personal data is stored.
+export const qrScanDays = pgTable(
+  "menu-hub_qr_scan_days",
+  {
+    restaurantId: uuid("restaurant_id")
+      .notNull()
+      .references(() => restaurants.id, { onDelete: "cascade" }),
+    day: date("day", { mode: "string" }).notNull(),
+    count: integer("count").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.restaurantId, t.day] })],
+);

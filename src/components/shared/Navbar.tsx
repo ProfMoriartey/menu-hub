@@ -1,13 +1,14 @@
 // src/components/shared/Navbar.tsx
 "use client";
 
-import { Link, usePathname, useRouter } from "~/i18n/navigation";
-import { useState, useTransition } from "react";
+import { Link, usePathname } from "~/i18n/navigation";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
+import { LanguageSwitcher } from "~/components/shared/LanguageSwitcher";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import AuthNavButtons from "~/components/layout/AuthNavButtons"; // Assuming this path
@@ -17,13 +18,8 @@ const MotionLink = motion.create(Link);
 
 export function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
-  const currentLocale = useLocale();
-  const [isPending, startTransition] = useTransition();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = useTranslations("navbar");
-
-  const locales = ["en", "tr", "ar", "es", "ru"];
 
   const navLinks = [
     { name: t("home"), href: "/" },
@@ -44,11 +40,6 @@ export function Navbar() {
     exit: { opacity: 0, y: -100 },
   };
 
-  const handleLocaleChange = (newLocale: string) => {
-    startTransition(() => {
-      router.replace(pathname, { locale: newLocale });
-    });
-  };
 
   return (
     <motion.nav
@@ -94,28 +85,7 @@ export function Navbar() {
           </div>
 
           {/* 2. Language Toggle (HIDDEN ON MOBILE) */}
-          <div className="hidden items-center gap-2 md:flex">
-            <label htmlFor="language-select" className="sr-only">
-              {t("language")}
-            </label>
-            <select
-              id="language-select"
-              defaultValue={currentLocale}
-              onChange={(e) => handleLocaleChange(e.target.value)}
-              disabled={isPending}
-              className={cn(
-                "bg-card text-foreground border-input rounded-md border px-2 py-1",
-                "focus:ring-primary focus:border-primary focus:outline-none",
-                "cursor-pointer",
-              )}
-            >
-              {locales.map((locale) => (
-                <option key={locale} value={locale}>
-                  {locale.toUpperCase()}
-                </option>
-              ))}
-            </select>
-          </div>
+          <LanguageSwitcher className="hidden md:flex" />
 
           {/* 3. Theme Toggle (ALWAYS VISIBLE - Desktop & Mobile) */}
           <ThemeToggle />
@@ -196,28 +166,7 @@ export function Navbar() {
             ))}
 
             {/* Language Toggle in Mobile Menu (Moved here from main navbar row) */}
-            <div className="mt-8 flex items-center gap-2">
-              <label htmlFor="mobile-language-select" className="sr-only">
-                {t("language")}
-              </label>
-              <select
-                id="mobile-language-select"
-                defaultValue={currentLocale}
-                onChange={(e) => handleLocaleChange(e.target.value)}
-                disabled={isPending}
-                className={cn(
-                  "bg-card text-foreground border-input rounded-md border px-4 py-2 text-xl",
-                  "focus:ring-primary focus:border-primary focus:outline-none",
-                  "cursor-pointer",
-                )}
-              >
-                {locales.map((locale) => (
-                  <option key={locale} value={locale}>
-                    {locale.toUpperCase()}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <LanguageSwitcher className="mt-8 h-11 text-lg" />
 
             {/* User Profile Button in Mobile Menu (Visible here) */}
             <SignedIn>

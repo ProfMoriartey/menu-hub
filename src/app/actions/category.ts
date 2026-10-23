@@ -7,7 +7,8 @@ import { deleteUploadedFiles } from "~/server/uploads";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth";
-import { ActionError, runAction, type ActionResult } from "~/lib/action-result";
+import { ActionError, type ActionResult } from "~/lib/action-result";
+import { runAction } from "~/server/run-action";
 
 import { createCategorySchema, updateCategorySchema } from "~/lib/schemas";
 import { uniqueSlug } from "~/lib/slug";
@@ -25,7 +26,7 @@ async function takenCategorySlugs(restaurantId: string, exceptId?: string) {
 const revalidateMenuPages = () => revalidatePath("/[locale]", "layout");
 
 export async function addCategory(formData: FormData): Promise<ActionResult> {
-  return runAction("Couldn't add the category.", async () => {
+  return runAction("addCategoryFailed", async () => {
     const restaurantId = formData.get("restaurantId") as string;
     await checkAuthorization(restaurantId);
 
@@ -34,7 +35,7 @@ export async function addCategory(formData: FormData): Promise<ActionResult> {
       restaurantId,
     });
     if (!validationResult.success) {
-      throw new ActionError(validationResult.error.errors.map((e) => e.message).join(", "));
+      throw new ActionError("categoryNameRequired");
     }
 
     const { name } = validationResult.data;
@@ -49,7 +50,7 @@ export async function addCategory(formData: FormData): Promise<ActionResult> {
 }
 
 export async function updateCategory(formData: FormData): Promise<ActionResult> {
-  return runAction("Couldn't rename the category.", async () => {
+  return runAction("renameCategoryFailed", async () => {
     const restaurantId = formData.get("restaurantId") as string;
     await checkAuthorization(restaurantId);
 
@@ -59,7 +60,7 @@ export async function updateCategory(formData: FormData): Promise<ActionResult> 
       restaurantId,
     });
     if (!validationResult.success) {
-      throw new ActionError(validationResult.error.errors.map((e) => e.message).join(", "));
+      throw new ActionError("categoryNameRequired");
     }
 
     const { id: categoryId, name: newName } = validationResult.data;
@@ -67,7 +68,7 @@ export async function updateCategory(formData: FormData): Promise<ActionResult> 
       where: and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)),
       columns: { name: true, slug: true },
     });
-    if (!existing) throw new ActionError("Category not found.");
+    if (!existing) throw new ActionError("categoryNotFound");
 
     // The slug follows the name, so only a rename changes it.
     const slug =
@@ -85,7 +86,7 @@ export async function updateCategory(formData: FormData): Promise<ActionResult> 
 }
 
 export async function deleteCategory(categoryId: string, restaurantId: string): Promise<ActionResult> {
-  return runAction("Couldn't delete the category.", async () => {
+  return runAction("deleteCategoryFailed", async () => {
     await checkAuthorization(restaurantId);
 
     // The delete cascades to the category's items; keep their photo URLs first.
@@ -104,19 +105,19 @@ export async function deleteCategory(categoryId: string, restaurantId: string): 
 }
 
 export async function reorderCategories(formData: FormData): Promise<ActionResult> {
-  return runAction("Couldn't save the new order.", async () => {
+  return runAction("reorderFailed", async () => {
     const restaurantId = formData.get("restaurantId") as string;
-    if (!restaurantId) throw new ActionError("Missing restaurant.");
+    if (!restaurantId) throw new ActionError("missingRestaurant");
     await checkAuthorization(restaurantId);
 
     let orderedIds: unknown;
     try {
       orderedIds = JSON.parse(formData.get("orderedIds") as string);
     } catch {
-      throw new ActionError("Invalid category order.");
+      throw new ActionError("invalidOrder");
     }
     if (!Array.isArray(orderedIds) || orderedIds.some((id) => typeof id !== "string")) {
-      throw new ActionError("Invalid category order.");
+      throw new ActionError("invalidOrder");
     }
 
     await db.transaction(async (tx) => {

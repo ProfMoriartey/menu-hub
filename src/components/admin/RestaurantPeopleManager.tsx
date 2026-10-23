@@ -15,7 +15,7 @@ import {
   CommandList,
 } from "~/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
-import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
+import { ConfirmDialog } from "~/components/menu-editor/ConfirmDialog";
 import { RoleSelect } from "~/components/admin/UserAccessManager";
 import { UserAvatar } from "~/components/admin/UserList";
 import { assignRestaurantToUser, revokeRestaurantAccess } from "~/app/[locale]/admin/actions";

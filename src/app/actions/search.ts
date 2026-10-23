@@ -3,7 +3,7 @@
 
 import { db } from "~/server/db";
 import { categories, menuItems } from "~/server/db/schema";
-import { eq, exists, and } from "drizzle-orm";
+import { eq, exists, and, ne } from "drizzle-orm";
 import type { Restaurant } from "~/types/restaurant";
 
 // ADDED: Import schemas for casting
@@ -57,6 +57,7 @@ export async function searchRestaurants(
                   and(
                     eq(menuItems.restaurantId, restaurant.id), // Link menu item to current restaurant
                     drizzleIlike(menuItems.name, lowerCaseSearchTerm), // Search menu item name
+                    ne(menuItems.availability, "hidden"), // Hidden items aren't public
                   ),
                 ),
             ),

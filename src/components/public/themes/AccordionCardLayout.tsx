@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import { motion } from "framer-motion"; // ADDED: Import motion
 
+import { SoldOutBadge } from "~/components/public/SoldOutBadge";
 import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
 
 // Import Shadcn UI Accordion components
@@ -127,6 +128,9 @@ export function AccordionCardLayout({ menuData }: AccordionCardLayoutProps) {
                                     )}
                                   <p className="text-primary mt-2 text-lg font-bold">
                                     {item.price} {menuData.restaurant.currency}
+                                    <SoldOutBadge
+                                      availability={item.availability}
+                                    />
                                   </p>
                                 </div>
                               </Link>

@@ -1,9 +1,10 @@
-// src/components/admin/DeleteCategoryDialog.tsx
+// src/components/menu-editor/DeleteCategoryDialog.tsx
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
+import { ConfirmDialog } from "~/components/menu-editor/ConfirmDialog";
 
 // Import the deleteCategory action
 import { deleteCategory } from "~/app/actions/category";
@@ -21,6 +22,8 @@ export function DeleteCategoryDialog({
   itemCount,
   restaurantId,
 }: DeleteCategoryDialogProps) {
+  const t = useTranslations("MenuEditor.categories");
+
   return (
     <ConfirmDialog
       trigger={
@@ -28,19 +31,17 @@ export function DeleteCategoryDialog({
           variant="ghost"
           size="icon"
           className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-          aria-label={`Delete ${categoryName}`}
-          title="Delete category"
+          aria-label={t("deleteLabel", { name: categoryName })}
+          title={t("deleteTitle")}
         >
           <Trash2 className="h-4 w-4" />
         </Button>
       }
-      title={<>Delete &quot;{categoryName}&quot;?</>}
+      title={t("deleteConfirmTitle", { name: categoryName })}
       description={
-        itemCount === 0
-          ? "This category is empty. This can't be undone."
-          : `This also deletes the ${itemCount === 1 ? "1 item" : `${itemCount} items`} in it. This can't be undone.`
+        itemCount === 0 ? t("deleteEmpty") : t("deleteWithItems", { count: itemCount })
       }
-      confirmLabel={itemCount === 0 ? "Delete category" : "Delete category and items"}
+      confirmLabel={itemCount === 0 ? t("deleteButton") : t("deleteWithItemsButton")}
       onConfirm={() => deleteCategory(categoryId, restaurantId)}
     />
   );

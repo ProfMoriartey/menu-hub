@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import { SoldOutBadge } from "~/components/public/SoldOutBadge";
 import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
 
 interface RestaurantForMenuItemDisplay {
@@ -71,6 +72,7 @@ export function MenuItemDisplayClient({
         <h1 className={cn(baseTitleClasses, "text-foreground")}>{item.name}</h1>
         <p className={cn(basePriceClasses, "text-primary")}>
           {item.price} {item.restaurant.currency}
+          <SoldOutBadge availability={item.availability} />
         </p>
 
         {item.description && (

@@ -2,7 +2,7 @@
 "use client";
 
 import Image from "next/image";
-import { ExternalLink, MapPin, Pencil, Star, UtensilsCrossed } from "lucide-react";
+import { ExternalLink, Eye, MapPin, Pencil, Rocket, Star, UtensilsCrossed } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { DeleteRestaurantDialog } from "~/components/admin/DeleteRestaurantDialog";
@@ -11,6 +11,7 @@ import { formatDate } from "~/lib/format";
 
 import type { ActionResult } from "~/lib/action-result";
 import type { Restaurant } from "~/types/restaurant";
+import type { SetupProgress } from "~/lib/setup-checklist";
 
 export function RestaurantLogo({
   restaurant,
@@ -84,11 +85,14 @@ export function StatusBadges({
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
+  // Getting-started checklist progress; absent when not loaded.
+  setup?: SetupProgress;
   deleteRestaurantAction: (restaurantId: string) => Promise<ActionResult>;
 }
 
 export function RestaurantCard({
   restaurant,
+  setup,
   deleteRestaurantAction,
 }: RestaurantCardProps) {
   const details = [restaurant.typeOfEstablishment, restaurant.foodType]
@@ -117,6 +121,18 @@ export function RestaurantCard({
 
         <div className="flex flex-wrap gap-1.5">
           <StatusBadges restaurant={restaurant} />
+          {setup?.readyToGoLive ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-2 py-0.5 text-xs font-medium text-sky-800 dark:text-sky-300">
+              <Rocket className="h-3 w-3" aria-hidden /> Ready to go live
+            </span>
+          ) : (
+            setup &&
+            !setup.complete && (
+              <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-medium tabular-nums">
+                Setup {setup.done}/{setup.total}
+              </span>
+            )
+          )}
         </div>
 
         <dl className="text-muted-foreground space-y-1 text-sm">
@@ -153,18 +169,21 @@ export function RestaurantCard({
           <Link href={`/admin/restaurants/${restaurant.slug}/menu`}>Menu</Link>
         </Button>
         <div className="ml-auto flex items-center">
-          {restaurant.isActive && (
-            <Button variant="ghost" size="icon" asChild>
-              <Link
-                href={`/${restaurant.slug}`}
-                target="_blank"
-                aria-label={`Open ${restaurant.name}'s live menu`}
-                title="Open live menu"
-              >
-                <ExternalLink className="h-4 w-4" />
-              </Link>
-            </Button>
-          )}
+          {/* Inactive restaurants open as a preview only people with access see. */}
+          <Button variant="ghost" size="icon" asChild>
+            <Link
+              href={`/${restaurant.slug}`}
+              target="_blank"
+              aria-label={
+                restaurant.isActive
+                  ? `Open ${restaurant.name}'s live menu`
+                  : `Preview ${restaurant.name}'s menu`
+              }
+              title={restaurant.isActive ? "Open live menu" : "Preview menu"}
+            >
+              {restaurant.isActive ? <ExternalLink className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </Link>
+          </Button>
           <DeleteRestaurantDialog
             restaurantId={restaurant.id}
             restaurantName={restaurant.name}

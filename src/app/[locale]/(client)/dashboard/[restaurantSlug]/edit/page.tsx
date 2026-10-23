@@ -1,13 +1,11 @@
-// app/[locale]/(app)/dashboard/[restaurantSlug]/edit/page.tsx
-import { db } from "~/server/db";
-import * as schema from "~/server/db/schema";
-import { eq } from "drizzle-orm";
-import { notFound } from "next/navigation";
+// app/[locale]/(client)/dashboard/[restaurantSlug]/edit/page.tsx
 import { type Metadata } from "next";
-
-import RestaurantEditor from "~/components/dashboard/RestaurantEditor";
-import { getRestaurantRole } from "~/app/actions/auth";
+import { getLocale } from "next-intl/server";
+import { redirect } from "~/i18n/navigation";
+import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { canEditDetails } from "~/lib/access";
+import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
+import { RestaurantDetailsEditor } from "~/components/dashboard/RestaurantDetailsEditor";
 import type { DeliveryAppLinks, SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
@@ -15,52 +13,32 @@ interface EditPageProps {
   params: Promise<{ restaurantSlug: string }>;
 }
 
-async function getRestaurantData(slug: string) {
-  const restaurant = await db.query.restaurants.findFirst({
-    where: eq(schema.restaurants.slug, slug),
-    with: {
-      categories: {
-        with: {
-          menuItems: {
-            orderBy: (menuItems, { asc }) => [asc(menuItems.order)],
-          },
-        },
-        orderBy: (categories, { asc }) => [asc(categories.order)],
-      },
-    },
-  });
-
-  if (!restaurant) {
-    notFound();
-  }
-
-  // Cast unknown JSONB fields to their expected types
-  return {
-    ...restaurant,
-    currency: restaurant.currency || "USD",
-    socialMedia: restaurant.socialMedia as SocialMediaLinks,
-    deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
-  } as Restaurant;
-}
-
 export const metadata: Metadata = {
-  title: "Menu Editor | Menupedia",
-  description: "Manage your restaurant menu, categories, and delivery links.",
+  title: "Restaurant Details | Menupedia",
+  description: "Manage your restaurant's details, contact information and links.",
 };
 
 export default async function RestaurantEditPage({ params }: EditPageProps) {
   const { restaurantSlug } = await params;
-  const restaurantData = await getRestaurantData(restaurantSlug);
-  // The layout has already confirmed access; this decides what they may edit.
-  const role = await getRestaurantRole(restaurantData.id);
+  const { restaurant: row, role } = await getDashboardRestaurant(restaurantSlug);
+
+  // Editors manage the menu only.
+  if (!canEditDetails(role)) {
+    return redirect({ href: `/dashboard/${row.slug}/menu`, locale: await getLocale() });
+  }
+
+  const restaurant: Restaurant = {
+    ...row,
+    categories: [],
+    currency: row.currency || "USD",
+    socialMedia: row.socialMedia as SocialMediaLinks,
+    deliveryApps: row.deliveryApps as DeliveryAppLinks,
+  };
 
   return (
-    // Increased to max-w-7xl to give the new multi-column form breathing room
-    <div className="mx-auto max-w-7xl px-4">
-      <RestaurantEditor
-        initialRestaurantData={restaurantData}
-        canEditDetails={canEditDetails(role)}
-      />
-    </div>
+    <>
+      <DashboardRestaurantHeader restaurant={restaurant} role={role} activeTab="details" />
+      <RestaurantDetailsEditor restaurant={restaurant} />
+    </>
   );
 }

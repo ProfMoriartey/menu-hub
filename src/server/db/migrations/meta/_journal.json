@@ -15,6 +15,20 @@
       "when": 1792736703131,
       "tag": "0002_add_category_and_item_slugs",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792758028690,
+      "tag": "0003_add_qr_scan_days",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792758624565,
+      "tag": "0004_add_item_availability",
+      "breakpoints": true
     }
   ]
 }

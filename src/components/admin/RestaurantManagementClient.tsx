@@ -11,23 +11,30 @@ import { cn } from "~/lib/utils";
 
 import type { ActionResult } from "~/lib/action-result";
 import type { Restaurant } from "~/types/restaurant";
+import type { SetupProgress } from "~/lib/setup-checklist";
 
-const FILTERS = [
+type FilterTest = (restaurant: Restaurant, setup: SetupProgress | undefined) => boolean;
+
+const FILTERS: { id: string; label: string; test: FilterTest }[] = [
   { id: "all", label: "All", test: () => true },
-  { id: "active", label: "Active", test: (r: Restaurant) => r.isActive },
-  { id: "inactive", label: "Inactive", test: (r: Restaurant) => !r.isActive },
-  { id: "featured", label: "Featured", test: (r: Restaurant) => r.isActive && r.isDisplayed },
-] as const;
+  { id: "active", label: "Active", test: (r) => r.isActive },
+  { id: "inactive", label: "Inactive", test: (r) => !r.isActive },
+  // Set up by their owners and waiting to be published: the review queue.
+  { id: "ready", label: "Ready to go live", test: (_r, setup) => Boolean(setup?.readyToGoLive) },
+  { id: "featured", label: "Featured", test: (r) => r.isActive && r.isDisplayed },
+];
 
-type FilterId = (typeof FILTERS)[number]["id"];
+type FilterId = string;
 
 interface RestaurantManagementClientProps {
   initialRestaurants: Restaurant[];
+  setup: Record<string, SetupProgress>;
   deleteRestaurantAction: (restaurantId: string) => Promise<ActionResult>;
 }
 
 export function RestaurantManagementClient({
   initialRestaurants,
+  setup,
   deleteRestaurantAction,
 }: RestaurantManagementClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,7 +53,7 @@ export function RestaurantManagementClient({
 
   const searched = term ? initialRestaurants.filter(matchesSearch) : initialRestaurants;
   const activeFilter = FILTERS.find((f) => f.id === filter)!;
-  const visible = searched.filter(activeFilter.test);
+  const visible = searched.filter((r) => activeFilter.test(r, setup[r.id]));
 
   if (initialRestaurants.length === 0) {
     return (
@@ -96,7 +103,7 @@ export function RestaurantManagementClient({
             >
               {f.label}
               <span className="text-muted-foreground ml-1.5 tabular-nums">
-                {searched.filter(f.test).length}
+                {searched.filter((r) => f.test(r, setup[r.id])).length}
               </span>
             </button>
           ))}
@@ -125,6 +132,7 @@ export function RestaurantManagementClient({
             <RestaurantCard
               key={restaurant.id}
               restaurant={restaurant}
+              setup={setup[restaurant.id]}
               deleteRestaurantAction={deleteRestaurantAction}
             />
           ))}

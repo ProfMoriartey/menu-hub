@@ -1,10 +1,11 @@
 // app/admin/restaurants/[restaurantSlug]/menu/page.tsx
 import { db } from "~/server/db";
-import { categories, restaurants } from "~/server/db/schema";
+import { restaurants } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
+import { getCategorySummaries } from "~/server/menu-data";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
-import { CategoryList, type CategorySummary } from "~/components/admin/CategoryList";
+import { CategoryList } from "~/components/menu-editor/CategoryList";
 
 export default async function AdminMenuPage({
   params,
@@ -21,30 +22,7 @@ export default async function AdminMenuPage({
     notFound();
   }
 
-  // Item ids and images are enough for the counts and thumbnails.
-  const rows = await db.query.categories.findMany({
-    where: eq(categories.restaurantId, restaurant.id),
-    orderBy: (categories, { asc }) => [asc(categories.order)],
-    with: {
-      menuItems: {
-        columns: { id: true, imageUrl: true },
-        orderBy: (menuItems, { asc }) => [asc(menuItems.order)],
-      },
-    },
-  });
-
-  const summaries: CategorySummary[] = rows.map((category) => ({
-    id: category.id,
-    slug: category.slug,
-    name: category.name,
-    order: category.order,
-    itemCount: category.menuItems.length,
-    thumbnails: category.menuItems
-      .map((item) => item.imageUrl)
-      .filter((url): url is string => Boolean(url))
-      .slice(0, 3),
-  }));
-
+  const summaries = await getCategorySummaries(restaurant.id);
   const totalItems = summaries.reduce((sum, c) => sum + c.itemCount, 0);
 
   return (
@@ -59,7 +37,7 @@ export default async function AdminMenuPage({
       </div>
       <CategoryList
         restaurantId={restaurant.id}
-        restaurantSlug={restaurant.slug}
+        basePath={`/admin/restaurants/${restaurant.slug}/menu`}
         categories={summaries}
       />
     </div>

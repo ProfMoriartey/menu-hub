@@ -9,6 +9,7 @@ import { ChevronLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { motion } from "framer-motion";
 
+import { SoldOutBadge } from "~/components/public/SoldOutBadge";
 import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
 
 interface RestaurantMenuData {
@@ -118,6 +119,7 @@ export function CategoryCardsImageDominantLayout({
                       </div>
                       <p className="text-primary mt-4 text-lg font-bold">
                         {item.price} {menuData.restaurant.currency}
+                        <SoldOutBadge availability={item.availability} />
                       </p>
                     </div>
                   </div>

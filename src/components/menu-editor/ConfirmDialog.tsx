@@ -1,7 +1,8 @@
-// src/components/admin/ConfirmDialog.tsx
+// src/components/menu-editor/ConfirmDialog.tsx
 "use client";
 
 import { useState, useTransition, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { CircleAlert } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -37,10 +38,11 @@ export function ConfirmDialog({
   title,
   description,
   confirmLabel,
-  pendingLabel = "Deleting…",
+  pendingLabel,
   confirmText,
   onConfirm,
 }: ConfirmDialogProps) {
+  const t = useTranslations("ConfirmDialog");
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +87,10 @@ export function ConfirmDialog({
             }}
           >
             <Label htmlFor="confirm-text" className="font-normal">
-              Type <strong className="font-semibold">{confirmText}</strong> to confirm
+              {t.rich("typeToConfirm", {
+                text: confirmText,
+                b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
+              })}
             </Label>
             <Input
               id="confirm-text"
@@ -103,9 +108,9 @@ export function ConfirmDialog({
           </p>
         )}
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>{t("cancel")}</AlertDialogCancel>
           <Button variant="destructive" onClick={confirm} disabled={isPending || !typedMatches}>
-            {isPending ? pendingLabel : confirmLabel}
+            {isPending ? (pendingLabel ?? t("deleting")) : confirmLabel}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
