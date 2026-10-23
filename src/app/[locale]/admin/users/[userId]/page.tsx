@@ -12,6 +12,8 @@ import { getClerkProfiles } from "~/server/clerk-profiles";
 import { AdminBadge, UserAvatar } from "~/components/admin/UserList";
 import { CopyButton } from "~/components/admin/CopyButton";
 import { UserAccessManager, type AssignedRestaurant } from "~/components/admin/UserAccessManager";
+import { DeleteUserButton } from "~/components/admin/DeleteUserButton";
+import { auth } from "@clerk/nextjs/server";
 
 interface UserPanelProps {
   params: Promise<{ userId: string }>;
@@ -33,6 +35,7 @@ const restaurantColumns = {
 
 export default async function UserAssignmentPanel({ params }: UserPanelProps) {
   const { userId: targetUserId } = await params;
+  const { userId: currentUserId } = await auth();
 
   const [user, allRestaurants, profiles] = await Promise.all([
     db.query.users.findFirst({
@@ -120,6 +123,28 @@ export default async function UserAssignmentPanel({ params }: UserPanelProps) {
         assigned={assigned}
         available={available}
       />
+
+      {/* deleteUser refuses these too; hiding the button just avoids a dead end. */}
+      {!profile?.isAdmin && user.id !== currentUserId && (
+        <section
+          aria-labelledby="danger-title"
+          className="border-destructive/30 flex flex-wrap items-center justify-between gap-4 rounded-xl border px-5 py-4 sm:px-6"
+        >
+          <div>
+            <h2 id="danger-title" className="text-base font-semibold">
+              Delete user
+            </h2>
+            <p className="text-muted-foreground mt-0.5 text-sm">
+              Removes their Clerk account and all their restaurant access.
+            </p>
+          </div>
+          <DeleteUserButton
+            userId={user.id}
+            userLabel={userLabel}
+            restaurantCount={assigned.length}
+          />
+        </section>
+      )}
     </div>
   );
 }

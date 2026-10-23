@@ -2,14 +2,21 @@
 
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { type WebhookEvent } from "@clerk/nextjs/server";
-import { db } from "~/server/db"; 
-import { users } from "~/server/db/schema"; 
+import { type UserJSON, type WebhookEvent } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
+import { db } from "~/server/db";
+import { users } from "~/server/db/schema";
 import { NextResponse } from "next/server";
-import { env } from "~/env"; 
+import { env } from "~/env";
 
 // This handler will not be cached
-// export const runtime = "edge"; 
+// export const runtime = "edge";
+
+// The address the user picked as primary, falling back to the first one.
+function primaryEmail(user: UserJSON): string | null {
+  const primary = user.email_addresses.find((e) => e.id === user.primary_email_address_id);
+  return (primary ?? user.email_addresses[0])?.email_address ?? null;
+}
 
 export async function POST(req: Request) {
   // 1. Get the headers
@@ -49,33 +56,40 @@ export async function POST(req: Request) {
     return new Response("Error: Invalid signature", { status: 400 });
   }
 
-  const eventType = evt.type;
+  // 4. Keep our users table in step with Clerk. A failure returns 500 so
+  // Clerk retries the event later.
+  try {
+    switch (evt.type) {
+      // Created and updated both upsert: an update for a user we never
+      // stored (e.g. created before the webhook existed) adds them.
+      case "user.created":
+      case "user.updated": {
+        const { id, created_at } = evt.data;
+        const email = primaryEmail(evt.data);
+        await db
+          .insert(users)
+          .values({ id, email, createdAt: new Date(created_at) })
+          .onConflictDoUpdate({ target: users.id, set: { email } });
+        console.log(`User ${id} synced (${evt.type}).`);
+        break;
+      }
 
-  // 4. Handle the user.created event
-  if (eventType === "user.created") {
-    // Type Narrowing: evt.data is guaranteed to be a UserJSON object here
-    const { id, email_addresses, created_at } = evt.data; 
-
-    if (!id) {
-      return new Response("Error: Missing user ID in payload", { status: 400 });
+      // Deleting the row also removes their restaurant access (cascade).
+      case "user.deleted": {
+        const { id } = evt.data;
+        if (!id) {
+          return new Response("Error: Missing user ID in payload", { status: 400 });
+        }
+        await db.delete(users).where(eq(users.id, id));
+        console.log(`User ${id} deleted.`);
+        break;
+      }
     }
-
-    try {
-      // Safely insert the new user into your Drizzle table
-      await db.insert(users).values({
-        id: id, // Clerk ID
-        email: email_addresses?.[0]?.email_address, // Use optional chaining for safety
-        createdAt: new Date(created_at),
-      })
-      .onConflictDoNothing();
-
-      console.log(`User ${id} successfully synced to database.`);
-    } catch (error) {
-      console.error(`Error inserting user ${id} into database:`, error);
-      return new Response("Error processing user creation", { status: 500 });
-    }
+  } catch (error) {
+    console.error(`Error handling ${evt.type}:`, error);
+    return new Response(`Error processing ${evt.type}`, { status: 500 });
   }
-  
+
   // 5. Respond to Clerk
   return NextResponse.json({ success: true }, { status: 200 });
 }
