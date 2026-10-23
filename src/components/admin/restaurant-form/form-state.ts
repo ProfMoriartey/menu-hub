@@ -109,16 +109,6 @@ export function validate(values: RestaurantFormValues): FormErrors {
   return errors;
 }
 
-export function slugify(name: string): string {
-  return name
-    .replace(/ı/g, "i")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
 // Lets people paste "instagram.com/place" without typing the protocol.
 export function normalizeUrl(value: string): string {
   const trimmed = value.trim();

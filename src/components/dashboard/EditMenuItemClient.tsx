@@ -217,6 +217,7 @@ export function EditMenuItemClient({
           )}
           <UploadButton
             endpoint="imageUploader"
+            input={{ restaurantId: menuItem.restaurantId }}
             className={cn(
               "ut-button:bg-primary ut-button:hover:bg-primary/90 ut-button:text-primary-foreground",
               "ut-allowed-content:text-muted-foreground",

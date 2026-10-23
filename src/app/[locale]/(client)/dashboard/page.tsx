@@ -8,12 +8,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
+import { toAccessLevel, type AccessLevel } from "~/lib/access";
 
 interface AssignedRestaurant {
   id: string;
   name: string;
   slug: string;
-  accessLevel: "editor" | "owner" | "viewer";
+  accessLevel: AccessLevel;
 }
 
 // NOTE: This component is placed inside an (app) route group to avoid
@@ -40,7 +41,7 @@ export default async function ClientUserDashboardPage() {
       id: assignment.restaurant.id,
       name: assignment.restaurant.name,
       slug: assignment.restaurant.slug,
-      accessLevel: assignment.accessLevel as AssignedRestaurant["accessLevel"],
+      accessLevel: toAccessLevel(assignment.accessLevel),
     }),
   );
 
@@ -81,6 +82,9 @@ export default async function ClientUserDashboardPage() {
                   {/* Translated Access Level Label */}
                   {t("accessLevelLabel")}:{" "}
                   {t(`accessLevels.${restaurant.accessLevel}`)}
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  {t(`accessLevelHints.${restaurant.accessLevel}`)}
                 </p>
               </CardHeader>
               <CardContent className="flex justify-end pt-0">

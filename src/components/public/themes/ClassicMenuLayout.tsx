@@ -90,7 +90,7 @@ export function ClassicMenuLayout({ menuData }: ClassicMenuLayoutProps) {
                   className="block h-full" // UPDATED: Added h-full here
                 >
                   <Link
-                    href={`/${menuData.restaurant.slug}/item/${item.id}`}
+                    href={`/${menuData.restaurant.slug}/item/${item.slug}`}
                     passHref
                     className="group block h-full" // UPDATED: Kept block and h-full for the Link
                   >

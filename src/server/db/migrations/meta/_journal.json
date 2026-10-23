@@ -8,6 +8,13 @@
       "when": 1777035884171,
       "tag": "0001_stiff_greymalkin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792736703131,
+      "tag": "0002_add_category_and_item_slugs",
+      "breakpoints": true
     }
   ]
 }

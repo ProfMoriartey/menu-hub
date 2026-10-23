@@ -5,6 +5,8 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "~/server/db";
 import { usersToRestaurants } from "~/server/db/schema";
 import { eq, and } from "drizzle-orm";
+import { canEditDetails, toAccessLevel, type RestaurantRole } from "~/lib/access";
+import { ActionError } from "~/lib/action-result";
 
 /**
  * Checks if the current user is a System Administrator (RBAC).
@@ -27,33 +29,53 @@ export async function isSystemAdmin(): Promise<boolean> {
 }
 
 /**
- * Checks if the current user is authorized to modify a specific restaurant (ABAC).
- * Authorization is granted if the user is a System Admin OR explicitly assigned to the restaurant.
- * @param {string} restaurantId - The ID of the restaurant resource being accessed.
- * @returns {Promise<void>} Throws an error if access is denied.
+ * The current user's role for a restaurant: "admin" for system admins,
+ * otherwise their assigned access level, or null when they have no access.
  */
-export async function checkAuthorization(restaurantId: string): Promise<void> {
+export async function getRestaurantRole(restaurantId: string): Promise<RestaurantRole | null> {
   const { userId } = await auth();
+  if (!userId) return null;
 
-  if (!userId) {
-    throw new Error("401: Authentication required.");
-  }
+  if (await isSystemAdmin()) return "admin";
 
-  // Check if the user is a System Admin (Global Override)
-  if (await isSystemAdmin()) {
-    return; // Admin access granted, bypass resource check
-  }
-
-  // Check if the user is explicitly linked to the restaurant (Resource ABAC)
-  const hasAccess = await db.query.usersToRestaurants.findFirst({
+  const link = await db.query.usersToRestaurants.findFirst({
     where: and(
       eq(usersToRestaurants.userId, userId),
       eq(usersToRestaurants.restaurantId, restaurantId),
-      // Optional: You could add a check for accessLevel here, e.g., eq(usersToRestaurants.accessLevel, 'editor')
     ),
+    columns: { accessLevel: true },
   });
 
-  if (!hasAccess) {
-    throw new Error("403: Not authorized to modify this restaurant.");
+  return link ? toAccessLevel(link.accessLevel) : null;
+}
+
+/**
+ * Menu changes (categories and items): any assigned user, or a system admin.
+ * @param {string} restaurantId - The ID of the restaurant resource being accessed.
+ * @returns {Promise<RestaurantRole>} The caller's role. Throws if access is denied.
+ */
+export async function checkAuthorization(restaurantId: string): Promise<RestaurantRole> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new ActionError("Please sign in again to make changes.");
   }
+
+  const role = await getRestaurantRole(restaurantId);
+  if (!role) {
+    throw new ActionError("You don't have access to this restaurant.");
+  }
+  return role;
+}
+
+/**
+ * Restaurant detail changes: owners and system admins only. Editors can
+ * manage the menu but not the restaurant itself.
+ */
+export async function checkOwnerAuthorization(restaurantId: string): Promise<RestaurantRole> {
+  const role = await checkAuthorization(restaurantId);
+  if (!canEditDetails(role)) {
+    throw new ActionError("Only the restaurant's owner can change its details.");
+  }
+  return role;
 }

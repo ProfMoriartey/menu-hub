@@ -356,6 +356,7 @@
     "labelCountry": "Country",
     "labelCurrency": "Currency Code",
     "labelPhoneNumber": "Phone Number",
+    "labelMapUrl": "Map Link",
     "labelAddress": "Address",
     "labelShortDescription": "Short Description",
     "labelTypeOfEstablishment": "Type of Establishment",
@@ -390,7 +391,8 @@
     "backToDashboard": "Back to Dashboard",
     "selectPage": "Select a page",
     "detailsTab": "Restaurant Details",
-    "categoriesTab": "Categories & Items"
+    "categoriesTab": "Categories & Items",
+    "editorNotice": "As an editor you can manage this restaurant's categories and items. Ask the owner to change the restaurant's details."
   },
   "Dashboard": {
     "title": "Your Assigned Menus",
@@ -402,6 +404,10 @@
       "editor": "Editor",
       "owner": "Owner",
       "viewer": "Viewer"
+    },
+    "accessLevelHints": {
+      "owner": "Can edit restaurant details and the menu",
+      "editor": "Can edit the menu"
     }
   }
 }

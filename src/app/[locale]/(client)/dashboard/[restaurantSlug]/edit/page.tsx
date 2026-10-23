@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 
 import RestaurantEditor from "~/components/dashboard/RestaurantEditor";
+import { getRestaurantRole } from "~/app/actions/auth";
+import { canEditDetails } from "~/lib/access";
 import type { DeliveryAppLinks, SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
@@ -49,11 +51,16 @@ export const metadata: Metadata = {
 export default async function RestaurantEditPage({ params }: EditPageProps) {
   const { restaurantSlug } = await params;
   const restaurantData = await getRestaurantData(restaurantSlug);
+  // The layout has already confirmed access; this decides what they may edit.
+  const role = await getRestaurantRole(restaurantData.id);
 
   return (
     // Increased to max-w-7xl to give the new multi-column form breathing room
     <div className="mx-auto max-w-7xl px-4">
-      <RestaurantEditor initialRestaurantData={restaurantData} />
+      <RestaurantEditor
+        initialRestaurantData={restaurantData}
+        canEditDetails={canEditDetails(role)}
+      />
     </div>
   );
 }

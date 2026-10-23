@@ -16,6 +16,8 @@ const nextConfig = {
       { protocol: "https", hostname: "utfs.io" },
       { protocol: "https", hostname: "*.ufs.sh" },
       { protocol: "https", hostname: "placehold.co" },
+      // Clerk profile photos (admin users pages)
+      { protocol: "https", hostname: "img.clerk.com" },
     ],
   },
 };

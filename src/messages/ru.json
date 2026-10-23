@@ -355,6 +355,7 @@
     "labelCountry": "Страна",
     "labelCurrency": "Код валюты",
     "labelPhoneNumber": "Номер телефона",
+    "labelMapUrl": "Ссылка на карту",
     "labelAddress": "Адрес",
     "labelShortDescription": "Краткое описание",
     "labelTypeOfEstablishment": "Тип заведения",
@@ -385,7 +386,8 @@
     "backToDashboard": "Назад к панели управления",
     "selectPage": "Выбрать страницу",
     "detailsTab": "Детали ресторана",
-    "categoriesTab": "Категории и пункты"
+    "categoriesTab": "Категории и пункты",
+    "editorNotice": "Как редактор, вы можете управлять категориями и блюдами этого ресторана. Чтобы изменить данные ресторана, обратитесь к владельцу."
   },
   "Dashboard": {
     "title": "Назначенные Вам Меню",
@@ -397,6 +399,10 @@
       "editor": "Редактор",
       "owner": "Владелец",
       "viewer": "Просмотрщик"
+    },
+    "accessLevelHints": {
+      "owner": "Может изменять данные ресторана и меню",
+      "editor": "Может изменять меню"
     }
   }
 }

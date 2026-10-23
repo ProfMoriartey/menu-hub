@@ -8,7 +8,8 @@ import {
   jsonb,
   pgEnum,
   integer,
-  primaryKey, 
+  primaryKey,
+  uniqueIndex,
   text, // IMPORTANT: Add 'text' import for longer string fields like description
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
@@ -60,16 +61,22 @@ export const restaurantsRelations = relations(restaurants, ({ many }) => ({
 }));
 
 
-export const categories = pgTable("menu-hub_categories", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  restaurantId: uuid("restaurant_id")
-    .notNull()
-    .references(() => restaurants.id, { onDelete: "cascade" }),
-  name: varchar("name", { length: 256 }).notNull(),
-  order: integer("order").notNull().default(0),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+export const categories = pgTable(
+  "menu-hub_categories",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    restaurantId: uuid("restaurant_id")
+      .notNull()
+      .references(() => restaurants.id, { onDelete: "cascade" }),
+    name: varchar("name", { length: 256 }).notNull(),
+    // URL name, unique within the restaurant (e.g. /admin/restaurants/marios/menu/pizzas)
+    slug: varchar("slug", { length: 256 }).notNull(),
+    order: integer("order").notNull().default(0),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (t) => [uniqueIndex("categories_restaurant_slug_idx").on(t.restaurantId, t.slug)],
+);
 
 // Define relations for categories
 export const categoriesRelations = relations(categories, ({ one, many }) => ({
@@ -80,24 +87,30 @@ export const categoriesRelations = relations(categories, ({ one, many }) => ({
   menuItems: many(menuItems),
 }));
 
-export const menuItems = pgTable("menu-hub_menu_items", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  categoryId: uuid("category_id")
-    .notNull()
-    .references(() => categories.id, { onDelete: "cascade" }),
-  restaurantId: uuid("restaurant_id")
-    .notNull()
-    .references(() => restaurants.id, { onDelete: "cascade" }),
-  name: varchar("name", { length: 256 }).notNull(),
-  description: varchar("description", { length: 512 }),
-  price: varchar("price", { length: 50 }).notNull(),
-  ingredients: varchar("ingredients", { length: 512 }),
-  dietaryLabels: jsonb("dietary_labels").$type<DietaryLabelValue[]>().default([]),
-  imageUrl: varchar("image_url", { length: 256 }),
-  order: integer("order").notNull().default(0), // Ensure this line exists
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+export const menuItems = pgTable(
+  "menu-hub_menu_items",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    categoryId: uuid("category_id")
+      .notNull()
+      .references(() => categories.id, { onDelete: "cascade" }),
+    restaurantId: uuid("restaurant_id")
+      .notNull()
+      .references(() => restaurants.id, { onDelete: "cascade" }),
+    name: varchar("name", { length: 256 }).notNull(),
+    // URL name, unique within the restaurant (e.g. /marios/item/margherita)
+    slug: varchar("slug", { length: 256 }).notNull(),
+    description: varchar("description", { length: 512 }),
+    price: varchar("price", { length: 50 }).notNull(),
+    ingredients: varchar("ingredients", { length: 512 }),
+    dietaryLabels: jsonb("dietary_labels").$type<DietaryLabelValue[]>().default([]),
+    imageUrl: varchar("image_url", { length: 256 }),
+    order: integer("order").notNull().default(0), // Ensure this line exists
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (t) => [uniqueIndex("menu_items_restaurant_slug_idx").on(t.restaurantId, t.slug)],
+);
 
 // Define relations for menuItems
 export const menuItemsRelations = relations(menuItems, ({ one }) => ({

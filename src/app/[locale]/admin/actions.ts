@@ -2,82 +2,69 @@
 'use server';
 
 import { db } from '~/server/db';
-import { usersToRestaurants } from '~/server/db/schema';
-import { auth } from '@clerk/nextjs/server';
+import { users, usersToRestaurants } from '~/server/db/schema';
+import { isSystemAdmin } from '~/app/actions/auth';
+import { ACCESS_LEVELS, type AccessLevel } from '~/lib/access';
+import { ActionError, runAction, type ActionResult } from '~/lib/action-result';
 
-import { revalidatePath } from 'next/cache'; 
+import { auth, clerkClient } from '@clerk/nextjs/server';
+import { isClerkAPIResponseError } from '@clerk/nextjs/errors';
+import { revalidatePath } from 'next/cache';
 import { and, eq } from 'drizzle-orm';
 
-// Server Action now accepts FormData as required by the HTML form method="POST"
-export async function assignRestaurantToUser(formData: FormData) {
-  // Extract data from the FormData object
-  const clerkUserId = formData.get('clerkUserId') as string;
-  const restaurantId = formData.get('restaurantId') as string;
-
-  // --- 1. Security Check (RBAC) ---
-const { sessionClaims } = await auth();
-const metadata = sessionClaims && 'metadata' in sessionClaims ? sessionClaims.metadata : null;
-const role = metadata && typeof metadata === 'object' && 'role' in metadata ? metadata.role : null;
-const isAdmin = role === "admin";
-
-  if (!isAdmin) {
-    // Fail fast and do not proceed with the database operation
-    throw new Error("ADMIN ACCESS REQUIRED"); 
+async function requireAdmin() {
+  if (!(await isSystemAdmin())) {
+    throw new ActionError('Only system administrators can change restaurant access.');
   }
+}
 
-  // --- 2. Input Validation (Basic) ---
-  if (!clerkUserId || !restaurantId) {
-    console.error("Missing required fields for assignment.");
-    return; // Return silently
+function requireAccessLevel(value: string): AccessLevel {
+  if (!(ACCESS_LEVELS as readonly string[]).includes(value)) {
+    throw new ActionError('Unknown access level.');
   }
+  return value as AccessLevel;
+}
 
-  // --- 3. Perform the assignment (ABAC Setup) ---
-  try {
+// Assigning an existing pair updates its access level instead.
+export async function assignRestaurantToUser(
+  clerkUserId: string,
+  restaurantId: string,
+  accessLevel: string,
+): Promise<ActionResult> {
+  return runAction("Couldn't give access to that restaurant.", async () => {
+    await requireAdmin();
+    const level = requireAccessLevel(accessLevel);
+
+    if (!clerkUserId || !restaurantId) {
+      throw new ActionError('Pick a restaurant to give access to.');
+    }
+
     await db.insert(usersToRestaurants)
       .values({
         userId: clerkUserId,
         restaurantId: restaurantId,
-        accessLevel: 'editor', // Default access
+        accessLevel: level,
       })
-      // Use onConflictDoUpdate to handle cases where a user is already assigned
       .onConflictDoUpdate({
         target: [usersToRestaurants.userId, usersToRestaurants.restaurantId],
-        set: { accessLevel: 'editor' }, 
+        set: { accessLevel: level },
       });
 
-    console.log(`User ${clerkUserId} assigned to restaurant ${restaurantId}.`);
-    // NOTE: Function returns void (no explicit return value) to satisfy Next.js form action typing.
-    
-    revalidatePath(`/admin/users/${clerkUserId}`); 
-    // redirect(`/admin/users/${clerkUserId}`);
-  } catch (error) {
-    console.error("Assignment error:", error);
-    // In a production app, you might log this error and redirect with a failure status.
-  }
+    revalidatePath('/[locale]/admin', 'layout');
+  });
 }
 
-export async function revokeRestaurantAccess(formData: FormData) {
-  const clerkUserId = formData.get('clerkUserId') as string;
-  const restaurantId = formData.get('restaurantId') as string;
+export async function revokeRestaurantAccess(
+  clerkUserId: string,
+  restaurantId: string,
+): Promise<ActionResult> {
+  return runAction("Couldn't remove access.", async () => {
+    await requireAdmin();
 
-  // 1. Security Check (RBAC) - Reuse the existing admin check logic
-  const { sessionClaims } = await auth();
-const metadata = sessionClaims && 'metadata' in sessionClaims ? sessionClaims.metadata : null;
-const role = metadata && typeof metadata === 'object' && 'role' in metadata ? metadata.role : null;
-const isAdmin = role === "admin";
+    if (!clerkUserId || !restaurantId) {
+      throw new ActionError('Missing user or restaurant.');
+    }
 
-  if (!isAdmin) {
-    throw new Error("ADMIN ACCESS REQUIRED");
-  }
-
-  // 2. Input Validation
-  if (!clerkUserId || !restaurantId) {
-    console.error("Missing required fields for revocation.");
-    return;
-  }
-
-  // 3. Perform the DELETION
-  try {
     await db.delete(usersToRestaurants)
       .where(
         and(
@@ -86,12 +73,42 @@ const isAdmin = role === "admin";
         )
       );
 
-    console.log(`Access revoked: User ${clerkUserId} from restaurant ${restaurantId}.`);
+    revalidatePath('/[locale]/admin', 'layout');
+  });
+}
 
-    // 4. Revalidate and Redirect (CRITICAL for instant UI update)
-    revalidatePath(`/admin/users/${clerkUserId}`);
-   
-  } catch (error) {
-    console.error("Revocation error:", error);
-  }
+/**
+ * Deletes the user's Clerk account (they can no longer sign in) and their
+ * row here, which also removes all their restaurant access (cascade).
+ * The user.deleted webhook that Clerk sends afterwards finds nothing left.
+ */
+export async function deleteUser(clerkUserId: string): Promise<ActionResult> {
+  return runAction("Couldn't delete the user.", async () => {
+    await requireAdmin();
+    if (!clerkUserId) throw new ActionError('Missing user.');
+
+    const { userId: currentUserId } = await auth();
+    if (clerkUserId === currentUserId) {
+      throw new ActionError("You can't delete your own account from here.");
+    }
+
+    const client = await clerkClient();
+    try {
+      const clerkUser = await client.users.getUser(clerkUserId);
+      if (clerkUser.publicMetadata?.role === 'admin') {
+        throw new ActionError(
+          'This user is a system admin. Remove their admin role in Clerk before deleting them.',
+        );
+      }
+      await client.users.deleteUser(clerkUserId);
+    } catch (error) {
+      // Already gone from Clerk: still remove what's left in our database.
+      const notFound = isClerkAPIResponseError(error) && error.status === 404;
+      if (!notFound) throw error;
+    }
+
+    await db.delete(users).where(eq(users.id, clerkUserId));
+    // No revalidatePath: it would re-render the deleted user's page as a 404
+    // before the caller navigates back to the (per-request) users list.
+  });
 }

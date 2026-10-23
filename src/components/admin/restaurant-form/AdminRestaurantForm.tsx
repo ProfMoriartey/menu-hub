@@ -1,6 +1,7 @@
 // src/components/admin/restaurant-form/AdminRestaurantForm.tsx
 "use client";
 
+import { unwrap, type ActionResult } from "~/lib/action-result";
 import {
   useEffect,
   useMemo,
@@ -40,6 +41,7 @@ import { UploadButton } from "~/utils/uploadthing";
 import { cn } from "~/lib/utils";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
+import { slugify } from "~/lib/slug";
 import { CharCount, Field, FormSection, ToggleRow, UrlInput } from "./fields";
 import {
   COUNTRY_SUGGESTIONS,
@@ -50,7 +52,6 @@ import {
   SECTIONS,
   THEMES,
   sectionHasError,
-  slugify,
   toFormData,
   validate,
   valuesFromRestaurant,
@@ -79,7 +80,7 @@ const DELIVERY_FIELDS: { key: keyof DeliveryAppLinks; label: string }[] = [
 
 interface AdminRestaurantFormProps {
   restaurant?: Restaurant;
-  action: (formData: FormData) => Promise<void>;
+  action: (formData: FormData) => Promise<ActionResult>;
 }
 
 export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormProps) {
@@ -169,10 +170,14 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
 
     startTransition(async () => {
       try {
-        await action(toFormData(values, restaurant?.id));
+        unwrap(await action(toFormData(values, restaurant?.id)));
         if (isEditing) {
           setSavedValues(values);
           setJustSaved(true);
+          // The page URL contains the slug, so follow it to its new address.
+          if (values.slug !== savedValues.slug) {
+            router.replace(`/admin/restaurants/${values.slug}/edit`);
+          }
         } else {
           router.push("/admin/restaurants");
         }
@@ -374,6 +379,7 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
                 <div className="flex flex-wrap items-center gap-2">
                   <UploadButton
                     endpoint="logoUploader"
+                    input={{ restaurantId: restaurant?.id }}
                     appearance={{ allowedContent: "hidden" }}
                     content={{ button: values.logoUrl ? "Replace logo" : "Upload logo" }}
                     className="ut-button:bg-primary ut-button:text-primary-foreground ut-button:h-9 ut-button:w-auto ut-button:px-4 ut-button:text-sm ut-button:font-medium ut-button:rounded-md ut-button:after:bg-primary/70"

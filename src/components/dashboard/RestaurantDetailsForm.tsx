@@ -1,5 +1,6 @@
 "use client";
 
+import { unwrap } from "~/lib/action-result";
 import React, { useState, useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl";
@@ -91,7 +92,7 @@ async function formWrapperAction(
   }
 
   try {
-    await updateRestaurant(formData);
+    unwrap(await updateRestaurant(formData));
     return { success: true, message: "updateSuccess", errors: {} };
   } catch (error) {
     const message = error instanceof Error ? error.message : "unknownError";
@@ -128,14 +129,16 @@ export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsF
 
   const [state, formAction] = useFormState(formWrapperAction, initialState);
 
+  // Hide a success message after a few seconds. Each submission returns a new
+  // state object, so the next save shows its message again. (Calling
+  // formAction to clear it would re-submit an empty form and fail validation.)
+  const [dismissedState, setDismissedState] = useState<FormState | null>(null);
   useEffect(() => {
-    if (state.success) {
-      const timer = setTimeout(() => {
-        formAction(new FormData());
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [state.success, formAction]);
+    if (!state.success) return;
+    const timer = setTimeout(() => setDismissedState(state), 3000);
+    return () => clearTimeout(timer);
+  }, [state]);
+  const showMessage = Boolean(state.message) && state !== dismissedState;
 
   const handleSocialMediaChange = (key: keyof SocialMediaLinks, value: string) => {
     setCurrentSocialMedia((prev) => ({ ...prev, [key]: value }));
@@ -178,8 +181,10 @@ export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsF
   const getTranslatedStatusMessage = (currentState: FormState) => {
     const key = currentState.message;
     if (key.startsWith("updateFailedPrefix")) {
-      const errorCode = key.split(":")[1] ?? "unknownError";
-      return t("messages.updateFailed", { error: t(errorCode) });
+      // The rest is the server's error text, which itself contains colons
+      // ("Unauthorized: 403: …"). Translate it only if it's a known key.
+      const error = key.slice("updateFailedPrefix:".length) || "unknownError";
+      return t("messages.updateFailed", { error: t.has(error) ? t(error) : error });
     }
     return t(`messages.${key}`);
   };
@@ -190,7 +195,7 @@ export default function RestaurantDetailsForm({ restaurant }: RestaurantDetailsF
         {t("mainTitle")}
       </h2>
 
-      {state.message && (
+      {showMessage && (
         <div className={cn("mb-4 rounded p-3 text-sm", state.success ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive")}>
           {getTranslatedStatusMessage(state)}
         </div>

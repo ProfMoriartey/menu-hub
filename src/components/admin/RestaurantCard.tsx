@@ -7,23 +7,17 @@ import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { DeleteRestaurantDialog } from "~/components/admin/DeleteRestaurantDialog";
 import { cn } from "~/lib/utils";
+import { formatDate } from "~/lib/format";
 
+import type { ActionResult } from "~/lib/action-result";
 import type { Restaurant } from "~/types/restaurant";
-
-// Fixed locale and time zone so server and browser render the same date.
-const dateFormat = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-  timeZone: "UTC",
-});
 
 export function RestaurantLogo({
   restaurant,
   size = "md",
 }: {
   restaurant: Pick<Restaurant, "name" | "logoUrl">;
-  size?: "md" | "lg";
+  size?: "sm" | "md" | "lg";
 }) {
   const initials = restaurant.name
     .split(/\s+/)
@@ -34,8 +28,10 @@ export function RestaurantLogo({
   return (
     <div
       className={cn(
-        "bg-muted border-border relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl border",
-        size === "lg" ? "h-16 w-16 text-xl" : "h-12 w-12 text-base",
+        "bg-muted border-border relative flex shrink-0 items-center justify-center overflow-hidden border",
+        size === "lg" && "h-16 w-16 rounded-xl text-xl",
+        size === "md" && "h-12 w-12 rounded-xl text-base",
+        size === "sm" && "h-8 w-8 rounded-lg text-xs",
       )}
     >
       {restaurant.logoUrl ? (
@@ -43,7 +39,7 @@ export function RestaurantLogo({
           src={restaurant.logoUrl}
           alt=""
           fill
-          sizes={size === "lg" ? "64px" : "48px"}
+          sizes={size === "lg" ? "64px" : size === "md" ? "48px" : "32px"}
           className="object-cover"
         />
       ) : (
@@ -88,7 +84,7 @@ export function StatusBadges({
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
-  deleteRestaurantAction: (restaurantId: string) => Promise<void>;
+  deleteRestaurantAction: (restaurantId: string) => Promise<ActionResult>;
 }
 
 export function RestaurantCard({
@@ -107,7 +103,7 @@ export function RestaurantCard({
           <div className="min-w-0 flex-1">
             <h3 className="truncate font-semibold">
               <Link
-                href={`/admin/restaurants/${restaurant.id}/edit`}
+                href={`/admin/restaurants/${restaurant.slug}/edit`}
                 className="hover:underline"
               >
                 {restaurant.name}
@@ -143,18 +139,18 @@ export function RestaurantCard({
         </dl>
 
         <p className="text-muted-foreground mt-auto text-xs">
-          Added {dateFormat.format(new Date(restaurant.createdAt))}
+          Added {formatDate(restaurant.createdAt)}
         </p>
       </div>
 
       <div className="border-border flex items-center gap-2 border-t px-5 py-3">
         <Button variant="outline" size="sm" asChild>
-          <Link href={`/admin/restaurants/${restaurant.id}/edit`}>
+          <Link href={`/admin/restaurants/${restaurant.slug}/edit`}>
             <Pencil className="h-3.5 w-3.5" /> Edit
           </Link>
         </Button>
         <Button variant="ghost" size="sm" asChild>
-          <Link href={`/admin/restaurants/${restaurant.id}/categories`}>Menu</Link>
+          <Link href={`/admin/restaurants/${restaurant.slug}/menu`}>Menu</Link>
         </Button>
         <div className="ml-auto flex items-center">
           {restaurant.isActive && (

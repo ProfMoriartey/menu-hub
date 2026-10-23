@@ -1,15 +1,18 @@
-// app/[restaurantSlug]/item/[itemId]/page.tsx
+// app/[restaurantSlug]/item/[itemSlug]/page.tsx
 import { db } from "~/server/db";
-import { menuItems } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import { menuItems, restaurants } from "~/server/db/schema";
+import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
+import { permanentRedirect } from "~/i18n/navigation";
+import { isUuid } from "~/lib/slug";
 import { MenuItemDisplayClient } from "~/components/public/MenuItemDisplayClient";
 import { getTranslations } from "next-intl/server"; // ADDED: Import getTranslations
 
 interface PageProps {
   params: Promise<{
     restaurantSlug: string;
-    itemId: string;
+    itemSlug: string;
   }>;
   searchParams?: Promise<
     Readonly<Record<string, string | string[] | undefined>>
@@ -17,20 +20,39 @@ interface PageProps {
 }
 
 export default async function MenuItemDetailPage({ params }: PageProps) {
-  const { restaurantSlug, itemId } = await params;
+  const { restaurantSlug, itemSlug } = await params;
 
   // ADDED: Fetch translations for this page
   const t = await getTranslations("menuItemDetailPage");
 
+  const restaurant = await db.query.restaurants.findFirst({
+    where: eq(restaurants.slug, restaurantSlug),
+    columns: { id: true },
+  });
+  if (!restaurant) notFound();
+
   const itemDetails = await db.query.menuItems.findFirst({
-    where: eq(menuItems.id, itemId),
+    where: and(eq(menuItems.restaurantId, restaurant.id), eq(menuItems.slug, itemSlug)),
     with: {
       restaurant: true,
       category: true,
     },
   });
 
-  if (!itemDetails || itemDetails.restaurant.slug !== restaurantSlug) {
+  if (!itemDetails) {
+    // Item links used to end in the item's id; send those to the slug URL.
+    if (isUuid(itemSlug)) {
+      const legacy = await db.query.menuItems.findFirst({
+        where: and(eq(menuItems.restaurantId, restaurant.id), eq(menuItems.id, itemSlug)),
+        columns: { slug: true },
+      });
+      if (legacy) {
+        permanentRedirect({
+          href: `/${restaurantSlug}/item/${legacy.slug}`,
+          locale: await getLocale(),
+        });
+      }
+    }
     notFound();
   }
 

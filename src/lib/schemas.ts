@@ -31,6 +31,8 @@ export const RESERVED_SLUGS = [
   "admin",
   "api",
   "dashboard",
+  // Admin pages live at /admin/restaurants/new and /admin/restaurants/[slug].
+  "new",
   "restaurants",
   "sign-in",
   "sign-up",

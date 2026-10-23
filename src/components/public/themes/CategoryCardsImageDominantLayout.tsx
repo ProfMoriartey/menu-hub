@@ -77,7 +77,7 @@ export function CategoryCardsImageDominantLayout({
                 className="block h-full"
               >
                 <Link
-                  href={`/${menuData.restaurant.slug}/item/${item.id}`}
+                  href={`/${menuData.restaurant.slug}/item/${item.slug}`}
                   passHref
                   className="group block h-full"
                 >

@@ -107,7 +107,7 @@ export function SidebarListLayout({ menuData }: SidebarListLayoutProps) {
                       className="block" // Ensure it remains a block for layout
                     >
                       <Link
-                        href={`/${menuData.restaurant.slug}/item/${item.id}`}
+                        href={`/${menuData.restaurant.slug}/item/${item.slug}`}
                         passHref
                         className="group block" // Ensure Link behaves as a block
                       >

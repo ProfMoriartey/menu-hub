@@ -34,6 +34,7 @@ export interface Category {
   id: string;
   restaurantId: string;
   name: string;
+  slug: string;
   order: number;
   createdAt: Date;
   updatedAt: Date | null;
@@ -47,6 +48,7 @@ export interface MenuItem {
   categoryId: string;
   restaurantId: string;
   name: string;
+  slug: string;
   description: string | null;
   price: string; 
   ingredients: string | null;
