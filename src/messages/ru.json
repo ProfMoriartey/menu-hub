@@ -357,7 +357,10 @@
       "deleteButton": "Удалить блюдо",
       "movedNotice": "«{name}» перенесено в категорию «{category}».",
       "addedElsewhereNotice": "«{name}» добавлено в категорию «{category}».",
-      "openCategory": "Открыть «{category}»"
+      "openCategory": "Открыть «{category}»",
+      "duplicate": "Дублировать",
+      "duplicateLabel": "Дублировать {name}",
+      "copyName": "{name} (копия)"
     },
     "itemDialog": {
       "close": "Закрыть",
@@ -505,7 +508,8 @@
     "signInToUpload": "Войдите, чтобы загружать файлы.",
     "adminOnlyNewLogo": "Загружать логотип для нового ресторана могут только администраторы.",
     "ownerOnlyLogo": "Изменять логотип ресторана может только его владелец.",
-    "invalidCategory": "Эта категория не относится к этому ресторану. Обновите страницу и попробуйте ещё раз."
+    "invalidCategory": "Эта категория не относится к этому ресторану. Обновите страницу и попробуйте ещё раз.",
+    "duplicateItemFailed": "Не удалось дублировать блюдо. Попробуйте ещё раз."
   },
   "UnsavedChanges": {
     "confirmLeave": "Есть несохранённые изменения. Уйти, не сохранив их?"

@@ -23,6 +23,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import {
   ArrowRightLeft,
+  CopyPlus,
   GripVertical,
   Pencil,
   Plus,
@@ -45,6 +46,7 @@ import {
 } from "~/components/menu-editor/ReorderStatus";
 import {
   deleteMenuItem,
+  duplicateMenuItem,
   setMenuItemAvailability,
   updateMenuItemOrder,
 } from "~/app/actions/menu-item";
@@ -93,12 +95,14 @@ function ItemRow({
   restaurantId,
   categoryId,
   onEdit,
+  onDuplicated,
 }: {
   item: AdminMenuItem;
   currency: string;
   restaurantId: string;
   categoryId: string;
   onEdit: () => void;
+  onDuplicated: (copy: AdminMenuItem) => void;
 }) {
   const t = useTranslations("MenuEditor");
   const tAvailability = useTranslations("Availability");
@@ -114,22 +118,30 @@ function ItemRow({
 
   // Shown at once; put back if saving fails. Follows the server data after.
   const [availability, setAvailability] = useState(item.availability);
-  const [availabilityError, setAvailabilityError] = useState<string | null>(
-    null,
-  );
+  const [rowError, setRowError] = useState<string | null>(null);
   const [isSavingAvailability, startAvailabilityTransition] = useTransition();
   useEffect(() => setAvailability(item.availability), [item.availability]);
+
+  const [isDuplicating, startDuplicateTransition] = useTransition();
+  const duplicate = () => {
+    setRowError(null);
+    startDuplicateTransition(async () => {
+      const result = await duplicateMenuItem(item.id, restaurantId);
+      if (result.ok) onDuplicated(result.data);
+      else setRowError(result.error);
+    });
+  };
 
   const changeAvailability = (next: ItemAvailability) => {
     if (next === availability) return;
     const previous = availability;
     setAvailability(next);
-    setAvailabilityError(null);
+    setRowError(null);
     startAvailabilityTransition(async () => {
       const result = await setMenuItemAvailability(item.id, restaurantId, next);
       if (!result.ok) {
         setAvailability(previous);
-        setAvailabilityError(result.error);
+        setRowError(result.error);
       }
     });
   };
@@ -233,18 +245,29 @@ function ItemRow({
           >
             <Pencil className="h-4 w-4" />
           </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={duplicate}
+            disabled={isDuplicating}
+            aria-label={t("items.duplicateLabel", { name: item.name })}
+            title={t("items.duplicate")}
+          >
+            <CopyPlus className="h-4 w-4" />
+          </Button>
           <DeleteItemButton
             item={item}
             restaurantId={restaurantId}
             categoryId={categoryId}
           />
         </div>
-        {availabilityError && (
+        {rowError && (
           <p
             className="text-destructive max-w-56 text-end text-xs"
             role="alert"
           >
-            {availabilityError}
+            {rowError}
           </p>
         )}
       </div>
@@ -404,6 +427,8 @@ export function MenuItemList({
                       restaurantId={restaurantId}
                       categoryId={categoryId}
                       onEdit={() => setDialogItem(item)}
+                      // Open the copy straight away to rename and adjust it.
+                      onDuplicated={(copy) => setDialogItem(copy)}
                     />
                   ))}
                 </ul>

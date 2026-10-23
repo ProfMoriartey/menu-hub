@@ -357,7 +357,10 @@
       "deleteButton": "Ürünü sil",
       "movedNotice": "\"{name}\", {category} kategorisine taşındı.",
       "addedElsewhereNotice": "\"{name}\", {category} kategorisine eklendi.",
-      "openCategory": "{category} kategorisini aç"
+      "openCategory": "{category} kategorisini aç",
+      "duplicate": "Çoğalt",
+      "duplicateLabel": "{name} ürününü çoğalt",
+      "copyName": "{name} (kopya)"
     },
     "itemDialog": {
       "close": "Kapat",
@@ -505,7 +508,8 @@
     "signInToUpload": "Dosya yüklemek için lütfen giriş yapın.",
     "adminOnlyNewLogo": "Yeni bir restoranın logosunu yalnızca yöneticiler yükleyebilir.",
     "ownerOnlyLogo": "Restoranın logosunu yalnızca restoran sahibi değiştirebilir.",
-    "invalidCategory": "Bu kategori bu restorana ait değil. Sayfayı yenileyip tekrar deneyin."
+    "invalidCategory": "Bu kategori bu restorana ait değil. Sayfayı yenileyip tekrar deneyin.",
+    "duplicateItemFailed": "Ürün çoğaltılamadı. Lütfen tekrar deneyin."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"

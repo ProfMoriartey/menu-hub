@@ -357,7 +357,10 @@
       "deleteButton": "Delete item",
       "movedNotice": "Moved \"{name}\" to {category}.",
       "addedElsewhereNotice": "Added \"{name}\" to {category}.",
-      "openCategory": "Open {category}"
+      "openCategory": "Open {category}",
+      "duplicate": "Duplicate",
+      "duplicateLabel": "Duplicate {name}",
+      "copyName": "{name} (copy)"
     },
     "itemDialog": {
       "close": "Close",
@@ -505,7 +508,8 @@
     "signInToUpload": "Please sign in to upload files.",
     "adminOnlyNewLogo": "Only administrators can upload a logo for a new restaurant.",
     "ownerOnlyLogo": "Only the restaurant's owner can change its logo.",
-    "invalidCategory": "That category doesn't belong to this restaurant. Reload the page and try again."
+    "invalidCategory": "That category doesn't belong to this restaurant. Reload the page and try again.",
+    "duplicateItemFailed": "Couldn't duplicate the item. Please try again."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"

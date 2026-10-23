@@ -4,7 +4,8 @@
 import { db } from "~/server/db";
 import { categories, menuItems } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, gt, sql } from "drizzle-orm";
+import { getTranslations } from "next-intl/server";
 import { checkAuthorization } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import { runAction } from "~/server/run-action";
@@ -198,6 +199,61 @@ export async function deleteMenuItem(
     await deleteUploadedFiles([existingItem.imageUrl]);
 
     revalidateMenuPages();
+  });
+}
+
+/**
+ * Copies an item (e.g. as a starting point for a variant) right below the
+ * original. The copy starts hidden, so a half-edited "(copy)" never shows on
+ * the public menu, and shares the original's photo: files are only deleted
+ * once no item uses them. Returns the copy, for opening its edit dialog.
+ */
+export async function duplicateMenuItem(
+  menuItemId: string,
+  restaurantId: string,
+): Promise<ActionResult<typeof menuItems.$inferSelect>> {
+  return runAction("duplicateItemFailed", async () => {
+    if (!restaurantId) throw new ActionError("missingRestaurant");
+    await checkAuthorization(restaurantId);
+
+    const [original] = await db
+      .select()
+      .from(menuItems)
+      .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)));
+    if (!original) throw new ActionError("itemNotFound");
+
+    // Named in the language of the person duplicating it.
+    const t = await getTranslations("MenuEditor.items");
+    const name = t("copyName", { name: original.name }).slice(0, 256);
+
+    const copy = await db.transaction(async (tx) => {
+      // Make room directly below the original.
+      await tx
+        .update(menuItems)
+        .set({ order: sql`${menuItems.order} + 1` })
+        .where(and(eq(menuItems.categoryId, original.categoryId), gt(menuItems.order, original.order)));
+
+      const [row] = await tx
+        .insert(menuItems)
+        .values({
+          restaurantId,
+          categoryId: original.categoryId,
+          name,
+          slug: uniqueSlug(name, await takenItemSlugs(restaurantId), "item"),
+          description: original.description,
+          price: original.price,
+          ingredients: original.ingredients,
+          dietaryLabels: original.dietaryLabels,
+          imageUrl: original.imageUrl,
+          availability: "hidden",
+          order: original.order + 1,
+        })
+        .returning();
+      return row!;
+    });
+
+    revalidateMenuPages();
+    return copy;
   });
 }
 

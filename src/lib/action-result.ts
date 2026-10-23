@@ -16,6 +16,7 @@ export const ACTION_ERROR_CODES = [
   "addItemFailed",
   "saveItemFailed",
   "deleteItemFailed",
+  "duplicateItemFailed",
   "reorderFailed",
   "grantAccessFailed",
   "removeAccessFailed",
@@ -58,8 +59,10 @@ export type ActionErrorValues = Record<string, string | number>;
 // Next.js replaces the message of any error thrown from a server action with
 // a generic one, so a thrown error never reaches the page. `error` is
 // already translated; `code` lets a page react to a specific failure.
-export type ActionResult =
-  | { ok: true }
+// Most actions return nothing on success; some (e.g. duplicating an item)
+// hand back what they made as `data`.
+export type ActionResult<T = void> =
+  | (T extends void ? { ok: true } : { ok: true; data: T })
   | { ok: false; error: string; code: ActionErrorCode };
 
 // An error meant for the person using the page. runAction() turns it into a
@@ -84,6 +87,6 @@ export class ActionFailure extends Error {
 }
 
 // For client code that already handles failures with try/catch.
-export function unwrap(result: ActionResult): void {
+export function unwrap<T>(result: ActionResult<T>): void {
   if (!result.ok) throw new ActionFailure(result.error, result.code);
 }

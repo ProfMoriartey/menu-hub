@@ -26,13 +26,14 @@ export async function translateActionError(
  * ActionErrors become translated messages; anything else is logged on the
  * server and reported as `fallback`, so database details never leak.
  */
-export async function runAction(
+export async function runAction<T = void>(
   fallback: ActionErrorCode,
-  body: () => Promise<void>,
-): Promise<ActionResult> {
+  body: () => Promise<T>,
+): Promise<ActionResult<T>> {
   try {
-    await body();
-    return { ok: true };
+    const data = await body();
+    // Actions without a result keep returning just { ok: true }.
+    return (data === undefined ? { ok: true } : { ok: true, data }) as ActionResult<T>;
   } catch (error) {
     // Let Next.js handle redirect() and notFound() as usual.
     unstable_rethrow(error);

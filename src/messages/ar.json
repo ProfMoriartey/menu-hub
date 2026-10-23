@@ -357,7 +357,10 @@
       "deleteButton": "حذف الصنف",
       "movedNotice": "تم نقل \"{name}\" إلى {category}.",
       "addedElsewhereNotice": "تمت إضافة \"{name}\" إلى {category}.",
-      "openCategory": "فتح {category}"
+      "openCategory": "فتح {category}",
+      "duplicate": "تكرار",
+      "duplicateLabel": "تكرار {name}",
+      "copyName": "{name} (نسخة)"
     },
     "itemDialog": {
       "close": "إغلاق",
@@ -505,7 +508,8 @@
     "signInToUpload": "يُرجى تسجيل الدخول لرفع الملفات.",
     "adminOnlyNewLogo": "لا يمكن رفع شعار لمطعم جديد إلا للمسؤولين.",
     "ownerOnlyLogo": "لا يمكن تغيير شعار المطعم إلا لمالكه.",
-    "invalidCategory": "هذه الفئة لا تتبع هذا المطعم. أعد تحميل الصفحة وحاول مرة أخرى."
+    "invalidCategory": "هذه الفئة لا تتبع هذا المطعم. أعد تحميل الصفحة وحاول مرة أخرى.",
+    "duplicateItemFailed": "تعذّر تكرار الصنف. يُرجى المحاولة مرة أخرى."
   },
   "UnsavedChanges": {
     "confirmLeave": "لديك تغييرات غير محفوظة. هل تريد المغادرة دون حفظها؟"

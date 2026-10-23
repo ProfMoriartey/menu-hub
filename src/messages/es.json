@@ -357,7 +357,10 @@
       "deleteButton": "Eliminar plato",
       "movedNotice": "\"{name}\" se ha movido a {category}.",
       "addedElsewhereNotice": "\"{name}\" se ha añadido a {category}.",
-      "openCategory": "Abrir {category}"
+      "openCategory": "Abrir {category}",
+      "duplicate": "Duplicar",
+      "duplicateLabel": "Duplicar {name}",
+      "copyName": "{name} (copia)"
     },
     "itemDialog": {
       "close": "Cerrar",
@@ -505,7 +508,8 @@
     "signInToUpload": "Inicia sesión para subir archivos.",
     "adminOnlyNewLogo": "Solo los administradores pueden subir el logo de un restaurante nuevo.",
     "ownerOnlyLogo": "Solo el propietario del restaurante puede cambiar su logo.",
-    "invalidCategory": "Esa categoría no pertenece a este restaurante. Recarga la página e inténtalo de nuevo."
+    "invalidCategory": "Esa categoría no pertenece a este restaurante. Recarga la página e inténtalo de nuevo.",
+    "duplicateItemFailed": "No se pudo duplicar el plato. Inténtalo de nuevo."
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
