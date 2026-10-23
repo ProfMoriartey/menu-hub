@@ -354,7 +354,10 @@
       "deleteTitle": "حذف الصنف",
       "deleteConfirmTitle": "حذف \"{name}\"؟",
       "deleteConfirmText": "سيُزال من القائمة مع صورته. لا يمكن التراجع عن ذلك.",
-      "deleteButton": "حذف الصنف"
+      "deleteButton": "حذف الصنف",
+      "movedNotice": "تم نقل \"{name}\" إلى {category}.",
+      "addedElsewhereNotice": "تمت إضافة \"{name}\" إلى {category}.",
+      "openCategory": "فتح {category}"
     },
     "itemDialog": {
       "close": "إغلاق",
@@ -388,7 +391,8 @@
       "saving": "جارٍ الحفظ…",
       "saveChanges": "حفظ التغييرات",
       "addItem": "إضافة صنف",
-      "saveFailed": "تعذّر حفظ الصنف."
+      "saveFailed": "تعذّر حفظ الصنف.",
+      "category": "الفئة"
     }
   },
   "DashboardRestaurant": {
@@ -494,6 +498,7 @@
     "cantDeleteAdmin": "هذا المستخدم مسؤول نظام. أزل دور المسؤول عنه في Clerk قبل حذفه.",
     "signInToUpload": "يُرجى تسجيل الدخول لرفع الملفات.",
     "adminOnlyNewLogo": "لا يمكن رفع شعار لمطعم جديد إلا للمسؤولين.",
-    "ownerOnlyLogo": "لا يمكن تغيير شعار المطعم إلا لمالكه."
+    "ownerOnlyLogo": "لا يمكن تغيير شعار المطعم إلا لمالكه.",
+    "invalidCategory": "هذه الفئة لا تتبع هذا المطعم. أعد تحميل الصفحة وحاول مرة أخرى."
   }
 }

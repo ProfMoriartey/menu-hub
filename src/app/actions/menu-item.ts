@@ -2,9 +2,9 @@
 "use server";
 
 import { db } from "~/server/db";
-import { menuItems } from "~/server/db/schema";
+import { categories, menuItems } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import { runAction } from "~/server/run-action";
@@ -46,6 +46,25 @@ const getJsonArrayValue = (formData: FormData, key: string): unknown => {
   return [];
 };
 
+// A request can name any category id, so check it is one of this
+// restaurant's before filing an item under it.
+async function requireCategoryOf(restaurantId: string, categoryId: string) {
+  const category = await db.query.categories.findFirst({
+    where: and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)),
+    columns: { id: true },
+  });
+  if (!category) throw new ActionError("invalidCategory");
+}
+
+// Items added or moved into a category go to its end.
+async function nextItemOrder(categoryId: string) {
+  const [row] = await db
+    .select({ max: sql<number | null>`max(${menuItems.order})` })
+    .from(menuItems)
+    .where(eq(menuItems.categoryId, categoryId));
+  return (row?.max ?? -1) + 1;
+}
+
 // Menus appear on public pages, the dashboard and the admin panel.
 const revalidateMenuPages = () => revalidatePath("/[locale]", "layout");
 
@@ -70,9 +89,12 @@ export async function addMenuItem(formData: FormData): Promise<ActionResult> {
     }
 
     const validatedData: CreateMenuItemData = result.data;
+    await requireCategoryOf(restaurantId, validatedData.categoryId);
+
     await db.insert(menuItems).values({
       ...validatedData,
       slug: uniqueSlug(validatedData.name, await takenItemSlugs(restaurantId), "item"),
+      order: await nextItemOrder(validatedData.categoryId),
     });
 
     revalidateMenuPages();
@@ -108,6 +130,11 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
       .where(and(eq(menuItems.id, validatedData.id), eq(menuItems.restaurantId, restaurantId)));
     if (!existingItem) throw new ActionError("itemNotFound");
 
+    // Moving to another category: it must be this restaurant's, and the
+    // item goes to the end of it.
+    const moved = validatedData.categoryId !== existingItem.categoryId;
+    if (moved) await requireCategoryOf(restaurantId, validatedData.categoryId);
+
     // The slug is part of the public item URL, so only a rename changes it.
     const slug =
       existingItem.name === validatedData.name
@@ -124,6 +151,10 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
         ingredients: validatedData.ingredients,
         dietaryLabels: validatedData.dietaryLabels,
         imageUrl: validatedData.imageUrl,
+        ...(moved && {
+          categoryId: validatedData.categoryId,
+          order: await nextItemOrder(validatedData.categoryId),
+        }),
         updatedAt: new Date(),
       })
       .where(and(eq(menuItems.id, validatedData.id), eq(menuItems.restaurantId, restaurantId)));

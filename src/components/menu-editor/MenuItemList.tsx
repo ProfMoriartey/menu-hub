@@ -21,8 +21,9 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Pencil, Plus, Trash2, UtensilsCrossed } from "lucide-react";
+import { ArrowRightLeft, GripVertical, Pencil, Plus, Trash2, UtensilsCrossed, X } from "lucide-react";
 import { unwrap } from "~/lib/action-result";
+import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { ConfirmDialog } from "~/components/menu-editor/ConfirmDialog";
 import {
@@ -164,6 +165,10 @@ interface MenuItemListProps {
   categoryId: string;
   categoryName: string;
   currency: string;
+  // Every category of the restaurant, so items can be moved between them.
+  categories: { id: string; slug: string; name: string }[];
+  // Where this restaurant's category pages live, e.g. "/dashboard/marios/menu".
+  basePath: string;
 }
 
 export function MenuItemList({
@@ -172,12 +177,20 @@ export function MenuItemList({
   categoryId,
   categoryName,
   currency,
+  categories,
+  basePath,
 }: MenuItemListProps) {
   const t = useTranslations("MenuEditor.items");
+  const tReorder = useTranslations("MenuEditor.reorder");
   const [items, setItems] = useState(initialItems);
   const [orderState, setOrderState] = useReorderState();
   // null = closed, "new" = adding, otherwise the item being edited.
   const [dialogItem, setDialogItem] = useState<AdminMenuItem | "new" | null>(null);
+  // An item saved into another category leaves this list; say where it went.
+  const [elsewhere, setElsewhere] = useState<{ name: string; categoryId: string; isNew: boolean } | null>(
+    null,
+  );
+  const elsewhereCategory = elsewhere && categories.find((c) => c.id === elsewhere.categoryId);
 
   // Adds, edits and deletes refresh the server data; pick it up here.
   useEffect(() => {
@@ -222,6 +235,32 @@ export function MenuItemList({
         <ReorderStatus state={orderState} onDismiss={() => setOrderState("idle")} />
       </div>
 
+      {elsewhereCategory && (
+        <div
+          role="status"
+          className="bg-primary/5 border-primary/20 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border px-4 py-2.5 text-sm"
+        >
+          <ArrowRightLeft className="text-primary h-4 w-4 shrink-0" aria-hidden />
+          <span>
+            {t(elsewhere.isNew ? "addedElsewhereNotice" : "movedNotice", {
+              name: elsewhere.name,
+              category: elsewhereCategory.name,
+            })}
+          </span>
+          <Link href={`${basePath}/${elsewhereCategory.slug}`} className="text-primary font-medium hover:underline">
+            {t("openCategory", { category: elsewhereCategory.name })}
+          </Link>
+          <button
+            type="button"
+            onClick={() => setElsewhere(null)}
+            aria-label={tReorder("dismiss")}
+            className="text-muted-foreground hover:text-foreground ms-auto"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
       {items.length === 0 ? (
         <div className="border-border flex flex-col items-center rounded-xl border border-dashed px-6 py-14 text-center">
           <UtensilsCrossed className="text-muted-foreground mb-3 h-9 w-9" />
@@ -263,6 +302,8 @@ export function MenuItemList({
         categoryId={categoryId}
         categoryName={categoryName}
         currency={currency}
+        categories={categories}
+        onSaved={(saved) => setElsewhere(saved.categoryId === categoryId ? null : saved)}
       />
     </div>
   );

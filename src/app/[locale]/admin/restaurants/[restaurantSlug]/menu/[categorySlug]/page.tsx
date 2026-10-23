@@ -53,6 +53,8 @@ export default async function AdminCategoryItemsPage({
         categoryId={category.id}
         categoryName={category.name}
         currency={restaurant.currency}
+        categories={allCategories}
+        basePath={`/admin/restaurants/${restaurant.slug}/menu`}
       />
     </div>
   )

@@ -38,6 +38,7 @@ export const ACTION_ERROR_CODES = [
   "missingRestaurant",
   "restaurantNotFound",
   "categoryNotFound",
+  "invalidCategory",
   "itemNotFound",
   "missingUser",
   // Users

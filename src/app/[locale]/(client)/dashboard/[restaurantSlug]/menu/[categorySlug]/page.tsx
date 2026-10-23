@@ -55,6 +55,8 @@ export default async function DashboardCategoryItemsPage({
           categoryId={category.id}
           categoryName={category.name}
           currency={restaurant.currency}
+          categories={allCategories}
+          basePath={basePath}
         />
       </div>
     </>

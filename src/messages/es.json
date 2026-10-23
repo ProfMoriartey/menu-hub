@@ -354,7 +354,10 @@
       "deleteTitle": "Eliminar plato",
       "deleteConfirmTitle": "¿Eliminar \"{name}\"?",
       "deleteConfirmText": "Se quitará del menú junto con su foto. No se puede deshacer.",
-      "deleteButton": "Eliminar plato"
+      "deleteButton": "Eliminar plato",
+      "movedNotice": "\"{name}\" se ha movido a {category}.",
+      "addedElsewhereNotice": "\"{name}\" se ha añadido a {category}.",
+      "openCategory": "Abrir {category}"
     },
     "itemDialog": {
       "close": "Cerrar",
@@ -388,7 +391,8 @@
       "saving": "Guardando…",
       "saveChanges": "Guardar cambios",
       "addItem": "Añadir plato",
-      "saveFailed": "No se pudo guardar el plato."
+      "saveFailed": "No se pudo guardar el plato.",
+      "category": "Categoría"
     }
   },
   "DashboardRestaurant": {
@@ -494,6 +498,7 @@
     "cantDeleteAdmin": "Este usuario es administrador del sistema. Quítale el rol de administrador en Clerk antes de eliminarlo.",
     "signInToUpload": "Inicia sesión para subir archivos.",
     "adminOnlyNewLogo": "Solo los administradores pueden subir el logo de un restaurante nuevo.",
-    "ownerOnlyLogo": "Solo el propietario del restaurante puede cambiar su logo."
+    "ownerOnlyLogo": "Solo el propietario del restaurante puede cambiar su logo.",
+    "invalidCategory": "Esa categoría no pertenece a este restaurante. Recarga la página e inténtalo de nuevo."
   }
 }

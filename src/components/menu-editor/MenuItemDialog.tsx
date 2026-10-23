@@ -18,6 +18,13 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { UploadButton } from "~/utils/uploadthing";
 import { addMenuItem, updateMenuItem } from "~/app/actions/menu-item";
 import { CharCount, Field } from "~/components/forms/fields";
@@ -49,15 +56,17 @@ interface ItemValues {
   ingredients: string;
   dietaryLabels: DietaryLabel[];
   imageUrl: string;
+  categoryId: string;
 }
 
-const valuesFromItem = (item?: AdminMenuItem): ItemValues => ({
+const valuesFromItem = (item: AdminMenuItem | undefined, categoryId: string): ItemValues => ({
   name: item?.name ?? "",
   price: item?.price ?? "",
   description: item?.description ?? "",
   ingredients: item?.ingredients ?? "",
   dietaryLabels: item?.dietaryLabels ?? [],
   imageUrl: item?.imageUrl ?? "",
+  categoryId: item?.categoryId ?? categoryId,
 });
 
 interface MenuItemDialogProps {
@@ -69,6 +78,9 @@ interface MenuItemDialogProps {
   categoryId: string;
   categoryName: string;
   currency: string;
+  // The restaurant's categories, for moving an item or adding it elsewhere.
+  categories: { id: string; name: string }[];
+  onSaved?: (saved: { name: string; categoryId: string; isNew: boolean }) => void;
 }
 
 export function MenuItemDialog(props: MenuItemDialogProps) {
@@ -87,11 +99,13 @@ function MenuItemForm({
   categoryId,
   categoryName,
   currency,
+  categories,
+  onSaved,
 }: MenuItemDialogProps) {
   const t = useTranslations("MenuEditor");
   const locale = useLocale();
   const isEditing = Boolean(item);
-  const [initial, setInitial] = useState(() => valuesFromItem(item));
+  const [initial, setInitial] = useState(() => valuesFromItem(item, categoryId));
   const [values, setValues] = useState(initial);
   const [errors, setErrors] = useState<Partial<Record<keyof ItemValues | "general", string>>>({});
   const [isUploading, setIsUploading] = useState(false);
@@ -132,7 +146,7 @@ function MenuItemForm({
       const formData = new FormData();
       if (item) formData.set("id", item.id);
       formData.set("restaurantId", restaurantId);
-      formData.set("categoryId", categoryId);
+      formData.set("categoryId", values.categoryId);
       formData.set("name", values.name);
       formData.set("price", values.price);
       formData.set("description", values.description);
@@ -142,8 +156,10 @@ function MenuItemForm({
 
       try {
         unwrap(await (item ? updateMenuItem : addMenuItem)(formData));
+        onSaved?.({ name: values.name, categoryId: values.categoryId, isNew: !item });
         if (addAnother) {
-          const empty = valuesFromItem();
+          // Keep the chosen category for the next one.
+          const empty = valuesFromItem(undefined, values.categoryId);
           setInitial(empty);
           setValues(empty);
           setAddedCount((n) => n + 1);
@@ -276,6 +292,23 @@ function MenuItemForm({
                 </div>
               </Field>
             </div>
+
+            {categories.length > 1 && (
+              <Field label={t("itemDialog.category")} htmlFor="item-category" className="sm:max-w-xs">
+                <Select value={values.categoryId} onValueChange={(v) => set("categoryId", v)}>
+                  <SelectTrigger id="item-category" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+            )}
 
             <Field
               label={t("itemDialog.description")}

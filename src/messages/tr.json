@@ -354,7 +354,10 @@
       "deleteTitle": "Ürünü sil",
       "deleteConfirmTitle": "\"{name}\" silinsin mi?",
       "deleteConfirmText": "Ürün, fotoğrafıyla birlikte menüden kaldırılacak. Bu işlem geri alınamaz.",
-      "deleteButton": "Ürünü sil"
+      "deleteButton": "Ürünü sil",
+      "movedNotice": "\"{name}\", {category} kategorisine taşındı.",
+      "addedElsewhereNotice": "\"{name}\", {category} kategorisine eklendi.",
+      "openCategory": "{category} kategorisini aç"
     },
     "itemDialog": {
       "close": "Kapat",
@@ -388,7 +391,8 @@
       "saving": "Kaydediliyor…",
       "saveChanges": "Değişiklikleri kaydet",
       "addItem": "Ürün ekle",
-      "saveFailed": "Ürün kaydedilemedi."
+      "saveFailed": "Ürün kaydedilemedi.",
+      "category": "Kategori"
     }
   },
   "DashboardRestaurant": {
@@ -494,6 +498,7 @@
     "cantDeleteAdmin": "Bu kullanıcı bir sistem yöneticisi. Silmeden önce Clerk'te yönetici rolünü kaldırın.",
     "signInToUpload": "Dosya yüklemek için lütfen giriş yapın.",
     "adminOnlyNewLogo": "Yeni bir restoranın logosunu yalnızca yöneticiler yükleyebilir.",
-    "ownerOnlyLogo": "Restoranın logosunu yalnızca restoran sahibi değiştirebilir."
+    "ownerOnlyLogo": "Restoranın logosunu yalnızca restoran sahibi değiştirebilir.",
+    "invalidCategory": "Bu kategori bu restorana ait değil. Sayfayı yenileyip tekrar deneyin."
   }
 }

@@ -354,7 +354,10 @@
       "deleteTitle": "Delete item",
       "deleteConfirmTitle": "Delete \"{name}\"?",
       "deleteConfirmText": "It will be removed from the menu, along with its photo. This can't be undone.",
-      "deleteButton": "Delete item"
+      "deleteButton": "Delete item",
+      "movedNotice": "Moved \"{name}\" to {category}.",
+      "addedElsewhereNotice": "Added \"{name}\" to {category}.",
+      "openCategory": "Open {category}"
     },
     "itemDialog": {
       "close": "Close",
@@ -388,7 +391,8 @@
       "saving": "Saving…",
       "saveChanges": "Save changes",
       "addItem": "Add item",
-      "saveFailed": "Couldn't save the item."
+      "saveFailed": "Couldn't save the item.",
+      "category": "Category"
     }
   },
   "DashboardRestaurant": {
@@ -494,6 +498,7 @@
     "cantDeleteAdmin": "This user is a system admin. Remove their admin role in Clerk before deleting them.",
     "signInToUpload": "Please sign in to upload files.",
     "adminOnlyNewLogo": "Only administrators can upload a logo for a new restaurant.",
-    "ownerOnlyLogo": "Only the restaurant's owner can change its logo."
+    "ownerOnlyLogo": "Only the restaurant's owner can change its logo.",
+    "invalidCategory": "That category doesn't belong to this restaurant. Reload the page and try again."
   }
 }
