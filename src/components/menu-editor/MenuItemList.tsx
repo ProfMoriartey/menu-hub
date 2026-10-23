@@ -35,11 +35,8 @@ import { unwrap } from "~/lib/action-result";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { ConfirmDialog } from "~/components/menu-editor/ConfirmDialog";
-import {
-  DIETARY_LABEL_KEYS,
-  MenuItemDialog,
-  type AdminMenuItem,
-} from "~/components/menu-editor/MenuItemDialog";
+import { MenuItemDialog, type AdminMenuItem } from "~/components/menu-editor/MenuItemDialog";
+import { DIETARY_LABEL_KEYS } from "~/lib/dietary-labels";
 import {
   ReorderStatus,
   useReorderState,

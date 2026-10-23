@@ -2,7 +2,7 @@
 "use client"; // ADDED: Ensure this is a client component for Framer Motion
 
 import { Link } from "~/i18n/navigation";
-import Image from "next/image";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -25,7 +25,6 @@ export function FeaturedRestaurantsSection({
 }: FeaturedRestaurantsSectionProps) {
   // Initialize translations for the 'featured' namespace
   const t = useTranslations("featured");
-  const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Image`;
 
   return (
     // UPDATED: motion.section for fade-in effect on mount, and semantic colors
@@ -65,15 +64,11 @@ export function FeaturedRestaurantsSection({
                     )}
                   >
                     <CardHeader className="flex-grow">
-                      <div className="mb-4 h-40 w-full overflow-hidden rounded-md">
-                        <Image
-                          src={restaurant.logoUrl ?? fallbackImageUrl}
-                          alt={`${restaurant.name} Logo`}
-                          width={300}
-                          height={200}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
+                      <RestaurantLogo
+                        restaurant={restaurant}
+                        className="mb-4 h-40 w-full rounded-md text-4xl"
+                        imageSizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      />
                       {/* UPDATED: CardTitle and CardDescription also semantic */}
                       <CardTitle className="text-foreground text-2xl">
                         {restaurant.name}

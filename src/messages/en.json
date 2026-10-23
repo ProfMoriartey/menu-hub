@@ -623,5 +623,12 @@
       "text": "Print your QR code for the tables. This step ticks itself off at the first scan.",
       "action": "Get QR code"
     }
+  },
+  "PublicMenu": {
+    "categoriesNav": "Menu categories",
+    "allCategories": "All categories",
+    "itemCount": "{count, plural, one {# item} other {# items}}",
+    "mapLabel": "Open in maps",
+    "websiteLabel": "Website"
   }
 }

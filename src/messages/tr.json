@@ -623,5 +623,12 @@
       "text": "Masalar için QR kodunuzu basın. Bu adım ilk okutmada kendiliğinden tamamlanır.",
       "action": "QR kodu al"
     }
+  },
+  "PublicMenu": {
+    "categoriesNav": "Menü kategorileri",
+    "allCategories": "Tüm kategoriler",
+    "itemCount": "{count} ürün",
+    "mapLabel": "Haritada aç",
+    "websiteLabel": "Web sitesi"
   }
 }

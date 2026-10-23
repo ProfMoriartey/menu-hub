@@ -8,12 +8,12 @@ import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
 import type { Restaurant, Category, MenuItem } from "~/types/restaurant";
 import type { SocialMediaLinks } from "~/lib/schemas";
 import { Link } from "~/i18n/navigation";
-import Image from "next/image";
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
 import { getTranslations } from "next-intl/server";
 import { Button } from "~/components/ui/button";
 import { Info, MapPin, Instagram, Facebook, Twitter, Music2, Globe } from "lucide-react";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 
 interface PageProps {
   params: Promise<{
@@ -29,6 +29,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
   const { restaurantSlug } = await params;
 
   const t = await getTranslations("restaurantMenuPage");
+  const tMenu = await getTranslations("PublicMenu");
 
   const rawData = await getRestaurantBySlug(restaurantSlug);
 
@@ -74,7 +75,10 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
       currency: restaurantDetails.currency,
       description: restaurantDetails.description,
     },
-    categories: categoriesWithMenuItems.map((cat) => ({
+    // Guests only see categories that have something in them.
+    categories: categoriesWithMenuItems
+      .filter((cat) => cat.menuItems.length > 0)
+      .map((cat) => ({
       id: cat.id,
       name: cat.name,
       slug: cat.slug,
@@ -101,120 +105,95 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
   };
 
   const socials = restaurantDetails.socialMedia ?? ({} as SocialMediaLinks);
-  const hasSocials = Object.values(socials).some((url) => url && url.trim() !== "");
+  // Brand names stay untranslated; only "Website" is a word.
+  const socialLinks = [
+    { url: socials.instagram, label: "Instagram", Icon: Instagram },
+    { url: socials.facebook, label: "Facebook", Icon: Facebook },
+    { url: socials.twitter, label: "Twitter", Icon: Twitter },
+    { url: socials.tiktok, label: "TikTok", Icon: Music2 },
+    { url: socials.website, label: tMenu("websiteLabel"), Icon: Globe },
+  ].filter((link) => link.url?.trim());
 
-  const fallbackLogoUrl = `https://placehold.co/100x100/E0E0E0/333333?text=Logo`;
   const themeClass = `theme-${restaurantDetails.theme ?? "default"}`;
 
   return (
     <div className={cn("relative min-h-screen", themeClass)}>
-      
-      {/* Mobile top controls: Only Theme Toggle now */}
-      <div className="absolute top-4 right-4 z-50 md:hidden">
+      {/* Phones: the theme toggle sits in the corner above the header. */}
+      <div className="absolute end-4 top-4 z-50 md:hidden">
         <ThemeToggle />
       </div>
 
-      <header className="bg-card p-4 shadow-sm relative pt-14 md:pt-4">
-        <div className="container mx-auto flex flex-col items-center sm:flex-row sm:items-start sm:justify-between sm:space-x-4">
-          
-          {/* Clickable Logo to Details */}
+      <header className="bg-card relative p-4 pt-14 shadow-sm md:pt-4">
+        <div className="container mx-auto flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+          {/* The logo opens the details page too, like the Details button. */}
           <Link
             href={`/${restaurantDetails.slug}/about`}
-            passHref
-            className="mb-4 flex-shrink-0 sm:mr-4 sm:mb-0 block"
+            aria-label={t("restaurantDetailsButton")}
+            className="block shrink-0 transition-transform hover:scale-105 active:scale-95"
           >
-            <div className="border-border relative h-24 w-24 cursor-pointer overflow-hidden rounded-lg border shadow-sm transition-transform hover:scale-105 active:scale-95">
-              <Image
-                src={restaurantDetails.logoUrl ?? fallbackLogoUrl}
-                alt={`${restaurantDetails.name} Logo`}
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
+            <RestaurantLogo
+              restaurant={restaurantDetails}
+              className="h-24 w-24 rounded-lg text-3xl shadow-sm"
+              imageSizes="96px"
+              priority
+            />
           </Link>
 
-          {/* Restaurant Title, Description, and Unified Action Row */}
-          <div className="mb-4 flex-grow text-center sm:mb-0 sm:text-left">
-            <h1 className="text-foreground text-4xl font-bold">
-              {restaurantDetails.name}
-            </h1>
-            
-            {restaurantDetails.description ? (
-              <p className="text-muted-foreground mt-2 text-lg">
-                {restaurantDetails.description}
-              </p>
-            ) : (
-              <p className="text-muted-foreground mt-2 text-lg">
-                {t("browseMenuDefault")}
-              </p>
-            )}
+          <div className="flex-grow text-center sm:text-start">
+            <h1 className="text-foreground text-4xl font-bold">{restaurantDetails.name}</h1>
+            <p className="text-muted-foreground mt-2 text-lg">
+              {restaurantDetails.description ?? t("browseMenuDefault")}
+            </p>
 
-            {/* Unified Action Row: Details | Map | Separator | Socials */}
+            {/* Details | Map | Separator | Socials */}
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-              
-              {/* Details Button */}
-              <Link href={`/${restaurantDetails.slug}/about`} passHref>
-                <Button variant="secondary" size="sm" className="h-8 rounded-full px-4 font-medium">
-                  <Info className="mr-1.5 h-4 w-4" />
+              <Button
+                variant="secondary"
+                size="sm"
+                className="h-8 rounded-full px-4 font-medium"
+                asChild
+              >
+                <Link href={`/${restaurantDetails.slug}/about`}>
+                  <Info className="h-4 w-4" aria-hidden />
                   {t("restaurantDetailsButton")}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
 
-              {/* Map Button */}
               {restaurantDetails.mapUrl && (
-                <a href={restaurantDetails.mapUrl} target="_blank" rel="noopener noreferrer">
-                  <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full">
-                    <MapPin className="h-4 w-4" />
-                  </Button>
-                </a>
+                <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full" asChild>
+                  <a
+                    href={restaurantDetails.mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={tMenu("mapLabel")}
+                    title={tMenu("mapLabel")}
+                  >
+                    <MapPin className="h-4 w-4" aria-hidden />
+                  </a>
+                </Button>
               )}
 
-              {/* Vertical Separator */}
-              {hasSocials && (
-                <div className="mx-1 h-5 w-px bg-border hidden sm:block"></div>
+              {socialLinks.length > 0 && (
+                <div className="bg-border mx-1 hidden h-5 w-px sm:block" aria-hidden />
               )}
 
-              {/* Social Media Links */}
-              {socials.instagram && (
-                <a href={socials.instagram} target="_blank" rel="noopener noreferrer">
-                  <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
-                    <Instagram className="h-4 w-4" />
-                  </Button>
-                </a>
-              )}
-              {socials.facebook && (
-                <a href={socials.facebook} target="_blank" rel="noopener noreferrer">
-                  <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
-                    <Facebook className="h-4 w-4" />
-                  </Button>
-                </a>
-              )}
-              {socials.twitter && (
-                <a href={socials.twitter} target="_blank" rel="noopener noreferrer">
-                  <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
-                    <Twitter className="h-4 w-4" />
-                  </Button>
-                </a>
-              )}
-              {socials.tiktok && (
-                <a href={socials.tiktok} target="_blank" rel="noopener noreferrer">
-                  <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
-                    <Music2 className="h-4 w-4" />
-                  </Button>
-                </a>
-              )}
-              {socials.website && (
-                <a href={socials.website} target="_blank" rel="noopener noreferrer">
-                  <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
-                    <Globe className="h-4 w-4" />
-                  </Button>
-                </a>
-              )}
+              {socialLinks.map(({ url, label, Icon }) => (
+                <Button
+                  key={label}
+                  variant="secondary"
+                  size="icon"
+                  className="text-muted-foreground hover:text-foreground h-8 w-8 rounded-full"
+                  asChild
+                >
+                  <a href={url} target="_blank" rel="noopener noreferrer" aria-label={label} title={label}>
+                    <Icon className="h-4 w-4" aria-hidden />
+                  </a>
+                </Button>
+              ))}
             </div>
           </div>
 
-          {/* PC Format: Theme Toggle Only */}
-          <div className="hidden flex-shrink-0 sm:self-center md:flex md:items-center">
+          <div className="hidden shrink-0 sm:self-center md:flex md:items-center">
             <ThemeToggle />
           </div>
         </div>

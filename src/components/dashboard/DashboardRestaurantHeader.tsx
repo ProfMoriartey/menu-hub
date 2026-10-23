@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { ChevronRight, ExternalLink, Eye } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
-import { RestaurantLogo } from "~/components/admin/RestaurantCard";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { canEditDetails, type RestaurantRole } from "~/lib/access";
 import { cn } from "~/lib/utils";
 import type { Restaurant } from "~/types/restaurant";

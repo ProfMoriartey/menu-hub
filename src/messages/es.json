@@ -623,5 +623,12 @@
       "text": "Imprime tu código QR para las mesas. Este paso se marca solo con el primer escaneo.",
       "action": "Obtener código QR"
     }
+  },
+  "PublicMenu": {
+    "categoriesNav": "Categorías del menú",
+    "allCategories": "Todas las categorías",
+    "itemCount": "{count, plural, one {# plato} other {# platos}}",
+    "mapLabel": "Abrir en el mapa",
+    "websiteLabel": "Sitio web"
   }
 }

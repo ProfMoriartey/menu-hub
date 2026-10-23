@@ -5,7 +5,7 @@
 "use client";
 
 import { Link } from "~/i18n/navigation";
-import Image from "next/image";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -34,8 +34,6 @@ export function PublicRestaurantCard({
   // ADDED: Initialize translations for the "restaurantCard" namespace
   const t = useTranslations("restaurantCard");
 
-  const fallbackImageUrl = `https://placehold.co/300x200/E0E0E0/333333?text=No+Image`;
-
   return (
     <Link key={restaurant.id} href={`/${restaurant.slug}`} passHref>
       <motion.div
@@ -54,14 +52,11 @@ export function PublicRestaurantCard({
           )}
         >
           <CardHeader className="flex-grow">
-            <div className="relative mb-4 h-40 w-full overflow-hidden rounded-md">
-              <Image
-                src={restaurant.logoUrl ?? fallbackImageUrl}
-                alt={`${restaurant.name} Logo`}
-                fill
-                className="object-cover"
-              />
-            </div>
+            <RestaurantLogo
+              restaurant={restaurant}
+              className="mb-4 h-40 w-full rounded-md text-4xl"
+              imageSizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            />
             <CardTitle className="text-foreground mb-2 text-2xl">
               {restaurant.name}
             </CardTitle>

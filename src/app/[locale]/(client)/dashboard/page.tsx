@@ -8,7 +8,7 @@ import { db } from "~/server/db";
 import { usersToRestaurants } from "~/server/db/schema";
 import { isSystemAdmin } from "~/app/actions/auth";
 import { Button } from "~/components/ui/button";
-import { RestaurantLogo } from "~/components/admin/RestaurantCard";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { canEditDetails, toAccessLevel } from "~/lib/access";
 import { setupProgress } from "~/lib/setup-checklist";
 import { getSetupFacts } from "~/server/setup-facts";

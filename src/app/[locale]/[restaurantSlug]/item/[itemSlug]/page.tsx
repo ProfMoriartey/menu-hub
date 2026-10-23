@@ -7,7 +7,6 @@ import { getLocale } from "next-intl/server";
 import { permanentRedirect } from "~/i18n/navigation";
 import { isUuid } from "~/lib/slug";
 import { MenuItemDisplayClient } from "~/components/public/MenuItemDisplayClient";
-import { getTranslations } from "next-intl/server"; // ADDED: Import getTranslations
 
 interface PageProps {
   params: Promise<{
@@ -21,9 +20,6 @@ interface PageProps {
 
 export default async function MenuItemDetailPage({ params }: PageProps) {
   const { restaurantSlug, itemSlug } = await params;
-
-  // ADDED: Fetch translations for this page
-  const t = await getTranslations("menuItemDetailPage");
 
   const restaurant = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
@@ -61,22 +57,12 @@ export default async function MenuItemDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  // The item view brings its own layout: back link, photo and details.
   return (
-    <div className="bg-background text-foreground min-h-screen">
-      {/* ADDED: Simple header for the page using translation */}
-      <header className="bg-card p-4 text-center shadow-sm">
-        <h1 className="mb-2 text-4xl font-bold">{t("pageTitle")}</h1>
-        <p className="text-muted-foreground text-lg">
-          {itemDetails.name} - {itemDetails.restaurant.name}
-        </p>
-      </header>
-      <main className="container mx-auto px-4 py-8">
-        <MenuItemDisplayClient
-          item={itemDetails}
-          restaurantSlug={restaurantSlug}
-          theme={itemDetails.restaurant.theme ?? "default"}
-        />
-      </main>
-    </div>
+    <MenuItemDisplayClient
+      item={itemDetails}
+      restaurantSlug={restaurantSlug}
+      theme={itemDetails.restaurant.theme ?? "default"}
+    />
   );
 }

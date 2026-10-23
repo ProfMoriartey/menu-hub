@@ -1,16 +1,19 @@
 // src/components/public/themes/CategoryCardsImageDominantLayout.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "~/i18n/navigation";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, UtensilsCrossed } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { motion } from "framer-motion";
 
+import { categorySectionId } from "~/components/public/CategoryNav";
+import { DietaryBadges } from "~/components/public/MenuItemCard";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
-import type { MenuItem, Category, DietaryLabel } from "~/types/restaurant";
+import type { MenuItem, Category } from "~/types/restaurant";
 
 interface RestaurantMenuData {
   restaurant: {
@@ -20,7 +23,6 @@ interface RestaurantMenuData {
     currency: string;
     description: string | null;
   };
-  // Ensure menuItems is included in the categories type
   categories: (Category & { menuItems: MenuItem[] })[];
 }
 
@@ -28,22 +30,37 @@ interface CategoryCardsImageDominantLayoutProps {
   menuData: RestaurantMenuData;
 }
 
+// Category cards first; picking one shows its items. The menu page only
+// passes categories that have items, so there are no empty states here.
 export function CategoryCardsImageDominantLayout({
   menuData,
 }: CategoryCardsImageDominantLayoutProps) {
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null,
-  );
+  const t = useTranslations("PublicMenu");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedCategory = menuData.categories.find((c) => c.id === selectedId);
 
-  const fallbackImageUrl = `https://placehold.co/400x300/E0E0E0/333333?text=Menu+Item`; // Changed fallback text
+  // Item pages link back to `#category-<slug>`: reopen that category.
+  useEffect(() => {
+    const match = menuData.categories.find(
+      (c) => `#${categorySectionId(c.slug)}` === window.location.hash,
+    );
+    if (match) setSelectedId(match.id);
+  }, [menuData.categories]);
+
+  const showCategories = () => {
+    setSelectedId(null);
+    if (window.location.hash) {
+      history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search,
+      );
+    }
+  };
 
   if (selectedCategory) {
-    const itemsToDisplay = selectedCategory.menuItems ?? [];
-
-    // Display Menu Items for the selected category (No visual changes needed here, only in the main list)
     return (
       <div className="space-y-6">
-        {/* Back Button Section */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -51,10 +68,11 @@ export function CategoryCardsImageDominantLayout({
         >
           <Button
             variant="outline"
-            className="bg-background text-foreground border-border mb-6 flex items-center"
-            onClick={() => setSelectedCategory(null)}
+            className="bg-background text-foreground border-border mb-6"
+            onClick={showCategories}
           >
-            <ChevronLeft className="mr-2 h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 rtl:rotate-180" aria-hidden />
+            {t("allCategories")}
           </Button>
         </motion.div>
 
@@ -62,132 +80,113 @@ export function CategoryCardsImageDominantLayout({
           {selectedCategory.name}
         </h2>
 
-        {itemsToDisplay.length === 0 ? (
-          <div className="text-muted-foreground py-10 text-center">
-            <p>No items in this category yet.</p>
-          </div>
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-            {itemsToDisplay.map((item, itemIndex) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: itemIndex * 0.05, duration: 0.3 }}
-                whileHover={{ scale: 1.02 }}
-                className="block h-full"
+        <div className="grid gap-6 md:grid-cols-2">
+          {selectedCategory.menuItems.map((item, itemIndex) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: itemIndex * 0.05, duration: 0.3 }}
+              whileHover={{ scale: 1.02 }}
+              className="block h-full"
+            >
+              <Link
+                href={`/${menuData.restaurant.slug}/item/${item.slug}`}
+                className="group bg-card border-border flex h-full flex-col overflow-hidden rounded-lg border shadow-md transition-shadow duration-200 hover:shadow-lg"
               >
-                <Link
-                  href={`/${menuData.restaurant.slug}/item/${item.slug}`}
-                  passHref
-                  className="group block h-full"
-                >
-                  <div className="bg-card border-border flex flex-col overflow-hidden rounded-lg border shadow-md transition-shadow duration-200 hover:shadow-lg">
-                    <div className="relative h-64 w-full overflow-hidden sm:h-80">
-                      <Image
-                        src={item.imageUrl ?? fallbackImageUrl}
-                        alt={item.name}
-                        fill
-                        style={{ objectFit: "cover" }}
-                        className="transition-transform duration-220 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="flex flex-grow flex-col justify-between p-4">
-                      <div>
-                        <h3 className="text-foreground group-hover:text-primary mb-1 text-xl font-semibold transition-colors duration-200">
-                          {item.name}
-                        </h3>
-                        {item.description && (
-                          <p className="text-muted-foreground mb-2 line-clamp-2 text-sm">
-                            {item.description}
-                          </p>
-                        )}
-                        {item.dietaryLabels &&
-                          item.dietaryLabels.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-1">
-                              {item.dietaryLabels.map((label: DietaryLabel) => (
-                                <span
-                                  key={label}
-                                  className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold"
-                                >
-                                  {label.charAt(0).toUpperCase() +
-                                    label.slice(1).replace(/-/g, " ")}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                      </div>
-                      <p className="text-primary mt-4 text-lg font-bold">
-                        {item.price} {menuData.restaurant.currency}
-                        <SoldOutBadge availability={item.availability} />
-                      </p>
-                    </div>
+                {item.imageUrl && (
+                  <div className="relative h-64 w-full overflow-hidden sm:h-80">
+                    <Image
+                      src={item.imageUrl}
+                      alt=""
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-200 group-hover:scale-105"
+                    />
                   </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        )}
+                )}
+                <div className="flex flex-grow flex-col justify-between p-4">
+                  <div>
+                    <h3 className="text-foreground group-hover:text-primary mb-1 text-xl font-semibold transition-colors duration-200">
+                      {item.name}
+                    </h3>
+                    {item.description && (
+                      <p className="text-muted-foreground mb-2 line-clamp-2 text-sm">
+                        {item.description}
+                      </p>
+                    )}
+                    <DietaryBadges
+                      labels={item.dietaryLabels}
+                      className="mt-2"
+                    />
+                  </div>
+                  <p className="text-primary mt-4 text-lg font-bold">
+                    {item.price} {menuData.restaurant.currency}
+                    <SoldOutBadge availability={item.availability} />
+                  </p>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </div>
     );
   }
 
-  // Display Category Cards (Initial View)
   return (
-    <div className="space-y-6">
-      {menuData.categories.length === 0 ? (
-        <div className="text-muted-foreground py-10 text-center">
-          <p>No categories available for this restaurant yet.</p>
-        </div>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {menuData.categories.map((category, categoryIndex) => {
-            // 🛑 1. FIND THE FIRST IMAGE URL
-            const firstImageUrl = category.menuItems?.find(
-              (item) => item.imageUrl,
-            )?.imageUrl;
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {menuData.categories.map((category, categoryIndex) => {
+        const coverUrl = category.menuItems.find(
+          (item) => item.imageUrl,
+        )?.imageUrl;
 
-            return (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: categoryIndex * 0.1, duration: 0.5 }}
-                whileHover={{ scale: 1.03 }}
-                className="block"
-              >
-                <div
-                  onClick={() => setSelectedCategory(category)}
-                  className="group bg-card border-border flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border text-center shadow-md transition-shadow duration-200 hover:shadow-lg"
-                >
-                  {/* 🛑 2. IMAGE SECTION (Image Dominant) */}
-                  <div className="relative h-40 w-full overflow-hidden bg-gray-100">
+        return (
+          <motion.div
+            key={category.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: categoryIndex * 0.1, duration: 0.5 }}
+            whileHover={{ scale: 1.03 }}
+            className="block"
+          >
+            <button
+              type="button"
+              onClick={() => setSelectedId(category.id)}
+              className="group bg-card border-border flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-lg border text-center shadow-md transition-shadow duration-200 hover:shadow-lg"
+            >
+              <div className="bg-muted relative flex h-40 w-full items-center justify-center overflow-hidden">
+                {coverUrl ? (
+                  <>
                     <Image
-                      src={firstImageUrl ?? fallbackImageUrl}
-                      alt={`${category.name} preview`}
+                      src={coverUrl}
+                      alt=""
                       fill
-                      style={{ objectFit: "cover" }}
-                      className="transition-transform duration-300 group-hover:scale-110"
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
                     />
                     {/* Overlay for contrast */}
-                    <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20"></div>
-                  </div>
+                    <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20" />
+                  </>
+                ) : (
+                  <UtensilsCrossed
+                    className="text-muted-foreground/60 h-10 w-10"
+                    aria-hidden
+                  />
+                )}
+              </div>
 
-                  {/* 🛑 3. TEXT SECTION (Below Image) */}
-                  <div className="flex flex-grow flex-col justify-between p-4">
-                    <h3 className="text-foreground group-hover:text-primary mb-2 text-2xl font-semibold">
-                      {category.name}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {category.menuItems?.length ?? 0} items
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
+              <div className="flex w-full flex-grow flex-col justify-between p-4">
+                <h3 className="text-foreground group-hover:text-primary mb-2 text-2xl font-semibold">
+                  {category.name}
+                </h3>
+                <p className="text-muted-foreground">
+                  {t("itemCount", { count: category.menuItems.length })}
+                </p>
+              </div>
+            </button>
+          </motion.div>
+        );
+      })}
     </div>
   );
 }

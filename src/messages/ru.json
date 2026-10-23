@@ -623,5 +623,12 @@
       "text": "Напечатайте QR-код для столов. Этот шаг отметится сам при первом сканировании.",
       "action": "Получить QR-код"
     }
+  },
+  "PublicMenu": {
+    "categoriesNav": "Категории меню",
+    "allCategories": "Все категории",
+    "itemCount": "{count, plural, one {# позиция} few {# позиции} many {# позиций} other {# позиции}}",
+    "mapLabel": "Открыть на карте",
+    "websiteLabel": "Сайт"
   }
 }

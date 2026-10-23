@@ -623,5 +623,12 @@
       "text": "اطبع رمز QR للطاولات. تكتمل هذه الخطوة تلقائيًا عند أول مسح.",
       "action": "الحصول على رمز QR"
     }
+  },
+  "PublicMenu": {
+    "categoriesNav": "فئات القائمة",
+    "allCategories": "كل الفئات",
+    "itemCount": "{count, plural, zero {لا توجد أصناف} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}}",
+    "mapLabel": "فتح في الخرائط",
+    "websiteLabel": "الموقع الإلكتروني"
   }
 }
