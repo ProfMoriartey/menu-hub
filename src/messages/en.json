@@ -405,7 +405,8 @@
     "categoriesSummary": "{categories, plural, one {# category} other {# categories}} · {items, plural, one {# item} other {# items}}. Open a category to manage its items.",
     "categoriesNav": "Categories",
     "itemsSummary": "{count, plural, one {# item} other {# items}} · Prices in {currency}",
-    "preview": "Preview menu"
+    "preview": "Preview menu",
+    "shareTab": "Share"
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -423,7 +424,8 @@
     "adminTitle": "You're an administrator",
     "adminText": "You can manage every restaurant from the admin panel.",
     "adminLink": "Open admin panel",
-    "preview": "Preview menu (not live yet)"
+    "preview": "Preview menu (not live yet)",
+    "share": "Share: QR code and link"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "Your menu address, visibility, theme and search settings are managed by an administrator.",
@@ -512,5 +514,30 @@
     "label": "Preview",
     "text": "This menu isn't public yet. Only people who manage this restaurant can see it.",
     "backToEditing": "Back to editing"
+  },
+  "Share": {
+    "liveStatus": "Your menu is live. Guests who scan the code or open the link see it right away.",
+    "notLiveStatus": "Your menu isn't live yet. Until it is, guests who scan the code are sent to the restaurant list. You can still print the code now: it starts working the moment the menu goes live.",
+    "previewLink": "Preview the menu",
+    "qrTitle": "QR code",
+    "qrDescription": "For tables, windows and flyers. Guests scan it with their phone camera.",
+    "qrAlt": "QR code for {name}'s menu",
+    "logoSwitch": "Logo in the middle",
+    "logoHint": "The code still scans reliably with the logo.",
+    "noLogo": "This restaurant has no logo yet.",
+    "addLogo": "Add one in Details",
+    "noLogoAskOwner": "This restaurant has no logo yet. The owner can add one in Details.",
+    "logoLoadFailed": "The logo couldn't be loaded, so the code is shown without it.",
+    "downloadPng": "Download PNG",
+    "downloadSvg": "Download SVG",
+    "formatsHint": "PNG works almost everywhere. SVG stays sharp at any size, for posters or a designer.",
+    "downloadFailed": "Couldn't create the image. Please try again.",
+    "testTip": "Before printing many, scan a test print with your phone to check it opens your menu.",
+    "linkTitle": "Menu link",
+    "linkDescription": "For your website, social media bio or messages.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "openLink": "Open link",
+    "permanentNote": "The QR code uses a permanent link, so printed codes keep working even if the menu address changes:"
   }
 }

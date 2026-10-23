@@ -2,7 +2,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { getTranslations, getLocale } from "next-intl/server";
 import { eq } from "drizzle-orm";
-import { ExternalLink, Eye, Pencil, ShieldCheck, Store, UtensilsCrossed } from "lucide-react";
+import { ExternalLink, Eye, Pencil, QrCode, ShieldCheck, Store, UtensilsCrossed } from "lucide-react";
 import { Link, redirect } from "~/i18n/navigation";
 import { db } from "~/server/db";
 import { usersToRestaurants } from "~/server/db/schema";
@@ -131,8 +131,17 @@ export default async function ClientUserDashboardPage() {
                     </Link>
                   </Button>
                 )}
-                {/* Not live yet: the same page opens as a preview only they can see. */}
                 <Button variant="ghost" size="icon" className="ms-auto" asChild>
+                  <Link
+                    href={`/dashboard/${restaurant.slug}/share`}
+                    aria-label={tHome("share")}
+                    title={tHome("share")}
+                  >
+                    <QrCode className="h-4 w-4" />
+                  </Link>
+                </Button>
+                {/* Not live yet: the same page opens as a preview only they can see. */}
+                <Button variant="ghost" size="icon" asChild>
                   <Link
                     href={`/${restaurant.slug}`}
                     target="_blank"

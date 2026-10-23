@@ -405,7 +405,8 @@
     "categoriesSummary": "{categories, plural, one {# categoría} other {# categorías}} · {items, plural, one {# plato} other {# platos}}. Abre una categoría para gestionar sus platos.",
     "categoriesNav": "Categorías",
     "itemsSummary": "{count, plural, one {# plato} other {# platos}} · Precios en {currency}",
-    "preview": "Vista previa del menú"
+    "preview": "Vista previa del menú",
+    "shareTab": "Compartir"
   },
   "LanguageSwitcher": {
     "label": "Idioma"
@@ -423,7 +424,8 @@
     "adminTitle": "Eres administrador",
     "adminText": "Puedes gestionar todos los restaurantes desde el panel de administración.",
     "adminLink": "Abrir el panel de administración",
-    "preview": "Vista previa del menú (aún no publicado)"
+    "preview": "Vista previa del menú (aún no publicado)",
+    "share": "Compartir: código QR y enlace"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "La dirección de tu menú, la visibilidad, el tema y los ajustes de búsqueda los gestiona un administrador.",
@@ -512,5 +514,30 @@
     "label": "Vista previa",
     "text": "Este menú aún no es público. Solo lo ven quienes gestionan este restaurante.",
     "backToEditing": "Volver a editar"
+  },
+  "Share": {
+    "liveStatus": "Tu menú está publicado. Quien escanee el código o abra el enlace lo verá al instante.",
+    "notLiveStatus": "Tu menú aún no está publicado. Hasta entonces, quien escanee el código irá a la lista de restaurantes. Puedes imprimir el código ya: funcionará en cuanto se publique el menú.",
+    "previewLink": "Ver la vista previa",
+    "qrTitle": "Código QR",
+    "qrDescription": "Para mesas, escaparates y folletos. Los clientes lo escanean con la cámara del móvil.",
+    "qrAlt": "Código QR del menú de {name}",
+    "logoSwitch": "Logo en el centro",
+    "logoHint": "El código se sigue escaneando bien con el logo.",
+    "noLogo": "Este restaurante aún no tiene logo.",
+    "addLogo": "Añádelo en Datos",
+    "noLogoAskOwner": "Este restaurante aún no tiene logo. El propietario puede añadirlo en Datos.",
+    "logoLoadFailed": "No se pudo cargar el logo, así que el código se muestra sin él.",
+    "downloadPng": "Descargar PNG",
+    "downloadSvg": "Descargar SVG",
+    "formatsHint": "PNG sirve casi para todo. SVG se ve nítido a cualquier tamaño, para carteles o un diseñador.",
+    "downloadFailed": "No se pudo crear la imagen. Inténtalo de nuevo.",
+    "testTip": "Antes de imprimir muchos, escanea una prueba con el móvil para comprobar que abre tu menú.",
+    "linkTitle": "Enlace del menú",
+    "linkDescription": "Para tu web, la biografía de tus redes sociales o mensajes.",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "openLink": "Abrir enlace",
+    "permanentNote": "El código QR usa un enlace permanente, así que los códigos impresos siguen funcionando aunque cambie la dirección del menú:"
   }
 }

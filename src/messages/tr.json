@@ -405,7 +405,8 @@
     "categoriesSummary": "{categories} kategori · {items} ürün. Ürünlerini yönetmek için bir kategori açın.",
     "categoriesNav": "Kategoriler",
     "itemsSummary": "{count} ürün · Fiyatlar {currency} cinsinden",
-    "preview": "Menüyü önizle"
+    "preview": "Menüyü önizle",
+    "shareTab": "Paylaş"
   },
   "LanguageSwitcher": {
     "label": "Dil"
@@ -423,7 +424,8 @@
     "adminTitle": "Yöneticisiniz",
     "adminText": "Tüm restoranları yönetim panelinden yönetebilirsiniz.",
     "adminLink": "Yönetim panelini aç",
-    "preview": "Menüyü önizle (henüz yayında değil)"
+    "preview": "Menüyü önizle (henüz yayında değil)",
+    "share": "Paylaş: QR kod ve bağlantı"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "Menü adresiniz, görünürlük, tema ve arama ayarlarınız bir yönetici tarafından yönetilir.",
@@ -512,5 +514,30 @@
     "label": "Önizleme",
     "text": "Bu menü henüz herkese açık değil. Yalnızca bu restoranı yönetenler görebilir.",
     "backToEditing": "Düzenlemeye dön"
+  },
+  "Share": {
+    "liveStatus": "Menünüz yayında. Kodu okutan veya bağlantıyı açan misafirler menüyü hemen görür.",
+    "notLiveStatus": "Menünüz henüz yayında değil. Yayına girene kadar kodu okutan misafirler restoran listesine yönlendirilir. Kodu şimdiden basabilirsiniz: menü yayına girdiği anda çalışmaya başlar.",
+    "previewLink": "Menüyü önizle",
+    "qrTitle": "QR kod",
+    "qrDescription": "Masalar, vitrinler ve el ilanları için. Misafirler telefon kamerasıyla okutur.",
+    "qrAlt": "{name} menüsünün QR kodu",
+    "logoSwitch": "Ortada logo",
+    "logoHint": "Kod, logoyla birlikte de sorunsuz okunur.",
+    "noLogo": "Bu restoranın henüz logosu yok.",
+    "addLogo": "Bilgiler bölümünden ekleyin",
+    "noLogoAskOwner": "Bu restoranın henüz logosu yok. Restoran sahibi Bilgiler bölümünden ekleyebilir.",
+    "logoLoadFailed": "Logo yüklenemedi, bu yüzden kod logosuz gösteriliyor.",
+    "downloadPng": "PNG indir",
+    "downloadSvg": "SVG indir",
+    "formatsHint": "PNG neredeyse her yerde çalışır. SVG her boyutta net kalır; afişler veya tasarımcı için.",
+    "downloadFailed": "Görsel oluşturulamadı. Lütfen tekrar deneyin.",
+    "testTip": "Çok sayıda basmadan önce bir deneme baskısını telefonunuzla okutup menünüzün açıldığından emin olun.",
+    "linkTitle": "Menü bağlantısı",
+    "linkDescription": "Web siteniz, sosyal medya profiliniz veya mesajlar için.",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "openLink": "Bağlantıyı aç",
+    "permanentNote": "QR kod kalıcı bir bağlantı kullanır; menü adresi değişse bile basılı kodlar çalışmaya devam eder:"
   }
 }

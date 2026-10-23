@@ -13,7 +13,7 @@ type HeaderRestaurant = Pick<
 
 interface RestaurantAdminHeaderProps {
   restaurant: HeaderRestaurant;
-  activeTab: "details" | "menu" | "people";
+  activeTab: "details" | "menu" | "share" | "people";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
   trail?: { label: string; href?: string }[];
 }
@@ -26,6 +26,7 @@ export function RestaurantAdminHeader({
   const tabs = [
     { id: "details", label: "Details", href: `/admin/restaurants/${restaurant.slug}/edit` },
     { id: "menu", label: "Menu", href: `/admin/restaurants/${restaurant.slug}/menu` },
+    { id: "share", label: "Share", href: `/admin/restaurants/${restaurant.slug}/share` },
     { id: "people", label: "People", href: `/admin/restaurants/${restaurant.slug}/people` },
   ] as const;
 

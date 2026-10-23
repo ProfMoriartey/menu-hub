@@ -11,7 +11,7 @@ import type { Restaurant } from "~/types/restaurant";
 interface DashboardRestaurantHeaderProps {
   restaurant: Pick<Restaurant, "name" | "slug" | "logoUrl" | "isActive">;
   role: RestaurantRole;
-  activeTab: "menu" | "details";
+  activeTab: "menu" | "details" | "share";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
   trail?: { label: string; href?: string }[];
 }
@@ -28,6 +28,8 @@ export async function DashboardRestaurantHeader({
   const base = `/dashboard/${restaurant.slug}`;
   const tabs = [
     { id: "menu", label: t("menuTab"), href: `${base}/menu` },
+    // Everyone with access shares the menu, editors included.
+    { id: "share", label: t("shareTab"), href: `${base}/share` },
     // Editors manage the menu only, so they don't get a details tab.
     ...(canEditDetails(role)
       ? [{ id: "details", label: t("detailsTab"), href: `${base}/edit` }]

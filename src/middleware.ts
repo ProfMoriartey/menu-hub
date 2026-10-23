@@ -13,8 +13,9 @@ const nextIntlMiddleware = createMiddleware(routing);
  * We need to exclude API routes, webhooks, and tRPC endpoints.
  */
 function isApiRoute(pathname: string): boolean {
-  // Use .startsWith to check for /api/ and /trpc/ routes
-  return pathname.startsWith("/api") || pathname.startsWith("/trpc");
+  // Use .startsWith to check for /api/ and /trpc/ routes. /r/ is the
+  // permanent menu link route (app/r), which has no language prefix.
+  return pathname.startsWith("/api") || pathname.startsWith("/trpc") || pathname.startsWith("/r/");
 }
 
 export default clerkMiddleware((auth, req) => {

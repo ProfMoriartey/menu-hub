@@ -20,7 +20,10 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    // The site's public address, e.g. https://menupedia.com. Printed QR codes
+    // and shared links use it, so set it to the production domain there.
+    // When unset, the address the page was opened on is used.
+    NEXT_PUBLIC_APP_URL: z.string().url().optional(),
   },
 
   /**
@@ -31,7 +34,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
