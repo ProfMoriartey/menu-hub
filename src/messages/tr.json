@@ -404,7 +404,8 @@
     "categoriesTitle": "Kategoriler",
     "categoriesSummary": "{categories} kategori · {items} ürün. Ürünlerini yönetmek için bir kategori açın.",
     "categoriesNav": "Kategoriler",
-    "itemsSummary": "{count} ürün · Fiyatlar {currency} cinsinden"
+    "itemsSummary": "{count} ürün · Fiyatlar {currency} cinsinden",
+    "preview": "Menüyü önizle"
   },
   "LanguageSwitcher": {
     "label": "Dil"
@@ -421,7 +422,8 @@
     "viewLive": "Canlı menüyü gör",
     "adminTitle": "Yöneticisiniz",
     "adminText": "Tüm restoranları yönetim panelinden yönetebilirsiniz.",
-    "adminLink": "Yönetim panelini aç"
+    "adminLink": "Yönetim panelini aç",
+    "preview": "Menüyü önizle (henüz yayında değil)"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "Menü adresiniz, görünürlük, tema ve arama ayarlarınız bir yönetici tarafından yönetilir.",
@@ -505,5 +507,10 @@
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
+  },
+  "MenuPreview": {
+    "label": "Önizleme",
+    "text": "Bu menü henüz herkese açık değil. Yalnızca bu restoranı yönetenler görebilir.",
+    "backToEditing": "Düzenlemeye dön"
   }
 }

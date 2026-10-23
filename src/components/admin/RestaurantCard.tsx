@@ -2,7 +2,7 @@
 "use client";
 
 import Image from "next/image";
-import { ExternalLink, MapPin, Pencil, Star, UtensilsCrossed } from "lucide-react";
+import { ExternalLink, Eye, MapPin, Pencil, Star, UtensilsCrossed } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { DeleteRestaurantDialog } from "~/components/admin/DeleteRestaurantDialog";
@@ -153,18 +153,21 @@ export function RestaurantCard({
           <Link href={`/admin/restaurants/${restaurant.slug}/menu`}>Menu</Link>
         </Button>
         <div className="ml-auto flex items-center">
-          {restaurant.isActive && (
-            <Button variant="ghost" size="icon" asChild>
-              <Link
-                href={`/${restaurant.slug}`}
-                target="_blank"
-                aria-label={`Open ${restaurant.name}'s live menu`}
-                title="Open live menu"
-              >
-                <ExternalLink className="h-4 w-4" />
-              </Link>
-            </Button>
-          )}
+          {/* Inactive restaurants open as a preview only people with access see. */}
+          <Button variant="ghost" size="icon" asChild>
+            <Link
+              href={`/${restaurant.slug}`}
+              target="_blank"
+              aria-label={
+                restaurant.isActive
+                  ? `Open ${restaurant.name}'s live menu`
+                  : `Preview ${restaurant.name}'s menu`
+              }
+              title={restaurant.isActive ? "Open live menu" : "Preview menu"}
+            >
+              {restaurant.isActive ? <ExternalLink className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </Link>
+          </Button>
           <DeleteRestaurantDialog
             restaurantId={restaurant.id}
             restaurantName={restaurant.name}

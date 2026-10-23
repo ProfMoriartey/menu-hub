@@ -2,7 +2,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { getTranslations, getLocale } from "next-intl/server";
 import { eq } from "drizzle-orm";
-import { ExternalLink, Pencil, ShieldCheck, Store, UtensilsCrossed } from "lucide-react";
+import { ExternalLink, Eye, Pencil, ShieldCheck, Store, UtensilsCrossed } from "lucide-react";
 import { Link, redirect } from "~/i18n/navigation";
 import { db } from "~/server/db";
 import { usersToRestaurants } from "~/server/db/schema";
@@ -131,18 +131,17 @@ export default async function ClientUserDashboardPage() {
                     </Link>
                   </Button>
                 )}
-                {restaurant.isActive && (
-                  <Button variant="ghost" size="icon" className="ms-auto" asChild>
-                    <Link
-                      href={`/${restaurant.slug}`}
-                      target="_blank"
-                      aria-label={tHome("viewLive")}
-                      title={tHome("viewLive")}
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                )}
+                {/* Not live yet: the same page opens as a preview only they can see. */}
+                <Button variant="ghost" size="icon" className="ms-auto" asChild>
+                  <Link
+                    href={`/${restaurant.slug}`}
+                    target="_blank"
+                    aria-label={restaurant.isActive ? tHome("viewLive") : tHome("preview")}
+                    title={restaurant.isActive ? tHome("viewLive") : tHome("preview")}
+                  >
+                    {restaurant.isActive ? <ExternalLink className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Link>
+                </Button>
               </div>
             </li>
           ))}

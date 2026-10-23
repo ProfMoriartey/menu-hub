@@ -404,7 +404,8 @@
     "categoriesTitle": "Categories",
     "categoriesSummary": "{categories, plural, one {# category} other {# categories}} · {items, plural, one {# item} other {# items}}. Open a category to manage its items.",
     "categoriesNav": "Categories",
-    "itemsSummary": "{count, plural, one {# item} other {# items}} · Prices in {currency}"
+    "itemsSummary": "{count, plural, one {# item} other {# items}} · Prices in {currency}",
+    "preview": "Preview menu"
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -421,7 +422,8 @@
     "viewLive": "View live menu",
     "adminTitle": "You're an administrator",
     "adminText": "You can manage every restaurant from the admin panel.",
-    "adminLink": "Open admin panel"
+    "adminLink": "Open admin panel",
+    "preview": "Preview menu (not live yet)"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "Your menu address, visibility, theme and search settings are managed by an administrator.",
@@ -505,5 +507,10 @@
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
+  },
+  "MenuPreview": {
+    "label": "Preview",
+    "text": "This menu isn't public yet. Only people who manage this restaurant can see it.",
+    "backToEditing": "Back to editing"
   }
 }

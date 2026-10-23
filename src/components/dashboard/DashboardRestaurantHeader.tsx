@@ -1,6 +1,6 @@
 // src/components/dashboard/DashboardRestaurantHeader.tsx
 import { getTranslations } from "next-intl/server";
-import { ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronRight, ExternalLink, Eye } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { RestaurantLogo } from "~/components/admin/RestaurantCard";
@@ -95,13 +95,13 @@ export async function DashboardRestaurantHeader({
             </div>
           </div>
         </div>
-        {restaurant.isActive && (
-          <Button variant="outline" asChild>
-            <Link href={`/${restaurant.slug}`} target="_blank">
-              {t("viewLive")} <ExternalLink className="h-4 w-4" />
-            </Link>
-          </Button>
-        )}
+        {/* Not live yet: the same page opens as a preview only they can see. */}
+        <Button variant="outline" asChild>
+          <Link href={`/${restaurant.slug}`} target="_blank">
+            {restaurant.isActive ? t("viewLive") : t("preview")}{" "}
+            {restaurant.isActive ? <ExternalLink className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </Link>
+        </Button>
       </div>
 
       <nav

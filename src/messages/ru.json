@@ -404,7 +404,8 @@
     "categoriesTitle": "Категории",
     "categoriesSummary": "{categories, plural, one {# категория} few {# категории} many {# категорий} other {# категории}} · {items, plural, one {# блюдо} few {# блюда} many {# блюд} other {# блюда}}. Откройте категорию, чтобы управлять блюдами.",
     "categoriesNav": "Категории",
-    "itemsSummary": "{count, plural, one {# блюдо} few {# блюда} many {# блюд} other {# блюда}} · Цены в {currency}"
+    "itemsSummary": "{count, plural, one {# блюдо} few {# блюда} many {# блюд} other {# блюда}} · Цены в {currency}",
+    "preview": "Предпросмотр меню"
   },
   "LanguageSwitcher": {
     "label": "Язык"
@@ -421,7 +422,8 @@
     "viewLive": "Открыть меню на сайте",
     "adminTitle": "Вы администратор",
     "adminText": "Все рестораны можно настраивать в панели администратора.",
-    "adminLink": "Открыть панель администратора"
+    "adminLink": "Открыть панель администратора",
+    "preview": "Предпросмотр меню (ещё не опубликовано)"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "Адрес меню, видимость, тему и настройки поиска задаёт администратор.",
@@ -505,5 +507,10 @@
   },
   "UnsavedChanges": {
     "confirmLeave": "Есть несохранённые изменения. Уйти, не сохранив их?"
+  },
+  "MenuPreview": {
+    "label": "Предпросмотр",
+    "text": "Это меню ещё не опубликовано. Его видят только те, кто управляет этим рестораном.",
+    "backToEditing": "Вернуться к редактированию"
   }
 }

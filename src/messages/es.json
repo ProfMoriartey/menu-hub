@@ -404,7 +404,8 @@
     "categoriesTitle": "Categorías",
     "categoriesSummary": "{categories, plural, one {# categoría} other {# categorías}} · {items, plural, one {# plato} other {# platos}}. Abre una categoría para gestionar sus platos.",
     "categoriesNav": "Categorías",
-    "itemsSummary": "{count, plural, one {# plato} other {# platos}} · Precios en {currency}"
+    "itemsSummary": "{count, plural, one {# plato} other {# platos}} · Precios en {currency}",
+    "preview": "Vista previa del menú"
   },
   "LanguageSwitcher": {
     "label": "Idioma"
@@ -421,7 +422,8 @@
     "viewLive": "Ver el menú publicado",
     "adminTitle": "Eres administrador",
     "adminText": "Puedes gestionar todos los restaurantes desde el panel de administración.",
-    "adminLink": "Abrir el panel de administración"
+    "adminLink": "Abrir el panel de administración",
+    "preview": "Vista previa del menú (aún no publicado)"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "La dirección de tu menú, la visibilidad, el tema y los ajustes de búsqueda los gestiona un administrador.",
@@ -505,5 +507,10 @@
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
+  },
+  "MenuPreview": {
+    "label": "Vista previa",
+    "text": "Este menú aún no es público. Solo lo ven quienes gestionan este restaurante.",
+    "backToEditing": "Volver a editar"
   }
 }

@@ -404,7 +404,8 @@
     "categoriesTitle": "الفئات",
     "categoriesSummary": "{categories, plural, =0 {لا فئات} one {فئة واحدة} two {فئتان} few {# فئات} many {# فئة} other {# فئة}} · {items, plural, =0 {لا أصناف} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}}. افتح فئة لإدارة أصنافها.",
     "categoriesNav": "الفئات",
-    "itemsSummary": "{count, plural, =0 {لا أصناف} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}} · الأسعار بعملة {currency}"
+    "itemsSummary": "{count, plural, =0 {لا أصناف} one {صنف واحد} two {صنفان} few {# أصناف} many {# صنفًا} other {# صنف}} · الأسعار بعملة {currency}",
+    "preview": "معاينة القائمة"
   },
   "LanguageSwitcher": {
     "label": "اللغة"
@@ -421,7 +422,8 @@
     "viewLive": "عرض القائمة المباشرة",
     "adminTitle": "أنت مسؤول",
     "adminText": "يمكنك إدارة جميع المطاعم من لوحة الإدارة.",
-    "adminLink": "فتح لوحة الإدارة"
+    "adminLink": "فتح لوحة الإدارة",
+    "preview": "معاينة القائمة (غير منشورة بعد)"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "يدير المسؤول عنوان قائمتك وإعدادات الظهور والمظهر والبحث.",
@@ -505,5 +507,10 @@
   },
   "UnsavedChanges": {
     "confirmLeave": "لديك تغييرات غير محفوظة. هل تريد المغادرة دون حفظها؟"
+  },
+  "MenuPreview": {
+    "label": "معاينة",
+    "text": "هذه القائمة غير منشورة بعد. لا يراها إلا من يديرون هذا المطعم.",
+    "backToEditing": "العودة إلى التعديل"
   }
 }
