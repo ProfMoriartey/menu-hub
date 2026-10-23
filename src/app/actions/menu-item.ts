@@ -7,7 +7,6 @@ import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth";
 import { ActionError, runAction, type ActionResult } from "~/lib/action-result";
-import { UTApi } from "uploadthing/server";
 
 import {
   createMenuItemSchema,
@@ -16,8 +15,7 @@ import {
   type UpdateMenuItemData,
 } from "~/lib/menu-item-schemas";
 import { uniqueSlug } from "~/lib/slug";
-
-const utapi = new UTApi();
+import { deleteUploadedFiles } from "~/server/uploads";
 
 // Slugs used by the restaurant's other menu items.
 async function takenItemSlugs(restaurantId: string, exceptId?: string) {
@@ -45,22 +43,6 @@ const getJsonArrayValue = (formData: FormData, key: string): unknown => {
     }
   }
   return [];
-};
-
-const getFileKey = (url: string | null | undefined): string | null => {
-  if (!url) return null;
-  return url.split("/f/")[1] ?? null;
-};
-
-// Best effort: a failed file cleanup should not fail the database change.
-const deleteUploadedFile = async (url: string | null | undefined) => {
-  const fileKey = getFileKey(url);
-  if (!fileKey) return;
-  try {
-    await utapi.deleteFiles(fileKey);
-  } catch (error) {
-    console.error("Failed to delete uploaded file:", fileKey, error);
-  }
 };
 
 // Menus appear on public pages, the dashboard and the admin panel.
@@ -147,7 +129,7 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
 
     // Covers both a replaced photo and a removed one.
     if (existingItem.imageUrl && existingItem.imageUrl !== validatedData.imageUrl) {
-      await deleteUploadedFile(existingItem.imageUrl);
+      await deleteUploadedFiles([existingItem.imageUrl]);
     }
 
     revalidateMenuPages();
@@ -174,7 +156,7 @@ export async function deleteMenuItem(
       .delete(menuItems)
       .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)));
 
-    await deleteUploadedFile(existingItem.imageUrl);
+    await deleteUploadedFiles([existingItem.imageUrl]);
 
     revalidateMenuPages();
   });

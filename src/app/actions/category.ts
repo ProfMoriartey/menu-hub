@@ -2,7 +2,8 @@
 "use server";
 
 import { db } from "~/server/db";
-import { categories } from "~/server/db/schema";
+import { categories, menuItems } from "~/server/db/schema";
+import { deleteUploadedFiles } from "~/server/uploads";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth";
@@ -87,9 +88,16 @@ export async function deleteCategory(categoryId: string, restaurantId: string): 
   return runAction("Couldn't delete the category.", async () => {
     await checkAuthorization(restaurantId);
 
+    // The delete cascades to the category's items; keep their photo URLs first.
+    const items = await db.query.menuItems.findMany({
+      where: and(eq(menuItems.categoryId, categoryId), eq(menuItems.restaurantId, restaurantId)),
+      columns: { imageUrl: true },
+    });
+
     await db
       .delete(categories)
       .where(and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)));
+    await deleteUploadedFiles(items.map((item) => item.imageUrl));
 
     revalidateMenuPages();
   });

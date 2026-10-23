@@ -2,7 +2,8 @@
 "use server";
 
 import { db } from "~/server/db";
-import { restaurants } from "~/server/db/schema";
+import { menuItems, restaurants } from "~/server/db/schema";
+import { deleteUploadedFiles } from "~/server/uploads";
 import { and, eq, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import type { ZodIssue } from "zod";
@@ -99,7 +100,27 @@ export async function deleteRestaurant(restaurantId: string): Promise<ActionResu
       throw new ActionError("Only system administrators can delete restaurants.");
     }
 
+    // Collect the files first: the delete cascades to categories and items,
+    // after which their photo URLs are gone.
+    const [restaurant, items] = await Promise.all([
+      db.query.restaurants.findFirst({
+        where: eq(restaurants.id, restaurantId),
+        columns: { logoUrl: true, ogImage: true },
+      }),
+      db.query.menuItems.findMany({
+        where: eq(menuItems.restaurantId, restaurantId),
+        columns: { imageUrl: true },
+      }),
+    ]);
+    if (!restaurant) throw new ActionError("Restaurant not found.");
+
     await db.delete(restaurants).where(eq(restaurants.id, restaurantId));
+    await deleteUploadedFiles([
+      restaurant.logoUrl,
+      restaurant.ogImage,
+      ...items.map((item) => item.imageUrl),
+    ]);
+
     revalidateRestaurantPages();
   });
 }
@@ -114,30 +135,31 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
 
     const submitted = { id: restaurantId, ...readRestaurantFields(formData) };
 
+    const current = await db.query.restaurants.findFirst({
+      where: eq(restaurants.id, restaurantId),
+      columns: {
+        logoUrl: true,
+        // Admin-only fields:
+        slug: true,
+        isActive: true,
+        isDisplayed: true,
+        currency: true,
+        theme: true,
+        typeOfEstablishment: true,
+        country: true,
+        foodType: true,
+        metaTitle: true,
+        metaDescription: true,
+        ogImage: true,
+      },
+    });
+    if (!current) throw new ActionError("Restaurant not found.");
+    const { logoUrl: previousLogoUrl, ...adminOnly } = current;
+
     // Owners edit what their dashboard shows (name, address, contact, logo,
     // links). The slug, visibility, theme, cuisine and SEO settings stay
     // admin-only, whatever the request contains.
-    let rawData = submitted;
-    if (role !== "admin") {
-      const current = await db.query.restaurants.findFirst({
-        where: eq(restaurants.id, restaurantId),
-        columns: {
-          slug: true,
-          isActive: true,
-          isDisplayed: true,
-          currency: true,
-          theme: true,
-          typeOfEstablishment: true,
-          country: true,
-          foodType: true,
-          metaTitle: true,
-          metaDescription: true,
-          ogImage: true,
-        },
-      });
-      if (!current) throw new ActionError("Restaurant not found.");
-      rawData = { ...submitted, ...current };
-    }
+    const rawData = role === "admin" ? submitted : { ...submitted, ...adminOnly };
 
     const result = restaurantFields.safeParse({
       ...rawData,
@@ -161,6 +183,12 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
       .update(restaurants)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(restaurants.id, restaurantId));
+
+    // A replaced or removed logo / share image leaves its old file behind.
+    await deleteUploadedFiles([
+      previousLogoUrl !== data.logoUrl ? previousLogoUrl : null,
+      adminOnly.ogImage !== data.ogImage ? adminOnly.ogImage : null,
+    ]);
 
     revalidateRestaurantPages();
   });
