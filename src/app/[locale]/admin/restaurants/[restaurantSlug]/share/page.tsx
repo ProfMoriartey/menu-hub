@@ -6,6 +6,8 @@ import { restaurants } from "~/server/db/schema";
 import { getShareLinks } from "~/server/public-origin";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
 import { SharePanel } from "~/components/share/SharePanel";
+import { ScanStats } from "~/components/share/ScanStats";
+import { getScanStats } from "~/server/qr-scans";
 
 export default async function AdminSharePage({
   params,
@@ -19,7 +21,10 @@ export default async function AdminSharePage({
   });
   if (!restaurant) notFound();
 
-  const { menuUrl, permanentUrl } = await getShareLinks(restaurant);
+  const [{ menuUrl, permanentUrl }, scanStats] = await Promise.all([
+    getShareLinks(restaurant),
+    getScanStats(restaurant.id),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -31,6 +36,7 @@ export default async function AdminSharePage({
         detailsHref={`/admin/restaurants/${restaurant.slug}/edit`}
         printHref={`/admin/restaurants/${restaurant.slug}/share/print`}
       />
+      <ScanStats stats={scanStats} />
     </div>
   );
 }

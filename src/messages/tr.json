@@ -553,6 +553,18 @@
     "secondLanguage": "İkinci satır",
     "noSecondLanguage": "Yok",
     "print": "Yazdır",
-    "printScaleTip": "Kartların gerçek boyutunda çıkması için yazdırma penceresinde \"Gerçek boyut\" veya %100 ölçeği seçin (\"Sayfaya sığdır\" değil)."
+    "printScaleTip": "Kartların gerçek boyutunda çıkması için yazdırma penceresinde \"Gerçek boyut\" veya %100 ölçeği seçin (\"Sayfaya sığdır\" değil).",
+    "scansTitle": "QR kod okutmaları",
+    "scansDescription": "Misafirlerin menünüzü QR kodu okutarak ne sıklıkla açtığı.",
+    "last7": "Son 7 gün",
+    "last30": "Son 30 gün",
+    "allTime": "Tüm zamanlar",
+    "noScans": "Henüz okutma yok. Misafirler QR kodunuzu okutmaya başlayınca burada görünür.",
+    "chartTitle": "Son 30 günde günlük okutmalar",
+    "chartLabel": "Son 30 günde günlük QR kod okutmalarını gösteren sütun grafiği, toplam {total} okutma. Her günü okumak için sol ve sağ ok tuşlarını kullanın.",
+    "scanCount": "{count, plural, =0 {Okutma yok} other {# okutma}}",
+    "dayColumn": "Gün",
+    "scansColumn": "Okutma",
+    "scansNote": "Yalnızca QR kod okutmaları sayılır, yazılan bağlantıdan gelen ziyaretler sayılmaz. Aynı telefondan 30 dakika içindeki tekrar okutmalar bir kez sayılır ve sohbet uygulamalarındaki bağlantı önizlemeleri sayılmaz. Günler UTC saatine göredir. Hiçbir kişisel veri saklanmaz."
   }
 }

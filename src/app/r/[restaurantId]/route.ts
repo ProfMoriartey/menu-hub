@@ -3,12 +3,16 @@
 // Permanent menu links: what printed QR codes point to. They name the
 // restaurant by id, which never changes, and forward to its current menu
 // address, so renaming the slug never breaks a code on a table. Every scan
-// passes through here, which is also where scan counting would go later.
-import { NextResponse, type NextRequest } from "next/server";
+// passes through here, so this is also where scans are counted.
+import { after, NextResponse, type NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
 import { isUuid } from "~/lib/slug";
+import { isLikelyBot, recordScan } from "~/server/qr-scans";
+
+// A phone that scans again within this window counts once.
+const REPEAT_WINDOW_SECONDS = 30 * 60;
 
 export async function GET(
   request: NextRequest,
@@ -19,7 +23,7 @@ export async function GET(
   const restaurant = isUuid(restaurantId)
     ? await db.query.restaurants.findFirst({
         where: eq(restaurants.id, restaurantId),
-        columns: { slug: true },
+        columns: { id: true, slug: true },
       })
     : undefined;
 
@@ -30,5 +34,30 @@ export async function GET(
   // Temporary and uncached, so a changed slug takes effect on the next scan.
   const response = NextResponse.redirect(target, 307);
   response.headers.set("Cache-Control", "no-store");
+
+  // Count real scans only: not HEAD requests (Next answers them with this
+  // handler), not link previews or bots, and not a repeat from the same phone.
+  const repeatCookie = "scanned";
+  const countable =
+    restaurant &&
+    request.method === "GET" &&
+    !isLikelyBot(request.headers.get("user-agent")) &&
+    !request.cookies.has(repeatCookie);
+
+  if (restaurant && countable) {
+    // Scoped to this link and holding no data beyond "1".
+    response.cookies.set(repeatCookie, "1", {
+      path: `/r/${restaurant.id}`,
+      maxAge: REPEAT_WINDOW_SECONDS,
+      httpOnly: true,
+      sameSite: "lax",
+      secure: target.protocol === "https:",
+    });
+    // After the redirect is sent, so guests never wait for the database.
+    after(() =>
+      recordScan(restaurant.id).catch((error) => console.error("Failed to record a QR scan:", error)),
+    );
+  }
+
   return response;
 }

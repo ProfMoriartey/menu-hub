@@ -553,6 +553,18 @@
     "secondLanguage": "Segunda línea",
     "noSecondLanguage": "Ninguna",
     "print": "Imprimir",
-    "printScaleTip": "En el cuadro de impresión, elige \"Tamaño real\" o escala 100% (no \"Ajustar a la página\") para que las tarjetas salgan a su tamaño real."
+    "printScaleTip": "En el cuadro de impresión, elige \"Tamaño real\" o escala 100% (no \"Ajustar a la página\") para que las tarjetas salgan a su tamaño real.",
+    "scansTitle": "Escaneos del código QR",
+    "scansDescription": "Con qué frecuencia los clientes abren tu menú escaneando el código QR.",
+    "last7": "Últimos 7 días",
+    "last30": "Últimos 30 días",
+    "allTime": "Desde el inicio",
+    "noScans": "Aún no hay escaneos. Aparecerán aquí cuando los clientes empiecen a escanear tu código QR.",
+    "chartTitle": "Escaneos por día, últimos 30 días",
+    "chartLabel": "Gráfico de columnas de escaneos del código QR por día en los últimos 30 días, {total, plural, one {# escaneo} other {# escaneos}} en total. Usa las flechas izquierda y derecha para leer cada día.",
+    "scanCount": "{count, plural, =0 {Sin escaneos} one {# escaneo} other {# escaneos}}",
+    "dayColumn": "Día",
+    "scansColumn": "Escaneos",
+    "scansNote": "Solo cuenta los escaneos del código QR, no las visitas desde el enlace escrito. Los escaneos repetidos desde el mismo móvil en 30 minutos cuentan una vez, y las vistas previas de enlaces en apps de chat no se cuentan. Los días siguen la hora UTC. No se guarda ningún dato personal."
   }
 }

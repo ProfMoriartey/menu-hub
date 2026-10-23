@@ -5,6 +5,8 @@ import { getShareLinks } from "~/server/public-origin";
 import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { SharePanel } from "~/components/share/SharePanel";
+import { ScanStats } from "~/components/share/ScanStats";
+import { getScanStats } from "~/server/qr-scans";
 
 export const metadata: Metadata = {
   title: "Share your menu | Menupedia",
@@ -18,18 +20,24 @@ export default async function DashboardSharePage({
 }) {
   const { restaurantSlug } = await params;
   const { restaurant, role } = await getDashboardRestaurant(restaurantSlug);
-  const { menuUrl, permanentUrl } = await getShareLinks(restaurant);
+  const [{ menuUrl, permanentUrl }, scanStats] = await Promise.all([
+    getShareLinks(restaurant),
+    getScanStats(restaurant.id),
+  ]);
 
   return (
     <>
       <DashboardRestaurantHeader restaurant={restaurant} role={role} activeTab="share" />
-      <SharePanel
-        restaurant={restaurant}
-        menuUrl={menuUrl}
-        permanentUrl={permanentUrl}
-        detailsHref={canEditDetails(role) ? `/dashboard/${restaurant.slug}/edit` : null}
-        printHref={`/dashboard/${restaurant.slug}/share/print`}
-      />
+      <div className="space-y-6">
+        <SharePanel
+          restaurant={restaurant}
+          menuUrl={menuUrl}
+          permanentUrl={permanentUrl}
+          detailsHref={canEditDetails(role) ? `/dashboard/${restaurant.slug}/edit` : null}
+          printHref={`/dashboard/${restaurant.slug}/share/print`}
+        />
+        <ScanStats stats={scanStats} />
+      </div>
     </>
   );
 }

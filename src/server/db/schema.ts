@@ -8,6 +8,7 @@ import {
   jsonb,
   pgEnum,
   integer,
+  date,
   primaryKey,
   uniqueIndex,
   text, // IMPORTANT: Add 'text' import for longer string fields like description
@@ -178,3 +179,16 @@ export const usersToRestaurantsRelations = relations(
 export const usersRelations = relations(users, ({ many }) => ({
   usersToRestaurants: many(usersToRestaurants),
 }));
+// QR code scans: one row per restaurant per day (UTC), counting visits to
+// the permanent /r/<id> link. No personal data is stored.
+export const qrScanDays = pgTable(
+  "menu-hub_qr_scan_days",
+  {
+    restaurantId: uuid("restaurant_id")
+      .notNull()
+      .references(() => restaurants.id, { onDelete: "cascade" }),
+    day: date("day", { mode: "string" }).notNull(),
+    count: integer("count").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.restaurantId, t.day] })],
+);

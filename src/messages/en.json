@@ -553,6 +553,18 @@
     "secondLanguage": "Second line",
     "noSecondLanguage": "None",
     "print": "Print",
-    "printScaleTip": "In the print dialog, choose \"Actual size\" or 100% scale (not \"Fit to page\") so the cards come out at their real size."
+    "printScaleTip": "In the print dialog, choose \"Actual size\" or 100% scale (not \"Fit to page\") so the cards come out at their real size.",
+    "scansTitle": "QR code scans",
+    "scansDescription": "How often guests open your menu by scanning the QR code.",
+    "last7": "Last 7 days",
+    "last30": "Last 30 days",
+    "allTime": "All time",
+    "noScans": "No scans yet. They'll show up here once guests start scanning your QR code.",
+    "chartTitle": "Scans per day, last 30 days",
+    "chartLabel": "Column chart of QR code scans per day over the last 30 days, {total, plural, one {# scan} other {# scans}} in total. Use the left and right arrow keys to read each day.",
+    "scanCount": "{count, plural, =0 {No scans} one {# scan} other {# scans}}",
+    "dayColumn": "Day",
+    "scansColumn": "Scans",
+    "scansNote": "Counts scans of the QR code only, not visits from the typed link. Repeat scans from the same phone within 30 minutes count once, and link previews in chat apps aren't counted. Days follow UTC time. No personal data is stored."
   }
 }
