@@ -13,7 +13,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="bg-background min-h-screen">
-      <header className="bg-card border-border sticky top-0 z-20 border-b">
+      <header className="bg-card border-border sticky top-0 z-20 border-b print:hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <Link href="/dashboard" className="text-primary inline-flex items-center gap-2 font-extrabold tracking-tight">
             <LayoutDashboard className="h-5 w-5" aria-hidden />

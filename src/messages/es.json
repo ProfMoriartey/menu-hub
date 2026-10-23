@@ -538,6 +538,21 @@
     "copy": "Copiar",
     "copied": "Copiado",
     "openLink": "Abrir enlace",
-    "permanentNote": "El código QR usa un enlace permanente, así que los códigos impresos siguen funcionando aunque cambie la dirección del menú:"
+    "permanentNote": "El código QR usa un enlace permanente, así que los códigos impresos siguen funcionando aunque cambie la dirección del menú:",
+    "cardsTitle": "Tarjetas para mesas",
+    "cardsDescription": "Tarjetas listas para imprimir con tu logo, el código QR y el enlace.",
+    "printCards": "Imprimir tarjetas",
+    "backToShare": "Volver a Compartir",
+    "printTitle": "Imprimir tarjetas para mesas",
+    "printDescription": "Elige el formato y el idioma de la tarjeta y luego imprime. Solo se imprimen las tarjetas.",
+    "printNotLive": "Tu menú aún no está publicado. Las tarjetas funcionarán en cuanto lo esté.",
+    "layout": "Formato",
+    "layoutA4": "Hoja A4, 4 tarjetas para recortar",
+    "layoutA6": "Tarjeta A6, una por página",
+    "cardLanguage": "Idioma de la tarjeta",
+    "secondLanguage": "Segunda línea",
+    "noSecondLanguage": "Ninguna",
+    "print": "Imprimir",
+    "printScaleTip": "En el cuadro de impresión, elige \"Tamaño real\" o escala 100% (no \"Ajustar a la página\") para que las tarjetas salgan a su tamaño real."
   }
 }

@@ -538,6 +538,21 @@
     "copy": "Kopyala",
     "copied": "Kopyalandı",
     "openLink": "Bağlantıyı aç",
-    "permanentNote": "QR kod kalıcı bir bağlantı kullanır; menü adresi değişse bile basılı kodlar çalışmaya devam eder:"
+    "permanentNote": "QR kod kalıcı bir bağlantı kullanır; menü adresi değişse bile basılı kodlar çalışmaya devam eder:",
+    "cardsTitle": "Masa kartları",
+    "cardsDescription": "Logonuz, QR kod ve bağlantıyla baskıya hazır kartlar.",
+    "printCards": "Masa kartlarını yazdır",
+    "backToShare": "Paylaş'a dön",
+    "printTitle": "Masa kartlarını yazdır",
+    "printDescription": "Bir düzen ve kartta yer alacak dili seçin, ardından yazdırın. Yalnızca kartlar yazdırılır.",
+    "printNotLive": "Menünüz henüz yayında değil. Kartlar menü yayına girdiği anda çalışır.",
+    "layout": "Düzen",
+    "layoutA4": "A4 sayfa, kesilecek 4 kart",
+    "layoutA6": "A6 kart, sayfa başına bir",
+    "cardLanguage": "Kart dili",
+    "secondLanguage": "İkinci satır",
+    "noSecondLanguage": "Yok",
+    "print": "Yazdır",
+    "printScaleTip": "Kartların gerçek boyutunda çıkması için yazdırma penceresinde \"Gerçek boyut\" veya %100 ölçeği seçin (\"Sayfaya sığdır\" değil)."
   }
 }

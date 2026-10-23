@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Check, CircleAlert, Copy, Download, ExternalLink, EyeOff, Globe, Info } from "lucide-react";
+import { Check, CircleAlert, Copy, Download, ExternalLink, EyeOff, Globe, Info, Printer } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -17,6 +17,8 @@ interface SharePanelProps {
   permanentUrl: string;
   // Where "add a logo" points, or null when the viewer can't edit details.
   detailsHref: string | null;
+  // The printable table cards page.
+  printHref: string;
 }
 
 type Logo = Awaited<ReturnType<typeof loadLogo>>;
@@ -30,7 +32,7 @@ function download(blob: Blob, filename: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function SharePanel({ restaurant, menuUrl, permanentUrl, detailsHref }: SharePanelProps) {
+export function SharePanel({ restaurant, menuUrl, permanentUrl, detailsHref, printHref }: SharePanelProps) {
   const t = useTranslations("Share");
   const [withLogo, setWithLogo] = useState(Boolean(restaurant.logoUrl));
   const [logo, setLogo] = useState<Logo | null>(null);
@@ -165,6 +167,16 @@ export function SharePanel({ restaurant, menuUrl, permanentUrl, detailsHref }: S
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
               {t("testTip")}
             </p>
+
+            <div className="border-border space-y-2 border-t pt-4">
+              <p className="text-sm font-medium">{t("cardsTitle")}</p>
+              <p className="text-muted-foreground text-sm">{t("cardsDescription")}</p>
+              <Button variant="secondary" asChild>
+                <Link href={printHref}>
+                  <Printer className="h-4 w-4" /> {t("printCards")}
+                </Link>
+              </Button>
+            </div>
           </div>
         </section>
 

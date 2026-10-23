@@ -28,6 +28,7 @@ export default async function DashboardSharePage({
         menuUrl={menuUrl}
         permanentUrl={permanentUrl}
         detailsHref={canEditDetails(role) ? `/dashboard/${restaurant.slug}/edit` : null}
+        printHref={`/dashboard/${restaurant.slug}/share/print`}
       />
     </>
   );

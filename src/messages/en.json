@@ -538,6 +538,21 @@
     "copy": "Copy",
     "copied": "Copied",
     "openLink": "Open link",
-    "permanentNote": "The QR code uses a permanent link, so printed codes keep working even if the menu address changes:"
+    "permanentNote": "The QR code uses a permanent link, so printed codes keep working even if the menu address changes:",
+    "cardsTitle": "Table cards",
+    "cardsDescription": "Ready-to-print cards with your logo, the QR code and the link.",
+    "printCards": "Print table cards",
+    "backToShare": "Back to Share",
+    "printTitle": "Print table cards",
+    "printDescription": "Choose a layout and the language on the card, then print. Only the cards are printed.",
+    "printNotLive": "Your menu isn't live yet. The cards will work as soon as it is.",
+    "layout": "Layout",
+    "layoutA4": "A4 sheet, 4 cards to cut out",
+    "layoutA6": "A6 card, one per page",
+    "cardLanguage": "Card language",
+    "secondLanguage": "Second line",
+    "noSecondLanguage": "None",
+    "print": "Print",
+    "printScaleTip": "In the print dialog, choose \"Actual size\" or 100% scale (not \"Fit to page\") so the cards come out at their real size."
   }
 }

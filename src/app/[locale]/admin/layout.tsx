@@ -42,7 +42,7 @@ export default async function AdminDashboardLayout({
     // ClerkProvider removed here
     <div className={cn("min-h-screen", "bg-background")}>
       {/* Top Navigation Bar for Admin */}
-      <header className="bg-card text-card-foreground border-border sticky top-0 z-20 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b px-4 py-3 sm:px-8">
+      <header className="bg-card text-card-foreground border-border sticky top-0 z-20 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b px-4 py-3 sm:px-8 print:hidden">
         <div className="flex items-center gap-6">
           <h2 className="text-primary text-lg font-extrabold tracking-tight">
             Admin
@@ -58,7 +58,7 @@ export default async function AdminDashboardLayout({
       {/* Main Content Area */}
       <main className={cn("w-full", "text-foreground")}>
         {/* Wrap children in a div with generous padding */}
-        <div className="mx-auto max-w-7xl p-4 sm:p-8">{children}</div>
+        <div className="mx-auto max-w-7xl p-4 sm:p-8 print:max-w-none print:p-0">{children}</div>
       </main>
     </div>
   );

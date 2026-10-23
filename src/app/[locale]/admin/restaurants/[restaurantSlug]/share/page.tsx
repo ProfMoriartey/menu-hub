@@ -29,6 +29,7 @@ export default async function AdminSharePage({
         menuUrl={menuUrl}
         permanentUrl={permanentUrl}
         detailsHref={`/admin/restaurants/${restaurant.slug}/edit`}
+        printHref={`/admin/restaurants/${restaurant.slug}/share/print`}
       />
     </div>
   );

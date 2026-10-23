@@ -44,5 +44,6 @@ export default async function RestaurantDashboardLayout({
     return redirect({ href: "/dashboard", locale: await getLocale() });
   }
 
-  return <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">{children}</div>;
+  // No padding when printing, so a table card sheet lines up with the paper.
+  return <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 print:max-w-none print:p-0">{children}</div>;
 }
