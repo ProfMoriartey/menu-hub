@@ -6,6 +6,8 @@ import { Button } from "~/components/ui/button";
 import { RestaurantManagementClient } from "~/components/admin/RestaurantManagementClient";
 import { deleteRestaurant } from "~/app/actions/restaurant";
 import { type Restaurant } from "~/types/restaurant";
+import { setupProgress } from "~/lib/setup-checklist";
+import { getSetupFacts } from "~/server/setup-facts";
 import { type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
 
 export default async function AdminRestaurantsPage() {
@@ -22,6 +24,13 @@ export default async function AdminRestaurantsPage() {
     socialMedia: restaurant.socialMedia as SocialMediaLinks,
     deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
   }));
+
+  // Setup checklist progress per restaurant, for the cards and the
+  // "Ready to go live" filter.
+  const facts = await getSetupFacts(allRestaurants);
+  const setup = Object.fromEntries(
+    allRestaurants.map((r) => [r.id, setupProgress(facts.get(r.id)!)]),
+  );
 
   const activeCount = allRestaurants.filter((r) => r.isActive).length;
 
@@ -42,6 +51,7 @@ export default async function AdminRestaurantsPage() {
       </div>
       <RestaurantManagementClient
         initialRestaurants={allRestaurants}
+        setup={setup}
         deleteRestaurantAction={deleteRestaurant}
       />
     </div>

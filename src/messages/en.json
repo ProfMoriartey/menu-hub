@@ -580,5 +580,48 @@
     "soldOutHint": "Stays on the menu, marked as sold out.",
     "hiddenHint": "Not shown on the menu at all.",
     "changeLabel": "Availability of {name}"
+  },
+  "Setup": {
+    "title": "Get your menu ready",
+    "subtitle": "A few steps to a menu your guests can scan.",
+    "readyToGoLive": "Everything's in place. An administrator will publish your menu soon.",
+    "progress": "{done} of {total} done",
+    "show": "Show",
+    "hide": "Hide",
+    "done": "Done",
+    "todo": "To do",
+    "ownerDoesThis": "The restaurant's owner adds this in Details.",
+    "cardLabel": "Setup",
+    "readyBadge": "Ready to go live",
+    "logo": {
+      "title": "Add your logo",
+      "text": "It's shown at the top of your menu and in the QR code.",
+      "action": "Add logo"
+    },
+    "description": {
+      "title": "Describe your restaurant",
+      "text": "A few sentences for your about page.",
+      "action": "Add description"
+    },
+    "categories": {
+      "title": "Create categories",
+      "text": "Group your menu, like Starters, Mains and Drinks.",
+      "action": "Add categories"
+    },
+    "items": {
+      "title": "Add items",
+      "text": "Dishes and drinks with a price, and a photo if you like.",
+      "action": "Add items"
+    },
+    "live": {
+      "title": "Go live",
+      "text": "An administrator publishes your menu once it's ready. Preview it in the meantime.",
+      "action": "Preview"
+    },
+    "scan": {
+      "title": "Get your first scan",
+      "text": "Print your QR code for the tables. This step ticks itself off at the first scan.",
+      "action": "Get QR code"
+    }
   }
 }

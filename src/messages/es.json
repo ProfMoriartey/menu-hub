@@ -580,5 +580,48 @@
     "soldOutHint": "Sigue en el menú, marcado como agotado.",
     "hiddenHint": "No aparece en el menú.",
     "changeLabel": "Disponibilidad de {name}"
+  },
+  "Setup": {
+    "title": "Prepara tu menú",
+    "subtitle": "Unos pocos pasos para tener un menú que tus clientes puedan escanear.",
+    "readyToGoLive": "Todo está listo. Un administrador publicará tu menú pronto.",
+    "progress": "{done} de {total} hechos",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "done": "Hecho",
+    "todo": "Pendiente",
+    "ownerDoesThis": "El propietario del restaurante lo añade en Datos.",
+    "cardLabel": "Configuración",
+    "readyBadge": "Listo para publicar",
+    "logo": {
+      "title": "Añade tu logo",
+      "text": "Aparece arriba en tu menú y en el código QR.",
+      "action": "Añadir logo"
+    },
+    "description": {
+      "title": "Describe tu restaurante",
+      "text": "Unas frases para tu página «Acerca de».",
+      "action": "Añadir descripción"
+    },
+    "categories": {
+      "title": "Crea categorías",
+      "text": "Organiza tu menú, por ejemplo Entrantes, Principales y Bebidas.",
+      "action": "Añadir categorías"
+    },
+    "items": {
+      "title": "Añade platos",
+      "text": "Platos y bebidas con su precio y, si quieres, una foto.",
+      "action": "Añadir platos"
+    },
+    "live": {
+      "title": "Publícalo",
+      "text": "Un administrador publica tu menú cuando está listo. Mientras tanto, puedes ver la vista previa.",
+      "action": "Vista previa"
+    },
+    "scan": {
+      "title": "Consigue tu primer escaneo",
+      "text": "Imprime tu código QR para las mesas. Este paso se marca solo con el primer escaneo.",
+      "action": "Obtener código QR"
+    }
   }
 }

@@ -10,6 +10,8 @@ import { isSystemAdmin } from "~/app/actions/auth";
 import { Button } from "~/components/ui/button";
 import { RestaurantLogo } from "~/components/admin/RestaurantCard";
 import { canEditDetails, toAccessLevel } from "~/lib/access";
+import { setupProgress } from "~/lib/setup-checklist";
+import { getSetupFacts } from "~/server/setup-facts";
 
 // NOTE: This component is placed inside an (app) route group to avoid
 // dynamic segment conflicts with [restaurantSlug]. The URL is /dashboard.
@@ -20,14 +22,15 @@ export default async function ClientUserDashboardPage() {
     return redirect({ href: "/sign-in", locale: await getLocale() });
   }
 
-  const [t, tHome, assignments, isAdmin] = await Promise.all([
+  const [t, tHome, tSetup, assignments, isAdmin] = await Promise.all([
     getTranslations("Dashboard"),
     getTranslations("DashboardHome"),
+    getTranslations("Setup"),
     db.query.usersToRestaurants.findMany({
       where: eq(usersToRestaurants.userId, userId),
       with: {
         restaurant: {
-          columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true },
+          columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true, description: true },
           // Ids are enough for the category and item counts.
           with: {
             categories: {
@@ -49,6 +52,9 @@ export default async function ClientUserDashboardPage() {
       itemCount: restaurant.categories.reduce((sum, c) => sum + c.menuItems.length, 0),
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
+
+  // Setup progress for every card, with one grouped query per table.
+  const setupFacts = await getSetupFacts(restaurants);
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 sm:px-6">
@@ -116,6 +122,28 @@ export default async function ClientUserDashboardPage() {
                     items: restaurant.itemCount,
                   })}
                 </p>
+
+                {(() => {
+                  const facts = setupFacts.get(restaurant.id);
+                  const progress = facts && setupProgress(facts);
+                  if (!progress || progress.complete) return null;
+                  return (
+                    <Link href={`/dashboard/${restaurant.slug}/menu`} className="group block space-y-1">
+                      <span className="text-muted-foreground flex items-center justify-between text-xs group-hover:underline">
+                        <span>{progress.readyToGoLive ? tSetup("readyBadge") : tSetup("cardLabel")}</span>
+                        <span className="tabular-nums">
+                          {tSetup("progress", { done: progress.done, total: progress.total })}
+                        </span>
+                      </span>
+                      <span className="bg-muted block h-1.5 overflow-hidden rounded-full" aria-hidden>
+                        <span
+                          className="bg-primary block h-full rounded-full"
+                          style={{ width: `${(progress.done / progress.total) * 100}%` }}
+                        />
+                      </span>
+                    </Link>
+                  );
+                })()}
               </div>
 
               <div className="border-border flex items-center gap-2 border-t px-5 py-3">

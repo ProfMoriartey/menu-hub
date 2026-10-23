@@ -580,5 +580,48 @@
     "soldOutHint": "Menüde kalır, tükendi olarak işaretlenir.",
     "hiddenHint": "Menüde hiç gösterilmez.",
     "changeLabel": "{name} durumu"
+  },
+  "Setup": {
+    "title": "Menünüzü hazırlayın",
+    "subtitle": "Misafirlerinizin okutabileceği bir menüye birkaç adım kaldı.",
+    "readyToGoLive": "Her şey hazır. Bir yönetici menünüzü yakında yayına alacak.",
+    "progress": "{total} adımdan {done} tanesi tamam",
+    "show": "Göster",
+    "hide": "Gizle",
+    "done": "Tamamlandı",
+    "todo": "Yapılacak",
+    "ownerDoesThis": "Bunu restoran sahibi Bilgiler bölümünden ekler.",
+    "cardLabel": "Kurulum",
+    "readyBadge": "Yayına hazır",
+    "logo": {
+      "title": "Logonuzu ekleyin",
+      "text": "Menünüzün en üstünde ve QR kodda gösterilir.",
+      "action": "Logo ekle"
+    },
+    "description": {
+      "title": "Restoranınızı tanıtın",
+      "text": "Hakkında sayfanız için birkaç cümle.",
+      "action": "Açıklama ekle"
+    },
+    "categories": {
+      "title": "Kategori oluşturun",
+      "text": "Menünüzü gruplayın; örneğin Başlangıçlar, Ana Yemekler ve İçecekler.",
+      "action": "Kategori ekle"
+    },
+    "items": {
+      "title": "Ürün ekleyin",
+      "text": "Fiyatıyla birlikte yemekler ve içecekler; isterseniz fotoğraf da ekleyin.",
+      "action": "Ürün ekle"
+    },
+    "live": {
+      "title": "Yayına alın",
+      "text": "Menünüz hazır olduğunda bir yönetici yayına alır. Bu arada önizleyebilirsiniz.",
+      "action": "Önizle"
+    },
+    "scan": {
+      "title": "İlk okutmayı alın",
+      "text": "Masalar için QR kodunuzu basın. Bu adım ilk okutmada kendiliğinden tamamlanır.",
+      "action": "QR kodu al"
+    }
   }
 }

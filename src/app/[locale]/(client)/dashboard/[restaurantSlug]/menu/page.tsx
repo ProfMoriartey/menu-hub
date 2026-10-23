@@ -5,6 +5,9 @@ import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { getCategorySummaries } from "~/server/menu-data";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { CategoryList } from "~/components/menu-editor/CategoryList";
+import { SetupChecklist } from "~/components/dashboard/SetupChecklist";
+import { getSetupFactsFor } from "~/server/setup-facts";
+import { canEditDetails } from "~/lib/access";
 
 export const metadata: Metadata = {
   title: "Menu Editor | Menupedia",
@@ -20,13 +23,23 @@ export default async function DashboardMenuPage({
   const { restaurant, role } = await getDashboardRestaurant(restaurantSlug);
   const t = await getTranslations("DashboardRestaurant");
 
-  const summaries = await getCategorySummaries(restaurant.id);
+  const [summaries, setupFacts] = await Promise.all([
+    getCategorySummaries(restaurant.id),
+    getSetupFactsFor(restaurant),
+  ]);
   const totalItems = summaries.reduce((sum, c) => sum + c.itemCount, 0);
 
   return (
     <>
       <DashboardRestaurantHeader restaurant={restaurant} role={role} activeTab="menu" />
       <div className="space-y-6">
+        {/* Disappears once every step is done. */}
+        <SetupChecklist
+          restaurant={restaurant}
+          facts={setupFacts}
+          canEditDetails={canEditDetails(role)}
+          firstCategorySlug={summaries[0]?.slug ?? null}
+        />
         <div>
           <h2 className="text-xl font-semibold">{t("categoriesTitle")}</h2>
           <p className="text-muted-foreground mt-1 text-sm">
