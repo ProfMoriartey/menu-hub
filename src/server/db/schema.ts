@@ -19,6 +19,7 @@ import type {
   ItemTranslations,
   RestaurantTranslations,
 } from "~/lib/menu-languages";
+import type { OpeningHours } from "~/lib/opening-hours";
 
 // Define ENUMs if you have them, e.g., for dietary labels
 export const dietaryLabelEnum = pgEnum("dietary_label", [
@@ -75,6 +76,16 @@ export const restaurants = pgTable("menu-hub_restaurants", {
     .notNull(),
   // Translated description, keyed by language.
   translations: jsonb("translations").$type<RestaurantTranslations>(),
+
+  // IANA time zone (e.g. "Europe/Istanbul"): opening hours and the QR scan
+  // statistics' days are in it. Null = not set (scan days fall back to UTC).
+  timeZone: varchar("time_zone", { length: 64 }),
+  // Weekly hours (lib/opening-hours). Null = not set: nothing is shown.
+  openingHours: jsonb("opening_hours").$type<OpeningHours>(),
+  // A custom accent colour on the public pages. Only an admin turns the
+  // feature on; owners and admins pick the colour (#rrggbb).
+  brandColorEnabled: boolean("brand_color_enabled").default(false).notNull(),
+  brandColor: varchar("brand_color", { length: 7 }),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow(),

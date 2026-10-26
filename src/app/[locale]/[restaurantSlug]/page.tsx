@@ -31,6 +31,7 @@ import {
   Globe,
 } from "lucide-react";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
+import { OpeningStatus } from "~/components/public/OpeningHours";
 import type { Metadata } from "next";
 import { getPublicOrigin } from "~/server/public-origin";
 import {
@@ -183,6 +184,12 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
             >
               {description.text ?? t("browseMenuDefault")}
             </p>
+
+            <OpeningStatus
+              hours={restaurantDetails.openingHours}
+              timeZone={restaurantDetails.timeZone}
+              className="mt-3"
+            />
 
             {/* Details | Map | Separator | Socials */}
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:justify-start">

@@ -532,7 +532,13 @@
     "saveLanguagesFailed": "Menü dilleri kaydedilemedi. Lütfen tekrar deneyin.",
     "saveTranslationsFailed": "Çeviriler kaydedilemedi. Lütfen tekrar deneyin.",
     "multilingualOff": "Bu restoran için birden fazla dilde menü açık değil.",
-    "invalidLanguages": "Dilleri listeden seçin."
+    "invalidLanguages": "Dilleri listeden seçin.",
+    "saveHoursFailed": "Çalışma saatleri kaydedilemedi. Lütfen tekrar deneyin.",
+    "saveColorFailed": "Marka rengi kaydedilemedi. Lütfen tekrar deneyin.",
+    "invalidHours": "Bazı çalışma saatleri geçerli değil. Saatleri kontrol edip tekrar deneyin.",
+    "invalidTimeZone": "Listeden bir saat dilimi seçin, örneğin Europe/Istanbul.",
+    "invalidColor": "#d97706 gibi bir renk girin.",
+    "brandColorOff": "Bu restoran için özel marka rengi açık değil."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -664,7 +670,16 @@
     "metaMenuDescription": "{name} menüsünü fiyatları ve fotoğraflarıyla görün.",
     "metaAboutTitle": "{name} – Bilgi ve konum",
     "metaItemTitle": "{item} – {restaurant}",
-    "metaItemDescription": "{restaurant} – {item}: {price}."
+    "metaItemDescription": "{restaurant} – {item}: {price}.",
+    "openNow": "Şu an açık",
+    "closedNow": "Kapalı",
+    "openUntil": "{time} saatine kadar",
+    "opensToday": "{time} saatinde açılır",
+    "opensTomorrow": "yarın {time} saatinde açılır",
+    "opensOn": "{day} {time} saatinde açılır",
+    "hoursHeading": "Çalışma saatleri",
+    "today": "Bugün",
+    "closedDay": "Kapalı"
   },
   "Team": {
     "inviteTitle": "Editör davet edin",
@@ -732,5 +747,40 @@
     "saved": "Kaydedildi",
     "chooseMainFirst": "Önce ana dili seçin.",
     "notTranslated": "Çevrilmedi: {languages}"
+  },
+  "OpeningHours": {
+    "title": "Çalışma saatleri",
+    "intro": "Menünüzde \"Şu an açık\" ya da \"Kapalı\" olarak, hakkında sayfanızda ve arama motorlarında gösterilir.",
+    "timeZoneLabel": "Saat dilimi",
+    "timeZoneHint": "Restoranın bulunduğu yer. QR kod okutmalarını günlere ayırmak için de kullanılır.",
+    "notSet": "Henüz çalışma saati yok. Siz ekleyene kadar misafirler hiçbir saat görmez.",
+    "add": "Çalışma saati ekle",
+    "closed": "Kapalı",
+    "opensLabel": "{day} açılış",
+    "closesLabel": "{day} kapanış",
+    "addRange": "Saat ekle",
+    "removeRange": "Bu saatleri kaldır",
+    "overnightHint": "Kapanış saati açılıştan önceyse gece yarısından sonrası demektir, örneğin 18:00 – 02:00.",
+    "sameEveryDay": "{day} saatlerini her güne uygula",
+    "remove": "Çalışma saatlerini kaldır",
+    "save": "Saatleri kaydet",
+    "saving": "Kaydediliyor…",
+    "saved": "Kaydedildi"
+  },
+  "BrandColor": {
+    "title": "Marka rengi",
+    "intro": "Menünüzdeki düğmeler, fiyatlar ve kategori çubuğu için sizin renginiz.",
+    "enableTitle": "Özel marka rengi",
+    "enableText": "Bu restoranın sahiplerinin herkese açık sayfalarda temanın vurgu rengini değiştirmesine izin verir. Kapatmak temanın rengine döner ama seçimlerini saklar.",
+    "notEnabled": "Bu restoran için özel marka rengi açık değil. Açtırmak için bir yöneticiyle iletişime geçin.",
+    "colorLabel": "Renk",
+    "colorHint": "İstediğiniz rengi seçin: yazıların açık ve koyu modda okunabilir kalması için gerektiğinde otomatik ayarlanır.",
+    "light": "Açık mod",
+    "dark": "Koyu mod",
+    "sampleButton": "Menü",
+    "save": "Rengi kaydet",
+    "saving": "Kaydediliyor…",
+    "useTheme": "Temanın rengini kullan",
+    "saved": "Kaydedildi"
   }
 }

@@ -26,6 +26,8 @@ export const ACTION_ERROR_CODES = [
   "respondInviteFailed",
   "saveLanguagesFailed",
   "saveTranslationsFailed",
+  "saveHoursFailed",
+  "saveColorFailed",
   // Access
   "signInAgain",
   "noAccess",
@@ -62,6 +64,11 @@ export const ACTION_ERROR_CODES = [
   // Menu languages
   "multilingualOff",
   "invalidLanguages",
+  // Opening hours and brand colour
+  "invalidHours",
+  "invalidTimeZone",
+  "invalidColor",
+  "brandColorOff",
   // Uploads
   "signInToUpload",
   "adminOnlyNewLogo",

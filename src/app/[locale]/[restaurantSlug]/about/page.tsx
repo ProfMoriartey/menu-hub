@@ -17,6 +17,7 @@ import { localizeDescription } from "~/server/localize-menu"
 
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"
 import { DeliveryOptionsDialog } from "~/components/public/DeliveryOptionsDialog"
+import { OpeningHoursTable, OpeningStatus } from "~/components/public/OpeningHours"
 import { PublicPageControls } from "~/components/public/PublicPageControls"
 
 interface PageProps {
@@ -215,6 +216,24 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
                 </div>
               )}
             </div>
+
+            {restaurantDetails.openingHours && restaurantDetails.timeZone && (
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-2xl font-bold border-s-4 border-primary ps-3">
+                    {tMenu("hoursHeading")}
+                  </h2>
+                  <OpeningStatus
+                    hours={restaurantDetails.openingHours}
+                    timeZone={restaurantDetails.timeZone}
+                  />
+                </div>
+                <OpeningHoursTable
+                  hours={restaurantDetails.openingHours}
+                  timeZone={restaurantDetails.timeZone}
+                />
+              </div>
+            )}
           </div>
 
           {/* Right Column - Address and Map */}

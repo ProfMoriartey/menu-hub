@@ -532,7 +532,13 @@
     "saveLanguagesFailed": "No se pudieron guardar los idiomas del menú. Inténtalo de nuevo.",
     "saveTranslationsFailed": "No se pudieron guardar las traducciones. Inténtalo de nuevo.",
     "multilingualOff": "Los menús en varios idiomas no están activados para este restaurante.",
-    "invalidLanguages": "Elige los idiomas de la lista."
+    "invalidLanguages": "Elige los idiomas de la lista.",
+    "saveHoursFailed": "No se pudo guardar el horario. Inténtalo de nuevo.",
+    "saveColorFailed": "No se pudo guardar el color de marca. Inténtalo de nuevo.",
+    "invalidHours": "Algunas horas no son válidas. Revisa los horarios e inténtalo de nuevo.",
+    "invalidTimeZone": "Elige una zona horaria de la lista, por ejemplo Europe/Istanbul.",
+    "invalidColor": "Introduce un color como #d97706.",
+    "brandColorOff": "El color de marca propio no está activado para este restaurante."
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
@@ -664,7 +670,16 @@
     "metaMenuDescription": "Mira el menú de {name}, con precios y fotos.",
     "metaAboutTitle": "{name} – Información y ubicación",
     "metaItemTitle": "{item} – {restaurant}",
-    "metaItemDescription": "{item} en {restaurant}: {price}."
+    "metaItemDescription": "{item} en {restaurant}: {price}.",
+    "openNow": "Abierto ahora",
+    "closedNow": "Cerrado",
+    "openUntil": "hasta las {time}",
+    "opensToday": "abre a las {time}",
+    "opensTomorrow": "abre mañana a las {time}",
+    "opensOn": "abre el {day} a las {time}",
+    "hoursHeading": "Horario",
+    "today": "Hoy",
+    "closedDay": "Cerrado"
   },
   "Team": {
     "inviteTitle": "Invitar a un editor",
@@ -732,5 +747,40 @@
     "saved": "Guardado",
     "chooseMainFirst": "Primero elige el idioma principal.",
     "notTranslated": "Sin traducir: {languages}"
+  },
+  "OpeningHours": {
+    "title": "Horario",
+    "intro": "Se muestra en tu menú como «Abierto ahora» o «Cerrado», en tu página de información y a los buscadores.",
+    "timeZoneLabel": "Zona horaria",
+    "timeZoneHint": "Donde está el restaurante. También se usa para contar los escaneos del código QR por día.",
+    "notSet": "Todavía no hay horario. Los clientes no verán ninguno hasta que lo añadas.",
+    "add": "Añadir horario",
+    "closed": "Cerrado",
+    "opensLabel": "Abre el {day}",
+    "closesLabel": "Cierra el {day}",
+    "addRange": "Añadir horas",
+    "removeRange": "Quitar estas horas",
+    "overnightHint": "Una hora de cierre anterior a la de apertura significa después de medianoche, por ejemplo 18:00 – 02:00.",
+    "sameEveryDay": "Usar el horario del {day} todos los días",
+    "remove": "Quitar el horario",
+    "save": "Guardar horario",
+    "saving": "Guardando…",
+    "saved": "Guardado"
+  },
+  "BrandColor": {
+    "title": "Color de marca",
+    "intro": "Tu color para los botones, los precios y la barra de categorías de tu menú.",
+    "enableTitle": "Color de marca propio",
+    "enableText": "Permite a los propietarios de este restaurante sustituir el color de acento del tema en las páginas públicas. Desactivarlo vuelve al color del tema, pero conserva su elección.",
+    "notEnabled": "El color de marca propio no está activado para este restaurante. Contacta con un administrador para activarlo.",
+    "colorLabel": "Color",
+    "colorHint": "Elige cualquier color: se ajusta automáticamente cuando hace falta para que el texto se lea bien en modo claro y oscuro.",
+    "light": "Modo claro",
+    "dark": "Modo oscuro",
+    "sampleButton": "Menú",
+    "save": "Guardar color",
+    "saving": "Guardando…",
+    "useTheme": "Usar el color del tema",
+    "saved": "Guardado"
   }
 }

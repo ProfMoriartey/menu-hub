@@ -7,6 +7,8 @@ import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { RestaurantDetailsEditor } from "~/components/dashboard/RestaurantDetailsEditor";
 import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
+import { OpeningHoursSettings } from "~/components/restaurant-settings/OpeningHoursSettings";
+import { BrandColorSettings } from "~/components/restaurant-settings/BrandColorSettings";
 import type { DeliveryAppLinks, SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
@@ -49,7 +51,7 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
         activeTab="details"
       />
       <RestaurantDetailsEditor restaurant={restaurant} />
-      <div className="mt-8">
+      <div className="mt-8 space-y-8">
         <MenuLanguagesSettings
           restaurantId={row.id}
           isAdmin={role === "admin"}
@@ -58,6 +60,17 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
           extraLanguages={row.extraLanguages}
           description={row.description}
           translations={row.translations}
+        />
+        <OpeningHoursSettings
+          restaurantId={row.id}
+          timeZone={row.timeZone}
+          hours={row.openingHours}
+        />
+        <BrandColorSettings
+          restaurantId={row.id}
+          isAdmin={role === "admin"}
+          enabled={row.brandColorEnabled}
+          color={row.brandColor}
         />
       </div>
     </>

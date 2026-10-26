@@ -7,6 +7,7 @@ import { getLocale, getMessages } from "next-intl/server";
 import { getRestaurantBySlug } from "~/server/public-menu";
 import { getRestaurantRole } from "~/app/actions/auth";
 import { PreviewBanner } from "~/components/public/PreviewBanner";
+import { brandCss } from "~/lib/brand-color";
 
 interface DynamicPublicLayoutProps {
   children: React.ReactNode;
@@ -71,9 +72,23 @@ export default async function DynamicPublicLayout({
 
   // 3. Live: everyone sees it. (Only inactive menus check who is asking, so
   // the public pages guests visit don't depend on sign-in at all.)
+  // The restaurant's own accent colour, when an admin has enabled it.
+  const brand =
+    restaurant.brandColorEnabled && restaurant.brandColor
+      ? brandCss(restaurant.brandColor)
+      : null;
+
   const withMessages = async (content: React.ReactNode) => (
     <NextIntlClientProvider messages={await clientMessages()}>
-      {content}
+      {brand ? (
+        <div className="brand-scope">
+          {/* Built from a validated #rrggbb only (lib/brand-color). */}
+          <style dangerouslySetInnerHTML={{ __html: brand }} />
+          {content}
+        </div>
+      ) : (
+        content
+      )}
     </NextIntlClientProvider>
   );
 

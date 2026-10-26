@@ -1,8 +1,19 @@
 // src/server/menu-structured-data.ts
 import { parsePrice } from "~/lib/format-price";
+import { WEEK_DAYS, type OpeningHours } from "~/lib/opening-hours";
 import type { SocialMediaLinks } from "~/lib/schemas";
 import type { PublicCategory } from "~/components/public/menu-types";
 import type { DietaryLabel, Restaurant } from "~/types/restaurant";
+
+const SCHEMA_DAYS = {
+  mon: "Monday",
+  tue: "Tuesday",
+  wed: "Wednesday",
+  thu: "Thursday",
+  fri: "Friday",
+  sat: "Saturday",
+  sun: "Sunday",
+} as const;
 
 // schema.org diets with an exact match; the other labels are left out
 // rather than mapped to something close.
@@ -35,7 +46,10 @@ export function restaurantStructuredData({
     | "country"
     | "foodType"
     | "currency"
-  > & { socialMedia: SocialMediaLinks | null };
+  > & {
+    socialMedia: SocialMediaLinks | null;
+    openingHours?: OpeningHours | null;
+  };
   categories: PublicCategory[];
   pageUrl: string;
   itemUrl: (itemSlug: string) => string;
@@ -63,6 +77,17 @@ export function restaurantStructuredData({
           }
         : undefined,
     servesCuisine: restaurant.foodType ?? undefined,
+    // A range closing before it opens runs past midnight, as schema.org allows.
+    openingHoursSpecification: restaurant.openingHours
+      ? WEEK_DAYS.flatMap((day) =>
+          restaurant.openingHours![day].map((range) => ({
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: `https://schema.org/${SCHEMA_DAYS[day]}`,
+            opens: range.open,
+            closes: range.close,
+          })),
+        )
+      : undefined,
     sameAs: sameAs.length ? sameAs : undefined,
     hasMenu: {
       "@type": "Menu",

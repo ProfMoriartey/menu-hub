@@ -23,7 +23,7 @@ export default async function AdminSharePage({
 
   const [{ menuUrl, permanentUrl }, scanStats] = await Promise.all([
     getShareLinks(restaurant),
-    getScanStats(restaurant.id),
+    getScanStats(restaurant.id, restaurant.timeZone),
   ]);
 
   return (

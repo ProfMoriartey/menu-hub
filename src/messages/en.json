@@ -532,7 +532,13 @@
     "saveLanguagesFailed": "Couldn't save the menu languages. Please try again.",
     "saveTranslationsFailed": "Couldn't save the translations. Please try again.",
     "multilingualOff": "Menus in several languages aren't enabled for this restaurant.",
-    "invalidLanguages": "Choose languages from the list."
+    "invalidLanguages": "Choose languages from the list.",
+    "saveHoursFailed": "Couldn't save the opening hours. Please try again.",
+    "saveColorFailed": "Couldn't save the brand colour. Please try again.",
+    "invalidHours": "Some opening hours aren't valid. Check the times and try again.",
+    "invalidTimeZone": "Choose a time zone from the list, for example Europe/Istanbul.",
+    "invalidColor": "Enter a colour like #d97706.",
+    "brandColorOff": "A custom brand colour isn't enabled for this restaurant."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -664,7 +670,16 @@
     "metaMenuDescription": "See the menu of {name}, with prices and photos.",
     "metaAboutTitle": "{name} – Info and location",
     "metaItemTitle": "{item} – {restaurant}",
-    "metaItemDescription": "{item} at {restaurant}: {price}."
+    "metaItemDescription": "{item} at {restaurant}: {price}.",
+    "openNow": "Open now",
+    "closedNow": "Closed",
+    "openUntil": "until {time}",
+    "opensToday": "opens at {time}",
+    "opensTomorrow": "opens tomorrow at {time}",
+    "opensOn": "opens {day} at {time}",
+    "hoursHeading": "Opening hours",
+    "today": "Today",
+    "closedDay": "Closed"
   },
   "Team": {
     "inviteTitle": "Invite an editor",
@@ -732,5 +747,40 @@
     "saved": "Saved",
     "chooseMainFirst": "Choose the main language first.",
     "notTranslated": "Not translated: {languages}"
+  },
+  "OpeningHours": {
+    "title": "Opening hours",
+    "intro": "Shown on your menu as \"Open now\" or \"Closed\", on your about page, and to search engines.",
+    "timeZoneLabel": "Time zone",
+    "timeZoneHint": "Where the restaurant is. Also used to count QR code scans per day.",
+    "notSet": "No opening hours yet. Guests don't see any until you add them.",
+    "add": "Add opening hours",
+    "closed": "Closed",
+    "opensLabel": "Opens on {day}",
+    "closesLabel": "Closes on {day}",
+    "addRange": "Add hours",
+    "removeRange": "Remove these hours",
+    "overnightHint": "A closing time earlier than the opening time means after midnight, for example 18:00 – 02:00.",
+    "sameEveryDay": "Use {day}'s hours every day",
+    "remove": "Remove opening hours",
+    "save": "Save hours",
+    "saving": "Saving…",
+    "saved": "Saved"
+  },
+  "BrandColor": {
+    "title": "Brand colour",
+    "intro": "Your colour for buttons, prices and the category bar on your menu.",
+    "enableTitle": "Custom brand colour",
+    "enableText": "Lets this restaurant's owners replace the theme's accent colour on the public pages. Turning it off goes back to the theme's colour but keeps their choice.",
+    "notEnabled": "A custom brand colour isn't enabled for this restaurant. Contact an administrator to turn it on.",
+    "colorLabel": "Colour",
+    "colorHint": "Pick any colour: it's adjusted automatically where needed so text stays readable in light and dark mode.",
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "sampleButton": "Menu",
+    "save": "Save colour",
+    "saving": "Saving…",
+    "useTheme": "Use the theme's colour",
+    "saved": "Saved"
   }
 }
