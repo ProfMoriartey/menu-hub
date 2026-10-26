@@ -133,11 +133,12 @@ export function sectionHasError(section: (typeof SECTIONS)[number], errors: Form
   );
 }
 
+// The menu designs (lib/menu-design); owners can also pick one on the
+// Appearance page.
 export const THEMES = [
-  { value: "classic", label: "Classic", description: "A simple scrolling menu, grouped by category." },
-  { value: "sidebar-list", label: "Sidebar list", description: "Categories in a side panel, items in a list." },
-  { value: "accordion-card", label: "Accordion cards", description: "Each category opens and closes like a drawer." },
-  { value: "category-cards-image-dominant", label: "Image cards", description: "Large photos lead; best for visual menus." },
+  { value: "classic", label: "Classic", description: "Cards with the photo beside the text. Suits most menus." },
+  { value: "photo-grid", label: "Photo grid", description: "Two columns of large photos on phones. For photo-rich menus." },
+  { value: "compact", label: "Compact", description: "A text list like a printed menu. For long menus without photos." },
 ];
 
 export const CURRENCIES = [

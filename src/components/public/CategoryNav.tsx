@@ -8,7 +8,6 @@ import { categorySectionId } from "~/lib/category-section";
 
 import type { Category } from "~/types/restaurant";
 
-
 // How far below the top of the screen a section's heading must be scrolled
 // before it counts as the one being read. Clears the sticky category bar.
 const ACTIVE_THRESHOLD_PX = 120;
@@ -100,7 +99,7 @@ export function CategoryNav({
   variant,
   className,
 }: {
-  categories: Pick<Category, "id" | "slug" | "name">[];
+  categories: (Pick<Category, "id" | "slug" | "name"> & { lang?: string })[];
   activeSlug: string | null;
   onSelect: (slug: string) => void;
   variant: "bar" | "sidebar";
@@ -130,7 +129,7 @@ export function CategoryNav({
       aria-label={t("categoriesNav")}
       className={cn(
         "bg-card rounded-lg shadow-md",
-        variant === "bar" && "sticky top-0 z-10 px-2 py-3",
+        variant === "bar" && "sticky top-0 z-10 px-1.5 py-2 sm:px-2 sm:py-3",
         variant === "sidebar" &&
           "sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto p-4",
         className,
@@ -165,7 +164,9 @@ export function CategoryNav({
                       : "bg-background text-foreground hover:bg-muted-foreground/10",
                 )}
               >
-                {category.name}
+                <span lang={category.lang} dir="auto">
+                  {category.name}
+                </span>
               </button>
             </li>
           );

@@ -47,51 +47,6 @@
     "messageSent": "Mesaj gönderildi!",
     "errorSendingMessage": "Mesaj gönderilemedi."
   },
-  "aboutPage": {
-    "mainTitle": "Menupedia Hakkında",
-    "mainDescription": "Menupedia, yerel restoranları ve onların çeşitli mutfak lezzetlerini keşfetmek için nihai çevrimiçi platformunuzdur. Yemek severleri geniş bir yemek deneyimi yelpazesiyle buluşturarak tam olarak canınızın çektiğini bulmanızı her zamankinden daha kolay hale getiriyoruz. Misyonumuz, yemek seçimlerinizi basitleştirmek ve yerel gastronomiyi en iyi şekilde tek bir uygun yerde vurgulamaktır.",
-    "whatWeOfferTitle": "Sunduklarımız",
-    "whatWeOfferDescription": "Menupedia, hem yemek yiyenler hem de restoran sahipleri için sorunsuz bir deneyim sunar.",
-    "forDiners": {
-      "title": "Yemek Yiyenler İçin:",
-      "description": "Özel restoran menülerine, kategorize edilmiş yemeklere, detaylı ürün bilgilerine (içerikler ve diyet etiketleri dahil) ve güzel görsellere kolay erişim. Zahmetsizce yeni favoriler keşfedin."
-    },
-    "forRestaurantOwners": {
-      "title": "Restoran Sahipleri İçin:",
-      "description": "Restoranınızın profilini, menü kategorilerini ve bireysel menü öğelerini yönetmek için güçlü bir yönetici paneli. Görselleri kolayca yükleyin, fiyatları belirleyin ve diyet bilgilerini güncelleyin."
-    },
-    "customizableThemes": {
-      "title": "Özelleştirilebilir Temalar:",
-      "description": "Restoranlar, markalarının benzersiz tarzına uygun çeşitli görüntü temalarından seçim yapabilir ve kişiselleştirilmiş bir müşteri deneyimi sağlayabilir."
-    },
-    "optimizedForAllDevices": {
-      "title": "Tüm Cihazlar İçin Optimize Edildi:",
-      "description": "Platformumuz, hem cep telefonlarında hem de masaüstü bilgisayarlarda optimum görüntüleme ve tarama deneyimi sağlamak üzere tasarlanmıştır."
-    },
-    "ourCommitmentTitle": "Taahhüdümüz",
-    "simplicity": {
-      "title": "Basitlik:",
-      "description": "Çevrimiçi menü yönetimini ve keşfini mümkün olduğunca basit hale getirmeye çalışıyoruz."
-    },
-    "innovation": {
-      "title": "İnovasyon:",
-      "description": "Platformumuzu yeni özellikler ve teknolojilerle sürekli geliştiriyoruz."
-    },
-    "userExperience": {
-      "title": "Kullanıcı Deneyimi:",
-      "description": "Hem restoran sahipleri hem de müşterileri için sezgisel tasarımı önceliklendiriyoruz."
-    },
-    "reliability": {
-      "title": "Güvenilirlik:",
-      "description": "Sağlam bir teknoloji yığını üzerine inşa edilen Menupedia, tutarlı performans sunar."
-    },
-    "getStartedTitle": "Başlayın",
-    "getStartedDescription": "Restoranınızın çevrimiçi varlığını kolaylaştırmaya veya bir sonraki favori yemeğinizi keşfetmeye hazır mısınız? Menupedia'yı bugün keşfedin!",
-    "exploreRestaurants": {
-      "title": "Restoranları Keşfet:",
-      "linkText": "Tüm Menülere Göz At"
-    }
-  },
   "restaurantsPage": {
     "mainTitle": "Restoranları Keşfet",
     "description": "Menupedia'da bulunan tüm restoranları arayın ve keşfedin.",
@@ -102,40 +57,10 @@
     "noRestaurantsFound": "Restoran bulunamadı.",
     "adminPrompt": "Yönetici iseniz, lütfen panodan restoran ekleyin."
   },
-  "themesPage": {
-    "mainTitle": "Menü Temalarını Keşfet",
-    "description": "Restoranınızın menüsünün parlayabileceği farklı yolları keşfedin. Her tema benzersiz bir görsel deneyim sunar.",
-    "sections": {
-      "classic": {
-        "title": "Klasik Düzen",
-        "description": "Zamansız, gezinmesi kolay bir düzen. Öne çıkan üst kategoriler ve net bir iki sütunlu menü ızgarası içerir. Geniş menüler için idealdir.",
-        "howItLooks": "Nasıl Görünüyor:",
-        "noRestaurantFound": "'Klasik' tema ile görüntülenecek restoran bulunamadı."
-      },
-      "sidebarList": {
-        "title": "Yan Menü Listesi Düzeni",
-        "description": "Kategori navigasyonu için temiz bir dikey yan menü ve tek sütunlu liste formatında görüntülenen menü öğeleri içerir.",
-        "howItLooks": "Nasıl Görünüyor:",
-        "noRestaurantFound": "'Yan Menü Listesi' tema ile görüntülenecek restoran bulunamadı."
-      },
-      "accordionCard": {
-        "title": "Akordeon Kart Düzeni",
-        "description": "Menü kategorilerini genişletilebilir/daraltılabilir akordeon bölümlerine ayırır ve menü öğelerini ayrı kartlar olarak görüntüler.",
-        "howItLooks": "Nasıl Görünüyor:",
-        "noRestaurantFound": "'Akordeon Kart' tema ile görüntülenecek restoran bulunamadı."
-      },
-      "categoryCardsImageDominant": {
-        "title": "Kategori Kartları Resim Odaklı Düzen",
-        "description": "Kategorileri belirgin tıklanabilir kartlar olarak sunar. Seçildiğinde, menü öğeleri görsel olarak zengin bir deneyim için daha büyük, baskın görsellerle görüntülenir.",
-        "howItLooks": "Nasıl Görünüyor:",
-        "noRestaurantFound": "'Kategori Kartları Resim Odaklı' tema ile görüntülenecek restoran bulunamadı."
-      }
-    }
-  },
   "navbar": {
     "home": "Ana Sayfa",
     "restaurants": "Restoranlar",
-    "themes": "Temalar",
+    "themes": "Özellikler",
     "aboutUs": "Hakkımızda",
     "language": "Dil"
   },
@@ -339,7 +264,10 @@
       "deleteEmpty": "Bu kategori boş. Bu işlem geri alınamaz.",
       "deleteWithItems": "İçindeki {count} ürün de silinecek. Bu işlem geri alınamaz.",
       "deleteButton": "Kategoriyi sil",
-      "deleteWithItemsButton": "Kategoriyi ve ürünleri sil"
+      "deleteWithItemsButton": "Kategoriyi ve ürünleri sil",
+      "translate": "Çevir",
+      "translateLabel": "{name} kategorisini çevir",
+      "translateTitle": "\"{name}\" diğer dillerde"
     },
     "items": {
       "add": "Ürün ekle",
@@ -396,7 +324,11 @@
       "addItem": "Ürün ekle",
       "saveFailed": "Ürün kaydedilemedi.",
       "category": "Kategori",
-      "photoTooLarge": "Bu fotoğraf küçültüldükten sonra bile çok büyük. Daha küçük bir fotoğraf deneyin (en fazla 2 MB)."
+      "photoTooLarge": "Bu fotoğraf küçültüldükten sonra bile çok büyük. Daha küçük bir fotoğraf deneyin (en fazla 2 MB).",
+      "languagesLabel": "Diller",
+      "mainLanguage": "ana dil",
+      "notTranslatedYet": "Henüz çevrilmedi",
+      "translationHint": "Fiyat, fotoğraf, kategori ve etiketler tüm dillerde ortaktır. Gri yazı ana dildir: siz değiştirene kadar misafirler onu görür."
     }
   },
   "DashboardRestaurant": {
@@ -410,7 +342,8 @@
     "itemsSummary": "{count} ürün · Fiyatlar {currency} cinsinden",
     "preview": "Menüyü önizle",
     "shareTab": "Paylaş",
-    "teamTab": "Ekip"
+    "teamTab": "Ekip",
+    "colorsTab": "Görünüm"
   },
   "LanguageSwitcher": {
     "label": "Dil"
@@ -521,7 +454,19 @@
     "inviteWrongAccount": "Bu davet başka bir e-posta adresi için. Davetin gönderildiği adresle giriş yapın.",
     "memberNotFound": "Bu kişi artık ekipte değil. Sayfayı yenileyin.",
     "ownersByAdminOnly": "Restoran sahiplerini yalnızca bir yönetici kaldırabilir.",
-    "ownerCantLeave": "Restoran sahipleri restorandan kendileri ayrılamaz. Bir yöneticiyle iletişime geçin."
+    "ownerCantLeave": "Restoran sahipleri restorandan kendileri ayrılamaz. Bir yöneticiyle iletişime geçin.",
+    "saveLanguagesFailed": "Menü dilleri kaydedilemedi. Lütfen tekrar deneyin.",
+    "saveTranslationsFailed": "Çeviriler kaydedilemedi. Lütfen tekrar deneyin.",
+    "multilingualOff": "Bu restoran için birden fazla dilde menü açık değil.",
+    "invalidLanguages": "Dilleri listeden seçin.",
+    "saveHoursFailed": "Çalışma saatleri kaydedilemedi. Lütfen tekrar deneyin.",
+    "saveColorFailed": "Renkler kaydedilemedi. Lütfen tekrar deneyin.",
+    "invalidHours": "Bazı çalışma saatleri geçerli değil. Saatleri kontrol edip tekrar deneyin.",
+    "invalidTimeZone": "Listeden bir saat dilimi seçin, örneğin Europe/Istanbul.",
+    "invalidColor": "#d97706 gibi renkler girin.",
+    "brandColorOff": "Bu restoran için özel renkler açık değil.",
+    "saveDesignFailed": "Menü tasarımı kaydedilemedi. Lütfen tekrar deneyin.",
+    "invalidDesign": "Menü tasarımlarından birini seçin."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -653,7 +598,21 @@
     "metaMenuDescription": "{name} menüsünü fiyatları ve fotoğraflarıyla görün.",
     "metaAboutTitle": "{name} – Bilgi ve konum",
     "metaItemTitle": "{item} – {restaurant}",
-    "metaItemDescription": "{restaurant} – {item}: {price}."
+    "metaItemDescription": "{restaurant} – {item}: {price}.",
+    "openNow": "Şu an açık",
+    "closedNow": "Kapalı",
+    "openUntil": "{time} saatine kadar",
+    "opensToday": "{time} saatinde açılır",
+    "opensTomorrow": "yarın {time} saatinde açılır",
+    "opensOn": "{day} {time} saatinde açılır",
+    "hoursHeading": "Çalışma saatleri",
+    "today": "Bugün",
+    "closedDay": "Kapalı",
+    "filter": "Filtre",
+    "filterLabel": "{count, plural, =0 {Beslenme filtreleri} other {Beslenme filtreleri, # seçili}}",
+    "closeDish": "Kapat",
+    "ingredients": "İçindekiler",
+    "dishPage": "Ürün sayfasını aç"
   },
   "Team": {
     "inviteTitle": "Editör davet edin",
@@ -703,5 +662,283 @@
     "invalidText": "Süresi dolmuş, iptal edilmiş ya da daha önce kullanılmış. Restoran sahibinden yeni bir bağlantı isteyin.",
     "toDashboard": "Panelinize gidin",
     "toHome": "Ana sayfaya gidin"
+  },
+  "MenuLanguages": {
+    "title": "Menü dilleri",
+    "intro": "Menüyü birden fazla dilde sunun. Misafirler çevrilmişse kendi dillerinde, değilse ana dilde görür.",
+    "enableTitle": "Birden fazla dilde menü",
+    "enableText": "Bu restoranın sahiplerinin dil seçmesine ve ekibinin menüyü çevirmesine izin verir. Kapatmak çevirileri gizler ama silmez.",
+    "notEnabled": "Bu restoran için birden fazla dilde menü açık değil. Açtırmak için bir yöneticiyle iletişime geçin.",
+    "mainLabel": "Ana dil",
+    "mainHint": "Menünün şu an yazıldığı dil. Her ürünün en az bu dilde olması gerekir.",
+    "mainPlaceholder": "Ana dili seçin",
+    "extraLabel": "Ek diller",
+    "extraHint": "Ekibiniz menü düzenleyiciden ürünleri ve kategorileri bu dillere çevirebilir.",
+    "descriptionIn": "Restoran açıklaması ({language})",
+    "save": "Dilleri kaydet",
+    "saving": "Kaydediliyor…",
+    "saved": "Kaydedildi",
+    "chooseMainFirst": "Önce ana dili seçin.",
+    "notTranslated": "Çevrilmedi: {languages}"
+  },
+  "OpeningHours": {
+    "title": "Çalışma saatleri",
+    "intro": "Menünüzde \"Şu an açık\" ya da \"Kapalı\" olarak, hakkında sayfanızda ve arama motorlarında gösterilir.",
+    "timeZoneLabel": "Saat dilimi",
+    "timeZoneHint": "Restoranın bulunduğu yer. QR kod okutmalarını günlere ayırmak için de kullanılır.",
+    "notSet": "Henüz çalışma saati yok. Siz ekleyene kadar misafirler hiçbir saat görmez.",
+    "add": "Çalışma saati ekle",
+    "closed": "Kapalı",
+    "opensLabel": "{day} açılış",
+    "closesLabel": "{day} kapanış",
+    "addRange": "Saat ekle",
+    "removeRange": "Bu saatleri kaldır",
+    "overnightHint": "Kapanış saati açılıştan önceyse gece yarısından sonrası demektir, örneğin 18:00 – 02:00.",
+    "sameEveryDay": "{day} saatlerini her güne uygula",
+    "remove": "Çalışma saatlerini kaldır",
+    "save": "Saatleri kaydet",
+    "saving": "Kaydediliyor…",
+    "saved": "Kaydedildi"
+  },
+  "ColorTheme": {
+    "title": "Menü renkleri",
+    "intro": "Misafirlerin menünüzde, hakkında ve ürün sayfalarında gördüğü renkleri açık ve koyu mod için seçin.",
+    "enableTitle": "Özel renkler",
+    "enableText": "Bu restoranın sahiplerinin renkleri tasarlamasına izin verir. Kapatmak varsayılan renklere döner ama tasarımlarını saklar.",
+    "notEnabled": "Bu restoran için özel renkler açık değil, bu yüzden varsayılan renkler kullanılıyor. Açtırmak için bir yöneticiyle iletişime geçin.",
+    "presetsLabel": "Bir paletle başlayın",
+    "presets": {
+      "default": "Varsayılan",
+      "ocean": "Okyanus",
+      "forest": "Orman",
+      "berry": "Böğürtlen",
+      "classic": "Klasik"
+    },
+    "modeLabel": "Renk modu",
+    "light": "Açık mod",
+    "dark": "Koyu mod",
+    "generateDark": "Açık moddan oluştur",
+    "previewLabel": "Önizleme",
+    "previewHint": "Hangi rengi kullandığını görmek için menünün herhangi bir yerinin üzerine gelin; o rengi değiştirmek için tıklayın.",
+    "colorsLabel": "Renkler · {mode}",
+    "roles": {
+      "background": {
+        "label": "Arka plan",
+        "hint": "Her şeyin arkasındaki sayfa."
+      },
+      "card": {
+        "label": "Kartlar",
+        "hint": "Ürün kartları, başlık ve kategori çubuğu."
+      },
+      "text": {
+        "label": "Yazı",
+        "hint": "Adlar ve başlıklar; açıklamalar daha açık bir tonda."
+      },
+      "primary": {
+        "label": "Ana renk",
+        "hint": "Fiyatlar, seçili kategori ve ana düğmeler."
+      },
+      "secondary": {
+        "label": "İkincil renk",
+        "hint": "Diğer kategoriler ve ikincil düğmeler."
+      },
+      "accent": {
+        "label": "Vurgu",
+        "hint": "Bir kategori ya da düğmenin üzerine gelindiğinde."
+      }
+    },
+    "warnings": {
+      "textOnBackground": "Yazı arka planda zor okunuyor.",
+      "textOnCard": "Yazı kartlarda zor okunuyor.",
+      "primaryOnCard": "Ana renkteki fiyatlar kartlarda zor görünüyor.",
+      "textOnPrimary": "Ana düğmelerdeki yazılar zor okunuyor.",
+      "textOnSecondary": "İkincil düğmelerdeki yazılar zor okunuyor.",
+      "textOnAccent": "Vurgulardaki yazılar zor okunuyor."
+    },
+    "save": "Kaydet",
+    "saving": "Kaydediliyor…",
+    "saved": "Kaydedildi",
+    "discard": "Değişiklikleri at",
+    "useDefault": "Varsayılan renkleri kullan",
+    "useDefaultConfirm": "Varsayılan renklere dönülsün mü? Mevcut renkleriniz silinecek.",
+    "sampleDescription": "Restoranınızın açıklaması",
+    "sampleDetails": "Bilgiler",
+    "sampleOrder": "Sipariş",
+    "sampleCategory": "Başlangıçlar",
+    "sampleDish": "Örnek ürün",
+    "sampleDishDescription": "Ürünün kısa bir açıklaması."
+  },
+  "MenuDesign": {
+    "title": "Menü tasarımı",
+    "intro": "Ürünlerinizin nasıl dizildiği. Her tasarım, kategorileri üstte olan tek kaydırmalı bir sayfadır ve telefon için yapılmıştır.",
+    "classic": {
+      "label": "Klasik",
+      "hint": "Fotoğrafı yazının yanında olan kartlar. Çoğu menüye uyar."
+    },
+    "photo-grid": {
+      "label": "Fotoğraf ızgarası",
+      "hint": "Telefonda iki sütun büyük fotoğraf. Fotoğrafı bol menüler için."
+    },
+    "compact": {
+      "label": "Sade",
+      "hint": "Basılı menü gibi bir yazı listesi. Fotoğrafsız uzun menüler için."
+    }
+  },
+  "featuresPage": {
+    "metaTitle": "Özellikler | Menupedia",
+    "metaDescription": "Restoranların kendi şekillendirdiği dijital menüler: üç tasarım, kendi renkleri, birden fazla dil, QR kodlar ve daha fazlası.",
+    "hero": {
+      "eyebrow": "Özellikler",
+      "title": "Menünüzün ihtiyacı olan her şey",
+      "intro": "Misafirlerinizin tek okutmayla açtığı, sizin saniyeler içinde güncellediğiniz dijital bir menü. Aşağıda demo restoranımızda deneyin.",
+      "ctaDemo": "Demoyu deneyin",
+      "ctaContact": "Bize ulaşın"
+    },
+    "demo": {
+      "title": "Kendiniz deneyin",
+      "intro": "Bu, uydurma bir restoran olan Lokanta Demo. Tasarımını, renklerini ve dilini değiştirin, bir ürüne dokunun; tıpkı misafirlerinizin yapacağı gibi.",
+      "design": "Tasarım",
+      "colors": "Renkler",
+      "mode": "Mod",
+      "language": "Menü dili",
+      "hint": "Açmak için bir ürüne dokunun. Gerçek menüler her telefonda aynı şekilde çalışır."
+    },
+    "groups": {
+      "look": "Menünüz, tarzınız",
+      "guests": "Her misafir için",
+      "current": "Her zaman güncel",
+      "found": "Bulunur ve paylaşılır"
+    },
+    "features": {
+      "designs": {
+        "title": "Üç menü tasarımı",
+        "text": "Klasik, Fotoğraf ızgarası ya da Sade. Yemeklerinize uyanı seçin, istediğiniz zaman değiştirin."
+      },
+      "colors": {
+        "title": "Kendi renkleriniz",
+        "text": "Arka planı, yazıyı, düğmeleri ve vurguları açık ve koyu mod için canlı önizlemeyle seçin. Ya da hazır bir paletle başlayın."
+      },
+      "fast": {
+        "title": "Telefon için yapıldı",
+        "text": "Masada okutan misafirler için hafif ve hızlı sayfalar; ürünler öne çıksın diye kompakt bir başlık."
+      },
+      "languages": {
+        "title": "Birden fazla dilde menü",
+        "text": "Menünüzü İngilizce, Türkçe, Arapça, İspanyolca ve Rusça sunun. Misafirler sağdan sola yazılanlar dahil kendi dillerinde görür."
+      },
+      "search": {
+        "title": "Arama ve beslenme filtreleri",
+        "text": "Misafirler ürünleri adına ya da içeriğine göre bulur; vejetaryen, vegan, glütensiz ve daha fazlasına göre filtreler."
+      },
+      "friendly": {
+        "title": "Misafir dostu",
+        "text": "Her misafirin kendi biçiminde fiyatlar, koyu mod ve tek dokunuşla fotoğrafı ve ayrıntılarıyla açılan ürünler."
+      },
+      "instant": {
+        "title": "Değişiklikler anında yayında",
+        "text": "Bir fiyatı değiştirin, ürün ekleyin ya da tükendi olarak işaretleyin; misafirler hemen görsün. Yeniden baskı yok."
+      },
+      "hours": {
+        "title": "Çalışma saatleri",
+        "text": "\"Şu an açık\" ya da bir sonraki açılış saati, sizin saat diliminize göre hesaplanır ve misafirin dilinde gösterilir."
+      },
+      "qr": {
+        "title": "QR kodlar ve masa kartları",
+        "text": "Menünüzün adresi değişse bile çalışmaya devam eden, logolu QR kodlar ve basıma hazır masa kartları."
+      },
+      "stats": {
+        "title": "Okutma istatistikleri",
+        "text": "Menünüzü her gün kaç misafirin açtığını görün."
+      },
+      "google": {
+        "title": "Google'da bulunur",
+        "text": "Arama motorları menünüzü, ürünlerinizi, fiyatlarınızı ve çalışma saatlerinizi sunduğunuz her dilde anlar."
+      },
+      "sharing": {
+        "title": "Güzel görünen bağlantılar",
+        "text": "WhatsApp'ta ve sosyal medyada paylaşılan bağlantılar adınızı, açıklamanızı ve fotoğrafınızı gösterir."
+      },
+      "about": {
+        "title": "Restoranınızın sayfası",
+        "text": "Adres ve harita, telefon, sosyal medya ve yemek siparişi uygulaması bağlantıları tek bir yerde."
+      }
+    },
+    "contact": {
+      "title": "Kendi menünüze hazır mısınız?",
+      "text": "Bize restoranınızdan bahsedin, birlikte kuralım.",
+      "email": "E-posta gönderin",
+      "whatsapp": "WhatsApp'tan yazın",
+      "whatsappMessage": "Merhaba! Restoranım için Menupedia hakkında bilgi almak istiyorum."
+    }
+  },
+  "aboutPage": {
+    "metaTitle": "Hakkında | Menupedia",
+    "metaDescription": "Menupedia, restoranlara misafirlerin tek okutmayla açtığı ve restoranın kendisinin güncel tuttuğu dijital bir menü sunar.",
+    "hero": {
+      "eyebrow": "Menupedia hakkında",
+      "title": "Restoranların kendi yönettiği dijital menüler",
+      "intro": "Misafirler masadaki QR kodu okutur ve menünüzü telefonlarında, kendi dillerinde görür. Fiyatları, ürünleri ve fotoğrafları siz değiştirirsiniz; saniyeler içinde yayındadır."
+    },
+    "story": {
+      "title": "Neden Menupedia",
+      "p1": "Basılı menüler, bir fiyat değiştiği ya da bir ürün tükendiği anda eskir. Birçok dijital menü ise sadece bir PDF'tir: telefonda zor okunur, her misafire aynıdır ve güncellemesi yine başkasına kalır.",
+      "p2": "Menupedia tam tersi şekilde kuruldu: telefon için yapılmış gerçek bir menü sayfası. Restoranın kendi ekibi onu her cihazdan, misafirlerinin konuştuğu dillerde güncel tutar."
+    },
+    "steps": {
+      "title": "Nasıl çalışır",
+      "s1": {
+        "title": "Hesabınızı alın",
+        "text": "Restoranınızı kurar ve size bir bağlantı göndeririz. Çalışanlarınızı kendi bağlantılarıyla davet edin: sahipler her şeyi, editörler menüyü yönetir."
+      },
+      "s2": {
+        "title": "Menünüzü oluşturun",
+        "text": "Fiyat, fotoğraf ve beslenme etiketleriyle kategoriler ve ürünler ekleyin. Adım adım kontrol listesi ve özel önizleme, misafirler görmeden her şeyi hazırlamanıza yardım eder."
+      },
+      "s3": {
+        "title": "Size özel yapın",
+        "text": "Bir tasarım ve renklerinizi seçin, çalışma saatlerinizi ekleyin ve menüyü başka dil konuşan misafirleriniz için çevirin."
+      },
+      "s4": {
+        "title": "Masalara koyun",
+        "text": "QR kodlu masa kartlarınızı basın. Misafirler okutur ve güncel menüyü görür; siz de her gün kaç kişinin açtığını görürsünüz."
+      }
+    },
+    "audiences": {
+      "title": "Masanın iki tarafı için",
+      "guests": {
+        "title": "Misafirler için",
+        "text": "Telefonda anında açılan, kendi dillerinde; fotoğraflı, tanıdık biçimde fiyatlı, beslenme filtreli ve restoranın saatlerini ve konumunu gösteren bir menü."
+      },
+      "restaurants": {
+        "title": "Restoranlar için",
+        "text": "Yeniden baskı yok, kimseyi beklemek yok: menüyü kendiniz değiştirin, misafirlerin ne yaptığını görün; Google'da ve menünüz paylaşıldığında en iyi şekilde görünün."
+      }
+    },
+    "values": {
+      "title": "Önem verdiklerimiz",
+      "phones": {
+        "title": "Önce telefon",
+        "text": "Misafirlerin çoğu menüyü masada telefonla açar; bu yüzden her sayfa önce küçük ekranlar için tasarlanır ve test edilir."
+      },
+      "everyone": {
+        "title": "Her misafir",
+        "text": "Sağdan sola dahil beş dil, okunaklı renkler ve ekran okuyucu desteği; hiçbir misafir tahmin etmek zorunda kalmaz."
+      },
+      "current": {
+        "title": "Her zaman güncel",
+        "text": "Misafirlerin gördüğü, bugün elinizde olandır: tükenen ürünler işaretlenir, değişiklikler hemen görünür."
+      },
+      "yours": {
+        "title": "Sizin restoranınız",
+        "text": "Sizin adınız, tasarımınız ve renkleriniz. Menü bizim değil, restoranınızın bir parçası gibi hissettirmeli."
+      }
+    },
+    "cta": {
+      "title": "Kendiniz görün",
+      "text": "Demo restoranımızı deneyin ya da Menupedia'daki menülere göz atın.",
+      "features": "Özellikleri keşfedin",
+      "restaurants": "Restoranlara göz atın",
+      "contact": "Bize ulaşın"
+    }
   }
 }

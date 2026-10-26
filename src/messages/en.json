@@ -47,51 +47,6 @@
     "messageSent": "Message sent!",
     "errorSendingMessage": "Failed to send message."
   },
-  "aboutPage": {
-    "mainTitle": "About Menupedia",
-    "mainDescription": "Menupedia is your ultimate online platform for discovering and exploring local restaurants and their diverse culinary offerings. We connect food lovers with a wide array of dining experiences, making it easier than ever to find exactly what you crave. Our mission is to simplify your dining choices and highlight the best of local gastronomy, all in one convenient place.",
-    "whatWeOfferTitle": "What We Offer",
-    "whatWeOfferDescription": "Menupedia provides a seamless experience for both diners and restaurant owners.",
-    "forDiners": {
-      "title": "For Diners:",
-      "description": "Easy access to dedicated restaurant menus, categorized dishes, detailed item information (including ingredients and dietary labels), and beautiful imagery. Discover new favorites effortlessly."
-    },
-    "forRestaurantOwners": {
-      "title": "For Restaurant Owners:",
-      "description": "A powerful admin dashboard to manage your restaurant's profile, menu categories, and individual menu items. Upload images, set prices, and update dietary information with ease."
-    },
-    "customizableThemes": {
-      "title": "Customizable Themes:",
-      "description": "Restaurants can choose from various display themes to match their brand's unique style, ensuring a personalized customer experience."
-    },
-    "optimizedForAllDevices": {
-      "title": "Optimized for All Devices:",
-      "description": "Our platform is designed to provide an optimal viewing and Browse experience on both mobile phones and desktop computers."
-    },
-    "ourCommitmentTitle": "Our Commitment",
-    "simplicity": {
-      "title": "Simplicity:",
-      "description": "We strive to make online menu management and discovery as straightforward as possible."
-    },
-    "innovation": {
-      "title": "Innovation:",
-      "description": "We continuously improve our platform with new features and technologies."
-    },
-    "userExperience": {
-      "title": "User Experience:",
-      "description": "We prioritize intuitive design for both restaurant owners and their customers."
-    },
-    "reliability": {
-      "title": "Reliability:",
-      "description": "Built on a robust stack, Menupedia offers consistent performance."
-    },
-    "getStartedTitle": "Get Started",
-    "getStartedDescription": "Ready to streamline your restaurant's online presence or discover your next favorite meal? Explore Menupedia today!",
-    "exploreRestaurants": {
-      "title": "Explore Restaurants:",
-      "linkText": "Browse All Menus"
-    }
-  },
   "restaurantsPage": {
     "mainTitle": "Discover Restaurants",
     "description": "Search and explore all restaurants available on Menupedia.",
@@ -102,40 +57,10 @@
     "noRestaurantsFound": "No restaurants found.",
     "adminPrompt": "If you are the admin, please add restaurants via the dashboard."
   },
-  "themesPage": {
-    "mainTitle": "Explore Menu Themes",
-    "description": "Discover the different ways your restaurant's menu can shine. Each theme offers a unique visual experience.",
-    "sections": {
-      "classic": {
-        "title": "Classic Layout",
-        "description": "A timeless, easy-to-navigate layout. It features prominent top categories and a clear two-column menu grid. Ideal for broad menus.",
-        "howItLooks": "How it looks:",
-        "noRestaurantFound": "No restaurant found with 'classic' theme to display."
-      },
-      "sidebarList": {
-        "title": "Sidebar List Layout",
-        "description": "Features a clean vertical sidebar for category navigation, with menu items displayed in a single-column list format.",
-        "howItLooks": "How it looks:",
-        "noRestaurantFound": "No restaurant found with 'sidebar-list' theme to display."
-      },
-      "accordionCard": {
-        "title": "Accordion Card Layout",
-        "description": "Organizes menu categories into expandable/collapsible accordion sections, revealing menu items displayed as distinct cards.",
-        "howItLooks": "How it looks:",
-        "noRestaurantFound": "No restaurant found with 'accordion-card' theme to display."
-      },
-      "categoryCardsImageDominant": {
-        "title": "Category Cards Image Dominant Layout",
-        "description": "Presents categories as prominent clickable cards. Upon selection, menu items are displayed with larger, dominant images for a visually rich experience.",
-        "howItLooks": "How it looks:",
-        "noRestaurantFound": "No restaurant found with 'category-cards-image-dominant' theme to display."
-      }
-    }
-  },
   "navbar": {
     "home": "Home",
     "restaurants": "Restaurants",
-    "themes": "Themes",
+    "themes": "Features",
     "aboutUs": "About Us",
     "language": "Language"
   },
@@ -339,7 +264,10 @@
       "deleteEmpty": "This category is empty. This can't be undone.",
       "deleteWithItems": "{count, plural, one {This also deletes the # item in it.} other {This also deletes the # items in it.}} This can't be undone.",
       "deleteButton": "Delete category",
-      "deleteWithItemsButton": "Delete category and items"
+      "deleteWithItemsButton": "Delete category and items",
+      "translate": "Translate",
+      "translateLabel": "Translate {name}",
+      "translateTitle": "\"{name}\" in other languages"
     },
     "items": {
       "add": "Add item",
@@ -396,7 +324,11 @@
       "addItem": "Add item",
       "saveFailed": "Couldn't save the item.",
       "category": "Category",
-      "photoTooLarge": "This photo is too large, even after shrinking. Try a smaller one (up to 2 MB)."
+      "photoTooLarge": "This photo is too large, even after shrinking. Try a smaller one (up to 2 MB).",
+      "languagesLabel": "Languages",
+      "mainLanguage": "main",
+      "notTranslatedYet": "Not translated yet",
+      "translationHint": "Price, photo, category and labels are shared by all languages. Greyed text is the main language: guests see it until you change it."
     }
   },
   "DashboardRestaurant": {
@@ -410,7 +342,8 @@
     "itemsSummary": "{count, plural, one {# item} other {# items}} · Prices in {currency}",
     "preview": "Preview menu",
     "shareTab": "Share",
-    "teamTab": "Team"
+    "teamTab": "Team",
+    "colorsTab": "Appearance"
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -521,7 +454,19 @@
     "inviteWrongAccount": "This invitation is for a different email address. Sign in with the address it was sent to.",
     "memberNotFound": "This person is no longer on the team. Reload the page.",
     "ownersByAdminOnly": "Owners can only be removed by an administrator.",
-    "ownerCantLeave": "Owners can't leave a restaurant themselves. Contact an administrator."
+    "ownerCantLeave": "Owners can't leave a restaurant themselves. Contact an administrator.",
+    "saveLanguagesFailed": "Couldn't save the menu languages. Please try again.",
+    "saveTranslationsFailed": "Couldn't save the translations. Please try again.",
+    "multilingualOff": "Menus in several languages aren't enabled for this restaurant.",
+    "invalidLanguages": "Choose languages from the list.",
+    "saveHoursFailed": "Couldn't save the opening hours. Please try again.",
+    "saveColorFailed": "Couldn't save the colours. Please try again.",
+    "invalidHours": "Some opening hours aren't valid. Check the times and try again.",
+    "invalidTimeZone": "Choose a time zone from the list, for example Europe/Istanbul.",
+    "invalidColor": "Enter colours like #d97706.",
+    "brandColorOff": "Custom colours aren't enabled for this restaurant.",
+    "saveDesignFailed": "Couldn't save the menu design. Please try again.",
+    "invalidDesign": "Choose one of the menu designs."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -653,7 +598,21 @@
     "metaMenuDescription": "See the menu of {name}, with prices and photos.",
     "metaAboutTitle": "{name} – Info and location",
     "metaItemTitle": "{item} – {restaurant}",
-    "metaItemDescription": "{item} at {restaurant}: {price}."
+    "metaItemDescription": "{item} at {restaurant}: {price}.",
+    "openNow": "Open now",
+    "closedNow": "Closed",
+    "openUntil": "until {time}",
+    "opensToday": "opens at {time}",
+    "opensTomorrow": "opens tomorrow at {time}",
+    "opensOn": "opens {day} at {time}",
+    "hoursHeading": "Opening hours",
+    "today": "Today",
+    "closedDay": "Closed",
+    "filter": "Filter",
+    "filterLabel": "{count, plural, =0 {Dietary filters} one {Dietary filters, # selected} other {Dietary filters, # selected}}",
+    "closeDish": "Close",
+    "ingredients": "Ingredients",
+    "dishPage": "Open the dish page"
   },
   "Team": {
     "inviteTitle": "Invite an editor",
@@ -703,5 +662,283 @@
     "invalidText": "It has expired, was cancelled, or was already used. Ask the restaurant's owner for a new link.",
     "toDashboard": "Go to your dashboard",
     "toHome": "Go to the home page"
+  },
+  "MenuLanguages": {
+    "title": "Menu languages",
+    "intro": "Offer the menu in more than one language. Guests see it in their language when it's translated, and in the main language otherwise.",
+    "enableTitle": "Menus in several languages",
+    "enableText": "Lets this restaurant's owners choose languages and its team translate the menu. Turning it off hides translations but keeps them.",
+    "notEnabled": "Menus in several languages aren't enabled for this restaurant. Contact an administrator to turn them on.",
+    "mainLabel": "Main language",
+    "mainHint": "The language the menu is written in now. Every dish needs at least this.",
+    "mainPlaceholder": "Choose the main language",
+    "extraLabel": "Extra languages",
+    "extraHint": "Your team can translate dishes and categories into these from the menu editor.",
+    "descriptionIn": "Restaurant description in {language}",
+    "save": "Save languages",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "chooseMainFirst": "Choose the main language first.",
+    "notTranslated": "Not translated: {languages}"
+  },
+  "OpeningHours": {
+    "title": "Opening hours",
+    "intro": "Shown on your menu as \"Open now\" or \"Closed\", on your about page, and to search engines.",
+    "timeZoneLabel": "Time zone",
+    "timeZoneHint": "Where the restaurant is. Also used to count QR code scans per day.",
+    "notSet": "No opening hours yet. Guests don't see any until you add them.",
+    "add": "Add opening hours",
+    "closed": "Closed",
+    "opensLabel": "Opens on {day}",
+    "closesLabel": "Closes on {day}",
+    "addRange": "Add hours",
+    "removeRange": "Remove these hours",
+    "overnightHint": "A closing time earlier than the opening time means after midnight, for example 18:00 – 02:00.",
+    "sameEveryDay": "Use {day}'s hours every day",
+    "remove": "Remove opening hours",
+    "save": "Save hours",
+    "saving": "Saving…",
+    "saved": "Saved"
+  },
+  "ColorTheme": {
+    "title": "Menu colours",
+    "intro": "Choose the colours guests see on your menu, about and dish pages, in light and dark mode.",
+    "enableTitle": "Custom colours",
+    "enableText": "Lets this restaurant's owners design its colours. Turning it off goes back to the default colours but keeps their design.",
+    "notEnabled": "Custom colours aren't enabled for this restaurant, so the default colours are used. Contact an administrator to turn them on.",
+    "presetsLabel": "Start from a palette",
+    "presets": {
+      "default": "Default",
+      "ocean": "Ocean",
+      "forest": "Forest",
+      "berry": "Berry",
+      "classic": "Classic"
+    },
+    "modeLabel": "Colour mode",
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "generateDark": "Make from light mode",
+    "previewLabel": "Preview",
+    "previewHint": "Point at any part of the menu to see which colour it uses; click it to change that colour.",
+    "colorsLabel": "Colours · {mode}",
+    "roles": {
+      "background": {
+        "label": "Background",
+        "hint": "The page behind everything."
+      },
+      "card": {
+        "label": "Cards",
+        "hint": "Dish cards, the header and the category bar."
+      },
+      "text": {
+        "label": "Text",
+        "hint": "Names and headings; descriptions use a softer shade."
+      },
+      "primary": {
+        "label": "Primary",
+        "hint": "Prices, the selected category and main buttons."
+      },
+      "secondary": {
+        "label": "Secondary",
+        "hint": "Other categories and secondary buttons."
+      },
+      "accent": {
+        "label": "Accent",
+        "hint": "Highlights when pointing at a category or button."
+      }
+    },
+    "warnings": {
+      "textOnBackground": "Text is hard to read on the background.",
+      "textOnCard": "Text is hard to read on the cards.",
+      "primaryOnCard": "Prices in the primary colour are hard to see on the cards.",
+      "textOnPrimary": "Labels on primary buttons are hard to read.",
+      "textOnSecondary": "Labels on secondary buttons are hard to read.",
+      "textOnAccent": "Labels on accent highlights are hard to read."
+    },
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "discard": "Discard changes",
+    "useDefault": "Use the default colours",
+    "useDefaultConfirm": "Go back to the default colours? Your current colours will be removed.",
+    "sampleDescription": "Your restaurant's description",
+    "sampleDetails": "Details",
+    "sampleOrder": "Order",
+    "sampleCategory": "Starters",
+    "sampleDish": "Sample dish",
+    "sampleDishDescription": "A short description of the dish."
+  },
+  "MenuDesign": {
+    "title": "Menu design",
+    "intro": "How your dishes are laid out. Every design is one scrolling page with the categories at the top, made for phones.",
+    "classic": {
+      "label": "Classic",
+      "hint": "Cards with the photo beside the text. Suits most menus."
+    },
+    "photo-grid": {
+      "label": "Photo grid",
+      "hint": "Two columns of large photos on phones. For photo-rich menus."
+    },
+    "compact": {
+      "label": "Compact",
+      "hint": "A text list like a printed menu. For long menus without photos."
+    }
+  },
+  "featuresPage": {
+    "metaTitle": "Features | Menupedia",
+    "metaDescription": "Digital menus restaurants shape themselves: three designs, their own colours, several languages, QR codes and more.",
+    "hero": {
+      "eyebrow": "Features",
+      "title": "Everything your menu needs",
+      "intro": "A digital menu your guests open with one scan, and you update in seconds. Try it below on our demo restaurant.",
+      "ctaDemo": "Try the demo",
+      "ctaContact": "Get in touch"
+    },
+    "demo": {
+      "title": "Try it yourself",
+      "intro": "This is Lokanta Demo, a made-up restaurant. Change its design, colours and language, and tap a dish, just as your guests would.",
+      "design": "Design",
+      "colors": "Colours",
+      "mode": "Mode",
+      "language": "Menu language",
+      "hint": "Tap a dish to open it. Real menus work the same way on any phone."
+    },
+    "groups": {
+      "look": "Your menu, your look",
+      "guests": "Made for every guest",
+      "current": "Always up to date",
+      "found": "Found and shared"
+    },
+    "features": {
+      "designs": {
+        "title": "Three menu designs",
+        "text": "Classic, Photo grid or Compact. Pick the one that suits your food and switch any time."
+      },
+      "colors": {
+        "title": "Your own colours",
+        "text": "Choose the background, text, buttons and highlights, for light and dark mode, with a live preview. Or start from a ready-made palette."
+      },
+      "fast": {
+        "title": "Built for phones",
+        "text": "Light, fast pages for guests scanning at the table, with a compact header so the dishes come first."
+      },
+      "languages": {
+        "title": "Menus in several languages",
+        "text": "Offer your menu in English, Turkish, Arabic, Spanish and Russian. Guests see it in their own language, right-to-left included."
+      },
+      "search": {
+        "title": "Search and dietary filters",
+        "text": "Guests find dishes by name or ingredient, and filter for vegetarian, vegan, gluten-free and more."
+      },
+      "friendly": {
+        "title": "Friendly for guests",
+        "text": "Prices in each guest's own format, dark mode, and one tap opens any dish with its photo and details."
+      },
+      "instant": {
+        "title": "Changes go live instantly",
+        "text": "Change a price, add a dish or mark it sold out, and guests see it straight away. No reprinting."
+      },
+      "hours": {
+        "title": "Opening hours",
+        "text": "Show \"Open now\" or when you open next, worked out in your time zone and shown in the guest's language."
+      },
+      "qr": {
+        "title": "QR codes and table cards",
+        "text": "QR codes with your logo that keep working even if your menu's address changes, plus table cards ready to print."
+      },
+      "stats": {
+        "title": "Scan statistics",
+        "text": "See how many guests opened your menu each day."
+      },
+      "google": {
+        "title": "Found on Google",
+        "text": "Search engines understand your menu, dishes, prices and opening hours, in every language you offer."
+      },
+      "sharing": {
+        "title": "Links that look good",
+        "text": "Links shared on WhatsApp and social media show your name, description and photo."
+      },
+      "about": {
+        "title": "Your restaurant's page",
+        "text": "Address and map, phone, social media and delivery app links, all in one place."
+      }
+    },
+    "contact": {
+      "title": "Ready for your own menu?",
+      "text": "Tell us about your restaurant and we'll set it up together.",
+      "email": "Send an email",
+      "whatsapp": "Message us on WhatsApp",
+      "whatsappMessage": "Hello! I'd like to know more about Menupedia for my restaurant."
+    }
+  },
+  "aboutPage": {
+    "metaTitle": "About | Menupedia",
+    "metaDescription": "Menupedia gives restaurants a digital menu guests open with one scan, and that the restaurant keeps up to date itself.",
+    "hero": {
+      "eyebrow": "About Menupedia",
+      "title": "Digital menus that restaurants run themselves",
+      "intro": "Guests scan a QR code at the table and see your menu on their phone, in their language. You change prices, dishes and photos yourself, and it's live in seconds."
+    },
+    "story": {
+      "title": "Why Menupedia",
+      "p1": "Printed menus go out of date the moment a price changes or a dish runs out. Many digital menus are just a PDF: hard to read on a phone, the same for every guest, and still a job for someone else to update.",
+      "p2": "Menupedia is built the other way round: a real menu page made for phones, which the restaurant's own team keeps up to date from any device, in as many languages as its guests speak."
+    },
+    "steps": {
+      "title": "How it works",
+      "s1": {
+        "title": "Get your account",
+        "text": "We set up your restaurant and send you a link. Invite your staff with their own links: owners manage everything, editors look after the menu."
+      },
+      "s2": {
+        "title": "Build your menu",
+        "text": "Add categories and dishes with prices, photos and dietary labels. A step-by-step checklist and a private preview help you get everything ready before guests see it."
+      },
+      "s3": {
+        "title": "Make it yours",
+        "text": "Choose a design and your colours, add your opening hours, and translate the menu for guests who speak other languages."
+      },
+      "s4": {
+        "title": "Put it on the tables",
+        "text": "Print table cards with your QR code. Guests scan and see an up-to-date menu, and you see how many opened it each day."
+      }
+    },
+    "audiences": {
+      "title": "Made for both sides of the table",
+      "guests": {
+        "title": "For guests",
+        "text": "A menu that opens instantly on their phone, in their language, with photos, prices in a familiar format, dietary filters and the restaurant's hours and location."
+      },
+      "restaurants": {
+        "title": "For restaurants",
+        "text": "No reprinting and no waiting for anyone: change the menu yourself, see what guests do, and look your best on Google and when your menu is shared."
+      }
+    },
+    "values": {
+      "title": "What we care about",
+      "phones": {
+        "title": "Phones first",
+        "text": "Most guests open a menu on a phone at the table, so every page is designed and tested for small screens first."
+      },
+      "everyone": {
+        "title": "Every guest",
+        "text": "Five languages, right-to-left included, readable colours and screen-reader support, so no guest is left guessing."
+      },
+      "current": {
+        "title": "Always current",
+        "text": "What guests see is what you have today: sold-out dishes are marked, and changes appear straight away."
+      },
+      "yours": {
+        "title": "Your restaurant",
+        "text": "Your name, your design and your colours. The menu should feel like part of your restaurant, not ours."
+      }
+    },
+    "cta": {
+      "title": "See it for yourself",
+      "text": "Try our demo restaurant, or browse the menus already on Menupedia.",
+      "features": "Explore the features",
+      "restaurants": "Browse restaurants",
+      "contact": "Get in touch"
+    }
   }
 }

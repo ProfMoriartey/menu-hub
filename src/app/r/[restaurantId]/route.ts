@@ -23,13 +23,16 @@ export async function GET(
   const restaurant = isUuid(restaurantId)
     ? await db.query.restaurants.findFirst({
         where: eq(restaurants.id, restaurantId),
-        columns: { id: true, slug: true },
+        columns: { id: true, slug: true, timeZone: true },
       })
     : undefined;
 
   // No language prefix: the next-intl middleware picks the guest's language
   // on the next request. A deleted restaurant goes to the restaurant list.
-  const target = new URL(restaurant ? `/${restaurant.slug}` : "/restaurants", request.url);
+  const target = new URL(
+    restaurant ? `/${restaurant.slug}` : "/restaurants",
+    request.url,
+  );
 
   // Temporary and uncached, so a changed slug takes effect on the next scan.
   const response = NextResponse.redirect(target, 307);
@@ -55,7 +58,9 @@ export async function GET(
     });
     // After the redirect is sent, so guests never wait for the database.
     after(() =>
-      recordScan(restaurant.id).catch((error) => console.error("Failed to record a QR scan:", error)),
+      recordScan(restaurant.id, restaurant.timeZone).catch((error) =>
+        console.error("Failed to record a QR scan:", error),
+      ),
     );
   }
 

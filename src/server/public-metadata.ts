@@ -11,6 +11,11 @@ import { getPublicOrigin } from "~/server/public-origin";
  *
  * URLs are absolute and built from the public origin, so previews never
  * point at localhost or a preview deployment when NEXT_PUBLIC_APP_URL is set.
+ *
+ * With translations on (`menuLanguages`, main first), only those languages
+ * are offered to search engines; a page in any other language shows the
+ * main-language menu, so it names the main-language page as canonical
+ * instead of competing with it as a duplicate.
  */
 export async function publicPageMetadata({
   locale,
@@ -19,6 +24,7 @@ export async function publicPageMetadata({
   description,
   image,
   siteName,
+  menuLanguages,
 }: {
   locale: string;
   path: string;
@@ -27,18 +33,25 @@ export async function publicPageMetadata({
   // A photo makes a big preview card; a logo, a small one.
   image?: { url: string; large: boolean } | null;
   siteName: string;
+  menuLanguages?: string[] | null;
 }): Promise<Metadata> {
   const origin = await getPublicOrigin();
   const url = `${origin}/${locale}${path}`;
+  const offered: readonly string[] = menuLanguages?.length
+    ? menuLanguages
+    : routing.locales;
   const languages: Record<string, string> = Object.fromEntries(
-    routing.locales.map((l) => [l, `${origin}/${l}${path}`]),
+    offered.map((l) => [l, `${origin}/${l}${path}`]),
   );
   languages["x-default"] = `${origin}${path}`;
+  const canonical = offered.includes(locale)
+    ? url
+    : `${origin}/${offered[0]}${path}`;
 
   return {
     title: { absolute: title },
     description,
-    alternates: { canonical: url, languages },
+    alternates: { canonical, languages },
     openGraph: {
       type: "website",
       url,

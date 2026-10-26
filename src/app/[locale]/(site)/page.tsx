@@ -10,6 +10,7 @@ import { getTranslations } from "next-intl/server";
 import { HeroScroll } from "~/components/home/HeroSectionScroll";
 import { AboutScroll } from "~/components/home/AboutSectionScroll";
 import { ThemesScroll } from "~/components/home/ThemesSectionScroll";
+import { getDemoMenus } from "~/server/demo-menu";
 import { ContactScroll } from "~/components/home/ContactSectionScroll";
 import GroovySittingDoodle from "~/components/svg/GroovySittingDoodle";
 import CoffeeDoodle from "~/components/svg/CoffeeDoodle";
@@ -60,6 +61,7 @@ export default async function HomePage() {
       />
       <FeaturedRestaurantsSection restaurants={featuredRestaurants} />
       <ThemesScroll
+        demo={getDemoMenus()}
         doodle={
           <SittingDoodle
             className="h-auto w-full"

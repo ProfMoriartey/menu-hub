@@ -5,21 +5,39 @@ import { and, eq, ne } from "drizzle-orm";
 import { db } from "~/server/db";
 import { menuItems, restaurants } from "~/server/db/schema";
 import { routing } from "~/i18n/routing";
+import { allMenuLanguages, menuLanguagesOf } from "~/lib/menu-languages";
 import { getPublicOrigin } from "~/server/public-origin";
 
+// Built when requested, never at build time: a build-time sitemap would stay
+// frozen until the next deploy, and the build would need the database. The
+// query below is cached for an hour, so crawlers don't load it.
+export const dynamic = "force-dynamic";
+
 // Marketing pages, by path without the locale.
-const SITE_PAGES = ["", "/restaurants", "/about", "/themes"];
+const SITE_PAGES = ["", "/restaurants", "/about", "/features"];
+
+interface LivePath {
+  path: string;
+  // The menu's languages when it's translated; else every site language.
+  languages: readonly string[];
+}
 
 // Live restaurants and their visible items. Crawlers can wait an hour for a
 // new dish, so this isn't cleared on every save like the menu pages are.
 const getLivePaths = unstable_cache(
-  async () => {
+  async (): Promise<LivePath[]> => {
     const live = await db
-      .select({ slug: restaurants.slug })
+      .select({
+        id: restaurants.id,
+        slug: restaurants.slug,
+        multilingualEnabled: restaurants.multilingualEnabled,
+        mainLanguage: restaurants.mainLanguage,
+        extraLanguages: restaurants.extraLanguages,
+      })
       .from(restaurants)
       .where(eq(restaurants.isActive, true));
     const items = await db
-      .select({ restaurant: restaurants.slug, item: menuItems.slug })
+      .select({ restaurantId: menuItems.restaurantId, item: menuItems.slug })
       .from(menuItems)
       .innerJoin(restaurants, eq(menuItems.restaurantId, restaurants.id))
       .where(
@@ -28,9 +46,39 @@ const getLivePaths = unstable_cache(
           ne(menuItems.availability, "hidden"),
         ),
       );
+
+    // A translated menu is only listed in its own languages: the other
+    // language versions point to the main one (see publicPageMetadata).
+    const byId = new Map(
+      live.map((r) => {
+        const languages = menuLanguagesOf(r);
+        return [
+          r.id,
+          {
+            slug: r.slug,
+            languages: languages
+              ? allMenuLanguages(languages)
+              : routing.locales,
+          },
+        ];
+      }),
+    );
     return [
-      ...live.flatMap(({ slug }) => [`/${slug}`, `/${slug}/about`]),
-      ...items.map(({ restaurant, item }) => `/${restaurant}/item/${item}`),
+      ...[...byId.values()].flatMap(({ slug, languages }) => [
+        { path: `/${slug}`, languages },
+        { path: `/${slug}/about`, languages },
+      ]),
+      ...items.flatMap(({ restaurantId, item }) => {
+        const restaurant = byId.get(restaurantId);
+        return restaurant
+          ? [
+              {
+                path: `/${restaurant.slug}/item/${item}`,
+                languages: restaurant.languages,
+              },
+            ]
+          : [];
+      }),
     ];
   },
   ["sitemap-live-paths"],
@@ -38,20 +86,23 @@ const getLivePaths = unstable_cache(
 );
 
 /**
- * Every public page in every language, each listing its other languages, so
+ * Every public page in each of its languages, each listing the others, so
  * search engines find all live menus and show guests the right language.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const origin = await getPublicOrigin();
-  const paths = [...SITE_PAGES, ...(await getLivePaths())];
+  const pages: LivePath[] = [
+    ...SITE_PAGES.map((path) => ({ path, languages: routing.locales })),
+    ...(await getLivePaths()),
+  ];
 
-  return paths.flatMap((path) => {
-    const languages = Object.fromEntries(
-      routing.locales.map((locale) => [locale, `${origin}/${locale}${path}`]),
+  return pages.flatMap(({ path, languages }) => {
+    const alternates = Object.fromEntries(
+      languages.map((locale) => [locale, `${origin}/${locale}${path}`]),
     );
-    return routing.locales.map((locale) => ({
+    return languages.map((locale) => ({
       url: `${origin}/${locale}${path}`,
-      alternates: { languages },
+      alternates: { languages: alternates },
     }));
   });
 }

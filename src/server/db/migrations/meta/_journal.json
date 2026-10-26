@@ -36,6 +36,34 @@
       "when": 1792993660681,
       "tag": "0005_add_restaurant_invites",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792996654970,
+      "tag": "0006_add_menu_translations",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793004662719,
+      "tag": "0007_add_hours_and_brand_color",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793010545470,
+      "tag": "0008_add_color_theme",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793020769416,
+      "tag": "0009_rename_menu_designs",
+      "breakpoints": true
     }
   ]
 }

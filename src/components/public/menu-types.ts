@@ -15,9 +15,17 @@ export type PublicMenuItem = Pick<
   | "dietaryLabels"
   | "availability"
   | "imageUrl"
-> & { displayPrice: string };
+> & {
+  displayPrice: string;
+  // Set when the text shown is in another language than the page (a dish
+  // not translated yet): its language, for the `lang` attribute.
+  lang?: string;
+  // Main-language text to search too, when a translation is shown.
+  searchText?: string;
+};
 
 export type PublicCategory = Pick<Category, "id" | "name" | "slug"> & {
+  lang?: string;
   menuItems: PublicMenuItem[];
 };
 

@@ -22,18 +22,24 @@ export default async function DashboardSharePage({
   const { restaurant, role } = await getDashboardRestaurant(restaurantSlug);
   const [{ menuUrl, permanentUrl }, scanStats] = await Promise.all([
     getShareLinks(restaurant),
-    getScanStats(restaurant.id),
+    getScanStats(restaurant.id, restaurant.timeZone),
   ]);
 
   return (
     <>
-      <DashboardRestaurantHeader restaurant={restaurant} role={role} activeTab="share" />
+      <DashboardRestaurantHeader
+        restaurant={restaurant}
+        role={role}
+        activeTab="share"
+      />
       <div className="space-y-6">
         <SharePanel
           restaurant={restaurant}
           menuUrl={menuUrl}
           permanentUrl={permanentUrl}
-          detailsHref={canEditDetails(role) ? `/dashboard/${restaurant.slug}/edit` : null}
+          detailsHref={
+            canEditDetails(role) ? `/dashboard/${restaurant.slug}/edit` : null
+          }
           printHref={`/dashboard/${restaurant.slug}/share/print`}
         />
         <ScanStats stats={scanStats} />

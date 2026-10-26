@@ -167,10 +167,11 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
   headers, people/user access, `StatusBadges`.
 - `components/dashboard/`: `DashboardRestaurantHeader`,
   `RestaurantDetailsEditor`, `SetupChecklist`.
-- `components/public/`: menu themes (`themes/*Layout.tsx`, four themes:
-  classic, sidebar-list, accordion-card, category-cards-image-dominant; no
-  framer-motion), `MenuDisplayClient` (search + dietary filters over every
-  theme), `CategoryNav` (scroll-following bar/sidebar), `MenuItemCard`,
+- `components/public/`: `MenuDisplayClient` (filters + dish sheet around
+  `MenuLayout`), `MenuLayout` (the one layout; the design picks the dish
+  component), `MenuItemCard` (the three dish styles, with `data-role`
+  colour markers used by the Appearance preview), `DishSheet`,
+  `DietaryBadges`, `CategoryNav` (scroll-following bar),
   `MenuItemDetail` (server), `PublicPageControls`, `PreviewBanner`,
   `SoldOutBadge`, `menu-types.ts`.
 - `components/shared/`: `Navbar`, `ThemeToggle`, `LanguageSwitcher`,
@@ -182,9 +183,9 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 
 | Table | Notes |
 |---|---|
-| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social/delivery links (jsonb), SEO fields |
-| `menu-hub_categories` | `slug` unique per restaurant; `order` |
-| `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text |
+| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social/delivery links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`), `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
+| `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
+| `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
 | `menu-hub_users_to_restaurants` | `accessLevel` `owner` / `editor` (unknown values count as editor) |
 | `menu-hub_qr_scan_days` | `(restaurantId, day UTC)` → `count`; no personal data |
@@ -194,11 +195,18 @@ Deleting a restaurant cascades to its categories, items, access rows, scan
 counts and invitations. Deleting a user cascades to their access rows.
 
 **Migrations:** `0001` (old), `0002` slugs (with backfill SQL), `0003` QR scan
-days, `0004` item availability, `0005` restaurant invitations. The
+days, `0004` item availability, `0005` restaurant invitations, `0006` menu
+translations, `0007` time zone, opening hours and brand colour, `0008` colour
+theme (all add columns only), `0009` renames stored designs to the new
+three (data only; `menuDesignOf` maps old names too, so the order of deploy
+and migrate doesn't matter). The
 development database has 0001–0004 applied (checked 2026-10-23); **0005 was
 created 2026-10-26 and must be applied with `pnpm db:migrate` in dev and in
 production before the Team tab, admin People tab or dashboard invitations
-are used** (the Team and People pages error without the table).
+are used** (the Team and People pages error without the table). **0006
+(2026-10-26) must run before deploying the menu-languages change: every
+public restaurant page and the menu editors read its columns.** The same
+goes for **0007 and 0008 (2026-10-26)**: public pages read their columns.
 
 **Reserved slugs** (`RESERVED_SLUGS`): app routes like `admin`, `dashboard`,
 `restaurants`, … plus `new` (admin route), `r` (QR link route) and `invite`
@@ -235,6 +243,17 @@ are used** (the Team and People pages error without the table).
 - Uploads (`api/uploadthing/core.ts`): item photos need any access to that
   restaurant; logos need owner/admin; a logo without a restaurant (admin "new
   restaurant" form) needs admin. Buttons send `{ restaurantId, locale }`.
+- **Menu languages** (`lib/menu-languages.ts`, `app/actions/menu-languages.ts`):
+  only a system admin switches the feature on per restaurant
+  (`setMultilingualEnabled`); owners and admins pick the main and extra
+  languages (the site's five only) and translate the description; anyone on
+  the team translates items (item dialog tabs) and category names. Off hides
+  translations everywhere but keeps them; removing a language keeps its
+  text too. Server actions only accept the restaurant's current languages.
+- **Opening hours and time zone** (`app/actions/restaurant-settings.ts`):
+  owners and admins. **Colours**: a system admin switches custom colours on
+  per restaurant (`setBrandColorEnabled`), then owners and admins design them
+  on the Colours page (`updateColorTheme`).
 - Inactive restaurants: public pages are visible as a **preview** to anyone
   with access (`PreviewBanner`, `noindex`); others are redirected.
 
@@ -345,8 +364,13 @@ stats); Team (members, invite editors by link with copy/WhatsApp, pending
 invitations with new link/cancel, remove editors, leave); invitations on the
 home page; language switcher; unsaved-changes guard.
 
-**Public:** four themes; classic and sidebar are one scrolling page with a
-category bar that follows the scroll; search (12+ items) and dietary filters;
+**Public:** three designs (`lib/menu-design.ts`: classic, photo-grid,
+compact), all one scrolling page (`components/public/MenuLayout.tsx`) with a
+compact phone-first header, one-row search + Filter popover, and a sticky
+category bar that follows the scroll; dishes (`MenuItemCard.tsx`:
+`ClassicDish`, `PhotoDish`, `CompactDish`) open in a bottom sheet
+(`DishSheet.tsx`, `?dish=<slug>` in the address so Back closes it and links
+share; the dish page stays for long-press/new tab/Google); search (12+ items) and dietary filters;
 prices in the guest's format; guest language switcher; sold-out items last
 and dimmed; empty categories hidden; logo-or-initials, no placeholder images;
 hidden items excluded (menu, item page, search); preview of inactive
@@ -354,14 +378,91 @@ restaurants for staff; permanent QR links `/r/<id>` that forward to the
 current slug, count scans after the redirect, skip bots/HEAD/repeats within
 30 minutes (path-scoped cookie).
 
+**Menus in several languages:** existing columns hold the main language;
+translations sit in `translations` jsonb (see §4). Settings card
+`components/menu-languages/MenuLanguagesSettings` on the admin edit page and
+the owner Details tab. Editor: language tabs in `MenuItemDialog`, a Translate
+button per category, "Not translated: …" markers. Public pages localize with
+`server/localize-menu.ts` (guest's language if the menu has it, else main,
+field by field; text in another language than the page gets `lang` +
+`dir="auto"`; search also matches main-language text). SEO: with
+translations on, only the menu's languages get hreflang links and sitemap
+entries; other language pages name the main-language page as canonical. The
+admin SEO title/description (untranslated) are only used on main-language
+pages. Slugs stay in the main language. Automatic translation: deferred.
+
+**Opening hours:** card `components/restaurant-settings/OpeningHoursSettings`
+on the admin edit page and the owner Details tab,
+next to the menu-languages card. Up to 3 ranges a day; a close time before
+the open time runs past midnight; open == close means 24 hours. The menu
+header shows "Open now · until …" / "Closed · opens …" and the about page a
+week table (`components/public/OpeningHours.tsx`, server components, worked
+out per request in the restaurant's time zone). Structured data carries
+`openingHoursSpecification`. QR scan days use the restaurant's time zone
+once set (UTC before). Logic and tests: `lib/opening-hours.ts`.
+
+**Appearance** (route `/colors`, tab "Appearance"): the menu design picker
+(every owner; `updateMenuDesign` stores it in `restaurants.theme`) and custom
+colours, in the dashboard (owners/admins; editors redirected) and in admin
+(`components/colors/AppearanceEditor`). Its preview
+(`components/colors/MenuColorPreview`) renders the real dish components in
+the chosen design. A system admin switches the feature
+on per restaurant (`brandColorEnabled`, toggle on the page); off = default
+colours, design kept. Six colours per mode, light and dark
+(`lib/color-theme.ts`: background, card, text, primary, secondary, accent);
+every token the pages use (`--muted-foreground`, `--border`, text on
+buttons …) is derived from them in `paletteTokens`, so hover (`accent`) and
+every state follow the theme. The editor has presets, "Make from light
+mode" (`darkFromLight`), contrast warnings (never auto-changes the owner's
+choice) and a live preview (`MenuColorPreview`) whose parts carry
+`data-role`: hovering outlines the part and highlights its control, clicking
+selects it. `[restaurantSlug]/layout.tsx` wraps public pages in
+`.brand-scope` (own background/text) with `colorThemeCss`. The CSS also targets
+`body:has(.brand-scope)`, because pop-ups (dish sheet, filter panel,
+language list) render at the end of `<body>`, outside the scope; keep that
+when changing it. The unchanged "Default" palette uses the site's exact
+tokens (`SITE_TOKENS`, white text on amber) instead of derived ones, and
+gets no contrast warnings. Legacy: the
+single `brandColor` (before themes) still applies, primary + accent, until a
+theme is saved; saving or "Use the default colours" clears it. Default
+palette values are hex conversions of globals.css: update `DEFAULT_THEME`
+if the site theme changes. When adding colour to public components, use the
+theme tokens (`bg-card`, `text-primary`, `hover:bg-accent` …), not fixed
+colours, or custom themes won't reach them.
+
+**Features page** (`/features`, was `/themes`, which redirects permanently
+in `next.config.js`): marketing page for potential customers, built for
+selling without plan labels (no plans exist yet). Hero, an interactive demo
+(`components/features/MenuDemo`: Lokanta Demo, a made-up restaurant in
+`lib/demo-menu.ts`, nine dishes in all five languages, each with a photo (`public/` and
+`public/demo/`, Unsplash License, sources listed in `lib/demo-menu.ts`); visitors switch design, palette, light/dark and menu language
+and tap dishes; it renders the real dish components and
+`DishSheetInPlaceProvider`, a sheet that opens inside the phone frame and
+keeps its state instead of using `?dish=`, and is non-modal so the page
+keeps scrolling while it is open), feature groups, and a contact
+block. The home page's "Why choose" section shows the same demo with fewer
+controls. Prices for the demo are formatted on the server
+(`server/demo-menu.ts`). **Contact details live only in
+`lib/site-contact.ts`** (email, WhatsApp/phone; still the ones the home page
+showed, to be confirmed by the owner). When a feature is added, add it to
+the Features page's `GROUPS` and messages (`featuresPage.features`).
+
+**About page** (`/about`, server component, no animation library): the
+story, "How it works" in four steps (account and team invites, building
+the menu with the checklist and preview, design/colours/hours/languages,
+QR table cards and scan stats), who it's for, values, and links to
+Features, restaurants and contact. Getting started and teamwork are told
+here rather than on Features. Texts: `aboutPage` messages.
+
 **Search engines and link previews:** menu, about and item pages have their
 own title, description, preview image (admin SEO fields first, then
 description / logo / dish photo), canonical URL and hreflang links
 (`server/public-metadata.ts`). The menu page carries schema.org Restaurant
 JSON-LD with sections, items, diets and prices
 (`server/menu-structured-data.ts`; prices only when `parsePrice` can read
-them; `jsonLd()` escapes `<`). `app/sitemap.ts` lists every live page in all
-languages (cached an hour); `app/robots.ts` keeps crawlers out of admin,
+them; `jsonLd()` escapes `<`). `app/sitemap.ts` lists every live page in each of
+its languages (`force-dynamic`, data cached an hour; at build time it would
+freeze and need the database); `app/robots.ts` keeps crawlers out of admin,
 dashboard, sign-in, `/api/` and `/r/`. The middleware lets both through
 without a language prefix. Missing restaurants/items answer a real 404, and
 inactive ones a 307: there must be **no `loading.tsx` above
@@ -383,28 +484,38 @@ copied by hand today); seat limits per plan for the SaaS; an activity log of
 who changed what.
 
 **Ideas raised and deferred:**
-- Store a time zone per restaurant (scan days are UTC now; Turkey is UTC+3).
 - Owner self-publishing ("Publish" button, maybe with admin review), building
   on preview + the "Ready to go live" queue.
 - Translating the admin-only pages.
-- Menus in more than one language (owners enter item names per language).
-  Changes the data model; needs its own plan.
-- Opening hours with an "Open now" badge; per-restaurant brand colour.
+- Automatic translation of menus (AI/translation service; a paid-plan idea).
+- Special closures and holidays for opening hours.
 
-**Things the owner was asked to do. Confirm they're done before relying on them:**
-- Subscribe the Clerk webhook endpoint to `user.updated` and `user.deleted`.
-- Set `NEXT_PUBLIC_APP_URL` to the production domain in production.
-- Run `pnpm db:migrate` in production for migrations 0002–0005 (0005 before deploying the Team tab).
-- Set owners on each restaurant's People tab (all old assignments became editors).
-- Run `pnpm uploads:cleanup -- --delete` after a dry run. The dry run found 32
-  unused files, including some sensitive-looking photos (a SIM card PIN, a
-  profile picture); UploadThing URLs are public.
+**Done by the owner (confirmed 2026-10-26):** Clerk webhook subscribed to
+`user.updated` and `user.deleted`; `NEXT_PUBLIC_APP_URL` set on Vercel;
+unused UploadThing files cleaned up; migrations applied in dev up to 0008.
+
+**Still to check with the owner:**
+- `pnpm db:migrate` in production for migrations 0002–0009, before deploying
+  (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
+  colour themes; 0009: design names).
+- Owners set on each restaurant's People tab (all old assignments became editors).
+
+**Agreed next steps, parked for now (2026-10-26):**
+1. **Owners publish their own menu**: a Publish button once the checklist
+   is complete, probably as "request publishing" that an admin approves in
+   one click (the "Ready to go live" filter becomes a review queue); owners
+   can unpublish. Decisions still open: instant vs approval, unpublish yes/no.
+2. **Plans**: bundle the per-restaurant switches (menu languages, custom
+   colours, editor seats …) into free/paid plans; needs pricing and a payment
+   provider. Design discussion first.
+3. Smaller: invitation emails, automatic translation, holiday closures,
+   activity log.
 
 **Known leftovers:**
 - `package-lock.json` is stale (pnpm is canonical).
-- `next lint` still warns in four files nobody has reworked yet:
+- `next lint` still warns in three files nobody has reworked yet:
   `app/[locale]/layout.tsx`, `app/[locale]/(site)/page.tsx`,
-  `components/about/AboutPageClient.tsx`, `components/svg/GroovySittingDoodle.tsx`.
+  `components/svg/GroovySittingDoodle.tsx`.
 - Signed-out visits to the dashboard/admin redirect to sign-in with status 200
   (the redirect streams after `(site)/loading.tsx`). Harmless: crawlers are
   kept out by robots.txt.

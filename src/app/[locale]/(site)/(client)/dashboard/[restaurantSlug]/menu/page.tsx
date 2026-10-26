@@ -1,4 +1,5 @@
 // app/[locale]/(client)/dashboard/[restaurantSlug]/menu/page.tsx
+import { menuLanguagesOf } from "~/lib/menu-languages";
 import { type Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
@@ -31,7 +32,11 @@ export default async function DashboardMenuPage({
 
   return (
     <>
-      <DashboardRestaurantHeader restaurant={restaurant} role={role} activeTab="menu" />
+      <DashboardRestaurantHeader
+        restaurant={restaurant}
+        role={role}
+        activeTab="menu"
+      />
       <div className="space-y-6">
         {/* Disappears once every step is done. */}
         <SetupChecklist
@@ -43,11 +48,15 @@ export default async function DashboardMenuPage({
         <div>
           <h2 className="text-xl font-semibold">{t("categoriesTitle")}</h2>
           <p className="text-muted-foreground mt-1 text-sm">
-            {t("categoriesSummary", { categories: summaries.length, items: totalItems })}
+            {t("categoriesSummary", {
+              categories: summaries.length,
+              items: totalItems,
+            })}
           </p>
         </div>
         <CategoryList
           restaurantId={restaurant.id}
+          languages={menuLanguagesOf(restaurant)}
           basePath={`/dashboard/${restaurant.slug}/menu`}
           categories={summaries}
         />

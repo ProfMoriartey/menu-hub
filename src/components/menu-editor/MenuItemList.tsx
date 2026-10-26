@@ -35,8 +35,13 @@ import { unwrap } from "~/lib/action-result";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { ConfirmDialog } from "~/components/menu-editor/ConfirmDialog";
-import { MenuItemDialog, type AdminMenuItem } from "~/components/menu-editor/MenuItemDialog";
+import {
+  MenuItemDialog,
+  type AdminMenuItem,
+} from "~/components/menu-editor/MenuItemDialog";
 import { DIETARY_LABEL_KEYS } from "~/lib/dietary-labels";
+import { missingNames, type MenuLanguages } from "~/lib/menu-languages";
+import { MissingTranslations } from "~/components/menu-languages/MissingTranslations";
 import {
   ReorderStatus,
   useReorderState,
@@ -89,6 +94,7 @@ function DeleteItemButton({
 function ItemRow({
   item,
   currency,
+  languages,
   restaurantId,
   categoryId,
   onEdit,
@@ -96,6 +102,7 @@ function ItemRow({
 }: {
   item: AdminMenuItem;
   currency: string;
+  languages: MenuLanguages | null;
   restaurantId: string;
   categoryId: string;
   onEdit: () => void;
@@ -201,6 +208,9 @@ function ItemRow({
               {item.description}
             </p>
           )}
+          <MissingTranslations
+            languages={missingNames(item.translations, languages)}
+          />
           {item.dietaryLabels && item.dietaryLabels.length > 0 && (
             <div className="mt-1 flex flex-wrap gap-1">
               {item.dietaryLabels.map((label) => (
@@ -282,6 +292,8 @@ interface MenuItemListProps {
   categories: { id: string; slug: string; name: string }[];
   // Where this restaurant's category pages live, e.g. "/dashboard/marios/menu".
   basePath: string;
+  // The menu's languages when translations are on (lib/menu-languages).
+  languages: MenuLanguages | null;
 }
 
 export function MenuItemList({
@@ -292,6 +304,7 @@ export function MenuItemList({
   currency,
   categories,
   basePath,
+  languages,
 }: MenuItemListProps) {
   const t = useTranslations("MenuEditor.items");
   const tReorder = useTranslations("MenuEditor.reorder");
@@ -421,6 +434,7 @@ export function MenuItemList({
                       key={item.id}
                       item={item}
                       currency={currency}
+                      languages={languages}
                       restaurantId={restaurantId}
                       categoryId={categoryId}
                       onEdit={() => setDialogItem(item)}
@@ -447,6 +461,7 @@ export function MenuItemList({
         categoryName={categoryName}
         currency={currency}
         categories={categories}
+        languages={languages}
         onSaved={(saved) =>
           setElsewhere(saved.categoryId === categoryId ? null : saved)
         }

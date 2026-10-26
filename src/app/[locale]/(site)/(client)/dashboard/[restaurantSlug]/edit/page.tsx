@@ -6,6 +6,8 @@ import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { RestaurantDetailsEditor } from "~/components/dashboard/RestaurantDetailsEditor";
+import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
+import { OpeningHoursSettings } from "~/components/restaurant-settings/OpeningHoursSettings";
 import type { DeliveryAppLinks, SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
@@ -15,16 +17,21 @@ interface EditPageProps {
 
 export const metadata: Metadata = {
   title: "Restaurant Details | Menupedia",
-  description: "Manage your restaurant's details, contact information and links.",
+  description:
+    "Manage your restaurant's details, contact information and links.",
 };
 
 export default async function RestaurantEditPage({ params }: EditPageProps) {
   const { restaurantSlug } = await params;
-  const { restaurant: row, role } = await getDashboardRestaurant(restaurantSlug);
+  const { restaurant: row, role } =
+    await getDashboardRestaurant(restaurantSlug);
 
   // Editors manage the menu only.
   if (!canEditDetails(role)) {
-    return redirect({ href: `/dashboard/${row.slug}/menu`, locale: await getLocale() });
+    return redirect({
+      href: `/dashboard/${row.slug}/menu`,
+      locale: await getLocale(),
+    });
   }
 
   const restaurant: Restaurant = {
@@ -37,8 +44,28 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
 
   return (
     <>
-      <DashboardRestaurantHeader restaurant={restaurant} role={role} activeTab="details" />
+      <DashboardRestaurantHeader
+        restaurant={restaurant}
+        role={role}
+        activeTab="details"
+      />
       <RestaurantDetailsEditor restaurant={restaurant} />
+      <div className="mt-8 space-y-8">
+        <MenuLanguagesSettings
+          restaurantId={row.id}
+          isAdmin={role === "admin"}
+          enabled={row.multilingualEnabled}
+          mainLanguage={row.mainLanguage}
+          extraLanguages={row.extraLanguages}
+          description={row.description}
+          translations={row.translations}
+        />
+        <OpeningHoursSettings
+          restaurantId={row.id}
+          timeZone={row.timeZone}
+          hours={row.openingHours}
+        />
+      </div>
     </>
   );
 }

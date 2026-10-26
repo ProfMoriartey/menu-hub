@@ -24,6 +24,11 @@ export const ACTION_ERROR_CODES = [
   "createInviteFailed",
   "cancelInviteFailed",
   "respondInviteFailed",
+  "saveLanguagesFailed",
+  "saveTranslationsFailed",
+  "saveHoursFailed",
+  "saveColorFailed",
+  "saveDesignFailed",
   // Access
   "signInAgain",
   "noAccess",
@@ -57,6 +62,15 @@ export const ACTION_ERROR_CODES = [
   "memberNotFound",
   "ownersByAdminOnly",
   "ownerCantLeave",
+  // Menu languages
+  "multilingualOff",
+  "invalidLanguages",
+  // Opening hours and brand colour
+  "invalidHours",
+  "invalidTimeZone",
+  "invalidColor",
+  "brandColorOff",
+  "invalidDesign",
   // Uploads
   "signInToUpload",
   "adminOnlyNewLogo",

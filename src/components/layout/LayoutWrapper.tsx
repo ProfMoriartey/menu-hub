@@ -19,7 +19,7 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
     "/", // For the root path accessed directly (e.g., example.com/)
     "", // For the root path when locale prefix is removed (e.g., example.com/en -> "")
     "/restaurants",
-    "/themes",
+    "/features",
     "/about",
     // Add other base paths that should always show the navbar, e.g., "/contact"
   ];
