@@ -182,9 +182,9 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 
 | Table | Notes |
 |---|---|
-| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social/delivery links (jsonb), SEO fields |
-| `menu-hub_categories` | `slug` unique per restaurant; `order` |
-| `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text |
+| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social/delivery links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language) |
+| `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
+| `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
 | `menu-hub_users_to_restaurants` | `accessLevel` `owner` / `editor` (unknown values count as editor) |
 | `menu-hub_qr_scan_days` | `(restaurantId, day UTC)` → `count`; no personal data |
@@ -194,11 +194,14 @@ Deleting a restaurant cascades to its categories, items, access rows, scan
 counts and invitations. Deleting a user cascades to their access rows.
 
 **Migrations:** `0001` (old), `0002` slugs (with backfill SQL), `0003` QR scan
-days, `0004` item availability, `0005` restaurant invitations. The
+days, `0004` item availability, `0005` restaurant invitations, `0006` menu
+translations (adds columns only). The
 development database has 0001–0004 applied (checked 2026-10-23); **0005 was
 created 2026-10-26 and must be applied with `pnpm db:migrate` in dev and in
 production before the Team tab, admin People tab or dashboard invitations
-are used** (the Team and People pages error without the table).
+are used** (the Team and People pages error without the table). **0006
+(2026-10-26) must run before deploying the menu-languages change: every
+public restaurant page and the menu editors read its columns.**
 
 **Reserved slugs** (`RESERVED_SLUGS`): app routes like `admin`, `dashboard`,
 `restaurants`, … plus `new` (admin route), `r` (QR link route) and `invite`
@@ -235,6 +238,13 @@ are used** (the Team and People pages error without the table).
 - Uploads (`api/uploadthing/core.ts`): item photos need any access to that
   restaurant; logos need owner/admin; a logo without a restaurant (admin "new
   restaurant" form) needs admin. Buttons send `{ restaurantId, locale }`.
+- **Menu languages** (`lib/menu-languages.ts`, `app/actions/menu-languages.ts`):
+  only a system admin switches the feature on per restaurant
+  (`setMultilingualEnabled`); owners and admins pick the main and extra
+  languages (the site's five only) and translate the description; anyone on
+  the team translates items (item dialog tabs) and category names. Off hides
+  translations everywhere but keeps them; removing a language keeps its
+  text too. Server actions only accept the restaurant's current languages.
 - Inactive restaurants: public pages are visible as a **preview** to anyone
   with access (`PreviewBanner`, `noindex`); others are redirected.
 
@@ -354,14 +364,28 @@ restaurants for staff; permanent QR links `/r/<id>` that forward to the
 current slug, count scans after the redirect, skip bots/HEAD/repeats within
 30 minutes (path-scoped cookie).
 
+**Menus in several languages:** existing columns hold the main language;
+translations sit in `translations` jsonb (see §4). Settings card
+`components/menu-languages/MenuLanguagesSettings` on the admin edit page and
+the owner Details tab. Editor: language tabs in `MenuItemDialog`, a Translate
+button per category, "Not translated: …" markers. Public pages localize with
+`server/localize-menu.ts` (guest's language if the menu has it, else main,
+field by field; text in another language than the page gets `lang` +
+`dir="auto"`; search also matches main-language text). SEO: with
+translations on, only the menu's languages get hreflang links and sitemap
+entries; other language pages name the main-language page as canonical. The
+admin SEO title/description (untranslated) are only used on main-language
+pages. Slugs stay in the main language. Automatic translation: deferred.
+
 **Search engines and link previews:** menu, about and item pages have their
 own title, description, preview image (admin SEO fields first, then
 description / logo / dish photo), canonical URL and hreflang links
 (`server/public-metadata.ts`). The menu page carries schema.org Restaurant
 JSON-LD with sections, items, diets and prices
 (`server/menu-structured-data.ts`; prices only when `parsePrice` can read
-them; `jsonLd()` escapes `<`). `app/sitemap.ts` lists every live page in all
-languages (cached an hour); `app/robots.ts` keeps crawlers out of admin,
+them; `jsonLd()` escapes `<`). `app/sitemap.ts` lists every live page in each of
+its languages (`force-dynamic`, data cached an hour; at build time it would
+freeze and need the database); `app/robots.ts` keeps crawlers out of admin,
 dashboard, sign-in, `/api/` and `/r/`. The middleware lets both through
 without a language prefix. Missing restaurants/items answer a real 404, and
 inactive ones a 307: there must be **no `loading.tsx` above
@@ -387,14 +411,13 @@ who changed what.
 - Owner self-publishing ("Publish" button, maybe with admin review), building
   on preview + the "Ready to go live" queue.
 - Translating the admin-only pages.
-- Menus in more than one language (owners enter item names per language).
-  Changes the data model; needs its own plan.
+- Automatic translation of menus (AI/translation service; a paid-plan idea).
 - Opening hours with an "Open now" badge; per-restaurant brand colour.
 
 **Things the owner was asked to do. Confirm they're done before relying on them:**
 - Subscribe the Clerk webhook endpoint to `user.updated` and `user.deleted`.
 - Set `NEXT_PUBLIC_APP_URL` to the production domain in production.
-- Run `pnpm db:migrate` in production for migrations 0002–0005 (0005 before deploying the Team tab).
+- Run `pnpm db:migrate` in production for migrations 0002–0006, before deploying (0005: Team tab; 0006: menu languages).
 - Set owners on each restaurant's People tab (all old assignments became editors).
 - Run `pnpm uploads:cleanup -- --delete` after a dry run. The dry run found 32
   unused files, including some sensitive-looking photos (a SIM card PIN, a

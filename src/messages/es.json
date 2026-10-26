@@ -339,7 +339,10 @@
       "deleteEmpty": "Esta categoría está vacía. No se puede deshacer.",
       "deleteWithItems": "{count, plural, one {También se eliminará el plato que contiene.} other {También se eliminarán los # platos que contiene.}} No se puede deshacer.",
       "deleteButton": "Eliminar categoría",
-      "deleteWithItemsButton": "Eliminar categoría y platos"
+      "deleteWithItemsButton": "Eliminar categoría y platos",
+      "translate": "Traducir",
+      "translateLabel": "Traducir {name}",
+      "translateTitle": "«{name}» en otros idiomas"
     },
     "items": {
       "add": "Añadir plato",
@@ -396,7 +399,11 @@
       "addItem": "Añadir plato",
       "saveFailed": "No se pudo guardar el plato.",
       "category": "Categoría",
-      "photoTooLarge": "Esta foto es demasiado grande incluso después de reducirla. Prueba con una más pequeña (hasta 2 MB)."
+      "photoTooLarge": "Esta foto es demasiado grande incluso después de reducirla. Prueba con una más pequeña (hasta 2 MB).",
+      "languagesLabel": "Idiomas",
+      "mainLanguage": "principal",
+      "notTranslatedYet": "Aún sin traducir",
+      "translationHint": "El precio, la foto, la categoría y las etiquetas son comunes a todos los idiomas. Los campos vacíos muestran el idioma principal."
     }
   },
   "DashboardRestaurant": {
@@ -521,7 +528,11 @@
     "inviteWrongAccount": "Esta invitación es para otro correo electrónico. Inicia sesión con la dirección a la que se envió.",
     "memberNotFound": "Esta persona ya no está en el equipo. Recarga la página.",
     "ownersByAdminOnly": "Solo un administrador puede quitar a los propietarios.",
-    "ownerCantLeave": "Los propietarios no pueden salir de un restaurante por su cuenta. Contacta con un administrador."
+    "ownerCantLeave": "Los propietarios no pueden salir de un restaurante por su cuenta. Contacta con un administrador.",
+    "saveLanguagesFailed": "No se pudieron guardar los idiomas del menú. Inténtalo de nuevo.",
+    "saveTranslationsFailed": "No se pudieron guardar las traducciones. Inténtalo de nuevo.",
+    "multilingualOff": "Los menús en varios idiomas no están activados para este restaurante.",
+    "invalidLanguages": "Elige los idiomas de la lista."
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
@@ -703,5 +714,23 @@
     "invalidText": "Ha caducado, se canceló o ya se usó. Pide un enlace nuevo al propietario del restaurante.",
     "toDashboard": "Ir a tu panel",
     "toHome": "Ir a la página de inicio"
+  },
+  "MenuLanguages": {
+    "title": "Idiomas del menú",
+    "intro": "Ofrece el menú en más de un idioma. Los clientes lo ven en su idioma cuando está traducido y, si no, en el idioma principal.",
+    "enableTitle": "Menús en varios idiomas",
+    "enableText": "Permite a los propietarios de este restaurante elegir idiomas y a su equipo traducir el menú. Desactivarlo oculta las traducciones, pero las conserva.",
+    "notEnabled": "Los menús en varios idiomas no están activados para este restaurante. Contacta con un administrador para activarlos.",
+    "mainLabel": "Idioma principal",
+    "mainHint": "El idioma en el que está escrito el menú ahora. Cada plato necesita al menos este.",
+    "mainPlaceholder": "Elige el idioma principal",
+    "extraLabel": "Idiomas adicionales",
+    "extraHint": "Tu equipo puede traducir platos y categorías a estos idiomas desde el editor del menú.",
+    "descriptionIn": "Descripción del restaurante en {language}",
+    "save": "Guardar idiomas",
+    "saving": "Guardando…",
+    "saved": "Guardado",
+    "chooseMainFirst": "Primero elige el idioma principal.",
+    "notTranslated": "Sin traducir: {languages}"
   }
 }

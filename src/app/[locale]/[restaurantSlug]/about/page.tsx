@@ -12,6 +12,8 @@ import { cn } from "~/lib/utils"
 import { getLocale, getTranslations } from "next-intl/server"
 import type { Metadata } from "next"
 import { clip, publicPageMetadata, restaurantPreviewImage } from "~/server/public-metadata"
+import { allMenuLanguages, menuLanguagesOf } from "~/lib/menu-languages"
+import { localizeDescription } from "~/server/localize-menu"
 
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"
 import { DeliveryOptionsDialog } from "~/components/public/DeliveryOptionsDialog"
@@ -29,16 +31,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const t = await getTranslations("PublicMenu")
   // Where it is and how to reach it: what people look for on this page.
   const place = [restaurant.address, restaurant.country].filter(Boolean).join(", ")
+  const locale = await getLocale()
+  const languages = menuLanguagesOf(restaurant)
+  const description = localizeDescription(restaurant, languages, locale).text
   return publicPageMetadata({
-    locale: await getLocale(),
+    locale,
     path: `/${restaurant.slug}/about`,
     title: t("metaAboutTitle", { name: restaurant.name }),
     description: clip(
-      [place, restaurant.description].filter(Boolean).join(" · ") ||
+      [place, description].filter(Boolean).join(" · ") ||
         t("metaMenuDescription", { name: restaurant.name }),
     ),
     image: restaurantPreviewImage(restaurant),
     siteName: restaurant.name,
+    menuLanguages: languages && allMenuLanguages(languages),
   })
 }
 
@@ -59,6 +65,12 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
     socialMedia: rawData.socialMedia as SocialMediaLinks | null,
     deliveryApps: rawData.deliveryApps as DeliveryAppLinks | null,
   }
+  // In the guest's language when the menu has it (translations on).
+  const description = localizeDescription(
+    restaurantDetails,
+    menuLanguagesOf(restaurantDetails),
+    await getLocale(),
+  )
 
   const socials = restaurantDetails.socialMedia ?? ({} as SocialMediaLinks)
   const deliveryApps = restaurantDetails.deliveryApps ?? ({} as DeliveryAppLinks)
@@ -110,9 +122,13 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
             )}
           </div>
 
-          {restaurantDetails.description && (
-            <p className="text-muted-foreground max-w-2xl text-center text-lg leading-relaxed">
-              {restaurantDetails.description}
+          {description.text && (
+            <p
+              className="text-muted-foreground max-w-2xl text-center text-lg leading-relaxed"
+              lang={description.lang}
+              dir="auto"
+            >
+              {description.text}
             </p>
           )}
 

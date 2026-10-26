@@ -63,7 +63,9 @@ export function AccordionCardLayout({
               className="bg-card border-border rounded-lg border shadow-md"
             >
               <AccordionTrigger className="text-foreground px-6 py-4 text-start text-xl font-semibold hover:no-underline">
-                {category.name}
+                <span lang={category.lang} dir="auto">
+                  {category.name}
+                </span>
               </AccordionTrigger>
               <AccordionContent className="p-4 pt-0">
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -91,11 +93,15 @@ export function AccordionCardLayout({
                           </div>
                         )}
                         <h3 className="text-foreground group-hover:text-primary mb-1 text-xl font-semibold transition-colors duration-200">
-                          {item.name}
+                          <span lang={item.lang} dir="auto">
+                            {item.name}
+                          </span>
                         </h3>
                         {item.description && (
                           <p className="text-muted-foreground mb-2 line-clamp-2 text-sm">
-                            {item.description}
+                            <span lang={item.lang} dir="auto">
+                              {item.description}
+                            </span>
                           </p>
                         )}
                         <DietaryBadges

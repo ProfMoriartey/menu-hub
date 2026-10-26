@@ -24,6 +24,8 @@ export const ACTION_ERROR_CODES = [
   "createInviteFailed",
   "cancelInviteFailed",
   "respondInviteFailed",
+  "saveLanguagesFailed",
+  "saveTranslationsFailed",
   // Access
   "signInAgain",
   "noAccess",
@@ -57,6 +59,9 @@ export const ACTION_ERROR_CODES = [
   "memberNotFound",
   "ownersByAdminOnly",
   "ownerCantLeave",
+  // Menu languages
+  "multilingualOff",
+  "invalidLanguages",
   // Uploads
   "signInToUpload",
   "adminOnlyNewLogo",

@@ -65,7 +65,14 @@ export function useMenuFilters(categories: PublicCategory[]) {
         map.set(
           item.id,
           normalizeForSearch(
-            [item.name, item.description, item.ingredients, category.name]
+            [
+              item.name,
+              item.description,
+              item.ingredients,
+              category.name,
+              // Main-language text, when a translation is shown.
+              item.searchText,
+            ]
               .filter(Boolean)
               .join(" "),
           ),

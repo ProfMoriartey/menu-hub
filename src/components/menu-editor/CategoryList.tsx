@@ -1,7 +1,13 @@
 // src/components/menu-editor/CategoryList.tsx
 "use client";
 
-import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+  type FormEvent,
+} from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
@@ -21,14 +27,38 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Check, ChevronRight, GripVertical, LayoutList, Pencil, Plus } from "lucide-react";
+import {
+  Check,
+  ChevronRight,
+  GripVertical,
+  Languages,
+  LayoutList,
+  Pencil,
+  Plus,
+} from "lucide-react";
 import { unwrap } from "~/lib/action-result";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { DeleteCategoryDialog } from "~/components/menu-editor/DeleteCategoryDialog";
-import { ReorderStatus, useReorderState } from "~/components/menu-editor/ReorderStatus";
-import { addCategory, reorderCategories, updateCategory } from "~/app/actions/category";
+import {
+  ReorderStatus,
+  useReorderState,
+} from "~/components/menu-editor/ReorderStatus";
+import {
+  addCategory,
+  reorderCategories,
+  updateCategory,
+} from "~/app/actions/category";
+import { updateCategoryTranslations } from "~/app/actions/menu-languages";
+import { MissingTranslations } from "~/components/menu-languages/MissingTranslations";
+import {
+  LANGUAGE_NAMES,
+  missingNames,
+  type CategoryTranslations,
+  type MenuLanguage,
+  type MenuLanguages,
+} from "~/lib/menu-languages";
 import { cn } from "~/lib/utils";
 
 export interface CategorySummary {
@@ -38,6 +68,7 @@ export interface CategorySummary {
   order: number;
   itemCount: number;
   thumbnails: string[];
+  translations: CategoryTranslations | null;
 }
 
 const errorMessage = (error: unknown, fallback: string) =>
@@ -99,20 +130,122 @@ function AddCategoryRow({ restaurantId }: { restaurantId: string }) {
   );
 }
 
+// The category's name in each extra language, edited in place like a rename.
+function TranslateCategoryForm({
+  category,
+  restaurantId,
+  languages,
+  onDone,
+}: {
+  category: CategorySummary;
+  restaurantId: string;
+  languages: MenuLanguages;
+  onDone: () => void;
+}) {
+  const t = useTranslations("MenuEditor.categories");
+  const [names, setNames] = useState<Partial<Record<MenuLanguage, string>>>(
+    () =>
+      Object.fromEntries(
+        languages.extra.map((lang) => [
+          lang,
+          category.translations?.[lang]?.name ?? "",
+        ]),
+      ),
+  );
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const save = (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    startTransition(async () => {
+      const result = await updateCategoryTranslations(
+        restaurantId,
+        category.id,
+        Object.fromEntries(
+          languages.extra.map((lang) => [lang, { name: names[lang] ?? "" }]),
+        ),
+      );
+      if (result.ok) onDone();
+      else setError(result.error);
+    });
+  };
+
+  return (
+    <form onSubmit={save} className="min-w-0 flex-1 space-y-2">
+      <p className="truncate text-sm font-medium">
+        {t("translateTitle", { name: category.name })}
+      </p>
+      {languages.extra.map((lang) => (
+        <div key={lang} className="flex flex-wrap items-center gap-2">
+          <label
+            htmlFor={`category-${category.id}-${lang}`}
+            className="text-muted-foreground w-24 shrink-0 text-sm"
+            lang={lang}
+          >
+            {LANGUAGE_NAMES[lang]}
+          </label>
+          <Input
+            id={`category-${category.id}-${lang}`}
+            lang={lang}
+            dir={lang === "ar" ? "rtl" : "ltr"}
+            value={names[lang] ?? ""}
+            placeholder={category.name}
+            maxLength={256}
+            disabled={isPending}
+            onChange={(e) => {
+              const value = e.target.value;
+              setNames((prev) => ({ ...prev, [lang]: value }));
+            }}
+            onKeyDown={(e) => e.key === "Escape" && onDone()}
+            className="h-8 max-w-xs"
+          />
+        </div>
+      ))}
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" disabled={isPending}>
+          <Check className="h-3.5 w-3.5" />{" "}
+          {isPending ? t("saving") : t("save")}
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          onClick={onDone}
+          disabled={isPending}
+        >
+          {t("cancel")}
+        </Button>
+      </div>
+      {error && <p className="text-destructive text-sm">{error}</p>}
+    </form>
+  );
+}
+
 function CategoryRow({
   category,
   restaurantId,
   basePath,
+  languages,
 }: {
   category: CategorySummary;
   restaurantId: string;
   basePath: string;
+  languages: MenuLanguages | null;
 }) {
   const t = useTranslations("MenuEditor.categories");
-  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
-    useSortable({ id: category.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: category.id });
 
   const [isRenaming, setIsRenaming] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   const [draft, setDraft] = useState(category.name);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -171,8 +304,18 @@ function CategoryRow({
         <GripVertical className="h-4 w-4" />
       </button>
 
-      {isRenaming ? (
-        <form onSubmit={saveRename} className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+      {isTranslating && languages ? (
+        <TranslateCategoryForm
+          category={category}
+          restaurantId={restaurantId}
+          languages={languages}
+          onDone={() => setIsTranslating(false)}
+        />
+      ) : isRenaming ? (
+        <form
+          onSubmit={saveRename}
+          className="flex min-w-0 flex-1 flex-wrap items-center gap-2"
+        >
           <Input
             value={draft}
             onChange={(e) => {
@@ -187,33 +330,72 @@ function CategoryRow({
             className="h-8 max-w-xs"
           />
           <Button type="submit" size="sm" disabled={isPending}>
-            <Check className="h-3.5 w-3.5" /> {isPending ? t("saving") : t("save")}
+            <Check className="h-3.5 w-3.5" />{" "}
+            {isPending ? t("saving") : t("save")}
           </Button>
-          <Button type="button" size="sm" variant="ghost" onClick={cancelRename} disabled={isPending}>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={cancelRename}
+            disabled={isPending}
+          >
             {t("cancel")}
           </Button>
           {error && <p className="text-destructive w-full text-sm">{error}</p>}
         </form>
       ) : (
         <>
-          <Link href={itemsHref} className="group flex min-w-0 flex-1 items-center gap-4">
+          <Link
+            href={itemsHref}
+            className="group flex min-w-0 flex-1 items-center gap-4"
+          >
             <div className="min-w-0 flex-1">
-              <p className="truncate font-medium group-hover:underline">{category.name}</p>
+              <p className="truncate font-medium group-hover:underline">
+                {category.name}
+              </p>
               <p className="text-muted-foreground text-sm">
                 {t("itemCount", { count: category.itemCount })}
               </p>
+              <MissingTranslations
+                languages={missingNames(category.translations, languages)}
+              />
             </div>
             {category.thumbnails.length > 0 && (
-              <div className="hidden -space-x-2 sm:flex rtl:space-x-reverse" aria-hidden>
+              <div
+                className="hidden -space-x-2 sm:flex rtl:space-x-reverse"
+                aria-hidden
+              >
                 {category.thumbnails.map((src) => (
-                  <div key={src} className="ring-card relative h-8 w-8 overflow-hidden rounded-full ring-2">
-                    <Image src={src} alt="" fill sizes="32px" className="object-cover" />
+                  <div
+                    key={src}
+                    className="ring-card relative h-8 w-8 overflow-hidden rounded-full ring-2"
+                  >
+                    <Image
+                      src={src}
+                      alt=""
+                      fill
+                      sizes="32px"
+                      className="object-cover"
+                    />
                   </div>
                 ))}
               </div>
             )}
           </Link>
           <div className="flex shrink-0 items-center">
+            {languages && languages.extra.length > 0 && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsTranslating(true)}
+                aria-label={t("translateLabel", { name: category.name })}
+                title={t("translate")}
+              >
+                <Languages className="h-4 w-4" />
+              </Button>
+            )}
             <Button
               type="button"
               variant="ghost"
@@ -234,7 +416,11 @@ function CategoryRow({
               restaurantId={restaurantId}
             />
             <Button variant="ghost" size="icon" asChild>
-              <Link href={itemsHref} aria-label={t("openLabel", { name: category.name })} title={t("open")}>
+              <Link
+                href={itemsHref}
+                aria-label={t("openLabel", { name: category.name })}
+                title={t("open")}
+              >
                 <ChevronRight className="h-4 w-4 rtl:rotate-180" />
               </Link>
             </Button>
@@ -251,9 +437,16 @@ interface CategoryListProps {
   // a category's items are at `${basePath}/${category.slug}`.
   basePath: string;
   categories: CategorySummary[];
+  // The menu's languages when translations are on (lib/menu-languages).
+  languages: MenuLanguages | null;
 }
 
-export function CategoryList({ restaurantId, basePath, categories }: CategoryListProps) {
+export function CategoryList({
+  restaurantId,
+  basePath,
+  categories,
+  languages,
+}: CategoryListProps) {
   const t = useTranslations("MenuEditor.categories");
   const [items, setItems] = useState(categories);
   const [orderStatus, setOrderStatus] = useReorderState();
@@ -265,7 +458,9 @@ export function CategoryList({ restaurantId, basePath, categories }: CategoryLis
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
   );
 
   const handleDragEnd = async ({ active, over }: DragEndEvent) => {
@@ -294,19 +489,31 @@ export function CategoryList({ restaurantId, basePath, categories }: CategoryLis
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <AddCategoryRow restaurantId={restaurantId} />
-        <ReorderStatus state={orderStatus} onDismiss={() => setOrderStatus("idle")} />
+        <ReorderStatus
+          state={orderStatus}
+          onDismiss={() => setOrderStatus("idle")}
+        />
       </div>
 
       {items.length === 0 ? (
         <div className="border-border flex flex-col items-center rounded-xl border border-dashed px-6 py-14 text-center">
           <LayoutList className="text-muted-foreground mb-3 h-9 w-9" />
           <p className="font-medium">{t("emptyTitle")}</p>
-          <p className="text-muted-foreground mt-1 max-w-sm text-sm">{t("emptyText")}</p>
+          <p className="text-muted-foreground mt-1 max-w-sm text-sm">
+            {t("emptyText")}
+          </p>
         </div>
       ) : (
         <div className="border-border overflow-hidden rounded-xl border shadow-sm">
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={items.map((c) => c.id)} strategy={verticalListSortingStrategy}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={items.map((c) => c.id)}
+              strategy={verticalListSortingStrategy}
+            >
               <ul>
                 {items.map((category) => (
                   <CategoryRow
@@ -314,6 +521,7 @@ export function CategoryList({ restaurantId, basePath, categories }: CategoryLis
                     category={category}
                     restaurantId={restaurantId}
                     basePath={basePath}
+                    languages={languages}
                   />
                 ))}
               </ul>
@@ -321,7 +529,9 @@ export function CategoryList({ restaurantId, basePath, categories }: CategoryLis
           </DndContext>
         </div>
       )}
-      {items.length > 1 && <p className="text-muted-foreground text-xs">{t("dragHint")}</p>}
+      {items.length > 1 && (
+        <p className="text-muted-foreground text-xs">{t("dragHint")}</p>
+      )}
     </div>
   );
 }

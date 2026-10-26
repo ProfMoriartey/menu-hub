@@ -339,7 +339,10 @@
       "deleteEmpty": "Bu kategori boş. Bu işlem geri alınamaz.",
       "deleteWithItems": "İçindeki {count} ürün de silinecek. Bu işlem geri alınamaz.",
       "deleteButton": "Kategoriyi sil",
-      "deleteWithItemsButton": "Kategoriyi ve ürünleri sil"
+      "deleteWithItemsButton": "Kategoriyi ve ürünleri sil",
+      "translate": "Çevir",
+      "translateLabel": "{name} kategorisini çevir",
+      "translateTitle": "\"{name}\" diğer dillerde"
     },
     "items": {
       "add": "Ürün ekle",
@@ -396,7 +399,11 @@
       "addItem": "Ürün ekle",
       "saveFailed": "Ürün kaydedilemedi.",
       "category": "Kategori",
-      "photoTooLarge": "Bu fotoğraf küçültüldükten sonra bile çok büyük. Daha küçük bir fotoğraf deneyin (en fazla 2 MB)."
+      "photoTooLarge": "Bu fotoğraf küçültüldükten sonra bile çok büyük. Daha küçük bir fotoğraf deneyin (en fazla 2 MB).",
+      "languagesLabel": "Diller",
+      "mainLanguage": "ana dil",
+      "notTranslatedYet": "Henüz çevrilmedi",
+      "translationHint": "Fiyat, fotoğraf, kategori ve etiketler tüm dillerde ortaktır. Boş alanlarda ana dil gösterilir."
     }
   },
   "DashboardRestaurant": {
@@ -521,7 +528,11 @@
     "inviteWrongAccount": "Bu davet başka bir e-posta adresi için. Davetin gönderildiği adresle giriş yapın.",
     "memberNotFound": "Bu kişi artık ekipte değil. Sayfayı yenileyin.",
     "ownersByAdminOnly": "Restoran sahiplerini yalnızca bir yönetici kaldırabilir.",
-    "ownerCantLeave": "Restoran sahipleri restorandan kendileri ayrılamaz. Bir yöneticiyle iletişime geçin."
+    "ownerCantLeave": "Restoran sahipleri restorandan kendileri ayrılamaz. Bir yöneticiyle iletişime geçin.",
+    "saveLanguagesFailed": "Menü dilleri kaydedilemedi. Lütfen tekrar deneyin.",
+    "saveTranslationsFailed": "Çeviriler kaydedilemedi. Lütfen tekrar deneyin.",
+    "multilingualOff": "Bu restoran için birden fazla dilde menü açık değil.",
+    "invalidLanguages": "Dilleri listeden seçin."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -703,5 +714,23 @@
     "invalidText": "Süresi dolmuş, iptal edilmiş ya da daha önce kullanılmış. Restoran sahibinden yeni bir bağlantı isteyin.",
     "toDashboard": "Panelinize gidin",
     "toHome": "Ana sayfaya gidin"
+  },
+  "MenuLanguages": {
+    "title": "Menü dilleri",
+    "intro": "Menüyü birden fazla dilde sunun. Misafirler çevrilmişse kendi dillerinde, değilse ana dilde görür.",
+    "enableTitle": "Birden fazla dilde menü",
+    "enableText": "Bu restoranın sahiplerinin dil seçmesine ve ekibinin menüyü çevirmesine izin verir. Kapatmak çevirileri gizler ama silmez.",
+    "notEnabled": "Bu restoran için birden fazla dilde menü açık değil. Açtırmak için bir yöneticiyle iletişime geçin.",
+    "mainLabel": "Ana dil",
+    "mainHint": "Menünün şu an yazıldığı dil. Her ürünün en az bu dilde olması gerekir.",
+    "mainPlaceholder": "Ana dili seçin",
+    "extraLabel": "Ek diller",
+    "extraHint": "Ekibiniz menü düzenleyiciden ürünleri ve kategorileri bu dillere çevirebilir.",
+    "descriptionIn": "Restoran açıklaması ({language})",
+    "save": "Dilleri kaydet",
+    "saving": "Kaydediliyor…",
+    "saved": "Kaydedildi",
+    "chooseMainFirst": "Önce ana dili seçin.",
+    "notTranslated": "Çevrilmedi: {languages}"
   }
 }

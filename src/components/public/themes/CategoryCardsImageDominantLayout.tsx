@@ -62,7 +62,9 @@ export function CategoryCardsImageDominantLayout({
         </div>
 
         <h2 className="text-foreground mb-4 text-3xl font-semibold">
-          {selectedCategory.name}
+          <span lang={selectedCategory.lang} dir="auto">
+            {selectedCategory.name}
+          </span>
         </h2>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -92,11 +94,15 @@ export function CategoryCardsImageDominantLayout({
                 <div className="flex flex-grow flex-col justify-between p-4">
                   <div>
                     <h3 className="text-foreground group-hover:text-primary mb-1 text-xl font-semibold transition-colors duration-200">
-                      {item.name}
+                      <span lang={item.lang} dir="auto">
+                        {item.name}
+                      </span>
                     </h3>
                     {item.description && (
                       <p className="text-muted-foreground mb-2 line-clamp-2 text-sm">
-                        {item.description}
+                        <span lang={item.lang} dir="auto">
+                          {item.description}
+                        </span>
                       </p>
                     )}
                     <DietaryBadges
@@ -157,7 +163,9 @@ export function CategoryCardsImageDominantLayout({
 
               <div className="flex w-full flex-grow flex-col justify-between p-4">
                 <h3 className="text-foreground group-hover:text-primary mb-2 text-2xl font-semibold">
-                  {category.name}
+                  <span lang={category.lang} dir="auto">
+                    {category.name}
+                  </span>
                 </h3>
                 <p className="text-muted-foreground">
                   {t("itemCount", { count: category.menuItems.length })}

@@ -1,4 +1,5 @@
 // app/[locale]/(client)/dashboard/[restaurantSlug]/menu/[categorySlug]/page.tsx
+import { menuLanguagesOf } from "~/lib/menu-languages";
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -46,12 +47,16 @@ export default async function DashboardCategoryItemsPage({
         <div>
           <h2 className="text-xl font-semibold">{category.name}</h2>
           <p className="text-muted-foreground mt-1 text-sm">
-            {t("itemsSummary", { count: items.length, currency: restaurant.currency })}
+            {t("itemsSummary", {
+              count: items.length,
+              currency: restaurant.currency,
+            })}
           </p>
         </div>
         <MenuItemList
           items={items}
           restaurantId={restaurant.id}
+          languages={menuLanguagesOf(restaurant)}
           categoryId={category.id}
           categoryName={category.name}
           currency={restaurant.currency}

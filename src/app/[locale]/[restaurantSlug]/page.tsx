@@ -5,6 +5,16 @@ import { MenuDisplayClient } from "~/components/public/MenuDisplayClient";
 import type { MenuItem } from "~/types/restaurant";
 import type { PublicMenuData } from "~/components/public/menu-types";
 import { formatPrice } from "~/lib/format-price";
+import {
+  allMenuLanguages,
+  contentLanguage as contentLanguageOf,
+  menuLanguagesOf,
+} from "~/lib/menu-languages";
+import {
+  localizeCategory,
+  localizeDescription,
+  localizeItem,
+} from "~/server/localize-menu";
 import type { SocialMediaLinks } from "~/lib/schemas";
 import { Link } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
@@ -49,19 +59,25 @@ export async function generateMetadata({
   const restaurant = await getRestaurantBySlug((await params).restaurantSlug);
   if (!restaurant) return {};
   const t = await getTranslations("PublicMenu");
-  // The admin form's SEO title and description win over the defaults.
+  const locale = await getLocale();
+  const languages = menuLanguagesOf(restaurant);
+  // The admin form's SEO title and description win over the defaults (they
+  // aren't translated, so only on main-language pages when translating).
+  const useSeoFields = !languages || locale === languages.main;
   return publicPageMetadata({
-    locale: await getLocale(),
+    locale,
     path: `/${restaurant.slug}`,
     title:
-      restaurant.metaTitle ?? t("metaMenuTitle", { name: restaurant.name }),
+      (useSeoFields ? restaurant.metaTitle : null) ??
+      t("metaMenuTitle", { name: restaurant.name }),
     description: clip(
-      restaurant.metaDescription ??
-        restaurant.description ??
+      (useSeoFields ? restaurant.metaDescription : null) ??
+        localizeDescription(restaurant, languages, locale).text ??
         t("metaMenuDescription", { name: restaurant.name }),
     ),
     image: restaurantPreviewImage(restaurant),
     siteName: restaurant.name,
+    menuLanguages: languages && allMenuLanguages(languages),
   });
 }
 
@@ -86,6 +102,9 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
   const locale = await getLocale();
   const origin = await getPublicOrigin();
   const menu = await getPublicMenu(restaurantDetails.id);
+  // Translations, when an admin has turned them on for this restaurant.
+  const languages = menuLanguagesOf(restaurantDetails);
+  const description = localizeDescription(restaurantDetails, languages, locale);
 
   // Sold-out items stay on the menu but move after everything still
   // available; otherwise the owner's order is kept.
@@ -98,17 +117,17 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
       name: restaurantDetails.name,
       slug: restaurantDetails.slug,
       currency: restaurantDetails.currency,
-      description: restaurantDetails.description,
+      description: description.text,
     },
     // Guests only see categories that have something in them.
     categories: menu
       .filter((category) => category.menuItems.length > 0)
-      .map((category) => ({
-        ...category,
-        menuItems: [...category.menuItems]
+      .map(({ menuItems, ...category }) => ({
+        ...localizeCategory(category, languages, locale),
+        menuItems: [...menuItems]
           .sort((x, y) => availableFirst(x) - availableFirst(y))
           .map((item) => ({
-            ...item,
+            ...localizeItem(item, languages, locale),
             displayPrice: formatPrice(
               item.price,
               restaurantDetails.currency,
@@ -157,8 +176,12 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
             <h1 className="text-foreground text-4xl font-bold">
               {restaurantDetails.name}
             </h1>
-            <p className="text-muted-foreground mt-2 text-lg">
-              {restaurantDetails.description ?? t("browseMenuDefault")}
+            <p
+              className="text-muted-foreground mt-2 text-lg"
+              lang={description.text ? description.lang : undefined}
+              dir="auto"
+            >
+              {description.text ?? t("browseMenuDefault")}
             </p>
 
             {/* Details | Map | Separator | Socials */}
@@ -237,8 +260,14 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
             dangerouslySetInnerHTML={{
               __html: jsonLd(
                 restaurantStructuredData({
-                  restaurant: restaurantDetails,
+                  restaurant: {
+                    ...restaurantDetails,
+                    description: description.text,
+                  },
                   categories: menuData.categories,
+                  inLanguage: languages
+                    ? (contentLanguageOf(languages, locale) ?? undefined)
+                    : undefined,
                   pageUrl: `${origin}/${locale}/${restaurantDetails.slug}`,
                   itemUrl: (itemSlug) =>
                     `${origin}/${locale}/${restaurantDetails.slug}/item/${itemSlug}`,

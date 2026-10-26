@@ -14,7 +14,9 @@ import type { PublicMenuItem } from "~/components/public/menu-types";
 import type { Category, Restaurant } from "~/types/restaurant";
 
 interface MenuItemDetailProps {
-  item: PublicMenuItem & { category: Pick<Category, "name" | "slug"> };
+  item: PublicMenuItem & {
+    category: Pick<Category, "name" | "slug"> & { lang?: string };
+  };
   restaurant: Pick<Restaurant, "name" | "slug" | "theme">;
 }
 
@@ -71,11 +73,15 @@ export function MenuItemDetail({ item, restaurant }: MenuItemDetailProps) {
                   href={menuHref}
                   className="hover:text-foreground hover:underline"
                 >
-                  {item.category.name}
+                  <span lang={item.category.lang} dir="auto">
+                    {item.category.name}
+                  </span>
                 </Link>
               </p>
               <h1 className="text-foreground mt-1 text-3xl font-bold sm:text-4xl">
-                {item.name}
+                <span lang={item.lang} dir="auto">
+                  {item.name}
+                </span>
               </h1>
             </div>
 
@@ -86,7 +92,9 @@ export function MenuItemDetail({ item, restaurant }: MenuItemDetailProps) {
 
             {item.description && (
               <p className="text-muted-foreground text-lg leading-relaxed">
-                {item.description}
+                <span lang={item.lang} dir="auto">
+                  {item.description}
+                </span>
               </p>
             )}
 

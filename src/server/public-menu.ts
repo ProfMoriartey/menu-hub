@@ -34,6 +34,7 @@ const ITEM_COLUMNS = {
   dietaryLabels: true,
   availability: true,
   imageUrl: true,
+  translations: true,
 } as const;
 
 /**
@@ -59,7 +60,7 @@ export const getPublicMenu = cache((restaurantId: string) =>
       db.query.categories.findMany({
         where: eq(categories.restaurantId, restaurantId),
         orderBy: (categories, { asc }) => [asc(categories.order)],
-        columns: { id: true, name: true, slug: true },
+        columns: { id: true, name: true, slug: true, translations: true },
         with: {
           menuItems: {
             // Hidden items aren't on the public menu; sold-out ones are, marked.
@@ -89,7 +90,11 @@ export const getPublicMenuItem = cache(
             ne(menuItems.availability, "hidden"),
           ),
           columns: ITEM_COLUMNS,
-          with: { category: { columns: { name: true, slug: true } } },
+          with: {
+            category: {
+              columns: { name: true, slug: true, translations: true },
+            },
+          },
         })) ?? null,
       ["public-menu-item", restaurantId, itemSlug],
       { tags: [menuTag(restaurantId)], revalidate: MAX_AGE_SECONDS },

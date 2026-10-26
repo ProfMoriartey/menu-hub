@@ -23,6 +23,7 @@ export function restaurantStructuredData({
   categories,
   pageUrl,
   itemUrl,
+  inLanguage,
 }: {
   restaurant: Pick<
     Restaurant,
@@ -38,6 +39,8 @@ export function restaurantStructuredData({
   categories: PublicCategory[];
   pageUrl: string;
   itemUrl: (itemSlug: string) => string;
+  // The menu text's language, when known (translations on).
+  inLanguage?: string;
 }) {
   const sameAs = Object.values(restaurant.socialMedia ?? {}).filter(
     (url): url is string => typeof url === "string" && url.trim() !== "",
@@ -64,6 +67,7 @@ export function restaurantStructuredData({
     hasMenu: {
       "@type": "Menu",
       url: pageUrl,
+      inLanguage,
       hasMenuSection: categories.map((category) => ({
         "@type": "MenuSection",
         name: category.name,

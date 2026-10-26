@@ -60,11 +60,15 @@ export function MenuItemCard({
     >
       <div className="min-w-0 flex-grow">
         <h3 className="text-foreground group-hover:text-primary text-lg font-semibold transition-colors duration-200 sm:text-xl">
-          {item.name}
+          <span lang={item.lang} dir="auto">
+            {item.name}
+          </span>
         </h3>
         {item.description && (
           <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
-            {item.description}
+            <span lang={item.lang} dir="auto">
+              {item.description}
+            </span>
           </p>
         )}
         <DietaryBadges labels={item.dietaryLabels} className="mt-2" />

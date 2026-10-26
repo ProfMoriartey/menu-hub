@@ -14,6 +14,11 @@ import {
   text, // IMPORTANT: Add 'text' import for longer string fields like description
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import type {
+  CategoryTranslations,
+  ItemTranslations,
+  RestaurantTranslations,
+} from "~/lib/menu-languages";
 
 // Define ENUMs if you have them, e.g., for dietary labels
 export const dietaryLabelEnum = pgEnum("dietary_label", [
@@ -26,10 +31,14 @@ export const dietaryLabelEnum = pgEnum("dietary_label", [
 
 // Whether guests see a menu item: listed normally, listed as sold out, or not
 // shown at all (e.g. seasonal items, or ones still being prepared).
-export const itemAvailabilityEnum = pgEnum("item_availability", ["available", "sold_out", "hidden"]);
+export const itemAvailabilityEnum = pgEnum("item_availability", [
+  "available",
+  "sold_out",
+  "hidden",
+]);
 
 // Define a TypeScript type for the values of the dietaryLabelEnum
-type DietaryLabelValue = typeof dietaryLabelEnum.enumValues[number];
+type DietaryLabelValue = (typeof dietaryLabelEnum.enumValues)[number];
 
 export const restaurants = pgTable("menu-hub_restaurants", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -48,12 +57,24 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   theme: varchar("theme", { length: 50 }),
   typeOfEstablishment: varchar("type_of_establishment", { length: 100 }),
 
-  socialMedia: jsonb("social_media"), 
+  socialMedia: jsonb("social_media"),
   deliveryApps: jsonb("delivery_apps"),
-  mapUrl: varchar("map_url", { length: 512 }), 
+  mapUrl: varchar("map_url", { length: 512 }),
   metaTitle: varchar("meta_title", { length: 256 }),
   metaDescription: text("meta_description"),
   ogImage: varchar("og_image", { length: 256 }),
+
+  // Menus in several languages (lib/menu-languages). Only an admin turns the
+  // feature on; owners and admins then pick the languages. Existing text
+  // columns hold the main language; others go in `translations` columns.
+  multilingualEnabled: boolean("multilingual_enabled").default(false).notNull(),
+  mainLanguage: varchar("main_language", { length: 8 }),
+  extraLanguages: jsonb("extra_languages")
+    .$type<string[]>()
+    .default([])
+    .notNull(),
+  // Translated description, keyed by language.
+  translations: jsonb("translations").$type<RestaurantTranslations>(),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -64,7 +85,6 @@ export const restaurantsRelations = relations(restaurants, ({ many }) => ({
   categories: many(categories),
   usersToRestaurants: many(usersToRestaurants), // ADDED LINK
 }));
-
 
 export const categories = pgTable(
   "menu-hub_categories",
@@ -77,10 +97,14 @@ export const categories = pgTable(
     // URL name, unique within the restaurant (e.g. /admin/restaurants/marios/menu/pizzas)
     slug: varchar("slug", { length: 256 }).notNull(),
     order: integer("order").notNull().default(0),
+    // Translated names, keyed by language (main language is `name`).
+    translations: jsonb("translations").$type<CategoryTranslations>(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow(),
   },
-  (t) => [uniqueIndex("categories_restaurant_slug_idx").on(t.restaurantId, t.slug)],
+  (t) => [
+    uniqueIndex("categories_restaurant_slug_idx").on(t.restaurantId, t.slug),
+  ],
 );
 
 // Define relations for categories
@@ -108,14 +132,23 @@ export const menuItems = pgTable(
     description: varchar("description", { length: 512 }),
     price: varchar("price", { length: 50 }).notNull(),
     ingredients: varchar("ingredients", { length: 512 }),
-    dietaryLabels: jsonb("dietary_labels").$type<DietaryLabelValue[]>().default([]),
-    availability: itemAvailabilityEnum("availability").notNull().default("available"),
+    dietaryLabels: jsonb("dietary_labels")
+      .$type<DietaryLabelValue[]>()
+      .default([]),
+    availability: itemAvailabilityEnum("availability")
+      .notNull()
+      .default("available"),
+    // Translated name/description/ingredients, keyed by language (main
+    // language is in the columns above). Price, photo and labels are shared.
+    translations: jsonb("translations").$type<ItemTranslations>(),
     imageUrl: varchar("image_url", { length: 256 }),
     order: integer("order").notNull().default(0), // Ensure this line exists
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow(),
   },
-  (t) => [uniqueIndex("menu_items_restaurant_slug_idx").on(t.restaurantId, t.slug)],
+  (t) => [
+    uniqueIndex("menu_items_restaurant_slug_idx").on(t.restaurantId, t.slug),
+  ],
 );
 
 // Define relations for menuItems
@@ -133,7 +166,7 @@ export const menuItemsRelations = relations(menuItems, ({ one }) => ({
 // 1. User Table (to reference Clerk IDs)
 export const users = pgTable("menu-hub_users", {
   // Store the Clerk User ID (text, non-nullable)
-  id: text("id").primaryKey(), 
+  id: text("id").primaryKey(),
   // You can add an optional email/name for debugging, but Clerk is the source of truth
   email: varchar("email", { length: 256 }).unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -161,7 +194,7 @@ export const usersToRestaurants = pgTable(
   (t) => ({
     // Enforce uniqueness for the pair (user_id, restaurant_id)
     pk: primaryKey({ columns: [t.userId, t.restaurantId] }),
-  })
+  }),
 );
 
 // 3. Relations for Junction Table (Optional but recommended for relational queries)
@@ -176,7 +209,7 @@ export const usersToRestaurantsRelations = relations(
       fields: [usersToRestaurants.restaurantId],
       references: [restaurants.id],
     }),
-  })
+  }),
 );
 
 // Update existing relations to include the new link
@@ -200,21 +233,31 @@ export const restaurantInvites = pgTable(
     email: varchar("email", { length: 256 }).notNull(),
     // SHA-256 of the token in the link, hex.
     tokenHash: varchar("token_hash", { length: 64 }).notNull().unique(),
-    invitedBy: text("invited_by").references(() => users.id, { onDelete: "set null" }),
+    invitedBy: text("invited_by").references(() => users.id, {
+      onDelete: "set null",
+    }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     expiresAt: timestamp("expires_at").notNull(),
   },
   // One open invitation per person per restaurant: inviting again replaces
   // the link.
-  (t) => [uniqueIndex("restaurant_invites_restaurant_email_idx").on(t.restaurantId, t.email)],
+  (t) => [
+    uniqueIndex("restaurant_invites_restaurant_email_idx").on(
+      t.restaurantId,
+      t.email,
+    ),
+  ],
 );
 
-export const restaurantInvitesRelations = relations(restaurantInvites, ({ one }) => ({
-  restaurant: one(restaurants, {
-    fields: [restaurantInvites.restaurantId],
-    references: [restaurants.id],
+export const restaurantInvitesRelations = relations(
+  restaurantInvites,
+  ({ one }) => ({
+    restaurant: one(restaurants, {
+      fields: [restaurantInvites.restaurantId],
+      references: [restaurants.id],
+    }),
   }),
-}));
+);
 
 // QR code scans: one row per restaurant per day (UTC), counting visits to
 // the permanent /r/<id> link. No personal data is stored.

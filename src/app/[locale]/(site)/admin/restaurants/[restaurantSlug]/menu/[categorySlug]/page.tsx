@@ -1,28 +1,29 @@
 // app/admin/restaurants/[restaurantSlug]/menu/[categorySlug]/page.tsx
-import { db } from "~/server/db"
-import { restaurants } from "~/server/db/schema"
-import { eq } from "drizzle-orm"
-import { notFound } from "next/navigation"
-import { getCategoryWithItems } from "~/server/menu-data"
-import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader"
-import { CategorySwitcher } from "~/components/menu-editor/CategorySwitcher"
-import { MenuItemList } from "~/components/menu-editor/MenuItemList"
+import { menuLanguagesOf } from "~/lib/menu-languages";
+import { db } from "~/server/db";
+import { restaurants } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
+import { notFound } from "next/navigation";
+import { getCategoryWithItems } from "~/server/menu-data";
+import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
+import { CategorySwitcher } from "~/components/menu-editor/CategorySwitcher";
+import { MenuItemList } from "~/components/menu-editor/MenuItemList";
 
 export default async function AdminCategoryItemsPage({
   params,
 }: {
-  params: Promise<{ restaurantSlug: string, categorySlug: string }>
+  params: Promise<{ restaurantSlug: string; categorySlug: string }>;
 }) {
-  const { restaurantSlug, categorySlug } = await params
+  const { restaurantSlug, categorySlug } = await params;
 
   const restaurant = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
-  })
-  if (!restaurant) notFound()
+  });
+  if (!restaurant) notFound();
 
-  const data = await getCategoryWithItems(restaurant.id, categorySlug)
-  if (!data) notFound()
-  const { category, allCategories, items } = data
+  const data = await getCategoryWithItems(restaurant.id, categorySlug);
+  if (!data) notFound();
+  const { category, allCategories, items } = data;
 
   return (
     <div className="space-y-8">
@@ -50,6 +51,7 @@ export default async function AdminCategoryItemsPage({
       <MenuItemList
         items={items}
         restaurantId={restaurant.id}
+        languages={menuLanguagesOf(restaurant)}
         categoryId={category.id}
         categoryName={category.name}
         currency={restaurant.currency}
@@ -57,5 +59,5 @@ export default async function AdminCategoryItemsPage({
         basePath={`/admin/restaurants/${restaurant.slug}/menu`}
       />
     </div>
-  )
+  );
 }

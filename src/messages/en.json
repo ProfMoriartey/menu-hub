@@ -339,7 +339,10 @@
       "deleteEmpty": "This category is empty. This can't be undone.",
       "deleteWithItems": "{count, plural, one {This also deletes the # item in it.} other {This also deletes the # items in it.}} This can't be undone.",
       "deleteButton": "Delete category",
-      "deleteWithItemsButton": "Delete category and items"
+      "deleteWithItemsButton": "Delete category and items",
+      "translate": "Translate",
+      "translateLabel": "Translate {name}",
+      "translateTitle": "\"{name}\" in other languages"
     },
     "items": {
       "add": "Add item",
@@ -396,7 +399,11 @@
       "addItem": "Add item",
       "saveFailed": "Couldn't save the item.",
       "category": "Category",
-      "photoTooLarge": "This photo is too large, even after shrinking. Try a smaller one (up to 2 MB)."
+      "photoTooLarge": "This photo is too large, even after shrinking. Try a smaller one (up to 2 MB).",
+      "languagesLabel": "Languages",
+      "mainLanguage": "main",
+      "notTranslatedYet": "Not translated yet",
+      "translationHint": "Price, photo, category and labels are shared by all languages. Empty fields show the main language."
     }
   },
   "DashboardRestaurant": {
@@ -521,7 +528,11 @@
     "inviteWrongAccount": "This invitation is for a different email address. Sign in with the address it was sent to.",
     "memberNotFound": "This person is no longer on the team. Reload the page.",
     "ownersByAdminOnly": "Owners can only be removed by an administrator.",
-    "ownerCantLeave": "Owners can't leave a restaurant themselves. Contact an administrator."
+    "ownerCantLeave": "Owners can't leave a restaurant themselves. Contact an administrator.",
+    "saveLanguagesFailed": "Couldn't save the menu languages. Please try again.",
+    "saveTranslationsFailed": "Couldn't save the translations. Please try again.",
+    "multilingualOff": "Menus in several languages aren't enabled for this restaurant.",
+    "invalidLanguages": "Choose languages from the list."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -703,5 +714,23 @@
     "invalidText": "It has expired, was cancelled, or was already used. Ask the restaurant's owner for a new link.",
     "toDashboard": "Go to your dashboard",
     "toHome": "Go to the home page"
+  },
+  "MenuLanguages": {
+    "title": "Menu languages",
+    "intro": "Offer the menu in more than one language. Guests see it in their language when it's translated, and in the main language otherwise.",
+    "enableTitle": "Menus in several languages",
+    "enableText": "Lets this restaurant's owners choose languages and its team translate the menu. Turning it off hides translations but keeps them.",
+    "notEnabled": "Menus in several languages aren't enabled for this restaurant. Contact an administrator to turn them on.",
+    "mainLabel": "Main language",
+    "mainHint": "The language the menu is written in now. Every dish needs at least this.",
+    "mainPlaceholder": "Choose the main language",
+    "extraLabel": "Extra languages",
+    "extraHint": "Your team can translate dishes and categories into these from the menu editor.",
+    "descriptionIn": "Restaurant description in {language}",
+    "save": "Save languages",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "chooseMainFirst": "Choose the main language first.",
+    "notTranslated": "Not translated: {languages}"
   }
 }

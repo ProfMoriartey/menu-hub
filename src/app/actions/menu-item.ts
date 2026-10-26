@@ -19,6 +19,13 @@ import {
   type UpdateMenuItemData,
 } from "~/lib/menu-item-schemas";
 import { uniqueSlug } from "~/lib/slug";
+import {
+  cleanTranslations,
+  ITEM_TEXT_FIELDS,
+  mergeTranslations,
+  type ItemTranslations,
+} from "~/lib/menu-languages";
+import { getMenuLanguages } from "~/server/menu-languages";
 import { deleteUploadedFiles } from "~/server/uploads";
 
 // Slugs used by the restaurant's other menu items.
@@ -49,11 +56,38 @@ const getJsonArrayValue = (formData: FormData, key: string): unknown => {
   return [];
 };
 
+// Item text in the restaurant's extra languages, as sent by the item form.
+// Only languages the restaurant uses are kept; null when translations are off
+// or the form didn't send any (so stored ones stay as they are).
+async function sentTranslations(formData: FormData, restaurantId: string) {
+  if (!formData.has("translations")) return null;
+  const languages = await getMenuLanguages(restaurantId);
+  if (!languages) return null;
+  let raw: unknown = null;
+  try {
+    raw = JSON.parse(getStringValue(formData, "translations") ?? "null");
+  } catch {
+    throw new ActionError("invalidItem");
+  }
+  return {
+    languages: languages.extra,
+    translations: cleanTranslations(
+      raw,
+      languages.extra,
+      ITEM_TEXT_FIELDS,
+      (field) => (field === "name" ? 256 : 512),
+    ) as ItemTranslations,
+  };
+}
+
 // A request can name any category id, so check it is one of this
 // restaurant's before filing an item under it.
 async function requireCategoryOf(restaurantId: string, categoryId: string) {
   const category = await db.query.categories.findFirst({
-    where: and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)),
+    where: and(
+      eq(categories.id, categoryId),
+      eq(categories.restaurantId, restaurantId),
+    ),
     columns: { id: true },
   });
   if (!category) throw new ActionError("invalidCategory");
@@ -91,10 +125,17 @@ export async function addMenuItem(formData: FormData): Promise<ActionResult> {
 
     const validatedData: CreateMenuItemData = result.data;
     await requireCategoryOf(restaurantId, validatedData.categoryId);
+    const sent = await sentTranslations(formData, restaurantId);
 
     await db.insert(menuItems).values({
       ...validatedData,
-      slug: uniqueSlug(validatedData.name, await takenItemSlugs(restaurantId), "item"),
+      translations:
+        sent && mergeTranslations(null, sent.translations, sent.languages),
+      slug: uniqueSlug(
+        validatedData.name,
+        await takenItemSlugs(restaurantId),
+        "item",
+      ),
       order: await nextItemOrder(validatedData.categoryId),
     });
 
@@ -102,7 +143,9 @@ export async function addMenuItem(formData: FormData): Promise<ActionResult> {
   });
 }
 
-export async function updateMenuItem(formData: FormData): Promise<ActionResult> {
+export async function updateMenuItem(
+  formData: FormData,
+): Promise<ActionResult> {
   return runAction("saveItemFailed", async () => {
     const restaurantId = getStringValue(formData, "restaurantId");
     if (!restaurantId) throw new ActionError("missingRestaurant");
@@ -129,7 +172,12 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
     const [existingItem] = await db
       .select()
       .from(menuItems)
-      .where(and(eq(menuItems.id, validatedData.id), eq(menuItems.restaurantId, restaurantId)));
+      .where(
+        and(
+          eq(menuItems.id, validatedData.id),
+          eq(menuItems.restaurantId, restaurantId),
+        ),
+      );
     if (!existingItem) throw new ActionError("itemNotFound");
 
     // Moving to another category: it must be this restaurant's, and the
@@ -137,11 +185,17 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
     const moved = validatedData.categoryId !== existingItem.categoryId;
     if (moved) await requireCategoryOf(restaurantId, validatedData.categoryId);
 
+    const sent = await sentTranslations(formData, restaurantId);
+
     // The slug is part of the public item URL, so only a rename changes it.
     const slug =
       existingItem.name === validatedData.name
         ? existingItem.slug
-        : uniqueSlug(validatedData.name, await takenItemSlugs(restaurantId, existingItem.id), "item");
+        : uniqueSlug(
+            validatedData.name,
+            await takenItemSlugs(restaurantId, existingItem.id),
+            "item",
+          );
 
     await db
       .update(menuItems)
@@ -154,18 +208,35 @@ export async function updateMenuItem(formData: FormData): Promise<ActionResult> 
         dietaryLabels: validatedData.dietaryLabels,
         // Only when sent, so a form without the field can't put a sold-out
         // item back on sale.
-        availability: formData.has("availability") ? validatedData.availability : existingItem.availability,
+        availability: formData.has("availability")
+          ? validatedData.availability
+          : existingItem.availability,
         imageUrl: validatedData.imageUrl,
+        ...(sent && {
+          translations: mergeTranslations(
+            existingItem.translations,
+            sent.translations,
+            sent.languages,
+          ),
+        }),
         ...(moved && {
           categoryId: validatedData.categoryId,
           order: await nextItemOrder(validatedData.categoryId),
         }),
         updatedAt: new Date(),
       })
-      .where(and(eq(menuItems.id, validatedData.id), eq(menuItems.restaurantId, restaurantId)));
+      .where(
+        and(
+          eq(menuItems.id, validatedData.id),
+          eq(menuItems.restaurantId, restaurantId),
+        ),
+      );
 
     // Covers both a replaced photo and a removed one.
-    if (existingItem.imageUrl && existingItem.imageUrl !== validatedData.imageUrl) {
+    if (
+      existingItem.imageUrl &&
+      existingItem.imageUrl !== validatedData.imageUrl
+    ) {
       await deleteUploadedFiles([existingItem.imageUrl]);
     }
 
@@ -186,12 +257,22 @@ export async function deleteMenuItem(
     const [existingItem] = await db
       .select()
       .from(menuItems)
-      .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)));
+      .where(
+        and(
+          eq(menuItems.id, menuItemId),
+          eq(menuItems.restaurantId, restaurantId),
+        ),
+      );
     if (!existingItem) throw new ActionError("itemNotFound");
 
     await db
       .delete(menuItems)
-      .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)));
+      .where(
+        and(
+          eq(menuItems.id, menuItemId),
+          eq(menuItems.restaurantId, restaurantId),
+        ),
+      );
 
     await deleteUploadedFiles([existingItem.imageUrl]);
 
@@ -216,7 +297,12 @@ export async function duplicateMenuItem(
     const [original] = await db
       .select()
       .from(menuItems)
-      .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)));
+      .where(
+        and(
+          eq(menuItems.id, menuItemId),
+          eq(menuItems.restaurantId, restaurantId),
+        ),
+      );
     if (!original) throw new ActionError("itemNotFound");
 
     // Named in the language of the person duplicating it.
@@ -228,7 +314,12 @@ export async function duplicateMenuItem(
       await tx
         .update(menuItems)
         .set({ order: sql`${menuItems.order} + 1` })
-        .where(and(eq(menuItems.categoryId, original.categoryId), gt(menuItems.order, original.order)));
+        .where(
+          and(
+            eq(menuItems.categoryId, original.categoryId),
+            gt(menuItems.order, original.order),
+          ),
+        );
 
       const [row] = await tx
         .insert(menuItems)
@@ -242,6 +333,8 @@ export async function duplicateMenuItem(
           ingredients: original.ingredients,
           dietaryLabels: original.dietaryLabels,
           imageUrl: original.imageUrl,
+          // Translations come along unchanged; only the main name says "copy".
+          translations: original.translations,
           availability: "hidden",
           order: original.order + 1,
         })
@@ -273,8 +366,16 @@ export async function setMenuItemAvailability(
 
     const [updated] = await db
       .update(menuItems)
-      .set({ availability: availability as ItemAvailability, updatedAt: new Date() })
-      .where(and(eq(menuItems.id, menuItemId), eq(menuItems.restaurantId, restaurantId)))
+      .set({
+        availability: availability as ItemAvailability,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(menuItems.id, menuItemId),
+          eq(menuItems.restaurantId, restaurantId),
+        ),
+      )
       .returning({ id: menuItems.id });
     if (!updated) throw new ActionError("itemNotFound");
 
@@ -295,7 +396,12 @@ export async function updateMenuItemOrder(
           tx
             .update(menuItems)
             .set({ order: item.order })
-            .where(and(eq(menuItems.id, item.id), eq(menuItems.restaurantId, restaurantId))),
+            .where(
+              and(
+                eq(menuItems.id, item.id),
+                eq(menuItems.restaurantId, restaurantId),
+              ),
+            ),
         ),
       );
     });
