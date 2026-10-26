@@ -5,7 +5,7 @@ import { db } from "~/server/db";
 import { menuItems, restaurants } from "~/server/db/schema";
 import { deleteUploadedFiles } from "~/server/uploads";
 import { and, eq, ne } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePublicRestaurant } from "~/server/public-menu";
 import type { ZodIssue } from "zod";
 import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
@@ -62,10 +62,6 @@ const restaurantFields = restaurantSchema.omit({ id: true });
 const invalidInput = (issues: ZodIssue[]) =>
   new ActionError(issues.some((issue) => issue.path[0] === "slug") ? "slugInvalid" : "invalidInput");
 
-// Restaurant data shows up on public pages, the dashboard and the admin
-// panel, so refresh every page under the locale segment.
-const revalidateRestaurantPages = () => revalidatePath("/[locale]", "layout");
-
 export async function addRestaurant(formData: FormData): Promise<ActionResult> {
   return runAction("createRestaurantFailed", async () => {
     if (!(await isSystemAdmin())) {
@@ -92,7 +88,7 @@ export async function addRestaurant(formData: FormData): Promise<ActionResult> {
     }
 
     await db.insert(restaurants).values(data);
-    revalidateRestaurantPages();
+    revalidatePublicRestaurant();
   });
 }
 
@@ -123,7 +119,7 @@ export async function deleteRestaurant(restaurantId: string): Promise<ActionResu
       ...items.map((item) => item.imageUrl),
     ]);
 
-    revalidateRestaurantPages();
+    revalidatePublicRestaurant(restaurantId);
   });
 }
 
@@ -192,6 +188,6 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
       adminOnly.ogImage !== data.ogImage ? adminOnly.ogImage : null,
     ]);
 
-    revalidateRestaurantPages();
+    revalidatePublicRestaurant(restaurantId);
   });
 }

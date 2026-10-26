@@ -409,7 +409,8 @@
     "categoriesNav": "Categorías",
     "itemsSummary": "{count, plural, one {# plato} other {# platos}} · Precios en {currency}",
     "preview": "Vista previa del menú",
-    "shareTab": "Compartir"
+    "shareTab": "Compartir",
+    "teamTab": "Equipo"
   },
   "LanguageSwitcher": {
     "label": "Idioma"
@@ -509,7 +510,18 @@
     "adminOnlyNewLogo": "Solo los administradores pueden subir el logo de un restaurante nuevo.",
     "ownerOnlyLogo": "Solo el propietario del restaurante puede cambiar su logo.",
     "invalidCategory": "Esa categoría no pertenece a este restaurante. Recarga la página e inténtalo de nuevo.",
-    "duplicateItemFailed": "No se pudo duplicar el plato. Inténtalo de nuevo."
+    "duplicateItemFailed": "No se pudo duplicar el plato. Inténtalo de nuevo.",
+    "createInviteFailed": "No se pudo crear la invitación. Inténtalo de nuevo.",
+    "cancelInviteFailed": "No se pudo cancelar la invitación. Inténtalo de nuevo.",
+    "respondInviteFailed": "No se pudo responder a la invitación. Inténtalo de nuevo.",
+    "invalidEmail": "Introduce un correo electrónico válido.",
+    "alreadyMember": "Esta persona ya está en el equipo.",
+    "tooManyInvites": "Ya hay {max} invitaciones abiertas. Cancela algunas antes de crear otras.",
+    "inviteInvalid": "Esta invitación ha caducado o ya se usó. Pide un enlace nuevo al propietario.",
+    "inviteWrongAccount": "Esta invitación es para otro correo electrónico. Inicia sesión con la dirección a la que se envió.",
+    "memberNotFound": "Esta persona ya no está en el equipo. Recarga la página.",
+    "ownersByAdminOnly": "Solo un administrador puede quitar a los propietarios.",
+    "ownerCantLeave": "Los propietarios no pueden salir de un restaurante por su cuenta. Contacta con un administrador."
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
@@ -623,5 +635,73 @@
       "text": "Imprime tu código QR para las mesas. Este paso se marca solo con el primer escaneo.",
       "action": "Obtener código QR"
     }
+  },
+  "PublicMenu": {
+    "categoriesNav": "Categorías del menú",
+    "allCategories": "Todas las categorías",
+    "itemCount": "{count, plural, one {# plato} other {# platos}}",
+    "mapLabel": "Abrir en el mapa",
+    "websiteLabel": "Sitio web",
+    "searchLabel": "Buscar en el menú",
+    "searchPlaceholder": "Busca platos y bebidas",
+    "clearSearch": "Borrar búsqueda",
+    "dietaryFilters": "Filtros de dieta",
+    "resultCount": "{count, plural, one {# plato encontrado} other {# platos encontrados}}",
+    "noResults": "No hay nada en el menú que coincida.",
+    "clearFilters": "Borrar búsqueda y filtros",
+    "metaMenuTitle": "{name} – Menú",
+    "metaMenuDescription": "Mira el menú de {name}, con precios y fotos.",
+    "metaAboutTitle": "{name} – Información y ubicación",
+    "metaItemTitle": "{item} – {restaurant}",
+    "metaItemDescription": "{item} en {restaurant}: {price}."
+  },
+  "Team": {
+    "inviteTitle": "Invitar a un editor",
+    "inviteText": "Los editores pueden cambiar el menú: categorías, platos, precios y fotos. No pueden cambiar los datos del restaurante.",
+    "emailLabel": "Su correo electrónico",
+    "emailHint": "Tendrá que iniciar sesión con esta dirección para unirse.",
+    "createLink": "Crear enlace de invitación",
+    "creating": "Creando…",
+    "linkReady": "El enlace de invitación para {email} está listo",
+    "linkLabel": "Enlace de invitación",
+    "copy": "Copiar enlace",
+    "copied": "Copiado",
+    "closeLink": "Cerrar",
+    "linkHint": "Envíaselo, por ejemplo por WhatsApp. Funciona una sola vez, solo para {email}, hasta el {date}. Cópialo ahora: por seguridad no se puede volver a mostrar.",
+    "whatsappText": "Te han invitado a ayudar a gestionar el menú de {restaurant} en Menupedia. Abre este enlace para unirte: {url}",
+    "pendingTitle": "Invitaciones pendientes",
+    "pendingText": "Personas que aún no se han unido. Un enlace nuevo sustituye al anterior.",
+    "expires": "Caduca el {date}",
+    "newLink": "Nuevo enlace",
+    "cancelInvite": "Cancelar",
+    "membersTitle": "Equipo",
+    "membersText": "Los propietarios pueden editar los datos y el menú; los editores, solo el menú. Un administrador añade o quita propietarios.",
+    "noMembers": "Todavía no hay nadie en el equipo.",
+    "you": "tú",
+    "unknownPerson": "Persona desconocida",
+    "remove": "Quitar",
+    "removing": "Quitando…",
+    "removeTitle": "¿Quitar a {name}?",
+    "removeText": "Ya no podrá editar el menú de {restaurant}. Puedes volver a invitarle cuando quieras.",
+    "leave": "Salir",
+    "leaving": "Saliendo…",
+    "leaveTitle": "¿Salir de {restaurant}?",
+    "leaveText": "Ya no podrás editar este menú. Un propietario puede volver a invitarte."
+  },
+  "Invite": {
+    "eyebrow": "Invitación",
+    "title": "Únete a {restaurant} como editor",
+    "signInText": "Inicia sesión, o crea una cuenta, con <b>{email}</b> para unirte.",
+    "wrongAccountText": "Esta invitación es para <b>{email}</b>, pero has iniciado sesión con otra dirección. Cierra sesión e inicia sesión con esa dirección.",
+    "switchAccount": "Cerrar sesión y cambiar de cuenta",
+    "acceptText": "Podrás editar el menú de {restaurant}: categorías, platos, precios y fotos.",
+    "accept": "Aceptar y unirse",
+    "joining": "Uniéndote…",
+    "decline": "Rechazar",
+    "declined": "Invitación rechazada.",
+    "invalidTitle": "Esta invitación no se puede usar",
+    "invalidText": "Ha caducado, se canceló o ya se usó. Pide un enlace nuevo al propietario del restaurante.",
+    "toDashboard": "Ir a tu panel",
+    "toHome": "Ir a la página de inicio"
   }
 }

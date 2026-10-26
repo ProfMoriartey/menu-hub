@@ -2,8 +2,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { redirect } from "~/i18n/navigation";
-import { getLocale } from "next-intl/server";
-import { getRestaurantBySlug } from "~/server/queries";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
+import { getRestaurantBySlug } from "~/server/public-menu";
 import { getRestaurantRole } from "~/app/actions/auth";
 import { PreviewBanner } from "~/components/public/PreviewBanner";
 
@@ -17,7 +18,34 @@ export async function generateMetadata({
   params,
 }: Pick<DynamicPublicLayoutProps, "params">): Promise<Metadata> {
   const restaurant = await getRestaurantBySlug((await params).restaurantSlug);
-  return restaurant && !restaurant.isActive ? { robots: { index: false, follow: false } } : {};
+  return restaurant && !restaurant.isActive
+    ? { robots: { index: false, follow: false } }
+    : {};
+}
+
+// Translations the client components on these pages use. Server components
+// read every message on the server, so only these go to the browser, not the
+// whole site's (dashboard, admin, marketing). A client component here that
+// uses another namespace shows MISSING_MESSAGE: add it to this list.
+const CLIENT_NAMESPACES = [
+  "PublicMenu",
+  "Availability",
+  "LanguageSwitcher",
+  "UnsavedChanges",
+];
+
+async function clientMessages(): Promise<AbstractIntlMessages> {
+  const messages = (await getMessages()) as AbstractIntlMessages;
+  const picked: AbstractIntlMessages = Object.fromEntries(
+    CLIENT_NAMESPACES.map((namespace) => [
+      namespace,
+      messages[namespace] ?? {},
+    ]),
+  );
+  // Dietary labels are shared with the menu editor; only that part is needed.
+  const editor = messages.MenuEditor as AbstractIntlMessages | undefined;
+  picked.MenuEditor = { dietary: editor?.dietary ?? {} };
+  return picked;
 }
 
 /**
@@ -43,17 +71,23 @@ export default async function DynamicPublicLayout({
 
   // 3. Live: everyone sees it. (Only inactive menus check who is asking, so
   // the public pages guests visit don't depend on sign-in at all.)
+  const withMessages = async (content: React.ReactNode) => (
+    <NextIntlClientProvider messages={await clientMessages()}>
+      {content}
+    </NextIntlClientProvider>
+  );
+
   if (restaurant.isActive) {
-    return <>{children}</>;
+    return withMessages(children);
   }
 
   // 4. Not live yet: owners, editors and admins get a preview.
   if (await getRestaurantRole(restaurant.id)) {
-    return (
+    return withMessages(
       <>
         <PreviewBanner restaurantSlug={restaurant.slug} />
         {children}
-      </>
+      </>,
     );
   }
 

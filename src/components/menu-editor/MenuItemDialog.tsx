@@ -30,6 +30,7 @@ import { ITEM_PHOTO, resizeImages } from "~/lib/resize-image";
 import { addMenuItem, updateMenuItem } from "~/app/actions/menu-item";
 import { CharCount, Field } from "~/components/forms/fields";
 import { AVAILABILITY_OPTIONS, AvailabilitySelect } from "~/components/menu-editor/availability";
+import { DIETARY_LABEL_KEYS } from "~/lib/dietary-labels";
 import type { ItemAvailability } from "~/lib/menu-item-schemas";
 import { cn } from "~/lib/utils";
 import type { menuItems } from "~/server/db/schema";
@@ -37,15 +38,6 @@ import type { DietaryLabel } from "~/types/restaurant";
 
 export type AdminMenuItem = InferSelectModel<typeof menuItems>;
 
-// Matches dietaryLabelEnum in the database schema; values map to their
-// translation keys under MenuEditor.dietary.
-export const DIETARY_LABEL_KEYS: Record<DietaryLabel, string> = {
-  vegetarian: "vegetarian",
-  vegan: "vegan",
-  "gluten-free": "glutenFree",
-  "dairy-free": "dairyFree",
-  "nut-free": "nutFree",
-};
 const DIETARY_LABELS = Object.keys(DIETARY_LABEL_KEYS) as DietaryLabel[];
 
 // Column lengths in the menu items table.

@@ -1,19 +1,11 @@
 import "~/styles/globals.css";
 
-import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { extractRouterConfig } from "uploadthing/server";
-
-import { ourFileRouter } from "~/app/api/uploadthing/core";
-
 import { type Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Geist } from "next/font/google";
-import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
 import { ThemeProvider, themeInitScript } from "~/context/ThemeContext";
-import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "~/i18n/routing";
-import MouseTracker from "~/components/visuals/MouseTracker";
 
 // Determine the base URL for your application
 const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"; // Ensure this is set in your .env.local for production
@@ -75,31 +67,23 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+  // Only what every page needs. Sign-in (Clerk), the site navbar, upload
+  // setup and the full set of translations live in (site)/layout.tsx, so
+  // public menu pages, the ones guests open from a QR code, don't load them.
   return (
-    <ClerkProvider>
-      <html
-        lang={locale}
-        dir={locale === "ar" ? "rtl" : "ltr"}
-        className={`${geist.variable}`}
-        // themeInitScript adds the "dark" class before React hydrates
-        suppressHydrationWarning
-      >
-        <head>
-          <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        </head>
-        <body>
-          <NextIntlClientProvider>
-            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-
-            <ThemeProvider>
-              <LayoutWrapper>
-                {children}
-                {/* <MouseTracker /> */}
-              </LayoutWrapper>
-            </ThemeProvider>
-          </NextIntlClientProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className={`${geist.variable}`}
+      // themeInitScript adds the "dark" class before React hydrates
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
+    </html>
   );
 }

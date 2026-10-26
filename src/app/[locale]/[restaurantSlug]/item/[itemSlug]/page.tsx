@@ -1,13 +1,20 @@
 // app/[restaurantSlug]/item/[itemSlug]/page.tsx
 import { db } from "~/server/db";
-import { menuItems, restaurants } from "~/server/db/schema";
-import { and, eq, ne } from "drizzle-orm";
+import { menuItems } from "~/server/db/schema";
+import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
+import {
+  clip,
+  publicPageMetadata,
+  restaurantPreviewImage,
+} from "~/server/public-metadata";
 import { permanentRedirect } from "~/i18n/navigation";
 import { isUuid } from "~/lib/slug";
-import { MenuItemDisplayClient } from "~/components/public/MenuItemDisplayClient";
-import { getTranslations } from "next-intl/server"; // ADDED: Import getTranslations
+import { formatPrice } from "~/lib/format-price";
+import { getPublicMenuItem, getRestaurantBySlug } from "~/server/public-menu";
+import { MenuItemDetail } from "~/components/public/MenuItemDetail";
 
 interface PageProps {
   params: Promise<{
@@ -19,36 +26,57 @@ interface PageProps {
   >;
 }
 
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { restaurantSlug, itemSlug } = await params;
+  const restaurant = await getRestaurantBySlug(restaurantSlug);
+  if (!restaurant) return {};
+  const item = await getPublicMenuItem(restaurant.id, itemSlug);
+  if (!item) return {};
+
+  const locale = await getLocale();
+  const t = await getTranslations("PublicMenu");
+  const price = formatPrice(item.price, restaurant.currency, locale);
+  return publicPageMetadata({
+    locale,
+    path: `/${restaurant.slug}/item/${item.slug}`,
+    title: t("metaItemTitle", { item: item.name, restaurant: restaurant.name }),
+    description: clip(
+      item.description
+        ? `${price} · ${item.description}`
+        : t("metaItemDescription", {
+            item: item.name,
+            restaurant: restaurant.name,
+            price,
+          }),
+    ),
+    // The dish photo makes the best preview; the restaurant's image otherwise.
+    image: item.imageUrl
+      ? { url: item.imageUrl, large: true }
+      : restaurantPreviewImage(restaurant),
+    siteName: restaurant.name,
+  });
+}
+
 export default async function MenuItemDetailPage({ params }: PageProps) {
   const { restaurantSlug, itemSlug } = await params;
 
-  // ADDED: Fetch translations for this page
-  const t = await getTranslations("menuItemDetailPage");
-
-  const restaurant = await db.query.restaurants.findFirst({
-    where: eq(restaurants.slug, restaurantSlug),
-    columns: { id: true },
-  });
+  const restaurant = await getRestaurantBySlug(restaurantSlug);
   if (!restaurant) notFound();
 
   // Hidden items have no public page; sold-out ones do, marked as such.
-  const itemDetails = await db.query.menuItems.findFirst({
-    where: and(
-      eq(menuItems.restaurantId, restaurant.id),
-      eq(menuItems.slug, itemSlug),
-      ne(menuItems.availability, "hidden"),
-    ),
-    with: {
-      restaurant: true,
-      category: true,
-    },
-  });
+  const item = await getPublicMenuItem(restaurant.id, itemSlug);
 
-  if (!itemDetails) {
+  if (!item) {
     // Item links used to end in the item's id; send those to the slug URL.
+    // Rare, so this lookup isn't cached.
     if (isUuid(itemSlug)) {
       const legacy = await db.query.menuItems.findFirst({
-        where: and(eq(menuItems.restaurantId, restaurant.id), eq(menuItems.id, itemSlug)),
+        where: and(
+          eq(menuItems.restaurantId, restaurant.id),
+          eq(menuItems.id, itemSlug),
+        ),
         columns: { slug: true },
       });
       if (legacy) {
@@ -62,21 +90,16 @@ export default async function MenuItemDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="bg-background text-foreground min-h-screen">
-      {/* ADDED: Simple header for the page using translation */}
-      <header className="bg-card p-4 text-center shadow-sm">
-        <h1 className="mb-2 text-4xl font-bold">{t("pageTitle")}</h1>
-        <p className="text-muted-foreground text-lg">
-          {itemDetails.name} - {itemDetails.restaurant.name}
-        </p>
-      </header>
-      <main className="container mx-auto px-4 py-8">
-        <MenuItemDisplayClient
-          item={itemDetails}
-          restaurantSlug={restaurantSlug}
-          theme={itemDetails.restaurant.theme ?? "default"}
-        />
-      </main>
-    </div>
+    <MenuItemDetail
+      item={{
+        ...item,
+        displayPrice: formatPrice(
+          item.price,
+          restaurant.currency,
+          await getLocale(),
+        ),
+      }}
+      restaurant={restaurant}
+    />
   );
 }

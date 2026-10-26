@@ -4,7 +4,7 @@
 import { db } from "~/server/db";
 import { categories, menuItems } from "~/server/db/schema";
 import { deleteUploadedFiles } from "~/server/uploads";
-import { revalidatePath } from "next/cache";
+import { revalidatePublicMenu } from "~/server/public-menu";
 import { and, eq } from "drizzle-orm";
 import { checkAuthorization } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
@@ -21,9 +21,6 @@ async function takenCategorySlugs(restaurantId: string, exceptId?: string) {
     .where(eq(categories.restaurantId, restaurantId));
   return rows.filter((row) => row.id !== exceptId).map((row) => row.slug);
 }
-
-// Menus appear on public pages, the dashboard and the admin panel.
-const revalidateMenuPages = () => revalidatePath("/[locale]", "layout");
 
 export async function addCategory(formData: FormData): Promise<ActionResult> {
   return runAction("addCategoryFailed", async () => {
@@ -45,7 +42,7 @@ export async function addCategory(formData: FormData): Promise<ActionResult> {
       restaurantId,
     });
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
   });
 }
 
@@ -81,7 +78,7 @@ export async function updateCategory(formData: FormData): Promise<ActionResult> 
       .set({ name: newName, slug, updatedAt: new Date() })
       .where(and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)));
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
   });
 }
 
@@ -100,7 +97,7 @@ export async function deleteCategory(categoryId: string, restaurantId: string): 
       .where(and(eq(categories.id, categoryId), eq(categories.restaurantId, restaurantId)));
     await deleteUploadedFiles(items.map((item) => item.imageUrl));
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
   });
 }
 
@@ -131,6 +128,6 @@ export async function reorderCategories(formData: FormData): Promise<ActionResul
       );
     });
 
-    revalidateMenuPages();
+    revalidatePublicMenu(restaurantId);
   });
 }

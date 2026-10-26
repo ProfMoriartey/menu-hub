@@ -1,3 +1,5 @@
+Dont forget to Submit https://www.menu-pedia.com/sitemap.xml in Google Search Console.
+
 # Menu-Hub (Menupedia)
 
 A modern, full-stack web application for restaurant menu management and discovery. Menu-Hub connects food lovers with local restaurants through an intuitive platform that allows restaurant owners to manage their menus digitally while providing customers with a seamless dining discovery experience.

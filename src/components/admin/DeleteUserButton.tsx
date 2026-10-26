@@ -5,7 +5,7 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { ConfirmDialog } from "~/components/menu-editor/ConfirmDialog";
-import { deleteUser } from "~/app/[locale]/admin/actions";
+import { deleteUser } from "~/app/[locale]/(site)/admin/actions";
 
 interface DeleteUserButtonProps {
   userId: string;

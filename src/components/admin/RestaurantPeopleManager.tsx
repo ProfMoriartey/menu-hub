@@ -18,7 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover
 import { ConfirmDialog } from "~/components/menu-editor/ConfirmDialog";
 import { RoleSelect } from "~/components/admin/UserAccessManager";
 import { UserAvatar } from "~/components/admin/UserList";
-import { assignRestaurantToUser, revokeRestaurantAccess } from "~/app/[locale]/admin/actions";
+import { assignRestaurantToUser, revokeRestaurantAccess } from "~/app/[locale]/(site)/admin/actions";
 import type { AccessLevel } from "~/lib/access";
 
 export interface PersonSummary {

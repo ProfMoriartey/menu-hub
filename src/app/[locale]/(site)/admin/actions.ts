@@ -11,6 +11,9 @@ import { runAction } from '~/server/run-action';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import { isClerkAPIResponseError } from '@clerk/nextjs/errors';
 import { revalidatePath } from 'next/cache';
+
+// revalidatePath matches folder paths, route groups included.
+const ADMIN_LAYOUT = '/[locale]/(site)/admin';
 import { and, eq } from 'drizzle-orm';
 
 async function requireAdmin() {
@@ -51,7 +54,7 @@ export async function assignRestaurantToUser(
         set: { accessLevel: level },
       });
 
-    revalidatePath('/[locale]/admin', 'layout');
+    revalidatePath(ADMIN_LAYOUT, 'layout');
   });
 }
 
@@ -74,7 +77,7 @@ export async function revokeRestaurantAccess(
         )
       );
 
-    revalidatePath('/[locale]/admin', 'layout');
+    revalidatePath(ADMIN_LAYOUT, 'layout');
   });
 }
 

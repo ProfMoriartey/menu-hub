@@ -1,54 +1,17 @@
 // src/components/admin/RestaurantCard.tsx
 "use client";
 
-import Image from "next/image";
 import { ExternalLink, Eye, MapPin, Pencil, Rocket, Star, UtensilsCrossed } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { DeleteRestaurantDialog } from "~/components/admin/DeleteRestaurantDialog";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { cn } from "~/lib/utils";
 import { formatDate } from "~/lib/format";
 
 import type { ActionResult } from "~/lib/action-result";
 import type { Restaurant } from "~/types/restaurant";
 import type { SetupProgress } from "~/lib/setup-checklist";
-
-export function RestaurantLogo({
-  restaurant,
-  size = "md",
-}: {
-  restaurant: Pick<Restaurant, "name" | "logoUrl">;
-  size?: "sm" | "md" | "lg";
-}) {
-  const initials = restaurant.name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase() ?? "")
-    .join("");
-
-  return (
-    <div
-      className={cn(
-        "bg-muted border-border relative flex shrink-0 items-center justify-center overflow-hidden border",
-        size === "lg" && "h-16 w-16 rounded-xl text-xl",
-        size === "md" && "h-12 w-12 rounded-xl text-base",
-        size === "sm" && "h-8 w-8 rounded-lg text-xs",
-      )}
-    >
-      {restaurant.logoUrl ? (
-        <Image
-          src={restaurant.logoUrl}
-          alt=""
-          fill
-          sizes={size === "lg" ? "64px" : size === "md" ? "48px" : "32px"}
-          className="object-cover"
-        />
-      ) : (
-        <span className="text-muted-foreground font-semibold">{initials}</span>
-      )}
-    </div>
-  );
-}
 
 export function StatusBadges({
   restaurant,

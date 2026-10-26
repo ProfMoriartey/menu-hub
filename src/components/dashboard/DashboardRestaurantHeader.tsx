@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { ChevronRight, ExternalLink, Eye } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
-import { RestaurantLogo } from "~/components/admin/RestaurantCard";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { canEditDetails, type RestaurantRole } from "~/lib/access";
 import { cn } from "~/lib/utils";
 import type { Restaurant } from "~/types/restaurant";
@@ -11,7 +11,7 @@ import type { Restaurant } from "~/types/restaurant";
 interface DashboardRestaurantHeaderProps {
   restaurant: Pick<Restaurant, "name" | "slug" | "logoUrl" | "isActive">;
   role: RestaurantRole;
-  activeTab: "menu" | "details" | "share";
+  activeTab: "menu" | "details" | "share" | "team";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
   trail?: { label: string; href?: string }[];
 }
@@ -30,6 +30,8 @@ export async function DashboardRestaurantHeader({
     { id: "menu", label: t("menuTab"), href: `${base}/menu` },
     // Everyone with access shares the menu, editors included.
     { id: "share", label: t("shareTab"), href: `${base}/share` },
+    // Owners manage the team here; editors see who's on it and can leave.
+    { id: "team", label: t("teamTab"), href: `${base}/team` },
     // Editors manage the menu only, so they don't get a details tab.
     ...(canEditDetails(role)
       ? [{ id: "details", label: t("detailsTab"), href: `${base}/edit` }]

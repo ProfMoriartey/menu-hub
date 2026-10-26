@@ -2,16 +2,18 @@
 import { auth } from "@clerk/nextjs/server";
 import { getTranslations, getLocale } from "next-intl/server";
 import { eq } from "drizzle-orm";
-import { ExternalLink, Eye, Pencil, QrCode, ShieldCheck, Store, UtensilsCrossed } from "lucide-react";
+import { ExternalLink, Eye, Pencil, QrCode, ShieldCheck, Store, UserPlus, UtensilsCrossed } from "lucide-react";
 import { Link, redirect } from "~/i18n/navigation";
 import { db } from "~/server/db";
 import { usersToRestaurants } from "~/server/db/schema";
 import { isSystemAdmin } from "~/app/actions/auth";
 import { Button } from "~/components/ui/button";
-import { RestaurantLogo } from "~/components/admin/RestaurantCard";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { canEditDetails, toAccessLevel } from "~/lib/access";
 import { setupProgress } from "~/lib/setup-checklist";
 import { getSetupFacts } from "~/server/setup-facts";
+import { findInvitesForEmails, getVerifiedEmails } from "~/server/invites";
+import { InviteResponse } from "~/components/dashboard/InviteResponse";
 
 // NOTE: This component is placed inside an (app) route group to avoid
 // dynamic segment conflicts with [restaurantSlug]. The URL is /dashboard.
@@ -22,10 +24,11 @@ export default async function ClientUserDashboardPage() {
     return redirect({ href: "/sign-in", locale: await getLocale() });
   }
 
-  const [t, tHome, tSetup, assignments, isAdmin] = await Promise.all([
+  const [t, tHome, tSetup, tInvite, assignments, isAdmin, invitations] = await Promise.all([
     getTranslations("Dashboard"),
     getTranslations("DashboardHome"),
     getTranslations("Setup"),
+    getTranslations("Invite"),
     db.query.usersToRestaurants.findMany({
       where: eq(usersToRestaurants.userId, userId),
       with: {
@@ -42,6 +45,14 @@ export default async function ClientUserDashboardPage() {
       },
     }),
     isSystemAdmin(),
+    // Open invitations to this person's verified addresses, so they can join
+    // without the link. Clerk being unreachable shouldn't break the dashboard.
+    getVerifiedEmails(userId)
+      .then(findInvitesForEmails)
+      .catch((error: unknown) => {
+        console.error("Failed to load invitations:", error);
+        return [];
+      }),
   ]);
 
   const restaurants = assignments
@@ -52,6 +63,9 @@ export default async function ClientUserDashboardPage() {
       itemCount: restaurant.categories.reduce((sum, c) => sum + c.menuItems.length, 0),
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
+
+  const memberOf = new Set(assignments.map((a) => a.restaurant.id));
+  const openInvitations = invitations.filter((invite) => !memberOf.has(invite.restaurantId));
 
   // Setup progress for every card, with one grouped query per table.
   const setupFacts = await getSetupFacts(restaurants);
@@ -78,7 +92,29 @@ export default async function ClientUserDashboardPage() {
         </div>
       )}
 
-      {restaurants.length === 0 ? (
+      {openInvitations.length > 0 && (
+        <ul className="space-y-3" aria-label={tInvite("eyebrow")}>
+          {openInvitations.map((invite) => (
+            <li
+              key={invite.id}
+              className="bg-primary/5 border-primary/20 flex flex-wrap items-center justify-between gap-4 rounded-xl border px-5 py-4"
+            >
+              <div className="flex min-w-0 items-center gap-3">
+                <RestaurantLogo restaurant={invite.restaurant} />
+                <div className="min-w-0">
+                  <p className="text-muted-foreground flex items-center gap-1.5 text-sm">
+                    <UserPlus className="h-4 w-4" aria-hidden /> {tInvite("eyebrow")}
+                  </p>
+                  <p className="truncate font-medium">{tInvite("title", { restaurant: invite.restaurant.name })}</p>
+                </div>
+              </div>
+              <InviteResponse inviteId={invite.id} />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {restaurants.length === 0 && openInvitations.length > 0 ? null : restaurants.length === 0 ? (
         <div className="border-border flex flex-col items-center rounded-xl border border-dashed px-6 py-16 text-center">
           <Store className="text-muted-foreground mb-4 h-10 w-10" aria-hidden />
           <h2 className="text-lg font-semibold">{t("emptyTitle")}</h2>

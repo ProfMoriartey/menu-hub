@@ -6,7 +6,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Link } from "~/i18n/navigation";
-import Image from "next/image";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { Button } from "~/components/ui/button";
 
 import {
@@ -58,8 +58,6 @@ export function RestaurantSearchAndGrid({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
-
-  const fallbackImageUrl = `https://placehold.co/50x50/E0E0E0/333333?text=Logo`;
 
   // Effect for debouncing the search term and fetching results
   useEffect(() => {
@@ -183,12 +181,10 @@ export function RestaurantSearchAndGrid({
                           value={restaurant.id}
                           className="text-foreground flex cursor-pointer items-center gap-2"
                         >
-                          <Image
-                            src={restaurant.logoUrl ?? fallbackImageUrl}
-                            alt={`${restaurant.name} Logo`}
-                            width={32}
-                            height={32}
-                            className="rounded-full object-cover"
+                          <RestaurantLogo
+                            restaurant={restaurant}
+                            size="sm"
+                            className="rounded-full"
                           />
                           <div>
                             <p className="font-medium">{restaurant.name}</p>

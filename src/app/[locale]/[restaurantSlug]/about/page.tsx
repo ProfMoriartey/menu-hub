@@ -1,7 +1,7 @@
 // app/[locale]/(public)/[restaurantSlug]/about/page.tsx
-import { getRestaurantBySlug } from "~/server/queries"
+import { getRestaurantBySlug } from "~/server/public-menu"
 import { notFound } from "next/navigation"
-import Image from "next/image"
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo"
 import { Link } from "~/i18n/navigation"
 import { Button } from "~/components/ui/button"
 import { 
@@ -9,12 +9,13 @@ import {
   Instagram, Facebook, Twitter, Music2, UtensilsCrossed 
 } from "lucide-react"
 import { cn } from "~/lib/utils"
-import { getTranslations } from "next-intl/server"
+import { getLocale, getTranslations } from "next-intl/server"
+import type { Metadata } from "next"
+import { clip, publicPageMetadata, restaurantPreviewImage } from "~/server/public-metadata"
 
-import type { Restaurant } from "~/types/restaurant"
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"
 import { DeliveryOptionsDialog } from "~/components/public/DeliveryOptionsDialog"
-import { ThemeToggle } from "~/components/shared/ThemeToggle"
+import { PublicPageControls } from "~/components/public/PublicPageControls"
 
 interface PageProps {
   params: Promise<{
@@ -22,9 +23,29 @@ interface PageProps {
   }>
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const restaurant = await getRestaurantBySlug((await params).restaurantSlug)
+  if (!restaurant) return {}
+  const t = await getTranslations("PublicMenu")
+  // Where it is and how to reach it: what people look for on this page.
+  const place = [restaurant.address, restaurant.country].filter(Boolean).join(", ")
+  return publicPageMetadata({
+    locale: await getLocale(),
+    path: `/${restaurant.slug}/about`,
+    title: t("metaAboutTitle", { name: restaurant.name }),
+    description: clip(
+      [place, restaurant.description].filter(Boolean).join(" · ") ||
+        t("metaMenuDescription", { name: restaurant.name }),
+    ),
+    image: restaurantPreviewImage(restaurant),
+    siteName: restaurant.name,
+  })
+}
+
 export default async function RestaurantProfilePage({ params }: PageProps) {
   const { restaurantSlug } = await params
   const t = await getTranslations("restaurantProfilePage")
+  const tMenu = await getTranslations("PublicMenu")
 
   const rawData = await getRestaurantBySlug(restaurantSlug)
 
@@ -32,12 +53,12 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
     notFound()
   }
 
+  // The JSON columns are untyped in the database schema.
   const restaurantDetails = {
     ...rawData,
-    categories: [],
-    socialMedia: rawData.socialMedia as SocialMediaLinks,
-    deliveryApps: rawData.deliveryApps as DeliveryAppLinks,
-  } as Restaurant
+    socialMedia: rawData.socialMedia as SocialMediaLinks | null,
+    deliveryApps: rawData.deliveryApps as DeliveryAppLinks | null,
+  }
 
   const socials = restaurantDetails.socialMedia ?? ({} as SocialMediaLinks)
   const deliveryApps = restaurantDetails.deliveryApps ?? ({} as DeliveryAppLinks)
@@ -45,29 +66,26 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
   const hasSocials = Object.values(socials).some((url) => url && url.trim() !== "")
   const hasDelivery = Object.values(deliveryApps).some((url) => url && url.trim() !== "")
 
-  const fallbackLogoUrl = `https://placehold.co/150x150/E0E0E0/333333?text=Logo`
   const themeClass = `theme-${restaurantDetails.theme ?? "default"}`
 
   return (
     <div className={cn("relative min-h-screen p-4 sm:p-8", "bg-background text-foreground", themeClass)}>
       
       {/* Theme Toggle - Top Right */}
-      <div className="absolute top-4 right-4 z-50">
-        <ThemeToggle />
+      <div className="absolute end-4 top-4 z-50">
+        <PublicPageControls />
       </div>
 
-      <div className={cn("container mx-auto max-w-4xl rounded-lg p-6 shadow-lg sm:p-8 mt-12 sm:mt-0", "bg-card")}>
+      <div className={cn("container mx-auto max-w-4xl rounded-lg p-6 shadow-lg sm:p-8 mt-12", "bg-card")}>
         
         {/* Header section - centered for mobile and desktop */}
         <div className="mb-10 flex flex-col items-center border-b pb-8">
-          <div className={cn("relative mb-6 h-32 w-32 overflow-hidden rounded-full border-4 shadow-md", "border-primary/50")}>
-            <Image
-              src={restaurantDetails.logoUrl ?? fallbackLogoUrl}
-              alt={`${restaurantDetails.name} Logo`}
-              fill
-              className="object-cover"
-            />
-          </div>
+          <RestaurantLogo
+            restaurant={restaurantDetails}
+            className="border-primary/50 mb-6 h-32 w-32 rounded-full border-4 text-4xl shadow-md"
+            imageSizes="128px"
+            priority
+          />
 
           <h1 className="text-foreground mb-4 text-center text-4xl sm:text-5xl font-extrabold">
             {restaurantDetails.name}
@@ -77,7 +95,7 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
           <div className="mb-6 w-full max-w-sm grid grid-cols-2 gap-3 sm:flex sm:max-w-none sm:justify-center sm:gap-4">
             <Link href={`/${restaurantSlug}`} passHref className="w-full sm:w-auto">
               <Button size="lg" className="w-full font-bold px-4">
-                <UtensilsCrossed className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                <UtensilsCrossed className="me-2 h-4 w-4 sm:h-5 sm:w-5" />
                 {t("menuButton")}
               </Button>
             </Link>
@@ -102,27 +120,27 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
           {hasSocials && (
             <div className="mt-6 flex gap-5">
               {socials.instagram && (
-                <a href={socials.instagram} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href={socials.instagram} aria-label="Instagram" title="Instagram" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <Instagram className="h-7 w-7" />
                 </a>
               )}
               {socials.facebook && (
-                <a href={socials.facebook} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href={socials.facebook} aria-label="Facebook" title="Facebook" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <Facebook className="h-7 w-7" />
                 </a>
               )}
               {socials.twitter && (
-                <a href={socials.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href={socials.twitter} aria-label="Twitter" title="Twitter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <Twitter className="h-7 w-7" />
                 </a>
               )}
               {socials.tiktok && (
-                <a href={socials.tiktok} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href={socials.tiktok} aria-label="TikTok" title="TikTok" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <Music2 className="h-7 w-7" />
                 </a>
               )}
               {socials.website && (
-                <a href={socials.website} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href={socials.website} aria-label={tMenu("websiteLabel")} title={tMenu("websiteLabel")} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <Globe className="h-7 w-7" />
                 </a>
               )}
@@ -135,13 +153,13 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
           
           {/* Left Column - Contact and Info */}
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold border-l-4 border-primary pl-3">
+            <h2 className="text-2xl font-bold border-s-4 border-primary ps-3">
               {t("informationHeading")}
             </h2>
             
             <div className="space-y-4">
               {restaurantDetails.foodType && (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-4">
                   <Tag className="text-primary h-6 w-6 shrink-0" />
                   <div>
                     <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{t("foodTypeLabel")}</p>
@@ -151,7 +169,7 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
               )}
 
               {restaurantDetails.typeOfEstablishment && (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-4">
                   <Info className="text-primary h-6 w-6 shrink-0" />
                   <div>
                     <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{t("establishmentTypeLabel")}</p>
@@ -161,18 +179,18 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
               )}
 
 {restaurantDetails.phoneNumber && (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-4">
                   <Phone className="text-primary h-6 w-6 shrink-0" />
                   <div>
                     <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{t("phoneLabel")}</p>
-                    {/* Add dir="ltr" and force left/right alignment based on language context if needed */}
-                    <p className="text-lg" dir="ltr">{restaurantDetails.phoneNumber}</p>
+                    {/* The number reads left to right, but the line still aligns with the page. */}
+                    <p className="text-lg"><span dir="ltr">{restaurantDetails.phoneNumber}</span></p>
                   </div>
                 </div>
               )}
 
               {restaurantDetails.country && (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-4">
                   <Globe className="text-primary h-6 w-6 shrink-0" />
                   <div>
                     <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{t("countryLabel")}</p>
@@ -185,13 +203,13 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
 
           {/* Right Column - Address and Map */}
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold border-l-4 border-primary pl-3">
+            <h2 className="text-2xl font-bold border-s-4 border-primary ps-3">
               {t("locationHeading")}
             </h2>
 
             <div className="space-y-4">
               {restaurantDetails.address && (
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-4">
                   <MapPin className="text-primary h-6 w-6 mt-1 shrink-0" />
                   <div>
                     <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{t("addressLabel")}</p>

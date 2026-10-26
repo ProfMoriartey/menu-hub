@@ -81,13 +81,18 @@ comes from Clerk). `src/env.js` validates the server ones and
 
 ```
 [locale]/
-  page.tsx, restaurants/, themes/, about/          public marketing + directory
+  layout.tsx          <html>, theme only. No Clerk, no translations for the
+                      browser: menu pages (QR scans) stay light. See below.
   [restaurantSlug]/                                 public menu of one restaurant
     layout.tsx        gate: active → everyone; inactive → preview for people
-                      with access (PreviewBanner, noindex), else redirect
+                      with access (PreviewBanner, noindex), else redirect.
+                      Gives the browser only CLIENT_NAMESPACES translations.
     page.tsx          the menu (hidden items excluded)
     about/, item/[itemSlug]/   (id-based item URLs permanently redirect to slugs)
-  (client)/dashboard/                               restaurant staff
+  (site)/             every other page. layout.tsx adds ClerkProvider, all
+                      translations, UploadThing's NextSSRPlugin, Navbar
+    page.tsx, restaurants/, themes/, about/        public marketing + directory
+  (site)/(client)/dashboard/                        restaurant staff
     layout.tsx        top bar: dashboard link, LanguageSwitcher, ThemeToggle, UserButton
     page.tsx          "Your restaurants" cards (+ setup progress)
     [restaurantSlug]/
@@ -95,20 +100,32 @@ comes from Clerk). `src/env.js` validates the server ones and
       menu/           categories + SetupChecklist;  menu/[categorySlug]/ items
       edit/           owner details form (editors are redirected to menu)
       share/          QR code, link, scan stats;  share/print/ table cards
-  admin/                                            system admin only (layout checks role)
+      team/           members, invite editors by link, pending invitations, leave
+  (site)/invite/[token]/   invitation page: sign in/up (Clerk withSignUp), email
+                      check, accept/decline. noindex, no-referrer
+  (site)/admin/                                     system admin only (layout checks role)
     restaurants/      list (filters incl. "Ready to go live"), new/
       [restaurantSlug]/edit | menu | menu/[categorySlug] | share | share/print | people
     users/, users/[userId]/   user list (search, Clerk profiles), access + roles, delete user
-  sign-in/
+  (site)/sign-in/
 r/[restaurantId]/route.ts   permanent QR link: counts the scan, 307 → /<current slug>
 api/uploadthing/            upload routes (per-restaurant permission checks)
 api/webhooks/clerk/         user.created / user.updated / user.deleted → users table
 actions/                    server actions: auth, restaurant, category, menu-item, search
-[locale]/admin/actions.ts   admin actions: assign/revoke access, delete user
+[locale]/(site)/admin/actions.ts   admin actions: assign/revoke access, delete user
 ```
 
 `src/middleware.ts` runs Clerk + next-intl. It skips `/api`, `/trpc` and `/r/`
-(those have no locale prefix).
+(those have no locale prefix). Server-side `auth()` works on every page; only
+`(site)` pages have Clerk in the browser.
+
+**Menu pages and the browser:** a client component used under
+`[restaurantSlug]` can only use the translation namespaces listed in
+`CLIENT_NAMESPACES` in `[restaurantSlug]/layout.tsx` (plus
+`MenuEditor.dietary`); add new ones there or it shows `MISSING_MESSAGE`.
+Never use Clerk's client components (`UserButton`, `useUser` …) there. This
+layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
+(measured 2026-10-26 with production builds); keep it that way.
 
 ### Key modules
 
@@ -118,6 +135,9 @@ actions/                    server actions: auth, restaurant, category, menu-ite
 | `server/run-action.ts` | `runAction(fallbackCode, body)`: translates errors with the request locale; server-only |
 | `app/actions/auth.ts` | `isSystemAdmin`, `getRestaurantRole`, `checkAuthorization` (any access), `checkOwnerAuthorization` (owner/admin) |
 | `lib/access.ts` | `ACCESS_LEVELS` (`owner`, `editor`), `RestaurantRole` (+ `admin`), `canEditDetails` |
+| `server/public-menu.ts` | cached reads for public pages (`getRestaurantBySlug`, `getPublicMenu`, `getPublicMenuItem`; `unstable_cache`, no Date columns) and `revalidatePublicMenu(id)` / `revalidatePublicRestaurant(id?)`, which every save action must call |
+| `lib/format-price.ts` | guest-language prices, server only (see §6) |
+| `lib/category-section.ts`, `lib/dietary-labels.ts` | menu section ids; dietary label → translation key |
 | `server/menu-data.ts` | category summaries / category with items, shared by admin + dashboard |
 | `server/dashboard-restaurant.ts` | `getDashboardRestaurant(slug)` → restaurant + viewer's role (React `cache`) |
 | `server/setup-facts.ts` + `lib/setup-checklist.ts` | getting-started checklist data (grouped queries) and rules |
@@ -144,13 +164,17 @@ actions/                    server actions: auth, restaurant, category, menu-ite
 - `components/forms/fields.tsx`: `FormSection`, `Field`, `UrlInput`,
   `CharCount`, `ToggleRow`.
 - `components/admin/`: admin-only (English): restaurant form, list, cards,
-  headers, people/user access, `RestaurantLogo`, `StatusBadges`.
+  headers, people/user access, `StatusBadges`.
 - `components/dashboard/`: `DashboardRestaurantHeader`,
   `RestaurantDetailsEditor`, `SetupChecklist`.
 - `components/public/`: menu themes (`themes/*Layout.tsx`, four themes:
-  classic, sidebar-list, accordion-card, category-cards-image-dominant),
-  `MenuItemDisplayClient`, `PreviewBanner`, `SoldOutBadge`.
-- `components/shared/`: `Navbar`, `ThemeToggle`, `LanguageSwitcher`.
+  classic, sidebar-list, accordion-card, category-cards-image-dominant; no
+  framer-motion), `MenuDisplayClient` (search + dietary filters over every
+  theme), `CategoryNav` (scroll-following bar/sidebar), `MenuItemCard`,
+  `MenuItemDetail` (server), `PublicPageControls`, `PreviewBanner`,
+  `SoldOutBadge`, `menu-types.ts`.
+- `components/shared/`: `Navbar`, `ThemeToggle`, `LanguageSwitcher`,
+  `RestaurantLogo` (logo or initials; admin, dashboard and public).
 
 ---
 
@@ -164,16 +188,21 @@ actions/                    server actions: auth, restaurant, category, menu-ite
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
 | `menu-hub_users_to_restaurants` | `accessLevel` `owner` / `editor` (unknown values count as editor) |
 | `menu-hub_qr_scan_days` | `(restaurantId, day UTC)` → `count`; no personal data |
+| `menu-hub_restaurant_invites` | owner → editor invitations: lower-cased `email`, `tokenHash` (SHA-256 of the link token; the link itself is never stored), `expiresAt` (7 days), `invitedBy`. Unique per `(restaurantId, email)`: inviting again replaces the link. Accepted/cancelled rows are deleted, expired ones cleaned up when listed |
 
-Deleting a restaurant cascades to its categories, items, access rows and scan
-counts. Deleting a user cascades to their access rows.
+Deleting a restaurant cascades to its categories, items, access rows, scan
+counts and invitations. Deleting a user cascades to their access rows.
 
 **Migrations:** `0001` (old), `0002` slugs (with backfill SQL), `0003` QR scan
-days, `0004` item availability. The development database has all of them
-applied (checked 2026-10-23). Production must run `pnpm db:migrate`.
+days, `0004` item availability, `0005` restaurant invitations. The
+development database has 0001–0004 applied (checked 2026-10-23); **0005 was
+created 2026-10-26 and must be applied with `pnpm db:migrate` in dev and in
+production before the Team tab, admin People tab or dashboard invitations
+are used** (the Team and People pages error without the table).
 
 **Reserved slugs** (`RESERVED_SLUGS`): app routes like `admin`, `dashboard`,
-`restaurants`, … plus `new` (admin route) and `r` (QR link route).
+`restaurants`, … plus `new` (admin route), `r` (QR link route) and `invite`
+(invitation links).
 
 ---
 
@@ -184,7 +213,18 @@ applied (checked 2026-10-23). Production must run `pnpm db:migrate`.
 - **Owner**: restaurant details (name, address, phone, map link,
   description, logo, social/delivery links) **and** the menu.
 - **Editor**: the menu only (categories, items, availability, duplicate,
-  reorder) plus the Share tab.
+  reorder) plus the Share tab. Sees the Team tab read-only and can leave.
+- **Team management** (`app/actions/team.ts`, dashboard Team tab): owners
+  (and admins, from the admin People tab) invite **editors only**, by a
+  copyable link (WhatsApp button), and remove editors. Both screens render
+  `components/team/InvitationsPanel` (translated, like the menu editor). **Owners are only added or removed by a system admin**
+  (admin People tab); owners can't leave. Accepting an invitation requires a
+  signed-in account whose **verified** Clerk email equals the invited
+  address (`getVerifiedEmails`); the link alone isn't enough, and the accept
+  action re-checks it. Accepting never downgrades an existing member, and
+  creates the `users` row if the Clerk webhook hasn't yet. Invitees with an
+  account also see open invitations on the dashboard home. Max 20 open
+  invitations per restaurant.
 - Admin-only restaurant fields (slug, active, featured, currency, theme,
   cuisine/type, country, SEO, og image) are **kept server-side** when a
   non-admin saves (`updateRestaurant`), whatever the request contains.
@@ -215,9 +255,13 @@ applied (checked 2026-10-23). Production must run `pnpm db:migrate`.
   (see `duplicateMenuItem`).
 - Client code either checks `result.ok` or wraps in try/catch with
   `unwrap(await action(...))`.
-- Revalidate with `revalidatePath("/[locale]", "layout")` (or
-  `"/[locale]/admin", "layout"`). Plain `"/admin/..."` paths never match
-  because of the locale prefix.
+- After changing restaurant or menu data, call `revalidatePublicMenu(id)` or
+  `revalidatePublicRestaurant(id?)` from `server/public-menu.ts`. They clear
+  the public pages' cache **and** re-render everything under `/[locale]`.
+  A plain `revalidatePath` leaves guests seeing cached data for up to an hour.
+- `revalidatePath` matches folder paths, **route groups included**: use
+  `"/[locale]/(site)/admin"`, not `"/[locale]/admin"`. Plain `"/admin/..."`
+  paths never match because of the locale prefix.
 
 ### i18n
 - Every user-facing string in public pages, the dashboard and shared
@@ -239,7 +283,13 @@ applied (checked 2026-10-23). Production must run `pnpm db:migrate`.
 - Upload buttons use `uploadButtonClass`, resize images with
   `onBeforeUploadBegin={resizeImages(ITEM_PHOTO | LOGO)}` and pass the locale.
 - Forms with a save bar use `useUnsavedChangesGuard(isDirty && !isPending, …)`.
-- Prices show `"{price} {currency}"`, never a hardcoded `$`.
+- Prices are free text plus the restaurant's currency (often "TL" or
+  "دينار", not ISO codes), never a hardcoded `$`. Public pages show them via
+  `lib/format-price.ts`, **on the server only** (Node and browsers format
+  some currencies differently → hydration mismatches). It only reformats
+  unambiguous prices (`459`, `12.50`) in a known currency (`TL` → TRY);
+  anything else ("3.000 دينار", "10-12 TL") shows exactly as typed. The
+  editors show the raw `"{price} {currency}"`.
 - Colors come from theme tokens; charts were validated with the dataviz
   method (bar color `#D97706` passes on both theme surfaces).
 
@@ -281,7 +331,7 @@ Namespaces of note: `MenuEditor`, `ConfirmDialog`, `Availability`, `Share`,
 **Admin:** restaurant list (search, filters All/Active/Inactive/Ready to go
 live/Featured, setup progress badges); full-page restaurant form with
 sections, sticky save bar, slug auto-generation; Details / Menu / Share /
-People tabs; users list with Clerk names/photos, access + Owner/Editor role,
+People tabs (People also invites editors by link and manages open invitations, with the same `components/team/InvitationsPanel` as the owner Team tab); users list with Clerk names/photos, access + Owner/Editor role,
 delete user (Clerk + DB; not self, not admins).
 
 **Dashboard:** home cards (logo, role, counts, setup progress, menu/details/
@@ -291,12 +341,31 @@ duplicate, delete, item dialog with photo, price, category move,
 availability, dietary chips, "save and add another"); Details (owners);
 Share (status, QR with logo switch, PNG/SVG downloads, link copy, permanent
 link note, printable A4/A6 table cards with card language + second line, scan
-stats); language switcher; unsaved-changes guard.
+stats); Team (members, invite editors by link with copy/WhatsApp, pending
+invitations with new link/cancel, remove editors, leave); invitations on the
+home page; language switcher; unsaved-changes guard.
 
-**Public:** four themes; sold-out badge; hidden items excluded (menu, item
-page, search); preview of inactive restaurants for staff; permanent QR links
-`/r/<id>` that forward to the current slug, count scans after the redirect,
-skip bots/HEAD/repeats within 30 minutes (path-scoped cookie).
+**Public:** four themes; classic and sidebar are one scrolling page with a
+category bar that follows the scroll; search (12+ items) and dietary filters;
+prices in the guest's format; guest language switcher; sold-out items last
+and dimmed; empty categories hidden; logo-or-initials, no placeholder images;
+hidden items excluded (menu, item page, search); preview of inactive
+restaurants for staff; permanent QR links `/r/<id>` that forward to the
+current slug, count scans after the redirect, skip bots/HEAD/repeats within
+30 minutes (path-scoped cookie).
+
+**Search engines and link previews:** menu, about and item pages have their
+own title, description, preview image (admin SEO fields first, then
+description / logo / dish photo), canonical URL and hreflang links
+(`server/public-metadata.ts`). The menu page carries schema.org Restaurant
+JSON-LD with sections, items, diets and prices
+(`server/menu-structured-data.ts`; prices only when `parsePrice` can read
+them; `jsonLd()` escapes `<`). `app/sitemap.ts` lists every live page in all
+languages (cached an hour); `app/robots.ts` keeps crawlers out of admin,
+dashboard, sign-in, `/api/` and `/r/`. The middleware lets both through
+without a language prefix. Missing restaurants/items answer a real 404, and
+inactive ones a 307: there must be **no `loading.tsx` above
+`[restaurantSlug]`**, or responses start streaming as 200 first.
 
 **Infrastructure:** Clerk webhook syncs users (created/updated/deleted);
 UploadThing cleanup only deletes unreferenced files; `scripts/cleanup-uploads.mjs`
@@ -308,24 +377,24 @@ Git history (`git log`) has a detailed commit message for each change.
 
 ## 9. Open items and decisions
 
-**Next feature, waiting on the owner's decision: owners managing their own editors.**
-Questions asked: should owners be able to invite and remove editors for
-their own restaurant? Invite by email (needs an invite flow for people who
-haven't signed up) or only pick existing users? It matters for the SaaS goal
-(less admin work). Admin side already has the People tab and access actions
-(`assignRestaurantToUser`, `revokeRestaurantAccess`, admin-only today).
+**Possible follow-ups to team management:** sending invitation emails (needs
+an email service such as Resend and a verified sender domain; links are
+copied by hand today); seat limits per plan for the SaaS; an activity log of
+who changed what.
 
 **Ideas raised and deferred:**
 - Store a time zone per restaurant (scan days are UTC now; Turkey is UTC+3).
 - Owner self-publishing ("Publish" button, maybe with admin review), building
   on preview + the "Ready to go live" queue.
-- Translating the remaining hardcoded English on public pages and the
-  admin-only pages.
+- Translating the admin-only pages.
+- Menus in more than one language (owners enter item names per language).
+  Changes the data model; needs its own plan.
+- Opening hours with an "Open now" badge; per-restaurant brand colour.
 
 **Things the owner was asked to do. Confirm they're done before relying on them:**
 - Subscribe the Clerk webhook endpoint to `user.updated` and `user.deleted`.
 - Set `NEXT_PUBLIC_APP_URL` to the production domain in production.
-- Run `pnpm db:migrate` in production for migrations 0002–0004.
+- Run `pnpm db:migrate` in production for migrations 0002–0005 (0005 before deploying the Team tab).
 - Set owners on each restaurant's People tab (all old assignments became editors).
 - Run `pnpm uploads:cleanup -- --delete` after a dry run. The dry run found 32
   unused files, including some sensitive-looking photos (a SIM card PIN, a
@@ -334,9 +403,13 @@ haven't signed up) or only pick existing users? It matters for the SaaS goal
 **Known leftovers:**
 - `package-lock.json` is stale (pnpm is canonical).
 - `next lint` still warns in four files nobody has reworked yet:
-  `app/[locale]/layout.tsx`, `app/[locale]/page.tsx`,
+  `app/[locale]/layout.tsx`, `app/[locale]/(site)/page.tsx`,
   `components/about/AboutPageClient.tsx`, `components/svg/GroovySittingDoodle.tsx`.
-- The public themes hardcode "No items in this category yet." in English.
+- Signed-out visits to the dashboard/admin redirect to sign-in with status 200
+  (the redirect streams after `(site)/loading.tsx`). Harmless: crawlers are
+  kept out by robots.txt.
+- Old message keys left unused: `menuItemDetailPage.pageTitle`, `.priceLabel`,
+  `.dietaryLabels` (the scripts have no single-key removal).
 
 ---
 
@@ -359,6 +432,15 @@ haven't signed up) or only pick existing users? It matters for the SaaS goal
   import them by path.
 - Shell gotchas: an apostrophe inside a `node -e '…'` script ends the bash
   string; use the Write tool for scripts with prose comments.
+- Agent tooling decodes `\uXXXX` sequences in tool input, so writing a
+  backslash-u escape into a file (Write/Edit, even shell commands) silently
+  inserts the real character. Write such escapes with Python `chr(92)` and
+  check the bytes (`cat -A`) afterwards.
+- Files are mixed CRLF/LF; `grep -c $'\r$'` is unreliable in this Git Bash,
+  count with Python (`b.count(b'\r\n')`) instead. Git normalises on commit.
+- When the owner's dev server is stopped, a production check is possible:
+  `pnpm build`, then `next start -p 3101` and fetch pages. Otherwise read
+  pages from their dev server (GET only), as the point-4 checks did.
 
 ---
 
@@ -369,6 +451,9 @@ haven't signed up) or only pick existing users? It matters for the SaaS goal
 - **End every finished change set with a ready-to-paste commit message**
   (imperative subject, body grouped into changes and fixes, plus any deploy
   steps such as migrations). **Don't commit unless asked**; the owner commits.
+- **Never mention Claude** in commit messages, pushes or PRs: no
+  `Co-Authored-By` line, no "Generated with" footer. Commits are authored
+  as **Chrollo** with the owner's email (set in this repo's git config).
 - The owner prefers recommendations with reasons, then decides ("let's do
   your way"). Ask only when the choice is genuinely theirs.
 - Keep admin and dashboard in step: features added to shared components
