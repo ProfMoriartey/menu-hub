@@ -636,6 +636,11 @@
     "dietaryFilters": "Beslenme filtreleri",
     "resultCount": "{count} ürün bulundu",
     "noResults": "Menüde eşleşen bir şey yok.",
-    "clearFilters": "Aramayı ve filtreleri temizle"
+    "clearFilters": "Aramayı ve filtreleri temizle",
+    "metaMenuTitle": "{name} – Menü",
+    "metaMenuDescription": "{name} menüsünü fiyatları ve fotoğraflarıyla görün.",
+    "metaAboutTitle": "{name} – Bilgi ve konum",
+    "metaItemTitle": "{item} – {restaurant}",
+    "metaItemDescription": "{restaurant} – {item}: {price}."
   }
 }

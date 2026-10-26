@@ -9,7 +9,9 @@ import {
   Instagram, Facebook, Twitter, Music2, UtensilsCrossed 
 } from "lucide-react"
 import { cn } from "~/lib/utils"
-import { getTranslations } from "next-intl/server"
+import { getLocale, getTranslations } from "next-intl/server"
+import type { Metadata } from "next"
+import { clip, publicPageMetadata, restaurantPreviewImage } from "~/server/public-metadata"
 
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"
 import { DeliveryOptionsDialog } from "~/components/public/DeliveryOptionsDialog"
@@ -19,6 +21,25 @@ interface PageProps {
   params: Promise<{
     restaurantSlug: string
   }>
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const restaurant = await getRestaurantBySlug((await params).restaurantSlug)
+  if (!restaurant) return {}
+  const t = await getTranslations("PublicMenu")
+  // Where it is and how to reach it: what people look for on this page.
+  const place = [restaurant.address, restaurant.country].filter(Boolean).join(", ")
+  return publicPageMetadata({
+    locale: await getLocale(),
+    path: `/${restaurant.slug}/about`,
+    title: t("metaAboutTitle", { name: restaurant.name }),
+    description: clip(
+      [place, restaurant.description].filter(Boolean).join(" · ") ||
+        t("metaMenuDescription", { name: restaurant.name }),
+    ),
+    image: restaurantPreviewImage(restaurant),
+    siteName: restaurant.name,
+  })
 }
 
 export default async function RestaurantProfilePage({ params }: PageProps) {

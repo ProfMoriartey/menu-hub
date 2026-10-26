@@ -1,4 +1,7 @@
-// app/loading.tsx
+// app/[locale]/(site)/loading.tsx
+// Not above the public restaurant pages on purpose: a loading boundary there
+// starts the response before the page can answer 404 or redirect, so a
+// missing menu would reach search engines as "200 OK".
 import { Loader2 } from "lucide-react"; // Import the spinner icon
 import { cn } from "~/lib/utils"; // ADDED: Import cn utility
 

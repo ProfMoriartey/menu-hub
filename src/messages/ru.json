@@ -636,6 +636,11 @@
     "dietaryFilters": "Фильтры по питанию",
     "resultCount": "{count, plural, one {Найдена # позиция} few {Найдено # позиции} many {Найдено # позиций} other {Найдено # позиции}}",
     "noResults": "В меню ничего не найдено.",
-    "clearFilters": "Сбросить поиск и фильтры"
+    "clearFilters": "Сбросить поиск и фильтры",
+    "metaMenuTitle": "{name} – Меню",
+    "metaMenuDescription": "Меню {name} с ценами и фотографиями.",
+    "metaAboutTitle": "{name} – Информация и адрес",
+    "metaItemTitle": "{item} – {restaurant}",
+    "metaItemDescription": "{item} в {restaurant}: {price}."
   }
 }

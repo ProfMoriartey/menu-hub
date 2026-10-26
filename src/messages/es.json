@@ -636,6 +636,11 @@
     "dietaryFilters": "Filtros de dieta",
     "resultCount": "{count, plural, one {# plato encontrado} other {# platos encontrados}}",
     "noResults": "No hay nada en el menú que coincida.",
-    "clearFilters": "Borrar búsqueda y filtros"
+    "clearFilters": "Borrar búsqueda y filtros",
+    "metaMenuTitle": "{name} – Menú",
+    "metaMenuDescription": "Mira el menú de {name}, con precios y fotos.",
+    "metaAboutTitle": "{name} – Información y ubicación",
+    "metaItemTitle": "{item} – {restaurant}",
+    "metaItemDescription": "{item} en {restaurant}: {price}."
   }
 }

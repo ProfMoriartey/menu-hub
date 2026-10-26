@@ -636,6 +636,11 @@
     "dietaryFilters": "فلاتر النظام الغذائي",
     "resultCount": "{count, plural, zero {لم يُعثر على أي صنف} one {تم العثور على صنف واحد} two {تم العثور على صنفين} few {تم العثور على # أصناف} many {تم العثور على # صنفًا} other {تم العثور على # صنف}}",
     "noResults": "لا يوجد في القائمة ما يطابق بحثك.",
-    "clearFilters": "مسح البحث والفلاتر"
+    "clearFilters": "مسح البحث والفلاتر",
+    "metaMenuTitle": "{name} – القائمة",
+    "metaMenuDescription": "تصفّح قائمة {name} مع الأسعار والصور.",
+    "metaAboutTitle": "{name} – المعلومات والموقع",
+    "metaItemTitle": "{item} – {restaurant}",
+    "metaItemDescription": "{item} من {restaurant}: {price}."
   }
 }

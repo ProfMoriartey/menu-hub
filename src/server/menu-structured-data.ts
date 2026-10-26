@@ -1,0 +1,106 @@
+// src/server/menu-structured-data.ts
+import { parsePrice } from "~/lib/format-price";
+import type { SocialMediaLinks } from "~/lib/schemas";
+import type { PublicCategory } from "~/components/public/menu-types";
+import type { DietaryLabel, Restaurant } from "~/types/restaurant";
+
+// schema.org diets with an exact match; the other labels are left out
+// rather than mapped to something close.
+const DIETS: Partial<Record<DietaryLabel, string>> = {
+  vegetarian: "https://schema.org/VegetarianDiet",
+  vegan: "https://schema.org/VeganDiet",
+  "gluten-free": "https://schema.org/GlutenFreeDiet",
+};
+
+/**
+ * schema.org Restaurant data for a menu page, so search engines can show the
+ * restaurant and its dishes. Prices are only included when they can be read
+ * without guessing (see parsePrice); a wrong price in search results is
+ * worse than none.
+ */
+export function restaurantStructuredData({
+  restaurant,
+  categories,
+  pageUrl,
+  itemUrl,
+}: {
+  restaurant: Pick<
+    Restaurant,
+    | "name"
+    | "description"
+    | "logoUrl"
+    | "phoneNumber"
+    | "address"
+    | "country"
+    | "foodType"
+    | "currency"
+  > & { socialMedia: SocialMediaLinks | null };
+  categories: PublicCategory[];
+  pageUrl: string;
+  itemUrl: (itemSlug: string) => string;
+}) {
+  const sameAs = Object.values(restaurant.socialMedia ?? {}).filter(
+    (url): url is string => typeof url === "string" && url.trim() !== "",
+  );
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    name: restaurant.name,
+    url: pageUrl,
+    description: restaurant.description ?? undefined,
+    image: restaurant.logoUrl ?? undefined,
+    telephone: restaurant.phoneNumber ?? undefined,
+    address:
+      restaurant.address || restaurant.country
+        ? {
+            "@type": "PostalAddress",
+            streetAddress: restaurant.address ?? undefined,
+            addressCountry: restaurant.country ?? undefined,
+          }
+        : undefined,
+    servesCuisine: restaurant.foodType ?? undefined,
+    sameAs: sameAs.length ? sameAs : undefined,
+    hasMenu: {
+      "@type": "Menu",
+      url: pageUrl,
+      hasMenuSection: categories.map((category) => ({
+        "@type": "MenuSection",
+        name: category.name,
+        hasMenuItem: category.menuItems.map((item) => {
+          const price = parsePrice(item.price, restaurant.currency);
+          const diets = (item.dietaryLabels ?? []).flatMap(
+            (label) => DIETS[label] ?? [],
+          );
+          return {
+            "@type": "MenuItem",
+            name: item.name,
+            url: itemUrl(item.slug),
+            description: item.description ?? undefined,
+            image: item.imageUrl ?? undefined,
+            suitableForDiet: diets.length ? diets : undefined,
+            offers: price
+              ? {
+                  "@type": "Offer",
+                  price: price.value,
+                  priceCurrency: price.currency,
+                  availability:
+                    item.availability === "sold_out"
+                      ? "https://schema.org/SoldOut"
+                      : "https://schema.org/InStock",
+                }
+              : undefined,
+          };
+        }),
+      })),
+    },
+  };
+}
+
+/**
+ * JSON for a <script type="application/ld+json"> tag. Owners type the text in
+ * it, so "<" is escaped: a name containing "</script>" can't end the tag.
+ */
+export function jsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}

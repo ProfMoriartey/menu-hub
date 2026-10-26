@@ -324,10 +324,27 @@ Share (status, QR with logo switch, PNG/SVG downloads, link copy, permanent
 link note, printable A4/A6 table cards with card language + second line, scan
 stats); language switcher; unsaved-changes guard.
 
-**Public:** four themes; sold-out badge; hidden items excluded (menu, item
-page, search); preview of inactive restaurants for staff; permanent QR links
-`/r/<id>` that forward to the current slug, count scans after the redirect,
-skip bots/HEAD/repeats within 30 minutes (path-scoped cookie).
+**Public:** four themes; classic and sidebar are one scrolling page with a
+category bar that follows the scroll; search (12+ items) and dietary filters;
+prices in the guest's format; guest language switcher; sold-out items last
+and dimmed; empty categories hidden; logo-or-initials, no placeholder images;
+hidden items excluded (menu, item page, search); preview of inactive
+restaurants for staff; permanent QR links `/r/<id>` that forward to the
+current slug, count scans after the redirect, skip bots/HEAD/repeats within
+30 minutes (path-scoped cookie).
+
+**Search engines and link previews:** menu, about and item pages have their
+own title, description, preview image (admin SEO fields first, then
+description / logo / dish photo), canonical URL and hreflang links
+(`server/public-metadata.ts`). The menu page carries schema.org Restaurant
+JSON-LD with sections, items, diets and prices
+(`server/menu-structured-data.ts`; prices only when `parsePrice` can read
+them; `jsonLd()` escapes `<`). `app/sitemap.ts` lists every live page in all
+languages (cached an hour); `app/robots.ts` keeps crawlers out of admin,
+dashboard, sign-in, `/api/` and `/r/`. The middleware lets both through
+without a language prefix. Missing restaurants/items answer a real 404, and
+inactive ones a 307: there must be **no `loading.tsx` above
+`[restaurantSlug]`**, or responses start streaming as 200 first.
 
 **Infrastructure:** Clerk webhook syncs users (created/updated/deleted);
 UploadThing cleanup only deletes unreferenced files; `scripts/cleanup-uploads.mjs`
@@ -350,8 +367,10 @@ haven't signed up) or only pick existing users? It matters for the SaaS goal
 - Store a time zone per restaurant (scan days are UTC now; Turkey is UTC+3).
 - Owner self-publishing ("Publish" button, maybe with admin review), building
   on preview + the "Ready to go live" queue.
-- Translating the remaining hardcoded English on public pages and the
-  admin-only pages.
+- Translating the admin-only pages.
+- Menus in more than one language (owners enter item names per language).
+  Changes the data model; needs its own plan.
+- Opening hours with an "Open now" badge; per-restaurant brand colour.
 
 **Things the owner was asked to do. Confirm they're done before relying on them:**
 - Subscribe the Clerk webhook endpoint to `user.updated` and `user.deleted`.
@@ -367,7 +386,11 @@ haven't signed up) or only pick existing users? It matters for the SaaS goal
 - `next lint` still warns in four files nobody has reworked yet:
   `app/[locale]/layout.tsx`, `app/[locale]/(site)/page.tsx`,
   `components/about/AboutPageClient.tsx`, `components/svg/GroovySittingDoodle.tsx`.
-- The public themes hardcode "No items in this category yet." in English.
+- Signed-out visits to the dashboard/admin redirect to sign-in with status 200
+  (the redirect streams after `(site)/loading.tsx`). Harmless: crawlers are
+  kept out by robots.txt.
+- Old message keys left unused: `menuItemDetailPage.pageTitle`, `.priceLabel`,
+  `.dietaryLabels` (the scripts have no single-key removal).
 
 ---
 
@@ -390,6 +413,15 @@ haven't signed up) or only pick existing users? It matters for the SaaS goal
   import them by path.
 - Shell gotchas: an apostrophe inside a `node -e '…'` script ends the bash
   string; use the Write tool for scripts with prose comments.
+- Agent tooling decodes `\uXXXX` sequences in tool input, so writing a
+  backslash-u escape into a file (Write/Edit, even shell commands) silently
+  inserts the real character. Write such escapes with Python `chr(92)` and
+  check the bytes (`cat -A`) afterwards.
+- Files are mixed CRLF/LF; `grep -c $'\r$'` is unreliable in this Git Bash,
+  count with Python (`b.count(b'\r\n')`) instead. Git normalises on commit.
+- When the owner's dev server is stopped, a production check is possible:
+  `pnpm build`, then `next start -p 3101` and fetch pages. Otherwise read
+  pages from their dev server (GET only), as the point-4 checks did.
 
 ---
 

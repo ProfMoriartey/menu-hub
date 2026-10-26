@@ -3,7 +3,13 @@ import { db } from "~/server/db";
 import { menuItems } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
+import {
+  clip,
+  publicPageMetadata,
+  restaurantPreviewImage,
+} from "~/server/public-metadata";
 import { permanentRedirect } from "~/i18n/navigation";
 import { isUuid } from "~/lib/slug";
 import { formatPrice } from "~/lib/format-price";
@@ -18,6 +24,39 @@ interface PageProps {
   searchParams?: Promise<
     Readonly<Record<string, string | string[] | undefined>>
   >;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { restaurantSlug, itemSlug } = await params;
+  const restaurant = await getRestaurantBySlug(restaurantSlug);
+  if (!restaurant) return {};
+  const item = await getPublicMenuItem(restaurant.id, itemSlug);
+  if (!item) return {};
+
+  const locale = await getLocale();
+  const t = await getTranslations("PublicMenu");
+  const price = formatPrice(item.price, restaurant.currency, locale);
+  return publicPageMetadata({
+    locale,
+    path: `/${restaurant.slug}/item/${item.slug}`,
+    title: t("metaItemTitle", { item: item.name, restaurant: restaurant.name }),
+    description: clip(
+      item.description
+        ? `${price} · ${item.description}`
+        : t("metaItemDescription", {
+            item: item.name,
+            restaurant: restaurant.name,
+            price,
+          }),
+    ),
+    // The dish photo makes the best preview; the restaurant's image otherwise.
+    image: item.imageUrl
+      ? { url: item.imageUrl, large: true }
+      : restaurantPreviewImage(restaurant),
+    siteName: restaurant.name,
+  });
 }
 
 export default async function MenuItemDetailPage({ params }: PageProps) {

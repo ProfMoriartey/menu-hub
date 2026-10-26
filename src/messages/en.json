@@ -636,6 +636,11 @@
     "dietaryFilters": "Dietary filters",
     "resultCount": "{count, plural, one {# item found} other {# items found}}",
     "noResults": "Nothing on the menu matches.",
-    "clearFilters": "Clear search and filters"
+    "clearFilters": "Clear search and filters",
+    "metaMenuTitle": "{name} – Menu",
+    "metaMenuDescription": "See the menu of {name}, with prices and photos.",
+    "metaAboutTitle": "{name} – Info and location",
+    "metaItemTitle": "{item} – {restaurant}",
+    "metaItemDescription": "{item} at {restaurant}: {price}."
   }
 }

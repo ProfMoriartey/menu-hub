@@ -11,8 +11,27 @@ import { cn } from "~/lib/utils";
 import { PublicPageControls } from "~/components/public/PublicPageControls";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Button } from "~/components/ui/button";
-import { Info, MapPin, Instagram, Facebook, Twitter, Music2, Globe } from "lucide-react";
+import {
+  Info,
+  MapPin,
+  Instagram,
+  Facebook,
+  Twitter,
+  Music2,
+  Globe,
+} from "lucide-react";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
+import type { Metadata } from "next";
+import { getPublicOrigin } from "~/server/public-origin";
+import {
+  clip,
+  publicPageMetadata,
+  restaurantPreviewImage,
+} from "~/server/public-metadata";
+import {
+  jsonLd,
+  restaurantStructuredData,
+} from "~/server/menu-structured-data";
 
 interface PageProps {
   params: Promise<{
@@ -22,6 +41,28 @@ interface PageProps {
   searchParams?: Promise<
     Readonly<Record<string, string | string[] | undefined>>
   >;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const restaurant = await getRestaurantBySlug((await params).restaurantSlug);
+  if (!restaurant) return {};
+  const t = await getTranslations("PublicMenu");
+  // The admin form's SEO title and description win over the defaults.
+  return publicPageMetadata({
+    locale: await getLocale(),
+    path: `/${restaurant.slug}`,
+    title:
+      restaurant.metaTitle ?? t("metaMenuTitle", { name: restaurant.name }),
+    description: clip(
+      restaurant.metaDescription ??
+        restaurant.description ??
+        t("metaMenuDescription", { name: restaurant.name }),
+    ),
+    image: restaurantPreviewImage(restaurant),
+    siteName: restaurant.name,
+  });
 }
 
 export default async function RestaurantMenuPage({ params }: PageProps) {
@@ -43,6 +84,7 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
   };
 
   const locale = await getLocale();
+  const origin = await getPublicOrigin();
   const menu = await getPublicMenu(restaurantDetails.id);
 
   // Sold-out items stay on the menu but move after everything still
@@ -67,7 +109,11 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
           .sort((x, y) => availableFirst(x) - availableFirst(y))
           .map((item) => ({
             ...item,
-            displayPrice: formatPrice(item.price, restaurantDetails.currency, locale),
+            displayPrice: formatPrice(
+              item.price,
+              restaurantDetails.currency,
+              locale,
+            ),
           })),
       })),
   };
@@ -108,7 +154,9 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
           </Link>
 
           <div className="flex-grow text-center sm:text-start">
-            <h1 className="text-foreground text-4xl font-bold">{restaurantDetails.name}</h1>
+            <h1 className="text-foreground text-4xl font-bold">
+              {restaurantDetails.name}
+            </h1>
             <p className="text-muted-foreground mt-2 text-lg">
               {restaurantDetails.description ?? t("browseMenuDefault")}
             </p>
@@ -128,7 +176,12 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
               </Button>
 
               {restaurantDetails.mapUrl && (
-                <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full" asChild>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-8 w-8 rounded-full"
+                  asChild
+                >
                   <a
                     href={restaurantDetails.mapUrl}
                     target="_blank"
@@ -142,7 +195,10 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
               )}
 
               {socialLinks.length > 0 && (
-                <div className="bg-border mx-1 hidden h-5 w-px sm:block" aria-hidden />
+                <div
+                  className="bg-border mx-1 hidden h-5 w-px sm:block"
+                  aria-hidden
+                />
               )}
 
               {socialLinks.map(({ url, label, Icon }) => (
@@ -153,7 +209,13 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
                   className="text-muted-foreground hover:text-foreground h-8 w-8 rounded-full"
                   asChild
                 >
-                  <a href={url} target="_blank" rel="noopener noreferrer" aria-label={label} title={label}>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    title={label}
+                  >
                     <Icon className="h-4 w-4" aria-hidden />
                   </a>
                 </Button>
@@ -168,6 +230,23 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        {/* Search engines read this; previews of unpublished menus get none. */}
+        {restaurantDetails.isActive && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: jsonLd(
+                restaurantStructuredData({
+                  restaurant: restaurantDetails,
+                  categories: menuData.categories,
+                  pageUrl: `${origin}/${locale}/${restaurantDetails.slug}`,
+                  itemUrl: (itemSlug) =>
+                    `${origin}/${locale}/${restaurantDetails.slug}/item/${itemSlug}`,
+                }),
+              ),
+            }}
+          />
+        )}
         {menuData.categories.length === 0 ? (
           <div className="text-muted-foreground py-10 text-center">
             <p>{t("noMenuItemsAvailable")}</p>
