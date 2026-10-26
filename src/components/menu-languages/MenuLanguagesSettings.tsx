@@ -63,12 +63,13 @@ export function MenuLanguagesSettings({
   const initial = {
     main: isMenuLanguage(mainLanguage) ? mainLanguage : null,
     extra: extraLanguages.filter(isMenuLanguage),
+    // Missing = not translated: shows the main description, saved as nothing.
     descriptions: Object.fromEntries(
-      MENU_LANGUAGES.map((lang) => [
-        lang,
-        translations?.[lang]?.description ?? "",
-      ]),
-    ) as Record<MenuLanguage, string>,
+      MENU_LANGUAGES.flatMap((lang) => {
+        const text = translations?.[lang]?.description;
+        return text ? [[lang, text]] : [];
+      }),
+    ) as Partial<Record<MenuLanguage, string>>,
   };
   const [values, setValues] = useState(initial);
   const isDirty = JSON.stringify(values) !== JSON.stringify(initial);
@@ -216,8 +217,11 @@ export function MenuLanguagesSettings({
                 dir={lang === "ar" ? "rtl" : "ltr"}
                 rows={3}
                 maxLength={2000}
-                value={values.descriptions[lang]}
-                placeholder={description ?? ""}
+                value={values.descriptions[lang] ?? description ?? ""}
+                className={cn(
+                  values.descriptions[lang] === undefined &&
+                    "text-muted-foreground",
+                )}
                 onChange={(e) => {
                   setSaved(false);
                   const text = e.target.value;

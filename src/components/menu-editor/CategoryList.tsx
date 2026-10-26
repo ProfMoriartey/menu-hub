@@ -143,13 +143,14 @@ function TranslateCategoryForm({
   onDone: () => void;
 }) {
   const t = useTranslations("MenuEditor.categories");
+  // Missing = not translated: shows the main name, saved as nothing.
   const [names, setNames] = useState<Partial<Record<MenuLanguage, string>>>(
     () =>
       Object.fromEntries(
-        languages.extra.map((lang) => [
-          lang,
-          category.translations?.[lang]?.name ?? "",
-        ]),
+        languages.extra.flatMap((lang) => {
+          const name = category.translations?.[lang]?.name;
+          return name ? [[lang, name]] : [];
+        }),
       ),
   );
   const [error, setError] = useState<string | null>(null);
@@ -189,8 +190,7 @@ function TranslateCategoryForm({
             id={`category-${category.id}-${lang}`}
             lang={lang}
             dir={lang === "ar" ? "rtl" : "ltr"}
-            value={names[lang] ?? ""}
-            placeholder={category.name}
+            value={names[lang] ?? category.name}
             maxLength={256}
             disabled={isPending}
             onChange={(e) => {
@@ -198,7 +198,10 @@ function TranslateCategoryForm({
               setNames((prev) => ({ ...prev, [lang]: value }));
             }}
             onKeyDown={(e) => e.key === "Escape" && onDone()}
-            className="h-8 max-w-xs"
+            className={cn(
+              "h-8 max-w-xs",
+              names[lang] === undefined && "text-muted-foreground",
+            )}
           />
         </div>
       ))}

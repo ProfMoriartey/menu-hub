@@ -403,7 +403,7 @@
       "languagesLabel": "Idiomas",
       "mainLanguage": "principal",
       "notTranslatedYet": "Aún sin traducir",
-      "translationHint": "El precio, la foto, la categoría y las etiquetas son comunes a todos los idiomas. Los campos vacíos muestran el idioma principal."
+      "translationHint": "El precio, la foto, la categoría y las etiquetas son comunes a todos los idiomas. El texto en gris es del idioma principal: los clientes lo ven hasta que lo cambies."
     }
   },
   "DashboardRestaurant": {

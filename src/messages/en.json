@@ -403,7 +403,7 @@
       "languagesLabel": "Languages",
       "mainLanguage": "main",
       "notTranslatedYet": "Not translated yet",
-      "translationHint": "Price, photo, category and labels are shared by all languages. Empty fields show the main language."
+      "translationHint": "Price, photo, category and labels are shared by all languages. Greyed text is the main language: guests see it until you change it."
     }
   },
   "DashboardRestaurant": {

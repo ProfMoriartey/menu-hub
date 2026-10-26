@@ -53,8 +53,10 @@ const DIETARY_LABELS = Object.keys(DIETARY_LABEL_KEYS) as DietaryLabel[];
 const MAX_NAME = 256;
 const MAX_TEXT = 512;
 
-// Name, description and ingredients in one extra language.
-type TextValues = Record<ItemTextField, string>;
+// Name, description and ingredients in one extra language. null = not
+// translated: the field shows the main language's current text, and saving
+// stores nothing for it. Typing turns it into the translation.
+type TextValues = Record<ItemTextField, string | null>;
 
 interface ItemValues {
   translations: Partial<Record<MenuLanguage, TextValues>>;
@@ -77,9 +79,9 @@ const valuesFromItem = (
     (languages?.extra ?? []).map((lang) => [
       lang,
       {
-        name: item?.translations?.[lang]?.name ?? "",
-        description: item?.translations?.[lang]?.description ?? "",
-        ingredients: item?.translations?.[lang]?.ingredients ?? "",
+        name: item?.translations?.[lang]?.name ?? null,
+        description: item?.translations?.[lang]?.description ?? null,
+        ingredients: item?.translations?.[lang]?.ingredients ?? null,
       },
     ]),
   ),
@@ -169,9 +171,9 @@ function MenuItemForm({
         ...prev.translations,
         [lang]: {
           ...(prev.translations[lang] ?? {
-            name: "",
-            description: "",
-            ingredients: "",
+            name: null,
+            description: null,
+            ingredients: null,
           }),
           [field]: value,
         },
@@ -307,7 +309,7 @@ function MenuItemForm({
                 ? activeLang === "main"
                 : activeLang === lang;
               const missing =
-                !isMain && !values.translations[lang]?.name.trim();
+                !isMain && !values.translations[lang]?.name?.trim();
               return (
                 <button
                   key={lang}
@@ -419,49 +421,35 @@ function MenuItemForm({
               <p className="text-muted-foreground text-sm" dir="auto">
                 {t("itemDialog.translationHint")}
               </p>
-              <Field
-                label={t("itemDialog.name")}
-                htmlFor={`item-name-${activeLang}`}
-              >
-                <Input
-                  id={`item-name-${activeLang}`}
-                  value={values.translations[activeLang]?.name ?? ""}
-                  onChange={(e) =>
-                    setTranslation(activeLang, "name", e.target.value)
-                  }
-                  maxLength={MAX_NAME}
-                  placeholder={values.name}
-                />
-              </Field>
-              <Field
-                label={t("itemDialog.description")}
-                htmlFor={`item-description-${activeLang}`}
-              >
-                <Textarea
-                  id={`item-description-${activeLang}`}
-                  rows={3}
-                  maxLength={MAX_TEXT}
-                  value={values.translations[activeLang]?.description ?? ""}
-                  onChange={(e) =>
-                    setTranslation(activeLang, "description", e.target.value)
-                  }
-                  placeholder={values.description}
-                />
-              </Field>
-              <Field
-                label={t("itemDialog.ingredients")}
-                htmlFor={`item-ingredients-${activeLang}`}
-              >
-                <Input
-                  id={`item-ingredients-${activeLang}`}
-                  maxLength={MAX_TEXT}
-                  value={values.translations[activeLang]?.ingredients ?? ""}
-                  onChange={(e) =>
-                    setTranslation(activeLang, "ingredients", e.target.value)
-                  }
-                  placeholder={values.ingredients}
-                />
-              </Field>
+              {(
+                [
+                  ["name", MAX_NAME, Input],
+                  ["description", MAX_TEXT, Textarea],
+                  ["ingredients", MAX_TEXT, Input],
+                ] as const
+              ).map(([field, maxLength, Control]) => {
+                const own = values.translations[activeLang]?.[field] ?? null;
+                return (
+                  <Field
+                    key={field}
+                    label={t(`itemDialog.${field}`)}
+                    htmlFor={`item-${field}-${activeLang}`}
+                  >
+                    <Control
+                      id={`item-${field}-${activeLang}`}
+                      {...(Control === Textarea && { rows: 3 })}
+                      maxLength={maxLength}
+                      // Until changed, the main language's text: editable
+                      // in place, greyed so it reads as not translated.
+                      value={own ?? values[field]}
+                      onChange={(e) =>
+                        setTranslation(activeLang, field, e.target.value)
+                      }
+                      className={cn(own === null && "text-muted-foreground")}
+                    />
+                  </Field>
+                );
+              })}
             </div>
           ) : (
             <div className="space-y-5">

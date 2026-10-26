@@ -403,7 +403,7 @@
       "languagesLabel": "Diller",
       "mainLanguage": "ana dil",
       "notTranslatedYet": "Henüz çevrilmedi",
-      "translationHint": "Fiyat, fotoğraf, kategori ve etiketler tüm dillerde ortaktır. Boş alanlarda ana dil gösterilir."
+      "translationHint": "Fiyat, fotoğraf, kategori ve etiketler tüm dillerde ortaktır. Gri yazı ana dildir: siz değiştirene kadar misafirler onu görür."
     }
   },
   "DashboardRestaurant": {
