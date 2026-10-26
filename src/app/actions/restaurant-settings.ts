@@ -7,7 +7,7 @@ import { restaurants } from "~/server/db/schema";
 import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import { isValidTimeZone, parseOpeningHours } from "~/lib/opening-hours";
-import { isBrandColor } from "~/lib/brand-color";
+import { parseColorTheme } from "~/lib/color-theme";
 import { runAction } from "~/server/run-action";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
 
@@ -58,15 +58,18 @@ export async function setBrandColorEnabled(
   });
 }
 
-/** Owners and admins, once enabled. `null` goes back to the theme's colour. */
-export async function updateBrandColor(
+/**
+ * Owners and admins, once an admin has enabled custom colours: the light
+ * and dark palettes. `null` goes back to the site's default colours.
+ */
+export async function updateColorTheme(
   restaurantId: string,
-  color: string | null,
+  theme: unknown,
 ): Promise<ActionResult> {
   return runAction("saveColorFailed", async () => {
     await checkOwnerAuthorization(restaurantId);
-    if (color !== null && !isBrandColor(color))
-      throw new ActionError("invalidColor");
+    const parsed = theme === null ? null : parseColorTheme(theme);
+    if (theme !== null && !parsed) throw new ActionError("invalidColor");
     const row = await db.query.restaurants.findFirst({
       where: eq(restaurants.id, restaurantId),
       columns: { brandColorEnabled: true },
@@ -76,7 +79,13 @@ export async function updateBrandColor(
 
     await db
       .update(restaurants)
-      .set({ brandColor: color?.toLowerCase() ?? null, updatedAt: new Date() })
+      .set({
+        colorTheme: parsed,
+        // A theme (or going back to the defaults) replaces the older single
+        // brand colour for good.
+        brandColor: null,
+        updatedAt: new Date(),
+      })
       .where(eq(restaurants.id, restaurantId));
     revalidatePublicRestaurant(restaurantId);
   });

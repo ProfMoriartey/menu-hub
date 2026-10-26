@@ -50,6 +50,13 @@
       "when": 1793004662719,
       "tag": "0007_add_hours_and_brand_color",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793010545470,
+      "tag": "0008_add_color_theme",
+      "breakpoints": true
     }
   ]
 }

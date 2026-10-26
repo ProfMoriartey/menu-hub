@@ -44,20 +44,20 @@ export function contrast(a: string, b: string) {
   return (hi! + 0.05) / (lo! + 0.05);
 }
 
-const mix = (hex: string, target: string, amount: number) => {
+export const mix = (hex: string, target: string, amount: number) => {
   const from = toRgb(hex);
   const to = toRgb(target);
   return toHex(from.map((c, i) => c + (to[i]! - c) * amount));
 };
 
-const bestText = (hex: string) =>
+export const bestText = (hex: string) =>
   contrast(hex, LIGHT_TEXT) >= contrast(hex, DARK_TEXT)
     ? LIGHT_TEXT
     : DARK_TEXT;
 
 // The closest colour to `hex`, moving towards black or white, that meets
 // both contrast rules on `surface`.
-function readableOn(hex: string, surface: string, towards: string) {
+export function readableOn(hex: string, surface: string, towards: string) {
   for (let step = 0; step <= 20; step++) {
     const candidate = mix(hex, towards, step / 20);
     if (
@@ -88,13 +88,13 @@ export function brandPalette(hex: string): BrandPalette {
 
 /**
  * CSS that sets the theme's accent colour inside `.brand-scope`, for both
- * light and dark mode. Only built from validated hex values.
+ * light and dark mode, hover highlights included. Only built from validated hex values.
  */
 export function brandCss(hex: string): string | null {
   if (!isBrandColor(hex)) return null;
   const { light, dark } = brandPalette(hex);
   return (
-    `.brand-scope{--primary:${light.primary};--primary-foreground:${light.foreground};--ring:${light.primary}}` +
-    `.dark .brand-scope{--primary:${dark.primary};--primary-foreground:${dark.foreground};--ring:${dark.primary}}`
+    `.brand-scope{--primary:${light.primary};--primary-foreground:${light.foreground};--ring:${light.primary};--accent:${light.primary};--accent-foreground:${light.foreground}}` +
+    `.dark .brand-scope{--primary:${dark.primary};--primary-foreground:${dark.foreground};--ring:${dark.primary};--accent:${dark.primary};--accent-foreground:${dark.foreground}}`
   );
 }

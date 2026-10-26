@@ -14,7 +14,7 @@ type HeaderRestaurant = Pick<
 
 interface RestaurantAdminHeaderProps {
   restaurant: HeaderRestaurant;
-  activeTab: "details" | "menu" | "share" | "people";
+  activeTab: "details" | "menu" | "share" | "colors" | "people";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
   trail?: { label: string; href?: string }[];
 }
@@ -25,15 +25,39 @@ export function RestaurantAdminHeader({
   trail = [],
 }: RestaurantAdminHeaderProps) {
   const tabs = [
-    { id: "details", label: "Details", href: `/admin/restaurants/${restaurant.slug}/edit` },
-    { id: "menu", label: "Menu", href: `/admin/restaurants/${restaurant.slug}/menu` },
-    { id: "share", label: "Share", href: `/admin/restaurants/${restaurant.slug}/share` },
-    { id: "people", label: "People", href: `/admin/restaurants/${restaurant.slug}/people` },
+    {
+      id: "details",
+      label: "Details",
+      href: `/admin/restaurants/${restaurant.slug}/edit`,
+    },
+    {
+      id: "menu",
+      label: "Menu",
+      href: `/admin/restaurants/${restaurant.slug}/menu`,
+    },
+    {
+      id: "share",
+      label: "Share",
+      href: `/admin/restaurants/${restaurant.slug}/share`,
+    },
+    {
+      id: "colors",
+      label: "Colours",
+      href: `/admin/restaurants/${restaurant.slug}/colors`,
+    },
+    {
+      id: "people",
+      label: "People",
+      href: `/admin/restaurants/${restaurant.slug}/people`,
+    },
   ] as const;
 
   const crumbs = [
     { label: "Restaurants", href: "/admin/restaurants" },
-    { label: restaurant.name, href: trail.length > 0 ? tabs[1].href : undefined },
+    {
+      label: restaurant.name,
+      href: trail.length > 0 ? tabs[1].href : undefined,
+    },
     ...trail,
   ];
 
@@ -43,9 +67,14 @@ export function RestaurantAdminHeader({
         <ol className="text-muted-foreground flex flex-wrap items-center gap-1 text-sm">
           {crumbs.map((crumb, i) => (
             <li key={i} className="flex min-w-0 items-center gap-1">
-              {i > 0 && <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden />}
+              {i > 0 && (
+                <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              )}
               {crumb.href ? (
-                <Link href={crumb.href} className="hover:text-foreground truncate">
+                <Link
+                  href={crumb.href}
+                  className="hover:text-foreground truncate"
+                >
                   {crumb.label}
                 </Link>
               ) : (
@@ -66,7 +95,9 @@ export function RestaurantAdminHeader({
               {restaurant.name}
             </h1>
             <div className="mt-1 flex flex-wrap items-center gap-2">
-              <span className="text-muted-foreground font-mono text-sm">/{restaurant.slug}</span>
+              <span className="text-muted-foreground font-mono text-sm">
+                /{restaurant.slug}
+              </span>
               <StatusBadges restaurant={restaurant} />
             </div>
           </div>
@@ -87,7 +118,10 @@ export function RestaurantAdminHeader({
         </Button>
       </div>
 
-      <nav aria-label="Restaurant sections" className="border-border flex gap-1 border-b">
+      <nav
+        aria-label="Restaurant sections"
+        className="border-border flex gap-1 border-b"
+      >
         {tabs.map((tab) => (
           <Link
             key={tab.id}

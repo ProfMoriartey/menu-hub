@@ -8,7 +8,6 @@ import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardResta
 import { RestaurantDetailsEditor } from "~/components/dashboard/RestaurantDetailsEditor";
 import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
 import { OpeningHoursSettings } from "~/components/restaurant-settings/OpeningHoursSettings";
-import { BrandColorSettings } from "~/components/restaurant-settings/BrandColorSettings";
 import type { DeliveryAppLinks, SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
@@ -65,12 +64,6 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
           restaurantId={row.id}
           timeZone={row.timeZone}
           hours={row.openingHours}
-        />
-        <BrandColorSettings
-          restaurantId={row.id}
-          isAdmin={role === "admin"}
-          enabled={row.brandColorEnabled}
-          color={row.brandColor}
         />
       </div>
     </>

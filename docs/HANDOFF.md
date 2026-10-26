@@ -182,7 +182,7 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 
 | Table | Notes |
 |---|---|
-| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social/delivery links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`), `brandColorEnabled` (admin switch), `brandColor` (#rrggbb) |
+| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social/delivery links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`), `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
 | `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
 | `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
@@ -195,15 +195,15 @@ counts and invitations. Deleting a user cascades to their access rows.
 
 **Migrations:** `0001` (old), `0002` slugs (with backfill SQL), `0003` QR scan
 days, `0004` item availability, `0005` restaurant invitations, `0006` menu
-translations, `0007` time zone, opening hours and brand colour (all add
-columns only). The
+translations, `0007` time zone, opening hours and brand colour, `0008` colour
+theme (all add columns only). The
 development database has 0001–0004 applied (checked 2026-10-23); **0005 was
 created 2026-10-26 and must be applied with `pnpm db:migrate` in dev and in
 production before the Team tab, admin People tab or dashboard invitations
 are used** (the Team and People pages error without the table). **0006
 (2026-10-26) must run before deploying the menu-languages change: every
 public restaurant page and the menu editors read its columns.** The same
-goes for **0007 (2026-10-26)**: public pages read its columns.
+goes for **0007 and 0008 (2026-10-26)**: public pages read their columns.
 
 **Reserved slugs** (`RESERVED_SLUGS`): app routes like `admin`, `dashboard`,
 `restaurants`, … plus `new` (admin route), `r` (QR link route) and `invite`
@@ -248,8 +248,9 @@ goes for **0007 (2026-10-26)**: public pages read its columns.
   translations everywhere but keeps them; removing a language keeps its
   text too. Server actions only accept the restaurant's current languages.
 - **Opening hours and time zone** (`app/actions/restaurant-settings.ts`):
-  owners and admins. **Brand colour**: a system admin switches it on per
-  restaurant (`setBrandColorEnabled`), then owners and admins pick it.
+  owners and admins. **Colours**: a system admin switches custom colours on
+  per restaurant (`setBrandColorEnabled`), then owners and admins design them
+  on the Colours page (`updateColorTheme`).
 - Inactive restaurants: public pages are visible as a **preview** to anyone
   with access (`PreviewBanner`, `noindex`); others are redirected.
 
@@ -382,8 +383,8 @@ entries; other language pages name the main-language page as canonical. The
 admin SEO title/description (untranslated) are only used on main-language
 pages. Slugs stay in the main language. Automatic translation: deferred.
 
-**Opening hours:** cards `components/restaurant-settings/OpeningHoursSettings`
-and `BrandColorSettings` on the admin edit page and the owner Details tab,
+**Opening hours:** card `components/restaurant-settings/OpeningHoursSettings`
+on the admin edit page and the owner Details tab,
 next to the menu-languages card. Up to 3 ranges a day; a close time before
 the open time runs past midnight; open == close means 24 hours. The menu
 header shows "Open now · until …" / "Closed · opens …" and the about page a
@@ -392,13 +393,26 @@ out per request in the restaurant's time zone). Structured data carries
 `openingHoursSpecification`. QR scan days use the restaurant's time zone
 once set (UTC before). Logic and tests: `lib/opening-hours.ts`.
 
-**Brand colour:** `[restaurantSlug]/layout.tsx` wraps public pages in
-`.brand-scope` with CSS from `lib/brand-color.ts`, overriding `--primary`,
-`--primary-foreground` and `--ring` per light/dark. The colour is nudged
-darker (light) or lighter (dark) until it has 3:1 against the page surface
-and its text 4.5:1. Surfaces are hard-coded sRGB conversions of the
-globals.css tokens: update `LIGHT_SURFACE`/`DARK_SURFACE` if the theme
-changes.
+**Colours** (custom colour themes): own page, tab "Colours" in the
+dashboard (owners/admins; editors redirected) and in admin
+(`components/colors/ColorThemeEditor`). A system admin switches the feature
+on per restaurant (`brandColorEnabled`, toggle on the page); off = default
+colours, design kept. Six colours per mode, light and dark
+(`lib/color-theme.ts`: background, card, text, primary, secondary, accent);
+every token the pages use (`--muted-foreground`, `--border`, text on
+buttons …) is derived from them in `paletteTokens`, so hover (`accent`) and
+every state follow the theme. The editor has presets, "Make from light
+mode" (`darkFromLight`), contrast warnings (never auto-changes the owner's
+choice) and a live preview (`MenuColorPreview`) whose parts carry
+`data-role`: hovering outlines the part and highlights its control, clicking
+selects it. `[restaurantSlug]/layout.tsx` wraps public pages in
+`.brand-scope` (own background/text) with `colorThemeCss`. Legacy: the
+single `brandColor` (before themes) still applies, primary + accent, until a
+theme is saved; saving or "Use the default colours" clears it. Default
+palette values are hex conversions of globals.css: update `DEFAULT_THEME`
+if the site theme changes. When adding colour to public components, use the
+theme tokens (`bg-card`, `text-primary`, `hover:bg-accent` …), not fixed
+colours, or custom themes won't reach them.
 
 **Search engines and link previews:** menu, about and item pages have their
 own title, description, preview image (admin SEO fields first, then
@@ -439,7 +453,7 @@ who changed what.
 **Things the owner was asked to do. Confirm they're done before relying on them:**
 - Subscribe the Clerk webhook endpoint to `user.updated` and `user.deleted`.
 - Set `NEXT_PUBLIC_APP_URL` to the production domain in production.
-- Run `pnpm db:migrate` in production for migrations 0002–0007, before deploying (0005: Team tab; 0006: menu languages; 0007: hours and brand colour).
+- Run `pnpm db:migrate` in production for migrations 0002–0008, before deploying (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008: colour themes).
 - Set owners on each restaurant's People tab (all old assignments became editors).
 - Run `pnpm uploads:cleanup -- --delete` after a dry run. The dry run found 32
   unused files, including some sensitive-looking photos (a SIM card PIN, a

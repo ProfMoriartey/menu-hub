@@ -417,7 +417,8 @@
     "itemsSummary": "{count, plural, one {# item} other {# items}} · Prices in {currency}",
     "preview": "Preview menu",
     "shareTab": "Share",
-    "teamTab": "Team"
+    "teamTab": "Team",
+    "colorsTab": "Colours"
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -534,11 +535,11 @@
     "multilingualOff": "Menus in several languages aren't enabled for this restaurant.",
     "invalidLanguages": "Choose languages from the list.",
     "saveHoursFailed": "Couldn't save the opening hours. Please try again.",
-    "saveColorFailed": "Couldn't save the brand colour. Please try again.",
+    "saveColorFailed": "Couldn't save the colours. Please try again.",
     "invalidHours": "Some opening hours aren't valid. Check the times and try again.",
     "invalidTimeZone": "Choose a time zone from the list, for example Europe/Istanbul.",
-    "invalidColor": "Enter a colour like #d97706.",
-    "brandColorOff": "A custom brand colour isn't enabled for this restaurant."
+    "invalidColor": "Enter colours like #d97706.",
+    "brandColorOff": "Custom colours aren't enabled for this restaurant."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -767,20 +768,72 @@
     "saving": "Saving…",
     "saved": "Saved"
   },
-  "BrandColor": {
-    "title": "Brand colour",
-    "intro": "Your colour for buttons, prices and the category bar on your menu.",
-    "enableTitle": "Custom brand colour",
-    "enableText": "Lets this restaurant's owners replace the theme's accent colour on the public pages. Turning it off goes back to the theme's colour but keeps their choice.",
-    "notEnabled": "A custom brand colour isn't enabled for this restaurant. Contact an administrator to turn it on.",
-    "colorLabel": "Colour",
-    "colorHint": "Pick any colour: it's adjusted automatically where needed so text stays readable in light and dark mode.",
+  "ColorTheme": {
+    "title": "Menu colours",
+    "intro": "Choose the colours guests see on your menu, about and dish pages, in light and dark mode.",
+    "enableTitle": "Custom colours",
+    "enableText": "Lets this restaurant's owners design its colours. Turning it off goes back to the default colours but keeps their design.",
+    "notEnabled": "Custom colours aren't enabled for this restaurant, so the default colours are used. Contact an administrator to turn them on.",
+    "presetsLabel": "Start from a palette",
+    "presets": {
+      "default": "Default",
+      "ocean": "Ocean",
+      "forest": "Forest",
+      "berry": "Berry",
+      "classic": "Classic"
+    },
+    "modeLabel": "Colour mode",
     "light": "Light mode",
     "dark": "Dark mode",
-    "sampleButton": "Menu",
-    "save": "Save colour",
+    "generateDark": "Make from light mode",
+    "previewLabel": "Preview",
+    "previewHint": "Point at any part of the menu to see which colour it uses; click it to change that colour.",
+    "colorsLabel": "Colours · {mode}",
+    "roles": {
+      "background": {
+        "label": "Background",
+        "hint": "The page behind everything."
+      },
+      "card": {
+        "label": "Cards",
+        "hint": "Dish cards, the header and the category bar."
+      },
+      "text": {
+        "label": "Text",
+        "hint": "Names and headings; descriptions use a softer shade."
+      },
+      "primary": {
+        "label": "Primary",
+        "hint": "Prices, the selected category and main buttons."
+      },
+      "secondary": {
+        "label": "Secondary",
+        "hint": "Other categories and secondary buttons."
+      },
+      "accent": {
+        "label": "Accent",
+        "hint": "Highlights when pointing at a category or button."
+      }
+    },
+    "warnings": {
+      "textOnBackground": "Text is hard to read on the background.",
+      "textOnCard": "Text is hard to read on the cards.",
+      "primaryOnCard": "Prices in the primary colour are hard to see on the cards.",
+      "textOnPrimary": "Labels on primary buttons are hard to read.",
+      "textOnSecondary": "Labels on secondary buttons are hard to read.",
+      "textOnAccent": "Labels on accent highlights are hard to read."
+    },
+    "save": "Save colours",
     "saving": "Saving…",
-    "useTheme": "Use the theme's colour",
-    "saved": "Saved"
+    "saved": "Saved",
+    "discard": "Discard changes",
+    "useDefault": "Use the default colours",
+    "useDefaultConfirm": "Go back to the default colours? Your current colours will be removed.",
+    "sampleDescription": "Your restaurant's description",
+    "sampleDetails": "Details",
+    "sampleOrder": "Order",
+    "sampleCategory": "Starters",
+    "sampleDish": "Sample dish",
+    "sampleDishDescription": "A short description of the dish."
   }
 }

@@ -8,6 +8,7 @@ import { getRestaurantBySlug } from "~/server/public-menu";
 import { getRestaurantRole } from "~/app/actions/auth";
 import { PreviewBanner } from "~/components/public/PreviewBanner";
 import { brandCss } from "~/lib/brand-color";
+import { colorThemeCss } from "~/lib/color-theme";
 
 interface DynamicPublicLayoutProps {
   children: React.ReactNode;
@@ -70,19 +71,22 @@ export default async function DynamicPublicLayout({
     return notFound();
   }
 
-  // 3. Live: everyone sees it. (Only inactive menus check who is asking, so
-  // the public pages guests visit don't depend on sign-in at all.)
-  // The restaurant's own accent colour, when an admin has enabled it.
-  const brand =
-    restaurant.brandColorEnabled && restaurant.brandColor
-      ? brandCss(restaurant.brandColor)
-      : null;
+  // The restaurant's own colours, when an admin has enabled them: its saved
+  // theme, or the single brand colour picked before themes existed.
+  const brand = !restaurant.brandColorEnabled
+    ? null
+    : restaurant.colorTheme
+      ? colorThemeCss(restaurant.colorTheme)
+      : restaurant.brandColor
+        ? brandCss(restaurant.brandColor)
+        : null;
 
   const withMessages = async (content: React.ReactNode) => (
     <NextIntlClientProvider messages={await clientMessages()}>
       {brand ? (
-        <div className="brand-scope">
-          {/* Built from a validated #rrggbb only (lib/brand-color). */}
+        // Its own background and text, so the page behind the menu matches.
+        <div className="brand-scope bg-background text-foreground min-h-screen">
+          {/* Built from validated #rrggbb values only (lib/color-theme). */}
           <style dangerouslySetInnerHTML={{ __html: brand }} />
           {content}
         </div>
@@ -92,6 +96,8 @@ export default async function DynamicPublicLayout({
     </NextIntlClientProvider>
   );
 
+  // 3. Live: everyone sees it. (Only inactive menus check who is asking, so
+  // the public pages guests visit don't depend on sign-in at all.)
   if (restaurant.isActive) {
     return withMessages(children);
   }

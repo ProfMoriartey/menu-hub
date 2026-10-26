@@ -417,7 +417,8 @@
     "itemsSummary": "{count, plural, one {# plato} other {# platos}} · Precios en {currency}",
     "preview": "Vista previa del menú",
     "shareTab": "Compartir",
-    "teamTab": "Equipo"
+    "teamTab": "Equipo",
+    "colorsTab": "Colores"
   },
   "LanguageSwitcher": {
     "label": "Idioma"
@@ -534,11 +535,11 @@
     "multilingualOff": "Los menús en varios idiomas no están activados para este restaurante.",
     "invalidLanguages": "Elige los idiomas de la lista.",
     "saveHoursFailed": "No se pudo guardar el horario. Inténtalo de nuevo.",
-    "saveColorFailed": "No se pudo guardar el color de marca. Inténtalo de nuevo.",
+    "saveColorFailed": "No se pudieron guardar los colores. Inténtalo de nuevo.",
     "invalidHours": "Algunas horas no son válidas. Revisa los horarios e inténtalo de nuevo.",
     "invalidTimeZone": "Elige una zona horaria de la lista, por ejemplo Europe/Istanbul.",
-    "invalidColor": "Introduce un color como #d97706.",
-    "brandColorOff": "El color de marca propio no está activado para este restaurante."
+    "invalidColor": "Introduce colores como #d97706.",
+    "brandColorOff": "Los colores propios no están activados para este restaurante."
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
@@ -767,20 +768,72 @@
     "saving": "Guardando…",
     "saved": "Guardado"
   },
-  "BrandColor": {
-    "title": "Color de marca",
-    "intro": "Tu color para los botones, los precios y la barra de categorías de tu menú.",
-    "enableTitle": "Color de marca propio",
-    "enableText": "Permite a los propietarios de este restaurante sustituir el color de acento del tema en las páginas públicas. Desactivarlo vuelve al color del tema, pero conserva su elección.",
-    "notEnabled": "El color de marca propio no está activado para este restaurante. Contacta con un administrador para activarlo.",
-    "colorLabel": "Color",
-    "colorHint": "Elige cualquier color: se ajusta automáticamente cuando hace falta para que el texto se lea bien en modo claro y oscuro.",
+  "ColorTheme": {
+    "title": "Colores del menú",
+    "intro": "Elige los colores que ven los clientes en tu menú, tu página de información y las páginas de platos, en modo claro y oscuro.",
+    "enableTitle": "Colores propios",
+    "enableText": "Permite a los propietarios de este restaurante diseñar sus colores. Desactivarlo vuelve a los colores predeterminados, pero conserva su diseño.",
+    "notEnabled": "Los colores propios no están activados para este restaurante, así que se usan los colores predeterminados. Contacta con un administrador para activarlos.",
+    "presetsLabel": "Empieza con una paleta",
+    "presets": {
+      "default": "Predeterminada",
+      "ocean": "Océano",
+      "forest": "Bosque",
+      "berry": "Frutos rojos",
+      "classic": "Clásica"
+    },
+    "modeLabel": "Modo de color",
     "light": "Modo claro",
     "dark": "Modo oscuro",
-    "sampleButton": "Menú",
-    "save": "Guardar color",
+    "generateDark": "Crear a partir del modo claro",
+    "previewLabel": "Vista previa",
+    "previewHint": "Señala cualquier parte del menú para ver qué color usa; haz clic para cambiar ese color.",
+    "colorsLabel": "Colores · {mode}",
+    "roles": {
+      "background": {
+        "label": "Fondo",
+        "hint": "La página detrás de todo."
+      },
+      "card": {
+        "label": "Tarjetas",
+        "hint": "Tarjetas de platos, la cabecera y la barra de categorías."
+      },
+      "text": {
+        "label": "Texto",
+        "hint": "Nombres y títulos; las descripciones usan un tono más suave."
+      },
+      "primary": {
+        "label": "Principal",
+        "hint": "Precios, la categoría seleccionada y los botones principales."
+      },
+      "secondary": {
+        "label": "Secundario",
+        "hint": "Las demás categorías y los botones secundarios."
+      },
+      "accent": {
+        "label": "Acento",
+        "hint": "Resaltado al señalar una categoría o un botón."
+      }
+    },
+    "warnings": {
+      "textOnBackground": "El texto se lee con dificultad sobre el fondo.",
+      "textOnCard": "El texto se lee con dificultad sobre las tarjetas.",
+      "primaryOnCard": "Los precios en el color principal se ven mal sobre las tarjetas.",
+      "textOnPrimary": "El texto de los botones principales se lee con dificultad.",
+      "textOnSecondary": "El texto de los botones secundarios se lee con dificultad.",
+      "textOnAccent": "El texto sobre el color de acento se lee con dificultad."
+    },
+    "save": "Guardar colores",
     "saving": "Guardando…",
-    "useTheme": "Usar el color del tema",
-    "saved": "Guardado"
+    "saved": "Guardado",
+    "discard": "Descartar cambios",
+    "useDefault": "Usar los colores predeterminados",
+    "useDefaultConfirm": "¿Volver a los colores predeterminados? Se eliminarán tus colores actuales.",
+    "sampleDescription": "La descripción de tu restaurante",
+    "sampleDetails": "Información",
+    "sampleOrder": "Pedir",
+    "sampleCategory": "Entrantes",
+    "sampleDish": "Plato de ejemplo",
+    "sampleDishDescription": "Una breve descripción del plato."
   }
 }

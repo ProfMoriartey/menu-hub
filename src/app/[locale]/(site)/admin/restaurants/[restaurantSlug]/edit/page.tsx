@@ -8,7 +8,6 @@ import { AdminRestaurantForm } from "~/components/admin/restaurant-form/AdminRes
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
 import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
 import { OpeningHoursSettings } from "~/components/restaurant-settings/OpeningHoursSettings";
-import { BrandColorSettings } from "~/components/restaurant-settings/BrandColorSettings";
 import type { Restaurant } from "~/types/restaurant";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 
@@ -49,12 +48,6 @@ export default async function EditRestaurantPage({
         restaurantId={row.id}
         timeZone={row.timeZone}
         hours={row.openingHours}
-      />
-      <BrandColorSettings
-        restaurantId={row.id}
-        isAdmin
-        enabled={row.brandColorEnabled}
-        color={row.brandColor}
       />
     </div>
   );

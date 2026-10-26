@@ -20,6 +20,7 @@ import type {
   RestaurantTranslations,
 } from "~/lib/menu-languages";
 import type { OpeningHours } from "~/lib/opening-hours";
+import type { ColorTheme } from "~/lib/color-theme";
 
 // Define ENUMs if you have them, e.g., for dietary labels
 export const dietaryLabelEnum = pgEnum("dietary_label", [
@@ -82,10 +83,14 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   timeZone: varchar("time_zone", { length: 64 }),
   // Weekly hours (lib/opening-hours). Null = not set: nothing is shown.
   openingHours: jsonb("opening_hours").$type<OpeningHours>(),
-  // A custom accent colour on the public pages. Only an admin turns the
-  // feature on; owners and admins pick the colour (#rrggbb).
+  // Custom colours on the public pages. Only an admin turns the feature on
+  // (brandColorEnabled); owners and admins then design `colorTheme` (light
+  // and dark palettes, lib/color-theme). `brandColor` is the single accent
+  // colour used before colour themes existed: still applied while no theme
+  // is saved, and the starting primary colour of the editor.
   brandColorEnabled: boolean("brand_color_enabled").default(false).notNull(),
   brandColor: varchar("brand_color", { length: 7 }),
+  colorTheme: jsonb("color_theme").$type<ColorTheme>(),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow(),

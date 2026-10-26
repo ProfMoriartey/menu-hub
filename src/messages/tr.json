@@ -417,7 +417,8 @@
     "itemsSummary": "{count} ürün · Fiyatlar {currency} cinsinden",
     "preview": "Menüyü önizle",
     "shareTab": "Paylaş",
-    "teamTab": "Ekip"
+    "teamTab": "Ekip",
+    "colorsTab": "Renkler"
   },
   "LanguageSwitcher": {
     "label": "Dil"
@@ -534,11 +535,11 @@
     "multilingualOff": "Bu restoran için birden fazla dilde menü açık değil.",
     "invalidLanguages": "Dilleri listeden seçin.",
     "saveHoursFailed": "Çalışma saatleri kaydedilemedi. Lütfen tekrar deneyin.",
-    "saveColorFailed": "Marka rengi kaydedilemedi. Lütfen tekrar deneyin.",
+    "saveColorFailed": "Renkler kaydedilemedi. Lütfen tekrar deneyin.",
     "invalidHours": "Bazı çalışma saatleri geçerli değil. Saatleri kontrol edip tekrar deneyin.",
     "invalidTimeZone": "Listeden bir saat dilimi seçin, örneğin Europe/Istanbul.",
-    "invalidColor": "#d97706 gibi bir renk girin.",
-    "brandColorOff": "Bu restoran için özel marka rengi açık değil."
+    "invalidColor": "#d97706 gibi renkler girin.",
+    "brandColorOff": "Bu restoran için özel renkler açık değil."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -767,20 +768,72 @@
     "saving": "Kaydediliyor…",
     "saved": "Kaydedildi"
   },
-  "BrandColor": {
-    "title": "Marka rengi",
-    "intro": "Menünüzdeki düğmeler, fiyatlar ve kategori çubuğu için sizin renginiz.",
-    "enableTitle": "Özel marka rengi",
-    "enableText": "Bu restoranın sahiplerinin herkese açık sayfalarda temanın vurgu rengini değiştirmesine izin verir. Kapatmak temanın rengine döner ama seçimlerini saklar.",
-    "notEnabled": "Bu restoran için özel marka rengi açık değil. Açtırmak için bir yöneticiyle iletişime geçin.",
-    "colorLabel": "Renk",
-    "colorHint": "İstediğiniz rengi seçin: yazıların açık ve koyu modda okunabilir kalması için gerektiğinde otomatik ayarlanır.",
+  "ColorTheme": {
+    "title": "Menü renkleri",
+    "intro": "Misafirlerin menünüzde, hakkında ve ürün sayfalarında gördüğü renkleri açık ve koyu mod için seçin.",
+    "enableTitle": "Özel renkler",
+    "enableText": "Bu restoranın sahiplerinin renkleri tasarlamasına izin verir. Kapatmak varsayılan renklere döner ama tasarımlarını saklar.",
+    "notEnabled": "Bu restoran için özel renkler açık değil, bu yüzden varsayılan renkler kullanılıyor. Açtırmak için bir yöneticiyle iletişime geçin.",
+    "presetsLabel": "Bir paletle başlayın",
+    "presets": {
+      "default": "Varsayılan",
+      "ocean": "Okyanus",
+      "forest": "Orman",
+      "berry": "Böğürtlen",
+      "classic": "Klasik"
+    },
+    "modeLabel": "Renk modu",
     "light": "Açık mod",
     "dark": "Koyu mod",
-    "sampleButton": "Menü",
-    "save": "Rengi kaydet",
+    "generateDark": "Açık moddan oluştur",
+    "previewLabel": "Önizleme",
+    "previewHint": "Hangi rengi kullandığını görmek için menünün herhangi bir yerinin üzerine gelin; o rengi değiştirmek için tıklayın.",
+    "colorsLabel": "Renkler · {mode}",
+    "roles": {
+      "background": {
+        "label": "Arka plan",
+        "hint": "Her şeyin arkasındaki sayfa."
+      },
+      "card": {
+        "label": "Kartlar",
+        "hint": "Ürün kartları, başlık ve kategori çubuğu."
+      },
+      "text": {
+        "label": "Yazı",
+        "hint": "Adlar ve başlıklar; açıklamalar daha açık bir tonda."
+      },
+      "primary": {
+        "label": "Ana renk",
+        "hint": "Fiyatlar, seçili kategori ve ana düğmeler."
+      },
+      "secondary": {
+        "label": "İkincil renk",
+        "hint": "Diğer kategoriler ve ikincil düğmeler."
+      },
+      "accent": {
+        "label": "Vurgu",
+        "hint": "Bir kategori ya da düğmenin üzerine gelindiğinde."
+      }
+    },
+    "warnings": {
+      "textOnBackground": "Yazı arka planda zor okunuyor.",
+      "textOnCard": "Yazı kartlarda zor okunuyor.",
+      "primaryOnCard": "Ana renkteki fiyatlar kartlarda zor görünüyor.",
+      "textOnPrimary": "Ana düğmelerdeki yazılar zor okunuyor.",
+      "textOnSecondary": "İkincil düğmelerdeki yazılar zor okunuyor.",
+      "textOnAccent": "Vurgulardaki yazılar zor okunuyor."
+    },
+    "save": "Renkleri kaydet",
     "saving": "Kaydediliyor…",
-    "useTheme": "Temanın rengini kullan",
-    "saved": "Kaydedildi"
+    "saved": "Kaydedildi",
+    "discard": "Değişiklikleri at",
+    "useDefault": "Varsayılan renkleri kullan",
+    "useDefaultConfirm": "Varsayılan renklere dönülsün mü? Mevcut renkleriniz silinecek.",
+    "sampleDescription": "Restoranınızın açıklaması",
+    "sampleDetails": "Bilgiler",
+    "sampleOrder": "Sipariş",
+    "sampleCategory": "Başlangıçlar",
+    "sampleDish": "Örnek ürün",
+    "sampleDishDescription": "Ürünün kısa bir açıklaması."
   }
 }

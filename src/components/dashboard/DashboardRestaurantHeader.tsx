@@ -11,7 +11,7 @@ import type { Restaurant } from "~/types/restaurant";
 interface DashboardRestaurantHeaderProps {
   restaurant: Pick<Restaurant, "name" | "slug" | "logoUrl" | "isActive">;
   role: RestaurantRole;
-  activeTab: "menu" | "details" | "share" | "team";
+  activeTab: "menu" | "details" | "share" | "team" | "colors";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
   trail?: { label: string; href?: string }[];
 }
@@ -34,7 +34,11 @@ export async function DashboardRestaurantHeader({
     { id: "team", label: t("teamTab"), href: `${base}/team` },
     // Editors manage the menu only, so they don't get a details tab.
     ...(canEditDetails(role)
-      ? [{ id: "details", label: t("detailsTab"), href: `${base}/edit` }]
+      ? [
+          { id: "details", label: t("detailsTab"), href: `${base}/edit` },
+          // The colours page explains itself when an admin hasn't enabled it.
+          { id: "colors", label: t("colorsTab"), href: `${base}/colors` },
+        ]
       : []),
   ];
 
@@ -103,7 +107,11 @@ export async function DashboardRestaurantHeader({
         <Button variant="outline" asChild>
           <Link href={`/${restaurant.slug}`} target="_blank">
             {restaurant.isActive ? t("viewLive") : t("preview")}{" "}
-            {restaurant.isActive ? <ExternalLink className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            {restaurant.isActive ? (
+              <ExternalLink className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
           </Link>
         </Button>
       </div>

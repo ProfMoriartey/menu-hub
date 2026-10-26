@@ -1,0 +1,1 @@
+ALTER TABLE "menu-hub_restaurants" ADD COLUMN "color_theme" jsonb;
