@@ -417,7 +417,12 @@ mode" (`darkFromLight`), contrast warnings (never auto-changes the owner's
 choice) and a live preview (`MenuColorPreview`) whose parts carry
 `data-role`: hovering outlines the part and highlights its control, clicking
 selects it. `[restaurantSlug]/layout.tsx` wraps public pages in
-`.brand-scope` (own background/text) with `colorThemeCss`. Legacy: the
+`.brand-scope` (own background/text) with `colorThemeCss`. The CSS also targets
+`body:has(.brand-scope)`, because pop-ups (dish sheet, filter panel,
+language list) render at the end of `<body>`, outside the scope; keep that
+when changing it. The unchanged "Default" palette uses the site's exact
+tokens (`SITE_TOKENS`, white text on amber) instead of derived ones, and
+gets no contrast warnings. Legacy: the
 single `brandColor` (before themes) still applies, primary + accent, until a
 theme is saved; saving or "Use the default colours" clears it. Default
 palette values are hex conversions of globals.css: update `DEFAULT_THEME`

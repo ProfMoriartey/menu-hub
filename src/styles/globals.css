@@ -105,7 +105,7 @@
   --foreground: oklch(89.5% 0.016 88.45); /* stone-200: #E7E5E4 - Light, readable text */
   --card-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
   --popover-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
-  --muted-foreground: oklch(50% 0.025 85); /* Mid-tone for muted text (remains similar) */
+  --muted-foreground: oklch(72% 0.02 85); /* #AAA497: softer text that still reads at 4.5:1+ on cards, the page and muted chips */
 
   --primary: oklch(80.52% 0.177 82.8); /* amber-400: #FBBE24 - Vibrant accent (remains similar) */
   --primary-foreground: oklch(20.31% 0.027 84.72); /* stone-800 for text on primary */

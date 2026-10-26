@@ -198,6 +198,62 @@ export function startingTheme(
   };
 }
 
+// The site's own tokens (globals.css, in hex) for the default palette, so
+// "Default" looks exactly like a restaurant without custom colours: white
+// text on the amber buttons, its borders and muted shades. Tokens derived
+// from the six colours would differ slightly. Update with globals.css.
+const SITE_TOKENS: Record<ThemeMode, Record<string, string>> = {
+  light: {
+    background: "#fcf9f4",
+    foreground: "#2a2315",
+    card: "#fcf9f4",
+    "card-foreground": "#2a2315",
+    popover: "#ffffff",
+    "popover-foreground": "#2a2315",
+    primary: "#be7721",
+    "primary-foreground": "#f8fafc",
+    secondary: "#f8dbbd",
+    "secondary-foreground": "#2a2315",
+    accent: "#be7721",
+    "accent-foreground": "#f8fafc",
+    muted: "#f8dbbd",
+    "muted-foreground": "#433927",
+    border: "#e1dcd1",
+    input: "#e1dcd1",
+    ring: "#be7721",
+  },
+  dark: {
+    background: "#1c1608",
+    foreground: "#e1dcd1",
+    card: "#2a2315",
+    "card-foreground": "#e1dcd1",
+    popover: "#2a2315",
+    "popover-foreground": "#e1dcd1",
+    primary: "#f6b200",
+    "primary-foreground": "#1c1608",
+    secondary: "#433927",
+    "secondary-foreground": "#e1dcd1",
+    accent: "#f6b200",
+    "accent-foreground": "#1c1608",
+    muted: "#433927",
+    "muted-foreground": "#aaa497",
+    border: "#433927",
+    input: "#433927",
+    ring: "#f6b200",
+  },
+};
+
+const samePalette = (a: Palette, b: Palette) =>
+  COLOR_ROLES.every((role) => a[role] === b[role]);
+
+/** Which of the site's default palettes this is, if it is one. */
+const defaultModeOf = (p: Palette): ThemeMode | null =>
+  samePalette(p, DEFAULT_THEME.light)
+    ? "light"
+    : samePalette(p, DEFAULT_THEME.dark)
+      ? "dark"
+      : null;
+
 // Softer text (descriptions, hints): a step towards the card colour, but
 // never below 4.5:1 on the cards.
 function mutedText(p: Palette) {
@@ -210,6 +266,8 @@ function mutedText(p: Palette) {
 
 /** Every colour token the public pages use, derived from one palette. */
 export function paletteTokens(p: Palette): Record<string, string> {
+  const siteDefault = defaultModeOf(p);
+  if (siteDefault) return { ...SITE_TOKENS[siteDefault] };
   const border = mix(p.card, p.text, 0.15);
   return {
     background: p.background,
@@ -239,12 +297,15 @@ const declarations = (p: Palette) =>
 
 /**
  * CSS for `.brand-scope` in light and dark mode. Only built from validated
- * hex colours, so it's safe to put in a <style> tag.
+ * hex colours, so it's safe to put in a <style> tag. The <body> gets it too
+ * (while a `.brand-scope` is on the page): pop-ups such as the dish sheet,
+ * the filter panel and the language list are drawn at the end of <body>,
+ * outside the scope.
  */
 export function colorThemeCss(theme: ColorTheme): string | null {
   const valid = parseColorTheme(theme);
   if (!valid) return null;
-  return `.brand-scope{${declarations(valid.light)}}.dark .brand-scope{${declarations(valid.dark)}}`;
+  return `.brand-scope,body:has(.brand-scope){${declarations(valid.light)}}.dark .brand-scope,.dark body:has(.brand-scope){${declarations(valid.dark)}}`;
 }
 
 export type ContrastWarning =
@@ -262,6 +323,9 @@ export type ContrastWarning =
 export function contrastWarnings(
   p: Palette,
 ): { warning: ContrastWarning; roles: ColorRole[] }[] {
+  // The site's own default is its design, not the owner's: nothing to warn
+  // them about there.
+  if (defaultModeOf(p)) return [];
   const checks: [ContrastWarning, ColorRole[], number, number][] = [
     [
       "textOnBackground",

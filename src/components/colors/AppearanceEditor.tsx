@@ -240,14 +240,18 @@ export function AppearanceEditor({
     }));
   };
 
-  // Without custom colours the preview shows the default ones.
+  // The colours being edited (only shown while custom colours are on).
   const palette = colorsEnabled ? theme[mode] : DEFAULT_THEME.light;
-  const previewStyle = Object.fromEntries(
-    Object.entries(paletteTokens(palette)).map(([token, value]) => [
-      `--${token}`,
-      value,
-    ]),
-  ) as CSSProperties;
+  // Without custom colours, the preview simply uses the site's own colours
+  // (the page's), exactly as guests see them.
+  const previewStyle = colorsEnabled
+    ? (Object.fromEntries(
+        Object.entries(paletteTokens(palette)).map(([token, value]) => [
+          `--${token}`,
+          value,
+        ]),
+      ) as CSSProperties)
+    : undefined;
   const warnings = colorsEnabled ? contrastWarnings(palette) : [];
 
   const toggle = (next: boolean) => {

@@ -94,7 +94,7 @@ export function brandCss(hex: string): string | null {
   if (!isBrandColor(hex)) return null;
   const { light, dark } = brandPalette(hex);
   return (
-    `.brand-scope{--primary:${light.primary};--primary-foreground:${light.foreground};--ring:${light.primary};--accent:${light.primary};--accent-foreground:${light.foreground}}` +
-    `.dark .brand-scope{--primary:${dark.primary};--primary-foreground:${dark.foreground};--ring:${dark.primary};--accent:${dark.primary};--accent-foreground:${dark.foreground}}`
+    `.brand-scope,body:has(.brand-scope){--primary:${light.primary};--primary-foreground:${light.foreground};--ring:${light.primary};--accent:${light.primary};--accent-foreground:${light.foreground}}` +
+    `.dark .brand-scope,.dark body:has(.brand-scope){--primary:${dark.primary};--primary-foreground:${dark.foreground};--ring:${dark.primary};--accent:${dark.primary};--accent-foreground:${dark.foreground}}`
   );
 }
