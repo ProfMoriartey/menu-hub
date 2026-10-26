@@ -81,13 +81,18 @@ comes from Clerk). `src/env.js` validates the server ones and
 
 ```
 [locale]/
-  page.tsx, restaurants/, themes/, about/          public marketing + directory
+  layout.tsx          <html>, theme only. No Clerk, no translations for the
+                      browser: menu pages (QR scans) stay light. See below.
   [restaurantSlug]/                                 public menu of one restaurant
     layout.tsx        gate: active → everyone; inactive → preview for people
-                      with access (PreviewBanner, noindex), else redirect
+                      with access (PreviewBanner, noindex), else redirect.
+                      Gives the browser only CLIENT_NAMESPACES translations.
     page.tsx          the menu (hidden items excluded)
     about/, item/[itemSlug]/   (id-based item URLs permanently redirect to slugs)
-  (client)/dashboard/                               restaurant staff
+  (site)/             every other page. layout.tsx adds ClerkProvider, all
+                      translations, UploadThing's NextSSRPlugin, Navbar
+    page.tsx, restaurants/, themes/, about/        public marketing + directory
+  (site)/(client)/dashboard/                        restaurant staff
     layout.tsx        top bar: dashboard link, LanguageSwitcher, ThemeToggle, UserButton
     page.tsx          "Your restaurants" cards (+ setup progress)
     [restaurantSlug]/
@@ -95,20 +100,29 @@ comes from Clerk). `src/env.js` validates the server ones and
       menu/           categories + SetupChecklist;  menu/[categorySlug]/ items
       edit/           owner details form (editors are redirected to menu)
       share/          QR code, link, scan stats;  share/print/ table cards
-  admin/                                            system admin only (layout checks role)
+  (site)/admin/                                     system admin only (layout checks role)
     restaurants/      list (filters incl. "Ready to go live"), new/
       [restaurantSlug]/edit | menu | menu/[categorySlug] | share | share/print | people
     users/, users/[userId]/   user list (search, Clerk profiles), access + roles, delete user
-  sign-in/
+  (site)/sign-in/
 r/[restaurantId]/route.ts   permanent QR link: counts the scan, 307 → /<current slug>
 api/uploadthing/            upload routes (per-restaurant permission checks)
 api/webhooks/clerk/         user.created / user.updated / user.deleted → users table
 actions/                    server actions: auth, restaurant, category, menu-item, search
-[locale]/admin/actions.ts   admin actions: assign/revoke access, delete user
+[locale]/(site)/admin/actions.ts   admin actions: assign/revoke access, delete user
 ```
 
 `src/middleware.ts` runs Clerk + next-intl. It skips `/api`, `/trpc` and `/r/`
-(those have no locale prefix).
+(those have no locale prefix). Server-side `auth()` works on every page; only
+`(site)` pages have Clerk in the browser.
+
+**Menu pages and the browser:** a client component used under
+`[restaurantSlug]` can only use the translation namespaces listed in
+`CLIENT_NAMESPACES` in `[restaurantSlug]/layout.tsx` (plus
+`MenuEditor.dietary`); add new ones there or it shows `MISSING_MESSAGE`.
+Never use Clerk's client components (`UserButton`, `useUser` …) there. This
+layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
+(measured 2026-10-26 with production builds); keep it that way.
 
 ### Key modules
 
@@ -118,6 +132,9 @@ actions/                    server actions: auth, restaurant, category, menu-ite
 | `server/run-action.ts` | `runAction(fallbackCode, body)`: translates errors with the request locale; server-only |
 | `app/actions/auth.ts` | `isSystemAdmin`, `getRestaurantRole`, `checkAuthorization` (any access), `checkOwnerAuthorization` (owner/admin) |
 | `lib/access.ts` | `ACCESS_LEVELS` (`owner`, `editor`), `RestaurantRole` (+ `admin`), `canEditDetails` |
+| `server/public-menu.ts` | cached reads for public pages (`getRestaurantBySlug`, `getPublicMenu`, `getPublicMenuItem`; `unstable_cache`, no Date columns) and `revalidatePublicMenu(id)` / `revalidatePublicRestaurant(id?)`, which every save action must call |
+| `lib/format-price.ts` | guest-language prices, server only (see §6) |
+| `lib/category-section.ts`, `lib/dietary-labels.ts` | menu section ids; dietary label → translation key |
 | `server/menu-data.ts` | category summaries / category with items, shared by admin + dashboard |
 | `server/dashboard-restaurant.ts` | `getDashboardRestaurant(slug)` → restaurant + viewer's role (React `cache`) |
 | `server/setup-facts.ts` + `lib/setup-checklist.ts` | getting-started checklist data (grouped queries) and rules |
@@ -144,13 +161,17 @@ actions/                    server actions: auth, restaurant, category, menu-ite
 - `components/forms/fields.tsx`: `FormSection`, `Field`, `UrlInput`,
   `CharCount`, `ToggleRow`.
 - `components/admin/`: admin-only (English): restaurant form, list, cards,
-  headers, people/user access, `RestaurantLogo`, `StatusBadges`.
+  headers, people/user access, `StatusBadges`.
 - `components/dashboard/`: `DashboardRestaurantHeader`,
   `RestaurantDetailsEditor`, `SetupChecklist`.
 - `components/public/`: menu themes (`themes/*Layout.tsx`, four themes:
-  classic, sidebar-list, accordion-card, category-cards-image-dominant),
-  `MenuItemDisplayClient`, `PreviewBanner`, `SoldOutBadge`.
-- `components/shared/`: `Navbar`, `ThemeToggle`, `LanguageSwitcher`.
+  classic, sidebar-list, accordion-card, category-cards-image-dominant; no
+  framer-motion), `MenuDisplayClient` (search + dietary filters over every
+  theme), `CategoryNav` (scroll-following bar/sidebar), `MenuItemCard`,
+  `MenuItemDetail` (server), `PublicPageControls`, `PreviewBanner`,
+  `SoldOutBadge`, `menu-types.ts`.
+- `components/shared/`: `Navbar`, `ThemeToggle`, `LanguageSwitcher`,
+  `RestaurantLogo` (logo or initials; admin, dashboard and public).
 
 ---
 
@@ -215,9 +236,13 @@ applied (checked 2026-10-23). Production must run `pnpm db:migrate`.
   (see `duplicateMenuItem`).
 - Client code either checks `result.ok` or wraps in try/catch with
   `unwrap(await action(...))`.
-- Revalidate with `revalidatePath("/[locale]", "layout")` (or
-  `"/[locale]/admin", "layout"`). Plain `"/admin/..."` paths never match
-  because of the locale prefix.
+- After changing restaurant or menu data, call `revalidatePublicMenu(id)` or
+  `revalidatePublicRestaurant(id?)` from `server/public-menu.ts`. They clear
+  the public pages' cache **and** re-render everything under `/[locale]`.
+  A plain `revalidatePath` leaves guests seeing cached data for up to an hour.
+- `revalidatePath` matches folder paths, **route groups included**: use
+  `"/[locale]/(site)/admin"`, not `"/[locale]/admin"`. Plain `"/admin/..."`
+  paths never match because of the locale prefix.
 
 ### i18n
 - Every user-facing string in public pages, the dashboard and shared
@@ -340,7 +365,7 @@ haven't signed up) or only pick existing users? It matters for the SaaS goal
 **Known leftovers:**
 - `package-lock.json` is stale (pnpm is canonical).
 - `next lint` still warns in four files nobody has reworked yet:
-  `app/[locale]/layout.tsx`, `app/[locale]/page.tsx`,
+  `app/[locale]/layout.tsx`, `app/[locale]/(site)/page.tsx`,
   `components/about/AboutPageClient.tsx`, `components/svg/GroovySittingDoodle.tsx`.
 - The public themes hardcode "No items in this category yet." in English.
 
@@ -375,6 +400,9 @@ haven't signed up) or only pick existing users? It matters for the SaaS goal
 - **End every finished change set with a ready-to-paste commit message**
   (imperative subject, body grouped into changes and fixes, plus any deploy
   steps such as migrations). **Don't commit unless asked**; the owner commits.
+- **Never mention Claude** in commit messages, pushes or PRs: no
+  `Co-Authored-By` line, no "Generated with" footer. Commits are authored
+  as **Chrollo** with the owner's email (set in this repo's git config).
 - The owner prefers recommendations with reasons, then decides ("let's do
   your way"). Ask only when the choice is genuinely theirs.
 - Keep admin and dashboard in step: features added to shared components

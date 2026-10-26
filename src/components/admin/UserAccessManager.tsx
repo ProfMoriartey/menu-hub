@@ -35,7 +35,7 @@ import {
 } from "~/components/ui/select";
 import { StatusBadges } from "~/components/admin/RestaurantCard";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
-import { assignRestaurantToUser, revokeRestaurantAccess } from "~/app/[locale]/admin/actions";
+import { assignRestaurantToUser, revokeRestaurantAccess } from "~/app/[locale]/(site)/admin/actions";
 import { ACCESS_LEVELS, ACCESS_LEVEL_INFO, type AccessLevel } from "~/lib/access";
 import type { Restaurant } from "~/types/restaurant";
 
