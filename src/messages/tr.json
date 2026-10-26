@@ -409,7 +409,8 @@
     "categoriesNav": "Kategoriler",
     "itemsSummary": "{count} ürün · Fiyatlar {currency} cinsinden",
     "preview": "Menüyü önizle",
-    "shareTab": "Paylaş"
+    "shareTab": "Paylaş",
+    "teamTab": "Ekip"
   },
   "LanguageSwitcher": {
     "label": "Dil"
@@ -509,7 +510,18 @@
     "adminOnlyNewLogo": "Yeni bir restoranın logosunu yalnızca yöneticiler yükleyebilir.",
     "ownerOnlyLogo": "Restoranın logosunu yalnızca restoran sahibi değiştirebilir.",
     "invalidCategory": "Bu kategori bu restorana ait değil. Sayfayı yenileyip tekrar deneyin.",
-    "duplicateItemFailed": "Ürün çoğaltılamadı. Lütfen tekrar deneyin."
+    "duplicateItemFailed": "Ürün çoğaltılamadı. Lütfen tekrar deneyin.",
+    "createInviteFailed": "Davet oluşturulamadı. Lütfen tekrar deneyin.",
+    "cancelInviteFailed": "Davet iptal edilemedi. Lütfen tekrar deneyin.",
+    "respondInviteFailed": "Davete yanıt verilemedi. Lütfen tekrar deneyin.",
+    "invalidEmail": "Geçerli bir e-posta adresi girin.",
+    "alreadyMember": "Bu kişi zaten ekipte.",
+    "tooManyInvites": "Zaten {max} açık davet var. Yenilerini oluşturmadan önce bazılarını iptal edin.",
+    "inviteInvalid": "Bu davetin süresi dolmuş ya da daha önce kullanılmış. Restoran sahibinden yeni bir bağlantı isteyin.",
+    "inviteWrongAccount": "Bu davet başka bir e-posta adresi için. Davetin gönderildiği adresle giriş yapın.",
+    "memberNotFound": "Bu kişi artık ekipte değil. Sayfayı yenileyin.",
+    "ownersByAdminOnly": "Restoran sahiplerini yalnızca bir yönetici kaldırabilir.",
+    "ownerCantLeave": "Restoran sahipleri restorandan kendileri ayrılamaz. Bir yöneticiyle iletişime geçin."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -642,5 +654,54 @@
     "metaAboutTitle": "{name} – Bilgi ve konum",
     "metaItemTitle": "{item} – {restaurant}",
     "metaItemDescription": "{restaurant} – {item}: {price}."
+  },
+  "Team": {
+    "inviteTitle": "Editör davet edin",
+    "inviteText": "Editörler menüyü değiştirebilir: kategoriler, ürünler, fiyatlar ve fotoğraflar. Restoran bilgilerini değiştiremezler.",
+    "emailLabel": "E-posta adresi",
+    "emailHint": "Katılmak için bu adresle giriş yapmaları gerekir.",
+    "createLink": "Davet bağlantısı oluştur",
+    "creating": "Oluşturuluyor…",
+    "linkReady": "{email} için davet bağlantısı hazır",
+    "linkLabel": "Davet bağlantısı",
+    "copy": "Bağlantıyı kopyala",
+    "copied": "Kopyalandı",
+    "closeLink": "Kapat",
+    "linkHint": "Örneğin WhatsApp'tan gönderin. Yalnızca bir kez, yalnızca {email} için ve {date} tarihine kadar çalışır. Şimdi kopyalayın: güvenlik nedeniyle tekrar gösterilemez.",
+    "whatsappText": "{restaurant} menüsünü Menupedia'da yönetmeye yardım etmen için davet edildin. Katılmak için bu bağlantıyı aç: {url}",
+    "pendingTitle": "Bekleyen davetler",
+    "pendingText": "Henüz katılmamış kişiler. Yeni bağlantı eskisinin yerini alır.",
+    "expires": "Son geçerlilik: {date}",
+    "newLink": "Yeni bağlantı",
+    "cancelInvite": "İptal et",
+    "membersTitle": "Ekip",
+    "membersText": "Sahipler bilgileri ve menüyü, editörler yalnızca menüyü düzenleyebilir. Sahipleri bir yönetici ekler veya kaldırır.",
+    "noMembers": "Ekipte henüz kimse yok.",
+    "you": "siz",
+    "unknownPerson": "Bilinmeyen kişi",
+    "remove": "Kaldır",
+    "removing": "Kaldırılıyor…",
+    "removeTitle": "{name} kaldırılsın mı?",
+    "removeText": "{restaurant} menüsünü artık düzenleyemeyecek. İstediğiniz zaman yeniden davet edebilirsiniz.",
+    "leave": "Ayrıl",
+    "leaving": "Ayrılınıyor…",
+    "leaveTitle": "{restaurant} restoranından ayrılınsın mı?",
+    "leaveText": "Bu menüyü artık düzenleyemeyeceksiniz. Bir restoran sahibi sizi yeniden davet edebilir."
+  },
+  "Invite": {
+    "eyebrow": "Davet",
+    "title": "{restaurant} ekibine editör olarak katılın",
+    "signInText": "Katılmak için <b>{email}</b> adresiyle giriş yapın veya hesap oluşturun.",
+    "wrongAccountText": "Bu davet <b>{email}</b> adresi için, ancak farklı bir adresle giriş yaptınız. Çıkış yapıp o adresle giriş yapın.",
+    "switchAccount": "Çıkış yap ve hesap değiştir",
+    "acceptText": "{restaurant} menüsünü düzenleyebileceksiniz: kategoriler, ürünler, fiyatlar ve fotoğraflar.",
+    "accept": "Kabul et ve katıl",
+    "joining": "Katılınıyor…",
+    "decline": "Reddet",
+    "declined": "Davet reddedildi.",
+    "invalidTitle": "Bu davet kullanılamıyor",
+    "invalidText": "Süresi dolmuş, iptal edilmiş ya da daha önce kullanılmış. Restoran sahibinden yeni bir bağlantı isteyin.",
+    "toDashboard": "Panelinize gidin",
+    "toHome": "Ana sayfaya gidin"
   }
 }

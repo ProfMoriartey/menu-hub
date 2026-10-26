@@ -100,6 +100,9 @@ comes from Clerk). `src/env.js` validates the server ones and
       menu/           categories + SetupChecklist;  menu/[categorySlug]/ items
       edit/           owner details form (editors are redirected to menu)
       share/          QR code, link, scan stats;  share/print/ table cards
+      team/           members, invite editors by link, pending invitations, leave
+  (site)/invite/[token]/   invitation page: sign in/up (Clerk withSignUp), email
+                      check, accept/decline. noindex, no-referrer
   (site)/admin/                                     system admin only (layout checks role)
     restaurants/      list (filters incl. "Ready to go live"), new/
       [restaurantSlug]/edit | menu | menu/[categorySlug] | share | share/print | people
@@ -185,16 +188,21 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
 | `menu-hub_users_to_restaurants` | `accessLevel` `owner` / `editor` (unknown values count as editor) |
 | `menu-hub_qr_scan_days` | `(restaurantId, day UTC)` → `count`; no personal data |
+| `menu-hub_restaurant_invites` | owner → editor invitations: lower-cased `email`, `tokenHash` (SHA-256 of the link token; the link itself is never stored), `expiresAt` (7 days), `invitedBy`. Unique per `(restaurantId, email)`: inviting again replaces the link. Accepted/cancelled rows are deleted, expired ones cleaned up when listed |
 
-Deleting a restaurant cascades to its categories, items, access rows and scan
-counts. Deleting a user cascades to their access rows.
+Deleting a restaurant cascades to its categories, items, access rows, scan
+counts and invitations. Deleting a user cascades to their access rows.
 
 **Migrations:** `0001` (old), `0002` slugs (with backfill SQL), `0003` QR scan
-days, `0004` item availability. The development database has all of them
-applied (checked 2026-10-23). Production must run `pnpm db:migrate`.
+days, `0004` item availability, `0005` restaurant invitations. The
+development database has 0001–0004 applied (checked 2026-10-23); **0005 was
+created 2026-10-26 and must be applied with `pnpm db:migrate` in dev and in
+production before the Team tab, admin People tab or dashboard invitations
+are used** (the Team and People pages error without the table).
 
 **Reserved slugs** (`RESERVED_SLUGS`): app routes like `admin`, `dashboard`,
-`restaurants`, … plus `new` (admin route) and `r` (QR link route).
+`restaurants`, … plus `new` (admin route), `r` (QR link route) and `invite`
+(invitation links).
 
 ---
 
@@ -205,7 +213,18 @@ applied (checked 2026-10-23). Production must run `pnpm db:migrate`.
 - **Owner**: restaurant details (name, address, phone, map link,
   description, logo, social/delivery links) **and** the menu.
 - **Editor**: the menu only (categories, items, availability, duplicate,
-  reorder) plus the Share tab.
+  reorder) plus the Share tab. Sees the Team tab read-only and can leave.
+- **Team management** (`app/actions/team.ts`, dashboard Team tab): owners
+  (and admins, from the admin People tab) invite **editors only**, by a
+  copyable link (WhatsApp button), and remove editors. Both screens render
+  `components/team/InvitationsPanel` (translated, like the menu editor). **Owners are only added or removed by a system admin**
+  (admin People tab); owners can't leave. Accepting an invitation requires a
+  signed-in account whose **verified** Clerk email equals the invited
+  address (`getVerifiedEmails`); the link alone isn't enough, and the accept
+  action re-checks it. Accepting never downgrades an existing member, and
+  creates the `users` row if the Clerk webhook hasn't yet. Invitees with an
+  account also see open invitations on the dashboard home. Max 20 open
+  invitations per restaurant.
 - Admin-only restaurant fields (slug, active, featured, currency, theme,
   cuisine/type, country, SEO, og image) are **kept server-side** when a
   non-admin saves (`updateRestaurant`), whatever the request contains.
@@ -312,7 +331,7 @@ Namespaces of note: `MenuEditor`, `ConfirmDialog`, `Availability`, `Share`,
 **Admin:** restaurant list (search, filters All/Active/Inactive/Ready to go
 live/Featured, setup progress badges); full-page restaurant form with
 sections, sticky save bar, slug auto-generation; Details / Menu / Share /
-People tabs; users list with Clerk names/photos, access + Owner/Editor role,
+People tabs (People also invites editors by link and manages open invitations, with the same `components/team/InvitationsPanel` as the owner Team tab); users list with Clerk names/photos, access + Owner/Editor role,
 delete user (Clerk + DB; not self, not admins).
 
 **Dashboard:** home cards (logo, role, counts, setup progress, menu/details/
@@ -322,7 +341,9 @@ duplicate, delete, item dialog with photo, price, category move,
 availability, dietary chips, "save and add another"); Details (owners);
 Share (status, QR with logo switch, PNG/SVG downloads, link copy, permanent
 link note, printable A4/A6 table cards with card language + second line, scan
-stats); language switcher; unsaved-changes guard.
+stats); Team (members, invite editors by link with copy/WhatsApp, pending
+invitations with new link/cancel, remove editors, leave); invitations on the
+home page; language switcher; unsaved-changes guard.
 
 **Public:** four themes; classic and sidebar are one scrolling page with a
 category bar that follows the scroll; search (12+ items) and dietary filters;
@@ -356,12 +377,10 @@ Git history (`git log`) has a detailed commit message for each change.
 
 ## 9. Open items and decisions
 
-**Next feature, waiting on the owner's decision: owners managing their own editors.**
-Questions asked: should owners be able to invite and remove editors for
-their own restaurant? Invite by email (needs an invite flow for people who
-haven't signed up) or only pick existing users? It matters for the SaaS goal
-(less admin work). Admin side already has the People tab and access actions
-(`assignRestaurantToUser`, `revokeRestaurantAccess`, admin-only today).
+**Possible follow-ups to team management:** sending invitation emails (needs
+an email service such as Resend and a verified sender domain; links are
+copied by hand today); seat limits per plan for the SaaS; an activity log of
+who changed what.
 
 **Ideas raised and deferred:**
 - Store a time zone per restaurant (scan days are UTC now; Turkey is UTC+3).
@@ -375,7 +394,7 @@ haven't signed up) or only pick existing users? It matters for the SaaS goal
 **Things the owner was asked to do. Confirm they're done before relying on them:**
 - Subscribe the Clerk webhook endpoint to `user.updated` and `user.deleted`.
 - Set `NEXT_PUBLIC_APP_URL` to the production domain in production.
-- Run `pnpm db:migrate` in production for migrations 0002–0004.
+- Run `pnpm db:migrate` in production for migrations 0002–0005 (0005 before deploying the Team tab).
 - Set owners on each restaurant's People tab (all old assignments became editors).
 - Run `pnpm uploads:cleanup -- --delete` after a dry run. The dry run found 32
   unused files, including some sensitive-looking photos (a SIM card PIN, a

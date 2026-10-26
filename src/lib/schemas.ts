@@ -33,6 +33,8 @@ export const RESERVED_SLUGS = [
   "dashboard",
   // Admin pages live at /admin/restaurants/new and /admin/restaurants/[slug].
   "new",
+  // Team invitation links live at /invite/<token>.
+  "invite",
   // Permanent menu links (QR codes) live at /r/<id>.
   "r",
   "restaurants",

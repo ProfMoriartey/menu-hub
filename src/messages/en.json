@@ -409,7 +409,8 @@
     "categoriesNav": "Categories",
     "itemsSummary": "{count, plural, one {# item} other {# items}} · Prices in {currency}",
     "preview": "Preview menu",
-    "shareTab": "Share"
+    "shareTab": "Share",
+    "teamTab": "Team"
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -509,7 +510,18 @@
     "adminOnlyNewLogo": "Only administrators can upload a logo for a new restaurant.",
     "ownerOnlyLogo": "Only the restaurant's owner can change its logo.",
     "invalidCategory": "That category doesn't belong to this restaurant. Reload the page and try again.",
-    "duplicateItemFailed": "Couldn't duplicate the item. Please try again."
+    "duplicateItemFailed": "Couldn't duplicate the item. Please try again.",
+    "createInviteFailed": "Couldn't create the invitation. Please try again.",
+    "cancelInviteFailed": "Couldn't cancel the invitation. Please try again.",
+    "respondInviteFailed": "Couldn't answer the invitation. Please try again.",
+    "invalidEmail": "Enter a valid email address.",
+    "alreadyMember": "This person is already on the team.",
+    "tooManyInvites": "There are already {max} open invitations. Cancel some before making new ones.",
+    "inviteInvalid": "This invitation has expired or was already used. Ask the owner for a new link.",
+    "inviteWrongAccount": "This invitation is for a different email address. Sign in with the address it was sent to.",
+    "memberNotFound": "This person is no longer on the team. Reload the page.",
+    "ownersByAdminOnly": "Owners can only be removed by an administrator.",
+    "ownerCantLeave": "Owners can't leave a restaurant themselves. Contact an administrator."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -642,5 +654,54 @@
     "metaAboutTitle": "{name} – Info and location",
     "metaItemTitle": "{item} – {restaurant}",
     "metaItemDescription": "{item} at {restaurant}: {price}."
+  },
+  "Team": {
+    "inviteTitle": "Invite an editor",
+    "inviteText": "Editors can change the menu: categories, items, prices and photos. They can't change the restaurant's details.",
+    "emailLabel": "Their email address",
+    "emailHint": "They'll need to sign in with this address to join.",
+    "createLink": "Create invitation link",
+    "creating": "Creating…",
+    "linkReady": "Invitation link for {email} is ready",
+    "linkLabel": "Invitation link",
+    "copy": "Copy link",
+    "copied": "Copied",
+    "closeLink": "Close",
+    "linkHint": "Send it to them, for example on WhatsApp. It works once, only for {email}, until {date}. Copy it now: for security it can't be shown again.",
+    "whatsappText": "You're invited to help manage the menu of {restaurant} on Menupedia. Open this link to join: {url}",
+    "pendingTitle": "Pending invitations",
+    "pendingText": "People who haven't joined yet. A new link replaces the old one.",
+    "expires": "Expires {date}",
+    "newLink": "New link",
+    "cancelInvite": "Cancel",
+    "membersTitle": "Team",
+    "membersText": "Owners can edit the details and the menu; editors, the menu only. Owners are added or removed by an administrator.",
+    "noMembers": "No one is on the team yet.",
+    "you": "you",
+    "unknownPerson": "Unknown person",
+    "remove": "Remove",
+    "removing": "Removing…",
+    "removeTitle": "Remove {name}?",
+    "removeText": "They will no longer be able to edit the menu of {restaurant}. You can invite them again at any time.",
+    "leave": "Leave",
+    "leaving": "Leaving…",
+    "leaveTitle": "Leave {restaurant}?",
+    "leaveText": "You will no longer be able to edit this menu. An owner can invite you again."
+  },
+  "Invite": {
+    "eyebrow": "Invitation",
+    "title": "Join {restaurant} as an editor",
+    "signInText": "Sign in, or create an account, with <b>{email}</b> to join.",
+    "wrongAccountText": "This invitation is for <b>{email}</b>, but you're signed in with a different address. Sign out and sign in with that address.",
+    "switchAccount": "Sign out and switch account",
+    "acceptText": "You'll be able to edit the menu of {restaurant}: categories, items, prices and photos.",
+    "accept": "Accept and join",
+    "joining": "Joining…",
+    "decline": "Decline",
+    "declined": "Invitation declined.",
+    "invalidTitle": "This invitation can't be used",
+    "invalidText": "It has expired, was cancelled, or was already used. Ask the restaurant's owner for a new link.",
+    "toDashboard": "Go to your dashboard",
+    "toHome": "Go to the home page"
   }
 }

@@ -184,6 +184,38 @@ export const usersToRestaurantsRelations = relations(
 export const usersRelations = relations(users, ({ many }) => ({
   usersToRestaurants: many(usersToRestaurants),
 }));
+// Invitations an owner sends to add an editor. Only a hash of the link's
+// token is stored, so the database alone can't be used to accept one; the
+// owner copies the link once, when it's made. Accepting needs a signed-in
+// account with this email (verified in Clerk). Accepted and cancelled
+// invitations are deleted; expired ones are ignored and cleaned up.
+export const restaurantInvites = pgTable(
+  "menu-hub_restaurant_invites",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    restaurantId: uuid("restaurant_id")
+      .notNull()
+      .references(() => restaurants.id, { onDelete: "cascade" }),
+    // Lower-cased.
+    email: varchar("email", { length: 256 }).notNull(),
+    // SHA-256 of the token in the link, hex.
+    tokenHash: varchar("token_hash", { length: 64 }).notNull().unique(),
+    invitedBy: text("invited_by").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+  },
+  // One open invitation per person per restaurant: inviting again replaces
+  // the link.
+  (t) => [uniqueIndex("restaurant_invites_restaurant_email_idx").on(t.restaurantId, t.email)],
+);
+
+export const restaurantInvitesRelations = relations(restaurantInvites, ({ one }) => ({
+  restaurant: one(restaurants, {
+    fields: [restaurantInvites.restaurantId],
+    references: [restaurants.id],
+  }),
+}));
+
 // QR code scans: one row per restaurant per day (UTC), counting visits to
 // the permanent /r/<id> link. No personal data is stored.
 export const qrScanDays = pgTable(

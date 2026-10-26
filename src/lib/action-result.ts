@@ -21,6 +21,9 @@ export const ACTION_ERROR_CODES = [
   "grantAccessFailed",
   "removeAccessFailed",
   "deleteUserFailed",
+  "createInviteFailed",
+  "cancelInviteFailed",
+  "respondInviteFailed",
   // Access
   "signInAgain",
   "noAccess",
@@ -45,6 +48,15 @@ export const ACTION_ERROR_CODES = [
   // Users
   "cantDeleteSelf",
   "cantDeleteAdmin",
+  // Team and invitations
+  "invalidEmail",
+  "alreadyMember",
+  "tooManyInvites",
+  "inviteInvalid",
+  "inviteWrongAccount",
+  "memberNotFound",
+  "ownersByAdminOnly",
+  "ownerCantLeave",
   // Uploads
   "signInToUpload",
   "adminOnlyNewLogo",
