@@ -47,51 +47,6 @@
     "messageSent": "¡Mensaje enviado!",
     "errorSendingMessage": "No se pudo enviar el mensaje."
   },
-  "aboutPage": {
-    "mainTitle": "Acerca de Menupedia",
-    "mainDescription": "Menupedia es tu plataforma en línea definitiva para descubrir y explorar restaurantes locales y sus diversas ofertas culinarias. Conectamos a los amantes de la comida con una amplia gama de experiencias gastronómicas, haciendo que sea más fácil que nunca encontrar exactamente lo que anhelas. Nuestra misión es simplificar tus elecciones gastronómicas y resaltar lo mejor de la gastronomía local, todo en un lugar conveniente.",
-    "whatWeOfferTitle": "Lo Que Ofrecemos",
-    "whatWeOfferDescription": "Menupedia ofrece una experiencia perfecta tanto para los comensales como para los propietarios de restaurantes.",
-    "forDiners": {
-      "title": "Para Comensales:",
-      "description": "Acceso fácil a menús de restaurantes dedicados, platos categorizados, información detallada de los artículos (incluyendo ingredientes y etiquetas dietéticas), e imágenes hermosas. Descubre nuevos favoritos sin esfuerzo."
-    },
-    "forRestaurantOwners": {
-      "title": "Para Propietarios de Restaurantes:",
-      "description": "Un potente panel de administración para gestionar el perfil de tu restaurante, las categorías de menú y los elementos de menú individuales. Sube imágenes, establece precios y actualiza la información dietética con facilidad."
-    },
-    "customizableThemes": {
-      "title": "Temas Personalizables:",
-      "description": "Los restaurantes pueden elegir entre varios temas de visualización para que coincidan con el estilo único de su marca, asegurando una experiencia personalizada para el cliente."
-    },
-    "optimizedForAllDevices": {
-      "title": "Optimizado para Todos los Dispositivos:",
-      "description": "Nuestra plataforma está diseñada para proporcionar una experiencia de visualización y navegación óptima tanto en teléfonos móviles como en ordenadores de escritorio."
-    },
-    "ourCommitmentTitle": "Nuestro Compromiso",
-    "simplicity": {
-      "title": "Simplicidad:",
-      "description": "Nos esforzamos por hacer que la gestión y el descubrimiento de menús en línea sean lo más sencillos posible."
-    },
-    "innovation": {
-      "title": "Innovación:",
-      "description": "Mejoramos continuamente nuestra plataforma con nuevas características y tecnologías."
-    },
-    "userExperience": {
-      "title": "Experiencia de Usuario:",
-      "description": "Priorizamos el diseño intuitivo tanto para los propietarios de restaurantes como para sus clientes."
-    },
-    "reliability": {
-      "title": "Fiabilidad:",
-      "description": "Construido sobre una pila robusta, Menupedia ofrece un rendimiento consistente."
-    },
-    "getStartedTitle": "Empieza",
-    "getStartedDescription": "¿Listo para optimizar la presencia en línea de tu restaurante o descubrir tu próxima comida favorita? ¡Explora Menupedia hoy mismo!",
-    "exploreRestaurants": {
-      "title": "Explorar Restaurantes:",
-      "linkText": "Explorar Todos los Menús"
-    }
-  },
   "restaurantsPage": {
     "mainTitle": "Descubre Restaurantes",
     "description": "Busca y explora todos los restaurantes disponibles en Menupedia.",
@@ -852,8 +807,7 @@
       "look": "Tu menú, a tu estilo",
       "guests": "Pensado para cada cliente",
       "current": "Siempre al día",
-      "found": "Fácil de encontrar y compartir",
-      "run": "Fácil de gestionar"
+      "found": "Fácil de encontrar y compartir"
     },
     "features": {
       "designs": {
@@ -907,14 +861,6 @@
       "about": {
         "title": "La página de tu restaurante",
         "text": "Dirección y mapa, teléfono, redes sociales y enlaces a apps de reparto, todo en un mismo lugar."
-      },
-      "team": {
-        "title": "Trabaja en equipo",
-        "text": "Invita a tu personal con un enlace. Los propietarios lo gestionan todo; los editores, el menú."
-      },
-      "start": {
-        "title": "Fácil de empezar",
-        "text": "Una lista paso a paso, una vista previa privada antes de publicar y fotos que se reducen solas al subirlas."
       }
     },
     "contact": {
@@ -923,6 +869,76 @@
       "email": "Enviar un correo",
       "whatsapp": "Escríbenos por WhatsApp",
       "whatsappMessage": "¡Hola! Me gustaría saber más sobre Menupedia para mi restaurante."
+    }
+  },
+  "aboutPage": {
+    "metaTitle": "Acerca de | Menupedia",
+    "metaDescription": "Menupedia da a los restaurantes un menú digital que los clientes abren con un escaneo y que el propio restaurante mantiene al día.",
+    "hero": {
+      "eyebrow": "Acerca de Menupedia",
+      "title": "Menús digitales que los restaurantes gestionan ellos mismos",
+      "intro": "Los clientes escanean un código QR en la mesa y ven tu menú en su móvil, en su idioma. Tú cambias precios, platos y fotos, y en segundos está publicado."
+    },
+    "story": {
+      "title": "Por qué Menupedia",
+      "p1": "Los menús impresos se quedan anticuados en cuanto cambia un precio o se acaba un plato. Muchos menús digitales son solo un PDF: difíciles de leer en el móvil, iguales para todos y su actualización sigue dependiendo de otra persona.",
+      "p2": "Menupedia se hizo al revés: una página de menú de verdad, pensada para el móvil, que el propio equipo del restaurante mantiene al día desde cualquier dispositivo, en tantos idiomas como hablen sus clientes."
+    },
+    "steps": {
+      "title": "Cómo funciona",
+      "s1": {
+        "title": "Consigue tu cuenta",
+        "text": "Preparamos tu restaurante y te enviamos un enlace. Invita a tu personal con sus propios enlaces: los propietarios lo gestionan todo y los editores se ocupan del menú."
+      },
+      "s2": {
+        "title": "Crea tu menú",
+        "text": "Añade categorías y platos con precios, fotos y etiquetas de dieta. Una lista paso a paso y una vista previa privada te ayudan a tenerlo todo listo antes de que lo vean los clientes."
+      },
+      "s3": {
+        "title": "Hazlo tuyo",
+        "text": "Elige un diseño y tus colores, añade tu horario y traduce el menú para los clientes que hablan otros idiomas."
+      },
+      "s4": {
+        "title": "Llévalo a las mesas",
+        "text": "Imprime tarjetas de mesa con tu código QR. Los clientes escanean y ven un menú actualizado, y tú ves cuántos lo abrieron cada día."
+      }
+    },
+    "audiences": {
+      "title": "Para los dos lados de la mesa",
+      "guests": {
+        "title": "Para los clientes",
+        "text": "Un menú que se abre al instante en el móvil, en su idioma, con fotos, precios en un formato conocido, filtros de dieta y el horario y la ubicación del restaurante."
+      },
+      "restaurants": {
+        "title": "Para los restaurantes",
+        "text": "Sin reimprimir y sin esperar a nadie: cambia el menú tú mismo, mira qué hacen los clientes y luce lo mejor posible en Google y cuando se comparte tu menú."
+      }
+    },
+    "values": {
+      "title": "Lo que nos importa",
+      "phones": {
+        "title": "Primero el móvil",
+        "text": "La mayoría de los clientes abre el menú en el móvil, en la mesa, así que cada página se diseña y se prueba primero para pantallas pequeñas."
+      },
+      "everyone": {
+        "title": "Cada cliente",
+        "text": "Cinco idiomas, incluida la escritura de derecha a izquierda, colores legibles y compatibilidad con lectores de pantalla, para que nadie tenga que adivinar."
+      },
+      "current": {
+        "title": "Siempre al día",
+        "text": "Lo que ven los clientes es lo que tienes hoy: los platos agotados se marcan y los cambios aparecen al momento."
+      },
+      "yours": {
+        "title": "Tu restaurante",
+        "text": "Tu nombre, tu diseño y tus colores. El menú debe sentirse parte de tu restaurante, no del nuestro."
+      }
+    },
+    "cta": {
+      "title": "Compruébalo tú mismo",
+      "text": "Prueba nuestro restaurante de demostración o mira los menús que ya están en Menupedia.",
+      "features": "Ver las funciones",
+      "restaurants": "Ver restaurantes",
+      "contact": "Contactar"
     }
   }
 }

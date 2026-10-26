@@ -8,7 +8,6 @@ import {
   Globe,
   Languages,
   LayoutTemplate,
-  ListChecks,
   Mail,
   MapPin,
   MessageCircle,
@@ -17,7 +16,6 @@ import {
   Search,
   Share2,
   Smartphone,
-  Users,
   Zap,
   type LucideIcon,
 } from "lucide-react";
@@ -67,19 +65,13 @@ const GROUPS: { id: string; features: { id: string; icon: LucideIcon }[] }[] = [
       { id: "about", icon: MapPin },
     ],
   },
-  {
-    id: "run",
-    features: [
-      { id: "team", icon: Users },
-      { id: "start", icon: ListChecks },
-    ],
-  },
 ];
 
 /**
  * What restaurants get, with a working demo menu (a made-up restaurant) so
  * potential customers can try designs, colours and languages themselves.
  * Was /themes, which showed the old menu designs; /themes redirects here.
+ * Getting started and teamwork are told on the About page ("How it works").
  */
 export default async function FeaturesPage() {
   const [t, locale] = await Promise.all([

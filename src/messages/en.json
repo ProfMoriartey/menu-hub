@@ -47,51 +47,6 @@
     "messageSent": "Message sent!",
     "errorSendingMessage": "Failed to send message."
   },
-  "aboutPage": {
-    "mainTitle": "About Menupedia",
-    "mainDescription": "Menupedia is your ultimate online platform for discovering and exploring local restaurants and their diverse culinary offerings. We connect food lovers with a wide array of dining experiences, making it easier than ever to find exactly what you crave. Our mission is to simplify your dining choices and highlight the best of local gastronomy, all in one convenient place.",
-    "whatWeOfferTitle": "What We Offer",
-    "whatWeOfferDescription": "Menupedia provides a seamless experience for both diners and restaurant owners.",
-    "forDiners": {
-      "title": "For Diners:",
-      "description": "Easy access to dedicated restaurant menus, categorized dishes, detailed item information (including ingredients and dietary labels), and beautiful imagery. Discover new favorites effortlessly."
-    },
-    "forRestaurantOwners": {
-      "title": "For Restaurant Owners:",
-      "description": "A powerful admin dashboard to manage your restaurant's profile, menu categories, and individual menu items. Upload images, set prices, and update dietary information with ease."
-    },
-    "customizableThemes": {
-      "title": "Customizable Themes:",
-      "description": "Restaurants can choose from various display themes to match their brand's unique style, ensuring a personalized customer experience."
-    },
-    "optimizedForAllDevices": {
-      "title": "Optimized for All Devices:",
-      "description": "Our platform is designed to provide an optimal viewing and Browse experience on both mobile phones and desktop computers."
-    },
-    "ourCommitmentTitle": "Our Commitment",
-    "simplicity": {
-      "title": "Simplicity:",
-      "description": "We strive to make online menu management and discovery as straightforward as possible."
-    },
-    "innovation": {
-      "title": "Innovation:",
-      "description": "We continuously improve our platform with new features and technologies."
-    },
-    "userExperience": {
-      "title": "User Experience:",
-      "description": "We prioritize intuitive design for both restaurant owners and their customers."
-    },
-    "reliability": {
-      "title": "Reliability:",
-      "description": "Built on a robust stack, Menupedia offers consistent performance."
-    },
-    "getStartedTitle": "Get Started",
-    "getStartedDescription": "Ready to streamline your restaurant's online presence or discover your next favorite meal? Explore Menupedia today!",
-    "exploreRestaurants": {
-      "title": "Explore Restaurants:",
-      "linkText": "Browse All Menus"
-    }
-  },
   "restaurantsPage": {
     "mainTitle": "Discover Restaurants",
     "description": "Search and explore all restaurants available on Menupedia.",
@@ -852,8 +807,7 @@
       "look": "Your menu, your look",
       "guests": "Made for every guest",
       "current": "Always up to date",
-      "found": "Found and shared",
-      "run": "Easy to run"
+      "found": "Found and shared"
     },
     "features": {
       "designs": {
@@ -907,14 +861,6 @@
       "about": {
         "title": "Your restaurant's page",
         "text": "Address and map, phone, social media and delivery app links, all in one place."
-      },
-      "team": {
-        "title": "Work as a team",
-        "text": "Invite your staff with a link. Owners manage everything; editors manage the menu."
-      },
-      "start": {
-        "title": "Easy to start",
-        "text": "A step-by-step checklist, a private preview before going live, and photos resized automatically when you upload them."
       }
     },
     "contact": {
@@ -923,6 +869,76 @@
       "email": "Send an email",
       "whatsapp": "Message us on WhatsApp",
       "whatsappMessage": "Hello! I'd like to know more about Menupedia for my restaurant."
+    }
+  },
+  "aboutPage": {
+    "metaTitle": "About | Menupedia",
+    "metaDescription": "Menupedia gives restaurants a digital menu guests open with one scan, and that the restaurant keeps up to date itself.",
+    "hero": {
+      "eyebrow": "About Menupedia",
+      "title": "Digital menus that restaurants run themselves",
+      "intro": "Guests scan a QR code at the table and see your menu on their phone, in their language. You change prices, dishes and photos yourself, and it's live in seconds."
+    },
+    "story": {
+      "title": "Why Menupedia",
+      "p1": "Printed menus go out of date the moment a price changes or a dish runs out. Many digital menus are just a PDF: hard to read on a phone, the same for every guest, and still a job for someone else to update.",
+      "p2": "Menupedia is built the other way round: a real menu page made for phones, which the restaurant's own team keeps up to date from any device, in as many languages as its guests speak."
+    },
+    "steps": {
+      "title": "How it works",
+      "s1": {
+        "title": "Get your account",
+        "text": "We set up your restaurant and send you a link. Invite your staff with their own links: owners manage everything, editors look after the menu."
+      },
+      "s2": {
+        "title": "Build your menu",
+        "text": "Add categories and dishes with prices, photos and dietary labels. A step-by-step checklist and a private preview help you get everything ready before guests see it."
+      },
+      "s3": {
+        "title": "Make it yours",
+        "text": "Choose a design and your colours, add your opening hours, and translate the menu for guests who speak other languages."
+      },
+      "s4": {
+        "title": "Put it on the tables",
+        "text": "Print table cards with your QR code. Guests scan and see an up-to-date menu, and you see how many opened it each day."
+      }
+    },
+    "audiences": {
+      "title": "Made for both sides of the table",
+      "guests": {
+        "title": "For guests",
+        "text": "A menu that opens instantly on their phone, in their language, with photos, prices in a familiar format, dietary filters and the restaurant's hours and location."
+      },
+      "restaurants": {
+        "title": "For restaurants",
+        "text": "No reprinting and no waiting for anyone: change the menu yourself, see what guests do, and look your best on Google and when your menu is shared."
+      }
+    },
+    "values": {
+      "title": "What we care about",
+      "phones": {
+        "title": "Phones first",
+        "text": "Most guests open a menu on a phone at the table, so every page is designed and tested for small screens first."
+      },
+      "everyone": {
+        "title": "Every guest",
+        "text": "Five languages, right-to-left included, readable colours and screen-reader support, so no guest is left guessing."
+      },
+      "current": {
+        "title": "Always current",
+        "text": "What guests see is what you have today: sold-out dishes are marked, and changes appear straight away."
+      },
+      "yours": {
+        "title": "Your restaurant",
+        "text": "Your name, your design and your colours. The menu should feel like part of your restaurant, not ours."
+      }
+    },
+    "cta": {
+      "title": "See it for yourself",
+      "text": "Try our demo restaurant, or browse the menus already on Menupedia.",
+      "features": "Explore the features",
+      "restaurants": "Browse restaurants",
+      "contact": "Get in touch"
     }
   }
 }

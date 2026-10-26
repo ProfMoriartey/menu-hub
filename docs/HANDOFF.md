@@ -447,6 +447,13 @@ controls. Prices for the demo are formatted on the server
 showed, to be confirmed by the owner). When a feature is added, add it to
 the Features page's `GROUPS` and messages (`featuresPage.features`).
 
+**About page** (`/about`, server component, no animation library): the
+story, "How it works" in four steps (account and team invites, building
+the menu with the checklist and preview, design/colours/hours/languages,
+QR table cards and scan stats), who it's for, values, and links to
+Features, restaurants and contact. Getting started and teamwork are told
+here rather than on Features. Texts: `aboutPage` messages.
+
 **Search engines and link previews:** menu, about and item pages have their
 own title, description, preview image (admin SEO fields first, then
 description / logo / dish photo), canonical URL and hreflang links
@@ -506,9 +513,9 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 
 **Known leftovers:**
 - `package-lock.json` is stale (pnpm is canonical).
-- `next lint` still warns in four files nobody has reworked yet:
+- `next lint` still warns in three files nobody has reworked yet:
   `app/[locale]/layout.tsx`, `app/[locale]/(site)/page.tsx`,
-  `components/about/AboutPageClient.tsx`, `components/svg/GroovySittingDoodle.tsx`.
+  `components/svg/GroovySittingDoodle.tsx`.
 - Signed-out visits to the dashboard/admin redirect to sign-in with status 200
   (the redirect streams after `(site)/loading.tsx`). Harmless: crawlers are
   kept out by robots.txt.

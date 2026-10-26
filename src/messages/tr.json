@@ -47,51 +47,6 @@
     "messageSent": "Mesaj gönderildi!",
     "errorSendingMessage": "Mesaj gönderilemedi."
   },
-  "aboutPage": {
-    "mainTitle": "Menupedia Hakkında",
-    "mainDescription": "Menupedia, yerel restoranları ve onların çeşitli mutfak lezzetlerini keşfetmek için nihai çevrimiçi platformunuzdur. Yemek severleri geniş bir yemek deneyimi yelpazesiyle buluşturarak tam olarak canınızın çektiğini bulmanızı her zamankinden daha kolay hale getiriyoruz. Misyonumuz, yemek seçimlerinizi basitleştirmek ve yerel gastronomiyi en iyi şekilde tek bir uygun yerde vurgulamaktır.",
-    "whatWeOfferTitle": "Sunduklarımız",
-    "whatWeOfferDescription": "Menupedia, hem yemek yiyenler hem de restoran sahipleri için sorunsuz bir deneyim sunar.",
-    "forDiners": {
-      "title": "Yemek Yiyenler İçin:",
-      "description": "Özel restoran menülerine, kategorize edilmiş yemeklere, detaylı ürün bilgilerine (içerikler ve diyet etiketleri dahil) ve güzel görsellere kolay erişim. Zahmetsizce yeni favoriler keşfedin."
-    },
-    "forRestaurantOwners": {
-      "title": "Restoran Sahipleri İçin:",
-      "description": "Restoranınızın profilini, menü kategorilerini ve bireysel menü öğelerini yönetmek için güçlü bir yönetici paneli. Görselleri kolayca yükleyin, fiyatları belirleyin ve diyet bilgilerini güncelleyin."
-    },
-    "customizableThemes": {
-      "title": "Özelleştirilebilir Temalar:",
-      "description": "Restoranlar, markalarının benzersiz tarzına uygun çeşitli görüntü temalarından seçim yapabilir ve kişiselleştirilmiş bir müşteri deneyimi sağlayabilir."
-    },
-    "optimizedForAllDevices": {
-      "title": "Tüm Cihazlar İçin Optimize Edildi:",
-      "description": "Platformumuz, hem cep telefonlarında hem de masaüstü bilgisayarlarda optimum görüntüleme ve tarama deneyimi sağlamak üzere tasarlanmıştır."
-    },
-    "ourCommitmentTitle": "Taahhüdümüz",
-    "simplicity": {
-      "title": "Basitlik:",
-      "description": "Çevrimiçi menü yönetimini ve keşfini mümkün olduğunca basit hale getirmeye çalışıyoruz."
-    },
-    "innovation": {
-      "title": "İnovasyon:",
-      "description": "Platformumuzu yeni özellikler ve teknolojilerle sürekli geliştiriyoruz."
-    },
-    "userExperience": {
-      "title": "Kullanıcı Deneyimi:",
-      "description": "Hem restoran sahipleri hem de müşterileri için sezgisel tasarımı önceliklendiriyoruz."
-    },
-    "reliability": {
-      "title": "Güvenilirlik:",
-      "description": "Sağlam bir teknoloji yığını üzerine inşa edilen Menupedia, tutarlı performans sunar."
-    },
-    "getStartedTitle": "Başlayın",
-    "getStartedDescription": "Restoranınızın çevrimiçi varlığını kolaylaştırmaya veya bir sonraki favori yemeğinizi keşfetmeye hazır mısınız? Menupedia'yı bugün keşfedin!",
-    "exploreRestaurants": {
-      "title": "Restoranları Keşfet:",
-      "linkText": "Tüm Menülere Göz At"
-    }
-  },
   "restaurantsPage": {
     "mainTitle": "Restoranları Keşfet",
     "description": "Menupedia'da bulunan tüm restoranları arayın ve keşfedin.",
@@ -852,8 +807,7 @@
       "look": "Menünüz, tarzınız",
       "guests": "Her misafir için",
       "current": "Her zaman güncel",
-      "found": "Bulunur ve paylaşılır",
-      "run": "Yönetmesi kolay"
+      "found": "Bulunur ve paylaşılır"
     },
     "features": {
       "designs": {
@@ -907,14 +861,6 @@
       "about": {
         "title": "Restoranınızın sayfası",
         "text": "Adres ve harita, telefon, sosyal medya ve yemek siparişi uygulaması bağlantıları tek bir yerde."
-      },
-      "team": {
-        "title": "Ekip olarak çalışın",
-        "text": "Çalışanlarınızı bir bağlantıyla davet edin. Sahipler her şeyi, editörler menüyü yönetir."
-      },
-      "start": {
-        "title": "Başlaması kolay",
-        "text": "Adım adım bir kontrol listesi, yayına almadan önce özel bir önizleme ve yüklerken otomatik küçültülen fotoğraflar."
       }
     },
     "contact": {
@@ -923,6 +869,76 @@
       "email": "E-posta gönderin",
       "whatsapp": "WhatsApp'tan yazın",
       "whatsappMessage": "Merhaba! Restoranım için Menupedia hakkında bilgi almak istiyorum."
+    }
+  },
+  "aboutPage": {
+    "metaTitle": "Hakkında | Menupedia",
+    "metaDescription": "Menupedia, restoranlara misafirlerin tek okutmayla açtığı ve restoranın kendisinin güncel tuttuğu dijital bir menü sunar.",
+    "hero": {
+      "eyebrow": "Menupedia hakkında",
+      "title": "Restoranların kendi yönettiği dijital menüler",
+      "intro": "Misafirler masadaki QR kodu okutur ve menünüzü telefonlarında, kendi dillerinde görür. Fiyatları, ürünleri ve fotoğrafları siz değiştirirsiniz; saniyeler içinde yayındadır."
+    },
+    "story": {
+      "title": "Neden Menupedia",
+      "p1": "Basılı menüler, bir fiyat değiştiği ya da bir ürün tükendiği anda eskir. Birçok dijital menü ise sadece bir PDF'tir: telefonda zor okunur, her misafire aynıdır ve güncellemesi yine başkasına kalır.",
+      "p2": "Menupedia tam tersi şekilde kuruldu: telefon için yapılmış gerçek bir menü sayfası. Restoranın kendi ekibi onu her cihazdan, misafirlerinin konuştuğu dillerde güncel tutar."
+    },
+    "steps": {
+      "title": "Nasıl çalışır",
+      "s1": {
+        "title": "Hesabınızı alın",
+        "text": "Restoranınızı kurar ve size bir bağlantı göndeririz. Çalışanlarınızı kendi bağlantılarıyla davet edin: sahipler her şeyi, editörler menüyü yönetir."
+      },
+      "s2": {
+        "title": "Menünüzü oluşturun",
+        "text": "Fiyat, fotoğraf ve beslenme etiketleriyle kategoriler ve ürünler ekleyin. Adım adım kontrol listesi ve özel önizleme, misafirler görmeden her şeyi hazırlamanıza yardım eder."
+      },
+      "s3": {
+        "title": "Size özel yapın",
+        "text": "Bir tasarım ve renklerinizi seçin, çalışma saatlerinizi ekleyin ve menüyü başka dil konuşan misafirleriniz için çevirin."
+      },
+      "s4": {
+        "title": "Masalara koyun",
+        "text": "QR kodlu masa kartlarınızı basın. Misafirler okutur ve güncel menüyü görür; siz de her gün kaç kişinin açtığını görürsünüz."
+      }
+    },
+    "audiences": {
+      "title": "Masanın iki tarafı için",
+      "guests": {
+        "title": "Misafirler için",
+        "text": "Telefonda anında açılan, kendi dillerinde; fotoğraflı, tanıdık biçimde fiyatlı, beslenme filtreli ve restoranın saatlerini ve konumunu gösteren bir menü."
+      },
+      "restaurants": {
+        "title": "Restoranlar için",
+        "text": "Yeniden baskı yok, kimseyi beklemek yok: menüyü kendiniz değiştirin, misafirlerin ne yaptığını görün; Google'da ve menünüz paylaşıldığında en iyi şekilde görünün."
+      }
+    },
+    "values": {
+      "title": "Önem verdiklerimiz",
+      "phones": {
+        "title": "Önce telefon",
+        "text": "Misafirlerin çoğu menüyü masada telefonla açar; bu yüzden her sayfa önce küçük ekranlar için tasarlanır ve test edilir."
+      },
+      "everyone": {
+        "title": "Her misafir",
+        "text": "Sağdan sola dahil beş dil, okunaklı renkler ve ekran okuyucu desteği; hiçbir misafir tahmin etmek zorunda kalmaz."
+      },
+      "current": {
+        "title": "Her zaman güncel",
+        "text": "Misafirlerin gördüğü, bugün elinizde olandır: tükenen ürünler işaretlenir, değişiklikler hemen görünür."
+      },
+      "yours": {
+        "title": "Sizin restoranınız",
+        "text": "Sizin adınız, tasarımınız ve renkleriniz. Menü bizim değil, restoranınızın bir parçası gibi hissettirmeli."
+      }
+    },
+    "cta": {
+      "title": "Kendiniz görün",
+      "text": "Demo restoranımızı deneyin ya da Menupedia'daki menülere göz atın.",
+      "features": "Özellikleri keşfedin",
+      "restaurants": "Restoranlara göz atın",
+      "contact": "Bize ulaşın"
     }
   }
 }
