@@ -10,6 +10,17 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // The old Themes page became Features; keep shared links working.
+  async redirects() {
+    return [
+      { source: "/themes", destination: "/features", permanent: true },
+      {
+        source: "/:locale(en|tr|ar|es|ru)/themes",
+        destination: "/:locale/features",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       // UploadThing: legacy file URLs and current per-app URLs

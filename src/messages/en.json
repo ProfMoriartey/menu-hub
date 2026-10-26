@@ -102,40 +102,10 @@
     "noRestaurantsFound": "No restaurants found.",
     "adminPrompt": "If you are the admin, please add restaurants via the dashboard."
   },
-  "themesPage": {
-    "mainTitle": "Explore Menu Themes",
-    "description": "Discover the different ways your restaurant's menu can shine. Each theme offers a unique visual experience.",
-    "sections": {
-      "classic": {
-        "title": "Classic Layout",
-        "description": "A timeless, easy-to-navigate layout. It features prominent top categories and a clear two-column menu grid. Ideal for broad menus.",
-        "howItLooks": "How it looks:",
-        "noRestaurantFound": "No restaurant found with 'classic' theme to display."
-      },
-      "sidebarList": {
-        "title": "Sidebar List Layout",
-        "description": "Features a clean vertical sidebar for category navigation, with menu items displayed in a single-column list format.",
-        "howItLooks": "How it looks:",
-        "noRestaurantFound": "No restaurant found with 'sidebar-list' theme to display."
-      },
-      "accordionCard": {
-        "title": "Accordion Card Layout",
-        "description": "Organizes menu categories into expandable/collapsible accordion sections, revealing menu items displayed as distinct cards.",
-        "howItLooks": "How it looks:",
-        "noRestaurantFound": "No restaurant found with 'accordion-card' theme to display."
-      },
-      "categoryCardsImageDominant": {
-        "title": "Category Cards Image Dominant Layout",
-        "description": "Presents categories as prominent clickable cards. Upon selection, menu items are displayed with larger, dominant images for a visually rich experience.",
-        "howItLooks": "How it looks:",
-        "noRestaurantFound": "No restaurant found with 'category-cards-image-dominant' theme to display."
-      }
-    }
-  },
   "navbar": {
     "home": "Home",
     "restaurants": "Restaurants",
-    "themes": "Themes",
+    "themes": "Features",
     "aboutUs": "About Us",
     "language": "Language"
   },
@@ -857,6 +827,102 @@
     "compact": {
       "label": "Compact",
       "hint": "A text list like a printed menu. For long menus without photos."
+    }
+  },
+  "featuresPage": {
+    "metaTitle": "Features | Menupedia",
+    "metaDescription": "Digital menus restaurants shape themselves: three designs, their own colours, several languages, QR codes and more.",
+    "hero": {
+      "eyebrow": "Features",
+      "title": "Everything your menu needs",
+      "intro": "A digital menu your guests open with one scan, and you update in seconds. Try it below on our demo restaurant.",
+      "ctaDemo": "Try the demo",
+      "ctaContact": "Get in touch"
+    },
+    "demo": {
+      "title": "Try it yourself",
+      "intro": "This is Lokanta Demo, a made-up restaurant. Change its design, colours and language, and tap a dish, just as your guests would.",
+      "design": "Design",
+      "colors": "Colours",
+      "mode": "Mode",
+      "language": "Menu language",
+      "hint": "Tap a dish to open it. Real menus work the same way on any phone."
+    },
+    "groups": {
+      "look": "Your menu, your look",
+      "guests": "Made for every guest",
+      "current": "Always up to date",
+      "found": "Found and shared",
+      "run": "Easy to run"
+    },
+    "features": {
+      "designs": {
+        "title": "Three menu designs",
+        "text": "Classic, Photo grid or Compact. Pick the one that suits your food and switch any time."
+      },
+      "colors": {
+        "title": "Your own colours",
+        "text": "Choose the background, text, buttons and highlights, for light and dark mode, with a live preview. Or start from a ready-made palette."
+      },
+      "fast": {
+        "title": "Built for phones",
+        "text": "Light, fast pages for guests scanning at the table, with a compact header so the dishes come first."
+      },
+      "languages": {
+        "title": "Menus in several languages",
+        "text": "Offer your menu in English, Turkish, Arabic, Spanish and Russian. Guests see it in their own language, right-to-left included."
+      },
+      "search": {
+        "title": "Search and dietary filters",
+        "text": "Guests find dishes by name or ingredient, and filter for vegetarian, vegan, gluten-free and more."
+      },
+      "friendly": {
+        "title": "Friendly for guests",
+        "text": "Prices in each guest's own format, dark mode, and one tap opens any dish with its photo and details."
+      },
+      "instant": {
+        "title": "Changes go live instantly",
+        "text": "Change a price, add a dish or mark it sold out, and guests see it straight away. No reprinting."
+      },
+      "hours": {
+        "title": "Opening hours",
+        "text": "Show \"Open now\" or when you open next, worked out in your time zone and shown in the guest's language."
+      },
+      "qr": {
+        "title": "QR codes and table cards",
+        "text": "QR codes with your logo that keep working even if your menu's address changes, plus table cards ready to print."
+      },
+      "stats": {
+        "title": "Scan statistics",
+        "text": "See how many guests opened your menu each day."
+      },
+      "google": {
+        "title": "Found on Google",
+        "text": "Search engines understand your menu, dishes, prices and opening hours, in every language you offer."
+      },
+      "sharing": {
+        "title": "Links that look good",
+        "text": "Links shared on WhatsApp and social media show your name, description and photo."
+      },
+      "about": {
+        "title": "Your restaurant's page",
+        "text": "Address and map, phone, social media and delivery app links, all in one place."
+      },
+      "team": {
+        "title": "Work as a team",
+        "text": "Invite your staff with a link. Owners manage everything; editors manage the menu."
+      },
+      "start": {
+        "title": "Easy to start",
+        "text": "A step-by-step checklist, a private preview before going live, and photos resized automatically when you upload them."
+      }
+    },
+    "contact": {
+      "title": "Ready for your own menu?",
+      "text": "Tell us about your restaurant and we'll set it up together.",
+      "email": "Send an email",
+      "whatsapp": "Message us on WhatsApp",
+      "whatsappMessage": "Hello! I'd like to know more about Menupedia for my restaurant."
     }
   }
 }

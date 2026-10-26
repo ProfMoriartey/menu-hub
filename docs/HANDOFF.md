@@ -430,6 +430,23 @@ if the site theme changes. When adding colour to public components, use the
 theme tokens (`bg-card`, `text-primary`, `hover:bg-accent` …), not fixed
 colours, or custom themes won't reach them.
 
+**Features page** (`/features`, was `/themes`, which redirects permanently
+in `next.config.js`): marketing page for potential customers, built for
+selling without plan labels (no plans exist yet). Hero, an interactive demo
+(`components/features/MenuDemo`: Lokanta Demo, a made-up restaurant in
+`lib/demo-menu.ts`, nine dishes in all five languages, each with a photo (`public/` and
+`public/demo/`, Unsplash License, sources listed in `lib/demo-menu.ts`); visitors switch design, palette, light/dark and menu language
+and tap dishes; it renders the real dish components and
+`DishSheetInPlaceProvider`, a sheet that opens inside the phone frame and
+keeps its state instead of using `?dish=`, and is non-modal so the page
+keeps scrolling while it is open), feature groups, and a contact
+block. The home page's "Why choose" section shows the same demo with fewer
+controls. Prices for the demo are formatted on the server
+(`server/demo-menu.ts`). **Contact details live only in
+`lib/site-contact.ts`** (email, WhatsApp/phone; still the ones the home page
+showed, to be confirmed by the owner). When a feature is added, add it to
+the Features page's `GROUPS` and messages (`featuresPage.features`).
+
 **Search engines and link previews:** menu, about and item pages have their
 own title, description, preview image (admin SEO fields first, then
 description / logo / dish photo), canonical URL and hreflang links
@@ -465,9 +482,6 @@ who changed what.
 - Translating the admin-only pages.
 - Automatic translation of menus (AI/translation service; a paid-plan idea).
 - Special closures and holidays for opening hours.
-- The marketing `/themes` page (`app/[locale]/(site)/themes`,
-  `components/themes/*`) still shows the four old designs; it needs a rewrite
-  for Classic, Photo grid and Compact.
 
 **Done by the owner (confirmed 2026-10-26):** Clerk webhook subscribed to
 `user.updated` and `user.deleted`; `NEXT_PUBLIC_APP_URL` set on Vercel;

@@ -7,9 +7,10 @@ import { Link } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { Button } from "~/components/ui/button";
-import { ClassicThemeExample } from "~/components/themes/ClassicThemeExample";
-import { AccordionCardThemeExample } from "~/components/themes/AccordionCardThemeExample";
-import { useTranslations } from "next-intl"; // Import useTranslations
+import { MenuDemo } from "~/components/features/MenuDemo";
+import { useLocale, useTranslations } from "next-intl";
+
+import type { DemoMenus } from "~/server/demo-menu";
 
 import { useEffect, useState } from "react";
 import { useParallax } from "react-scroll-parallax";
@@ -17,11 +18,14 @@ import { useParallax } from "react-scroll-parallax";
 interface ThemesHomeSectionProps {
   /** Illustration rendered on the server and passed in, keeping its SVG out of the client bundle. */
   doodle: React.ReactNode;
+  // The demo restaurant's menu, prices formatted on the server.
+  demo: DemoMenus;
 }
 
-export function ThemesHomeSection({ doodle }: ThemesHomeSectionProps) {
+export function ThemesHomeSection({ doodle, demo }: ThemesHomeSectionProps) {
   // Initialize translations for the 'themes' namespace
   const t = useTranslations("themes");
+  const locale = useLocale();
 
   const [isParallaxDisabled, setIsParallaxDisabled] = useState(false);
 
@@ -108,39 +112,24 @@ export function ThemesHomeSection({ doodle }: ThemesHomeSectionProps) {
           >
             {t("previewTitle")} {/* Use translated value for previewTitle */}
           </motion.h3>
-          <div className="mb-12 flex w-full flex-col justify-center gap-8 md:flex-row">
-            {/* MODIFIED: Examples now below, in a row on md+ */}
-            {/* Classic Theme Example */}
-            <motion.div
-              variants={itemVariants}
-              transition={{ delay: 0.6 }}
-              className="flex w-full flex-col items-center md:w-1/2"
-            >
-              <h4 className="text-foreground mb-4 text-xl font-semibold">
-                {t("example.classic")}{" "}
-                {/* Use translated value for example.classic */}
-              </h4>
-              <ClassicThemeExample />
-            </motion.div>
-            {/* Accordion Card Theme Example */}
-            <motion.div
-              variants={itemVariants}
-              transition={{ delay: 0.7 }}
-              className="flex w-full flex-col items-center md:w-1/2"
-            >
-              <h4 className="text-foreground mb-4 text-xl font-semibold">
-                {t("example.accordion")}{" "}
-                {/* Use translated value for example.accordion */}
-              </h4>
-              <AccordionCardThemeExample />
-            </motion.div>
-          </div>
+          {/* The same working demo as the Features page, with fewer controls. */}
+          <motion.div
+            variants={itemVariants}
+            transition={{ delay: 0.6 }}
+            className="mb-12 w-full"
+          >
+            <MenuDemo
+              menus={demo}
+              initialLanguage={locale}
+              controls="compact"
+            />
+          </motion.div>
           <motion.div
             variants={itemVariants}
             transition={{ delay: 0.8 }}
             className="text-center"
           >
-            <Link href="/themes" passHref>
+            <Link href="/features" passHref>
               <Button
                 size="lg"
                 className={cn(

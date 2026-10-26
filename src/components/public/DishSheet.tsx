@@ -8,6 +8,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -99,32 +100,100 @@ export function DishSheetProvider({
   );
 }
 
+/**
+ * The same sheet without the address: it opens inside `container` (e.g. the
+ * phone on the Features page) and keeps the open dish in state. For demos,
+ * where changing the page's address would be wrong.
+ */
+export function DishSheetInPlaceProvider({
+  categories,
+  container,
+  children,
+}: {
+  categories: PublicCategory[];
+  container: HTMLElement | null;
+  children: React.ReactNode;
+}) {
+  const [openSlug, setOpenSlug] = useState<string | null>(null);
+  const found = useMemo(() => {
+    for (const category of categories) {
+      const item = category.menuItems.find((i) => i.slug === openSlug);
+      if (item) return { item, category };
+    }
+    return null;
+  }, [categories, openSlug]);
+  const context = useMemo(
+    () => ({ open: (item: PublicMenuItem) => setOpenSlug(item.slug) }),
+    [],
+  );
+
+  return (
+    <DishSheetContext.Provider value={context}>
+      {children}
+      {/* Not modal: a modal dialog locks scrolling on the whole page, but
+          this sheet only covers the phone it opens in. Tapping outside the
+          sheet (its backdrop, or anywhere on the page) still closes it. */}
+      <DialogPrimitive.Root
+        modal={false}
+        open={Boolean(found)}
+        onOpenChange={(next) => !next && setOpenSlug(null)}
+      >
+        {found && container && (
+          <DishSheetContent
+            {...found}
+            restaurantSlug={null}
+            container={container}
+          />
+        )}
+      </DialogPrimitive.Root>
+    </DishSheetContext.Provider>
+  );
+}
+
 function DishSheetContent({
   item,
   category,
   restaurantSlug,
+  container,
 }: {
   item: PublicMenuItem;
   category: PublicCategory;
-  restaurantSlug: string;
+  // Null for demos: there's no dish page to link to.
+  restaurantSlug: string | null;
+  // Where the sheet opens: the page (default) or inside an element.
+  container?: HTMLElement;
 }) {
   const t = useTranslations("PublicMenu");
+  const contained = Boolean(container);
 
   return (
-    <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50" />
+    <DialogPrimitive.Portal container={container}>
+      {contained ? (
+        // Non-modal dialogs get no overlay from Radix: dim the phone ourselves.
+        <div
+          className="animate-in fade-in-0 absolute inset-0 z-50 bg-black/50"
+          aria-hidden
+        />
+      ) : (
+        <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50" />
+      )}
       <DialogPrimitive.Content
         className={[
-          "bg-card text-foreground fixed z-50 flex max-h-[90dvh] flex-col overflow-hidden shadow-xl outline-none",
-          // Phones: a sheet from the bottom edge. Wider screens: a centred panel.
-          "inset-x-0 bottom-0 rounded-t-2xl",
-          "sm:inset-x-auto sm:top-1/2 sm:bottom-auto sm:left-1/2 sm:w-full sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl",
-          "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom sm:data-[state=open]:slide-in-from-bottom-4 sm:data-[state=open]:fade-in-0",
+          "bg-card text-foreground z-50 flex flex-col overflow-hidden shadow-xl outline-none",
+          "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom",
+          contained
+            ? // Inside a phone-sized frame: always the phone's bottom sheet.
+              "absolute inset-x-0 bottom-0 max-h-[85%] rounded-t-2xl"
+            : // Phones: a sheet from the bottom edge. Wider screens: a centred panel.
+              "sm:data-[state=open]:slide-in-from-bottom-4 sm:data-[state=open]:fade-in-0 fixed inset-x-0 bottom-0 max-h-[90dvh] rounded-t-2xl sm:inset-x-auto sm:top-1/2 sm:bottom-auto sm:left-1/2 sm:w-full sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl",
         ].join(" ")}
       >
         {/* The grab handle says "this can be closed" on phones. */}
         <div
-          className="bg-muted-foreground/30 absolute top-2 left-1/2 z-10 h-1 w-10 -translate-x-1/2 rounded-full sm:hidden"
+          className={[
+            "bg-muted-foreground/30 absolute top-2 left-1/2 z-10 h-1 w-10 -translate-x-1/2 rounded-full",
+            contained ? "" : "sm:hidden",
+          ].join(" ")}
           aria-hidden
         />
         <DialogPrimitive.Close
@@ -189,13 +258,15 @@ function DishSheetContent({
                 </p>
               </div>
             )}
-            <Link
-              href={`/${restaurantSlug}/item/${item.slug}`}
-              className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 pt-1 text-sm underline underline-offset-2"
-            >
-              <ExternalLink className="h-3.5 w-3.5" aria-hidden />{" "}
-              {t("dishPage")}
-            </Link>
+            {restaurantSlug && (
+              <Link
+                href={`/${restaurantSlug}/item/${item.slug}`}
+                className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 pt-1 text-sm underline underline-offset-2"
+              >
+                <ExternalLink className="h-3.5 w-3.5" aria-hidden />{" "}
+                {t("dishPage")}
+              </Link>
+            )}
           </div>
         </div>
       </DialogPrimitive.Content>

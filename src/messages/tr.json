@@ -102,40 +102,10 @@
     "noRestaurantsFound": "Restoran bulunamadı.",
     "adminPrompt": "Yönetici iseniz, lütfen panodan restoran ekleyin."
   },
-  "themesPage": {
-    "mainTitle": "Menü Temalarını Keşfet",
-    "description": "Restoranınızın menüsünün parlayabileceği farklı yolları keşfedin. Her tema benzersiz bir görsel deneyim sunar.",
-    "sections": {
-      "classic": {
-        "title": "Klasik Düzen",
-        "description": "Zamansız, gezinmesi kolay bir düzen. Öne çıkan üst kategoriler ve net bir iki sütunlu menü ızgarası içerir. Geniş menüler için idealdir.",
-        "howItLooks": "Nasıl Görünüyor:",
-        "noRestaurantFound": "'Klasik' tema ile görüntülenecek restoran bulunamadı."
-      },
-      "sidebarList": {
-        "title": "Yan Menü Listesi Düzeni",
-        "description": "Kategori navigasyonu için temiz bir dikey yan menü ve tek sütunlu liste formatında görüntülenen menü öğeleri içerir.",
-        "howItLooks": "Nasıl Görünüyor:",
-        "noRestaurantFound": "'Yan Menü Listesi' tema ile görüntülenecek restoran bulunamadı."
-      },
-      "accordionCard": {
-        "title": "Akordeon Kart Düzeni",
-        "description": "Menü kategorilerini genişletilebilir/daraltılabilir akordeon bölümlerine ayırır ve menü öğelerini ayrı kartlar olarak görüntüler.",
-        "howItLooks": "Nasıl Görünüyor:",
-        "noRestaurantFound": "'Akordeon Kart' tema ile görüntülenecek restoran bulunamadı."
-      },
-      "categoryCardsImageDominant": {
-        "title": "Kategori Kartları Resim Odaklı Düzen",
-        "description": "Kategorileri belirgin tıklanabilir kartlar olarak sunar. Seçildiğinde, menü öğeleri görsel olarak zengin bir deneyim için daha büyük, baskın görsellerle görüntülenir.",
-        "howItLooks": "Nasıl Görünüyor:",
-        "noRestaurantFound": "'Kategori Kartları Resim Odaklı' tema ile görüntülenecek restoran bulunamadı."
-      }
-    }
-  },
   "navbar": {
     "home": "Ana Sayfa",
     "restaurants": "Restoranlar",
-    "themes": "Temalar",
+    "themes": "Özellikler",
     "aboutUs": "Hakkımızda",
     "language": "Dil"
   },
@@ -857,6 +827,102 @@
     "compact": {
       "label": "Sade",
       "hint": "Basılı menü gibi bir yazı listesi. Fotoğrafsız uzun menüler için."
+    }
+  },
+  "featuresPage": {
+    "metaTitle": "Özellikler | Menupedia",
+    "metaDescription": "Restoranların kendi şekillendirdiği dijital menüler: üç tasarım, kendi renkleri, birden fazla dil, QR kodlar ve daha fazlası.",
+    "hero": {
+      "eyebrow": "Özellikler",
+      "title": "Menünüzün ihtiyacı olan her şey",
+      "intro": "Misafirlerinizin tek okutmayla açtığı, sizin saniyeler içinde güncellediğiniz dijital bir menü. Aşağıda demo restoranımızda deneyin.",
+      "ctaDemo": "Demoyu deneyin",
+      "ctaContact": "Bize ulaşın"
+    },
+    "demo": {
+      "title": "Kendiniz deneyin",
+      "intro": "Bu, uydurma bir restoran olan Lokanta Demo. Tasarımını, renklerini ve dilini değiştirin, bir ürüne dokunun; tıpkı misafirlerinizin yapacağı gibi.",
+      "design": "Tasarım",
+      "colors": "Renkler",
+      "mode": "Mod",
+      "language": "Menü dili",
+      "hint": "Açmak için bir ürüne dokunun. Gerçek menüler her telefonda aynı şekilde çalışır."
+    },
+    "groups": {
+      "look": "Menünüz, tarzınız",
+      "guests": "Her misafir için",
+      "current": "Her zaman güncel",
+      "found": "Bulunur ve paylaşılır",
+      "run": "Yönetmesi kolay"
+    },
+    "features": {
+      "designs": {
+        "title": "Üç menü tasarımı",
+        "text": "Klasik, Fotoğraf ızgarası ya da Sade. Yemeklerinize uyanı seçin, istediğiniz zaman değiştirin."
+      },
+      "colors": {
+        "title": "Kendi renkleriniz",
+        "text": "Arka planı, yazıyı, düğmeleri ve vurguları açık ve koyu mod için canlı önizlemeyle seçin. Ya da hazır bir paletle başlayın."
+      },
+      "fast": {
+        "title": "Telefon için yapıldı",
+        "text": "Masada okutan misafirler için hafif ve hızlı sayfalar; ürünler öne çıksın diye kompakt bir başlık."
+      },
+      "languages": {
+        "title": "Birden fazla dilde menü",
+        "text": "Menünüzü İngilizce, Türkçe, Arapça, İspanyolca ve Rusça sunun. Misafirler sağdan sola yazılanlar dahil kendi dillerinde görür."
+      },
+      "search": {
+        "title": "Arama ve beslenme filtreleri",
+        "text": "Misafirler ürünleri adına ya da içeriğine göre bulur; vejetaryen, vegan, glütensiz ve daha fazlasına göre filtreler."
+      },
+      "friendly": {
+        "title": "Misafir dostu",
+        "text": "Her misafirin kendi biçiminde fiyatlar, koyu mod ve tek dokunuşla fotoğrafı ve ayrıntılarıyla açılan ürünler."
+      },
+      "instant": {
+        "title": "Değişiklikler anında yayında",
+        "text": "Bir fiyatı değiştirin, ürün ekleyin ya da tükendi olarak işaretleyin; misafirler hemen görsün. Yeniden baskı yok."
+      },
+      "hours": {
+        "title": "Çalışma saatleri",
+        "text": "\"Şu an açık\" ya da bir sonraki açılış saati, sizin saat diliminize göre hesaplanır ve misafirin dilinde gösterilir."
+      },
+      "qr": {
+        "title": "QR kodlar ve masa kartları",
+        "text": "Menünüzün adresi değişse bile çalışmaya devam eden, logolu QR kodlar ve basıma hazır masa kartları."
+      },
+      "stats": {
+        "title": "Okutma istatistikleri",
+        "text": "Menünüzü her gün kaç misafirin açtığını görün."
+      },
+      "google": {
+        "title": "Google'da bulunur",
+        "text": "Arama motorları menünüzü, ürünlerinizi, fiyatlarınızı ve çalışma saatlerinizi sunduğunuz her dilde anlar."
+      },
+      "sharing": {
+        "title": "Güzel görünen bağlantılar",
+        "text": "WhatsApp'ta ve sosyal medyada paylaşılan bağlantılar adınızı, açıklamanızı ve fotoğrafınızı gösterir."
+      },
+      "about": {
+        "title": "Restoranınızın sayfası",
+        "text": "Adres ve harita, telefon, sosyal medya ve yemek siparişi uygulaması bağlantıları tek bir yerde."
+      },
+      "team": {
+        "title": "Ekip olarak çalışın",
+        "text": "Çalışanlarınızı bir bağlantıyla davet edin. Sahipler her şeyi, editörler menüyü yönetir."
+      },
+      "start": {
+        "title": "Başlaması kolay",
+        "text": "Adım adım bir kontrol listesi, yayına almadan önce özel bir önizleme ve yüklerken otomatik küçültülen fotoğraflar."
+      }
+    },
+    "contact": {
+      "title": "Kendi menünüze hazır mısınız?",
+      "text": "Bize restoranınızdan bahsedin, birlikte kuralım.",
+      "email": "E-posta gönderin",
+      "whatsapp": "WhatsApp'tan yazın",
+      "whatsappMessage": "Merhaba! Restoranım için Menupedia hakkında bilgi almak istiyorum."
     }
   }
 }

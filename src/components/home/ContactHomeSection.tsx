@@ -8,6 +8,11 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl"; // Import useTranslations
 import { useEffect, useState } from "react";
 import { useParallax } from "react-scroll-parallax";
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_WHATSAPP,
+} from "~/lib/site-contact";
 
 interface ContactHomeSectionProps {
   /** Illustration rendered on the server and passed in, keeping its SVG out of the client bundle. */
@@ -98,19 +103,20 @@ export function ContactHomeSection({ doodle }: ContactHomeSectionProps) {
             <p>
               {t("emailLabel")}: {/* Use translated value for email label */}
               <a
-                href="mailto:ahmed.a.alhusaini@gmail.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="text-attention hover:underline"
               >
-                ahmed.a.alhusaini@gmail.com
+                {CONTACT_EMAIL}
               </a>
             </p>
             <p>
               {t("phoneLabel")}: {/* Use translated value for phone label */}
               <a
-                href="tel:+905531565053" // Corrected href for phone number
+                href={`tel:+${CONTACT_WHATSAPP}`}
                 className="text-attention hover:underline"
+                dir="ltr"
               >
-                +90 553 156 5053
+                {CONTACT_PHONE_DISPLAY}
               </a>
             </p>
           </motion.div>
