@@ -6,9 +6,10 @@ import { restaurants } from "~/server/db/schema";
 import { getPreviewMenu } from "~/server/color-preview";
 import { startingTheme } from "~/lib/color-theme";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
-import { ColorThemeEditor } from "~/components/colors/ColorThemeEditor";
+import { AppearanceEditor } from "~/components/colors/AppearanceEditor";
+import { menuDesignOf } from "~/lib/menu-design";
 
-// The same colours page owners get, plus the switch that turns it on.
+// The same Appearance page owners get, plus the custom-colours switch.
 export default async function AdminColorsPage({
   params,
 }: {
@@ -23,10 +24,11 @@ export default async function AdminColorsPage({
   return (
     <div className="space-y-8">
       <RestaurantAdminHeader restaurant={restaurant} activeTab="colors" />
-      <ColorThemeEditor
+      <AppearanceEditor
         restaurantId={restaurant.id}
         isAdmin
-        enabled={restaurant.brandColorEnabled}
+        colorsEnabled={restaurant.brandColorEnabled}
+        design={menuDesignOf(restaurant.theme)}
         startTheme={startingTheme(restaurant.colorTheme, restaurant.brandColor)}
         hasSavedTheme={Boolean(restaurant.colorTheme ?? restaurant.brandColor)}
         menu={await getPreviewMenu(restaurant)}

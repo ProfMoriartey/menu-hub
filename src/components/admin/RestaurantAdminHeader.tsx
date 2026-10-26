@@ -42,7 +42,7 @@ export function RestaurantAdminHeader({
     },
     {
       id: "colors",
-      label: "Colours",
+      label: "Appearance",
       href: `/admin/restaurants/${restaurant.slug}/colors`,
     },
     {

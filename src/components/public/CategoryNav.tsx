@@ -129,7 +129,7 @@ export function CategoryNav({
       aria-label={t("categoriesNav")}
       className={cn(
         "bg-card rounded-lg shadow-md",
-        variant === "bar" && "sticky top-0 z-10 px-2 py-3",
+        variant === "bar" && "sticky top-0 z-10 px-1.5 py-2 sm:px-2 sm:py-3",
         variant === "sidebar" &&
           "sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto p-4",
         className,

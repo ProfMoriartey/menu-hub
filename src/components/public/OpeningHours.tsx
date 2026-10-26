@@ -23,7 +23,8 @@ export async function OpeningStatus({
   hours,
   timeZone,
   className,
-}: Props & { className?: string }) {
+  size = "md",
+}: Props & { className?: string; size?: "sm" | "md" }) {
   if (!hours || !timeZone) return null;
   const [t, locale] = await Promise.all([
     getTranslations("PublicMenu"),
@@ -47,7 +48,10 @@ export async function OpeningStatus({
   return (
     <p
       className={cn(
-        "inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium",
+        "inline-flex items-center rounded-full font-medium",
+        size === "sm"
+          ? "gap-1.5 px-2 py-0.5 text-xs"
+          : "gap-2 px-3 py-1 text-sm",
         status.open
           ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
           : "bg-muted text-muted-foreground",

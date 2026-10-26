@@ -11,6 +11,7 @@ import type { PreviewMenu } from "~/components/colors/MenuColorPreview";
 export async function getPreviewMenu(restaurant: {
   id: string;
   name: string;
+  slug: string;
   logoUrl: string | null;
   description: string | null;
   currency: string;
@@ -21,6 +22,7 @@ export async function getPreviewMenu(restaurant: {
   ]);
   return {
     name: restaurant.name,
+    slug: restaurant.slug,
     logoUrl: restaurant.logoUrl,
     description: restaurant.description,
     categories: menu
@@ -29,13 +31,14 @@ export async function getPreviewMenu(restaurant: {
       .map((category) => ({
         id: category.id,
         name: category.name,
-        items: category.menuItems.slice(0, 4).map((item) => ({
-          id: item.id,
-          name: item.name,
-          description: item.description,
-          displayPrice: formatPrice(item.price, restaurant.currency, locale),
-          imageUrl: item.imageUrl,
-        })),
+        // The same shape the public menu uses, so the preview renders the
+        // real dish components. Main language, no translations.
+        items: category.menuItems
+          .slice(0, 4)
+          .map(({ translations: _t, ...item }) => ({
+            ...item,
+            displayPrice: formatPrice(item.price, restaurant.currency, locale),
+          })),
       })),
   };
 }

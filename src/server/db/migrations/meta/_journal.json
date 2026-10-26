@@ -57,6 +57,13 @@
       "when": 1793010545470,
       "tag": "0008_add_color_theme",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793020769416,
+      "tag": "0009_rename_menu_designs",
+      "breakpoints": true
     }
   ]
 }

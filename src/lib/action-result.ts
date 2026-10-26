@@ -28,6 +28,7 @@ export const ACTION_ERROR_CODES = [
   "saveTranslationsFailed",
   "saveHoursFailed",
   "saveColorFailed",
+  "saveDesignFailed",
   // Access
   "signInAgain",
   "noAccess",
@@ -69,6 +70,7 @@ export const ACTION_ERROR_CODES = [
   "invalidTimeZone",
   "invalidColor",
   "brandColorOff",
+  "invalidDesign",
   // Uploads
   "signInToUpload",
   "adminOnlyNewLogo",

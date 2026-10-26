@@ -167,10 +167,11 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
   headers, people/user access, `StatusBadges`.
 - `components/dashboard/`: `DashboardRestaurantHeader`,
   `RestaurantDetailsEditor`, `SetupChecklist`.
-- `components/public/`: menu themes (`themes/*Layout.tsx`, four themes:
-  classic, sidebar-list, accordion-card, category-cards-image-dominant; no
-  framer-motion), `MenuDisplayClient` (search + dietary filters over every
-  theme), `CategoryNav` (scroll-following bar/sidebar), `MenuItemCard`,
+- `components/public/`: `MenuDisplayClient` (filters + dish sheet around
+  `MenuLayout`), `MenuLayout` (the one layout; the design picks the dish
+  component), `MenuItemCard` (the three dish styles, with `data-role`
+  colour markers used by the Appearance preview), `DishSheet`,
+  `DietaryBadges`, `CategoryNav` (scroll-following bar),
   `MenuItemDetail` (server), `PublicPageControls`, `PreviewBanner`,
   `SoldOutBadge`, `menu-types.ts`.
 - `components/shared/`: `Navbar`, `ThemeToggle`, `LanguageSwitcher`,
@@ -196,7 +197,9 @@ counts and invitations. Deleting a user cascades to their access rows.
 **Migrations:** `0001` (old), `0002` slugs (with backfill SQL), `0003` QR scan
 days, `0004` item availability, `0005` restaurant invitations, `0006` menu
 translations, `0007` time zone, opening hours and brand colour, `0008` colour
-theme (all add columns only). The
+theme (all add columns only), `0009` renames stored designs to the new
+three (data only; `menuDesignOf` maps old names too, so the order of deploy
+and migrate doesn't matter). The
 development database has 0001–0004 applied (checked 2026-10-23); **0005 was
 created 2026-10-26 and must be applied with `pnpm db:migrate` in dev and in
 production before the Team tab, admin People tab or dashboard invitations
@@ -361,8 +364,13 @@ stats); Team (members, invite editors by link with copy/WhatsApp, pending
 invitations with new link/cancel, remove editors, leave); invitations on the
 home page; language switcher; unsaved-changes guard.
 
-**Public:** four themes; classic and sidebar are one scrolling page with a
-category bar that follows the scroll; search (12+ items) and dietary filters;
+**Public:** three designs (`lib/menu-design.ts`: classic, photo-grid,
+compact), all one scrolling page (`components/public/MenuLayout.tsx`) with a
+compact phone-first header, one-row search + Filter popover, and a sticky
+category bar that follows the scroll; dishes (`MenuItemCard.tsx`:
+`ClassicDish`, `PhotoDish`, `CompactDish`) open in a bottom sheet
+(`DishSheet.tsx`, `?dish=<slug>` in the address so Back closes it and links
+share; the dish page stays for long-press/new tab/Google); search (12+ items) and dietary filters;
 prices in the guest's format; guest language switcher; sold-out items last
 and dimmed; empty categories hidden; logo-or-initials, no placeholder images;
 hidden items excluded (menu, item page, search); preview of inactive
@@ -393,9 +401,12 @@ out per request in the restaurant's time zone). Structured data carries
 `openingHoursSpecification`. QR scan days use the restaurant's time zone
 once set (UTC before). Logic and tests: `lib/opening-hours.ts`.
 
-**Colours** (custom colour themes): own page, tab "Colours" in the
-dashboard (owners/admins; editors redirected) and in admin
-(`components/colors/ColorThemeEditor`). A system admin switches the feature
+**Appearance** (route `/colors`, tab "Appearance"): the menu design picker
+(every owner; `updateMenuDesign` stores it in `restaurants.theme`) and custom
+colours, in the dashboard (owners/admins; editors redirected) and in admin
+(`components/colors/AppearanceEditor`). Its preview
+(`components/colors/MenuColorPreview`) renders the real dish components in
+the chosen design. A system admin switches the feature
 on per restaurant (`brandColorEnabled`, toggle on the page); off = default
 colours, design kept. Six colours per mode, light and dark
 (`lib/color-theme.ts`: background, card, text, primary, secondary, accent);
@@ -449,15 +460,30 @@ who changed what.
 - Translating the admin-only pages.
 - Automatic translation of menus (AI/translation service; a paid-plan idea).
 - Special closures and holidays for opening hours.
+- The marketing `/themes` page (`app/[locale]/(site)/themes`,
+  `components/themes/*`) still shows the four old designs; it needs a rewrite
+  for Classic, Photo grid and Compact.
 
-**Things the owner was asked to do. Confirm they're done before relying on them:**
-- Subscribe the Clerk webhook endpoint to `user.updated` and `user.deleted`.
-- Set `NEXT_PUBLIC_APP_URL` to the production domain in production.
-- Run `pnpm db:migrate` in production for migrations 0002–0008, before deploying (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008: colour themes).
-- Set owners on each restaurant's People tab (all old assignments became editors).
-- Run `pnpm uploads:cleanup -- --delete` after a dry run. The dry run found 32
-  unused files, including some sensitive-looking photos (a SIM card PIN, a
-  profile picture); UploadThing URLs are public.
+**Done by the owner (confirmed 2026-10-26):** Clerk webhook subscribed to
+`user.updated` and `user.deleted`; `NEXT_PUBLIC_APP_URL` set on Vercel;
+unused UploadThing files cleaned up; migrations applied in dev up to 0008.
+
+**Still to check with the owner:**
+- `pnpm db:migrate` in production for migrations 0002–0009, before deploying
+  (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
+  colour themes; 0009: design names).
+- Owners set on each restaurant's People tab (all old assignments became editors).
+
+**Agreed next steps, parked for now (2026-10-26):**
+1. **Owners publish their own menu**: a Publish button once the checklist
+   is complete, probably as "request publishing" that an admin approves in
+   one click (the "Ready to go live" filter becomes a review queue); owners
+   can unpublish. Decisions still open: instant vs approval, unpublish yes/no.
+2. **Plans**: bundle the per-restaurant switches (menu languages, custom
+   colours, editor seats …) into free/paid plans; needs pricing and a payment
+   provider. Design discussion first.
+3. Smaller: invitation emails, automatic translation, holiday closures,
+   activity log.
 
 **Known leftovers:**
 - `package-lock.json` is stale (pnpm is canonical).

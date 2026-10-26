@@ -22,6 +22,7 @@ import { PublicPageControls } from "~/components/public/PublicPageControls";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Button } from "~/components/ui/button";
 import {
+  ChevronRight,
   Info,
   MapPin,
   Instagram,
@@ -152,114 +153,117 @@ export default async function RestaurantMenuPage({ params }: PageProps) {
 
   return (
     <div className={cn("relative min-h-screen", themeClass)}>
-      {/* Phones: language and theme switches sit in the corner above the header. */}
-      <div className="absolute end-4 top-4 z-50 md:hidden">
-        <PublicPageControls />
-      </div>
-
-      <header className="bg-card relative p-4 pt-14 shadow-sm md:pt-4">
-        <div className="container mx-auto flex flex-col items-center gap-4 sm:flex-row sm:items-start">
-          {/* The logo opens the details page too, like the Details button. */}
-          <Link
-            href={`/${restaurantDetails.slug}/about`}
-            aria-label={t("restaurantDetailsButton")}
-            className="block shrink-0 transition-transform hover:scale-105 active:scale-95"
-          >
-            <RestaurantLogo
-              restaurant={restaurantDetails}
-              className="h-24 w-24 rounded-lg text-3xl shadow-sm"
-              imageSizes="96px"
-              priority
-            />
-          </Link>
-
-          <div className="flex-grow text-center sm:text-start">
-            <h1 className="text-foreground text-4xl font-bold">
-              {restaurantDetails.name}
-            </h1>
-            <p
-              className="text-muted-foreground mt-2 text-lg"
-              lang={description.text ? description.lang : undefined}
-              dir="auto"
+      {/* Compact on purpose, phones first: guests come from a QR code to see
+          dishes, so the header leaves most of the screen to the menu. The
+          full description, hours and links are one tap away on About. */}
+      <header className="bg-card border-border border-b">
+        <div className="container mx-auto px-4 py-3 sm:py-5">
+          <div className="flex items-start gap-3 sm:gap-4">
+            {/* The logo opens the details page too, like the Details button. */}
+            <Link
+              href={`/${restaurantDetails.slug}/about`}
+              aria-label={t("restaurantDetailsButton")}
+              className="block shrink-0 transition-transform active:scale-95"
             >
-              {description.text ?? t("browseMenuDefault")}
-            </p>
+              <RestaurantLogo
+                restaurant={restaurantDetails}
+                className="h-12 w-12 rounded-xl text-base sm:h-20 sm:w-20 sm:text-2xl"
+                imageSizes="(min-width: 640px) 80px, 48px"
+                priority
+              />
+            </Link>
 
-            <OpeningStatus
-              hours={restaurantDetails.openingHours}
-              timeZone={restaurantDetails.timeZone}
-              className="mt-3"
-            />
-
-            {/* Details | Map | Separator | Socials */}
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-              <Button
-                variant="secondary"
+            <div className="min-w-0 flex-1">
+              <h1 className="text-foreground truncate text-xl leading-tight font-bold sm:text-3xl">
+                {restaurantDetails.name}
+              </h1>
+              <OpeningStatus
+                hours={restaurantDetails.openingHours}
+                timeZone={restaurantDetails.timeZone}
                 size="sm"
-                className="h-8 rounded-full px-4 font-medium"
-                asChild
-              >
-                <Link href={`/${restaurantDetails.slug}/about`}>
-                  <Info className="h-4 w-4" aria-hidden />
-                  {t("restaurantDetailsButton")}
-                </Link>
-              </Button>
-
-              {restaurantDetails.mapUrl && (
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="h-8 w-8 rounded-full"
-                  asChild
-                >
-                  <a
-                    href={restaurantDetails.mapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={tMenu("mapLabel")}
-                    title={tMenu("mapLabel")}
-                  >
-                    <MapPin className="h-4 w-4" aria-hidden />
-                  </a>
-                </Button>
-              )}
-
-              {socialLinks.length > 0 && (
-                <div
-                  className="bg-border mx-1 hidden h-5 w-px sm:block"
-                  aria-hidden
-                />
-              )}
-
-              {socialLinks.map(({ url, label, Icon }) => (
-                <Button
-                  key={label}
-                  variant="secondary"
-                  size="icon"
-                  className="text-muted-foreground hover:text-foreground h-8 w-8 rounded-full"
-                  asChild
-                >
-                  <a
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    title={label}
-                  >
-                    <Icon className="h-4 w-4" aria-hidden />
-                  </a>
-                </Button>
-              ))}
+                className="mt-1"
+              />
             </div>
+
+            <PublicPageControls compact className="-me-2 shrink-0" />
           </div>
 
-          <div className="hidden shrink-0 sm:self-center md:flex md:items-center">
-            <PublicPageControls />
+          {description.text && (
+            <Link
+              href={`/${restaurantDetails.slug}/about`}
+              className="text-muted-foreground hover:text-foreground mt-2 flex items-center gap-1 text-sm sm:text-base"
+            >
+              <span
+                className="line-clamp-1 sm:line-clamp-2"
+                lang={description.lang}
+                dir="auto"
+              >
+                {description.text}
+              </span>
+              <ChevronRight
+                className="h-4 w-4 shrink-0 rtl:rotate-180"
+                aria-hidden
+              />
+            </Link>
+          )}
+
+          {/* Details | Map | Socials, as small buttons. */}
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="h-8 rounded-full px-3 text-xs font-medium"
+              asChild
+            >
+              <Link href={`/${restaurantDetails.slug}/about`}>
+                <Info className="h-3.5 w-3.5" aria-hidden />
+                {t("restaurantDetailsButton")}
+              </Link>
+            </Button>
+
+            {restaurantDetails.mapUrl && (
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-8 w-8 rounded-full"
+                asChild
+              >
+                <a
+                  href={restaurantDetails.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={tMenu("mapLabel")}
+                  title={tMenu("mapLabel")}
+                >
+                  <MapPin className="h-4 w-4" aria-hidden />
+                </a>
+              </Button>
+            )}
+
+            {socialLinks.map(({ url, label, Icon }) => (
+              <Button
+                key={label}
+                variant="secondary"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground h-8 w-8 rounded-full"
+                asChild
+              >
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  title={label}
+                >
+                  <Icon className="h-4 w-4" aria-hidden />
+                </a>
+              </Button>
+            ))}
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-4 sm:py-8">
         {/* Search engines read this; previews of unpublished menus get none. */}
         {restaurantDetails.isActive && (
           <script

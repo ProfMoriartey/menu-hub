@@ -8,6 +8,7 @@ import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import { isValidTimeZone, parseOpeningHours } from "~/lib/opening-hours";
 import { parseColorTheme } from "~/lib/color-theme";
+import { isMenuDesign } from "~/lib/menu-design";
 import { runAction } from "~/server/run-action";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
 
@@ -86,6 +87,25 @@ export async function updateColorTheme(
         brandColor: null,
         updatedAt: new Date(),
       })
+      .where(eq(restaurants.id, restaurantId));
+    revalidatePublicRestaurant(restaurantId);
+  });
+}
+
+/**
+ * Owners and admins: how the public menu lays out its dishes
+ * (lib/menu-design). Unlike custom colours, every restaurant can choose.
+ */
+export async function updateMenuDesign(
+  restaurantId: string,
+  design: string,
+): Promise<ActionResult> {
+  return runAction("saveDesignFailed", async () => {
+    await checkOwnerAuthorization(restaurantId);
+    if (!isMenuDesign(design)) throw new ActionError("invalidDesign");
+    await db
+      .update(restaurants)
+      .set({ theme: design, updatedAt: new Date() })
       .where(eq(restaurants.id, restaurantId));
     revalidatePublicRestaurant(restaurantId);
   });

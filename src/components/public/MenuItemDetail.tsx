@@ -6,7 +6,7 @@ import { ChevronLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { categorySectionId } from "~/lib/category-section";
-import { DietaryBadges } from "~/components/public/MenuItemCard";
+import { DietaryBadges } from "~/components/public/DietaryBadges";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
 import { PublicPageControls } from "~/components/public/PublicPageControls";
 

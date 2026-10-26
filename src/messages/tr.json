@@ -418,7 +418,7 @@
     "preview": "Menüyü önizle",
     "shareTab": "Paylaş",
     "teamTab": "Ekip",
-    "colorsTab": "Renkler"
+    "colorsTab": "Görünüm"
   },
   "LanguageSwitcher": {
     "label": "Dil"
@@ -539,7 +539,9 @@
     "invalidHours": "Bazı çalışma saatleri geçerli değil. Saatleri kontrol edip tekrar deneyin.",
     "invalidTimeZone": "Listeden bir saat dilimi seçin, örneğin Europe/Istanbul.",
     "invalidColor": "#d97706 gibi renkler girin.",
-    "brandColorOff": "Bu restoran için özel renkler açık değil."
+    "brandColorOff": "Bu restoran için özel renkler açık değil.",
+    "saveDesignFailed": "Menü tasarımı kaydedilemedi. Lütfen tekrar deneyin.",
+    "invalidDesign": "Menü tasarımlarından birini seçin."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -680,7 +682,12 @@
     "opensOn": "{day} {time} saatinde açılır",
     "hoursHeading": "Çalışma saatleri",
     "today": "Bugün",
-    "closedDay": "Kapalı"
+    "closedDay": "Kapalı",
+    "filter": "Filtre",
+    "filterLabel": "{count, plural, =0 {Beslenme filtreleri} other {Beslenme filtreleri, # seçili}}",
+    "closeDish": "Kapat",
+    "ingredients": "İçindekiler",
+    "dishPage": "Ürün sayfasını aç"
   },
   "Team": {
     "inviteTitle": "Editör davet edin",
@@ -835,5 +842,21 @@
     "sampleCategory": "Başlangıçlar",
     "sampleDish": "Örnek ürün",
     "sampleDishDescription": "Ürünün kısa bir açıklaması."
+  },
+  "MenuDesign": {
+    "title": "Menü tasarımı",
+    "intro": "Ürünlerinizin nasıl dizildiği. Her tasarım, kategorileri üstte olan tek kaydırmalı bir sayfadır ve telefon için yapılmıştır.",
+    "classic": {
+      "label": "Klasik",
+      "hint": "Fotoğrafı yazının yanında olan kartlar. Çoğu menüye uyar."
+    },
+    "photo-grid": {
+      "label": "Fotoğraf ızgarası",
+      "hint": "Telefonda iki sütun büyük fotoğraf. Fotoğrafı bol menüler için."
+    },
+    "compact": {
+      "label": "Sade",
+      "hint": "Basılı menü gibi bir yazı listesi. Fotoğrafsız uzun menüler için."
+    }
   }
 }

@@ -418,7 +418,7 @@
     "preview": "Preview menu",
     "shareTab": "Share",
     "teamTab": "Team",
-    "colorsTab": "Colours"
+    "colorsTab": "Appearance"
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -539,7 +539,9 @@
     "invalidHours": "Some opening hours aren't valid. Check the times and try again.",
     "invalidTimeZone": "Choose a time zone from the list, for example Europe/Istanbul.",
     "invalidColor": "Enter colours like #d97706.",
-    "brandColorOff": "Custom colours aren't enabled for this restaurant."
+    "brandColorOff": "Custom colours aren't enabled for this restaurant.",
+    "saveDesignFailed": "Couldn't save the menu design. Please try again.",
+    "invalidDesign": "Choose one of the menu designs."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -680,7 +682,12 @@
     "opensOn": "opens {day} at {time}",
     "hoursHeading": "Opening hours",
     "today": "Today",
-    "closedDay": "Closed"
+    "closedDay": "Closed",
+    "filter": "Filter",
+    "filterLabel": "{count, plural, =0 {Dietary filters} one {Dietary filters, # selected} other {Dietary filters, # selected}}",
+    "closeDish": "Close",
+    "ingredients": "Ingredients",
+    "dishPage": "Open the dish page"
   },
   "Team": {
     "inviteTitle": "Invite an editor",
@@ -835,5 +842,21 @@
     "sampleCategory": "Starters",
     "sampleDish": "Sample dish",
     "sampleDishDescription": "A short description of the dish."
+  },
+  "MenuDesign": {
+    "title": "Menu design",
+    "intro": "How your dishes are laid out. Every design is one scrolling page with the categories at the top, made for phones.",
+    "classic": {
+      "label": "Classic",
+      "hint": "Cards with the photo beside the text. Suits most menus."
+    },
+    "photo-grid": {
+      "label": "Photo grid",
+      "hint": "Two columns of large photos on phones. For photo-rich menus."
+    },
+    "compact": {
+      "label": "Compact",
+      "hint": "A text list like a printed menu. For long menus without photos."
+    }
   }
 }

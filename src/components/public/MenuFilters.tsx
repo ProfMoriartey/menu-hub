@@ -3,8 +3,14 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Check, Search, X } from "lucide-react";
+import { Check, Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 import { DIETARY_LABEL_KEYS } from "~/lib/dietary-labels";
 
@@ -136,76 +142,113 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
   const { showSearch, availableLabels } = filters;
   if (!showSearch && availableLabels.length === 0) return null;
 
+  // One row on purpose: search and a Filter button, with the dietary
+  // choices in a panel, so the dishes start near the top of a phone screen.
   return (
-    <div className="space-y-3">
-      {showSearch && (
-        <div role="search" className="relative">
-          <Search
-            className="text-muted-foreground pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2"
-            aria-hidden
-          />
-          <Input
-            type="search"
-            value={filters.query}
-            onChange={(e) => filters.setQuery(e.target.value)}
-            placeholder={t("searchPlaceholder")}
-            aria-label={t("searchLabel")}
-            enterKeyHint="search"
-            // The native clear button differs per browser; ours is below.
-            className="bg-card h-11 ps-9 pe-10 text-base [&::-webkit-search-cancel-button]:hidden"
-          />
-          {filters.query && (
-            <button
-              type="button"
-              onClick={() => filters.setQuery("")}
-              aria-label={t("clearSearch")}
-              className="text-muted-foreground hover:text-foreground absolute end-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full"
-            >
-              <X className="h-4 w-4" aria-hidden />
-            </button>
-          )}
-        </div>
-      )}
-
-      {availableLabels.length > 0 && (
-        <div
-          role="group"
-          aria-label={t("dietaryFilters")}
-          className="flex flex-wrap gap-2"
-        >
-          {availableLabels.map((label) => {
-            const on = filters.labels.includes(label);
-            return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        {showSearch && (
+          <div role="search" className="relative min-w-0 flex-1">
+            <Search
+              className="text-muted-foreground pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2"
+              aria-hidden
+            />
+            <Input
+              type="search"
+              value={filters.query}
+              onChange={(e) => filters.setQuery(e.target.value)}
+              placeholder={t("searchPlaceholder")}
+              aria-label={t("searchLabel")}
+              enterKeyHint="search"
+              // The native clear button differs per browser; ours is below.
+              className="bg-card h-10 ps-9 pe-10 text-base [&::-webkit-search-cancel-button]:hidden"
+            />
+            {filters.query && (
               <button
-                key={label}
                 type="button"
-                aria-pressed={on}
-                onClick={() => filters.toggleLabel(label)}
-                className={cn(
-                  "inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
-                  on
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-foreground border-border hover:bg-muted",
-                )}
+                onClick={() => filters.setQuery("")}
+                aria-label={t("clearSearch")}
+                className="text-muted-foreground hover:text-foreground absolute end-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full"
               >
-                {on && <Check className="h-3.5 w-3.5" aria-hidden />}
-                {tDietary(DIETARY_LABEL_KEYS[label])}
+                <X className="h-4 w-4" aria-hidden />
               </button>
-            );
-          })}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+
+        {availableLabels.length > 0 && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "bg-card h-10 shrink-0",
+                  !showSearch && "ms-auto",
+                )}
+                aria-label={t("filterLabel", { count: filters.labels.length })}
+              >
+                <SlidersHorizontal className="h-4 w-4" aria-hidden />
+                {t("filter")}
+                {filters.labels.length > 0 && (
+                  <span className="bg-primary text-primary-foreground flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs tabular-nums">
+                    {filters.labels.length}
+                  </span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-72 space-y-3">
+              <p className="text-sm font-medium">{t("dietaryFilters")}</p>
+              <div
+                role="group"
+                aria-label={t("dietaryFilters")}
+                className="flex flex-wrap gap-2"
+              >
+                {availableLabels.map((label) => {
+                  const on = filters.labels.includes(label);
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => filters.toggleLabel(label)}
+                      className={cn(
+                        "inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
+                        on
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-card text-foreground border-border hover:bg-accent hover:text-accent-foreground",
+                      )}
+                    >
+                      {on && <Check className="h-3.5 w-3.5" aria-hidden />}
+                      {tDietary(DIETARY_LABEL_KEYS[label])}
+                    </button>
+                  );
+                })}
+              </div>
+            </PopoverContent>
+          </Popover>
+        )}
+      </div>
 
       {/* Announced to screen readers as the results change. */}
       <p
         aria-live="polite"
         className={cn(
-          "text-muted-foreground text-sm",
+          "text-muted-foreground flex items-center gap-2 text-sm",
           !filters.isFiltering && "sr-only",
         )}
       >
-        {filters.isFiltering &&
-          t("resultCount", { count: filters.resultCount })}
+        {filters.isFiltering && (
+          <>
+            {t("resultCount", { count: filters.resultCount })}
+            <button
+              type="button"
+              onClick={filters.clear}
+              className="text-primary font-medium underline underline-offset-2 hover:no-underline"
+            >
+              {t("clearFilters")}
+            </button>
+          </>
+        )}
       </p>
     </div>
   );

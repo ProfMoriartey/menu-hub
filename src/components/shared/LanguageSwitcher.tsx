@@ -30,7 +30,15 @@ const LANGUAGE_NAMES: Record<string, string> = {
  * Switches the page to another language, staying on the same page. The
  * choice sticks: next-intl remembers it in a cookie.
  */
-export function LanguageSwitcher({ className }: { className?: string }) {
+export function LanguageSwitcher({
+  className,
+  compact = false,
+}: {
+  className?: string;
+  // Just the language code ("TR") on the trigger, for tight spaces like a
+  // phone-sized menu header. The list still names each language in full.
+  compact?: boolean;
+}) {
   const t = useTranslations("LanguageSwitcher");
   const tUnsaved = useTranslations("UnsavedChanges");
   const locale = useLocale();
@@ -46,17 +54,32 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         if (next === locale) return;
         // Switching reloads the page in the new language, so unsaved
         // edits would be lost. The select stays on the current language.
-        if (hasUnsavedChanges() && !window.confirm(tUnsaved("confirmLeave"))) return;
+        if (hasUnsavedChanges() && !window.confirm(tUnsaved("confirmLeave")))
+          return;
         startTransition(() => router.replace(pathname, { locale: next }));
       }}
     >
-      <SelectTrigger aria-label={t("label")} className={cn("h-9 gap-2", className)}>
+      <SelectTrigger
+        aria-label={t("label")}
+        className={cn("h-9 gap-2", className)}
+      >
         <Globe className="text-muted-foreground h-4 w-4 shrink-0" aria-hidden />
-        <SelectValue />
+        {compact ? (
+          <SelectValue>
+            <span className="text-xs font-semibold uppercase">{locale}</span>
+          </SelectValue>
+        ) : (
+          <SelectValue />
+        )}
       </SelectTrigger>
       <SelectContent align="end">
         {routing.locales.map((code) => (
-          <SelectItem key={code} value={code} lang={code} dir={code === "ar" ? "rtl" : "ltr"}>
+          <SelectItem
+            key={code}
+            value={code}
+            lang={code}
+            dir={code === "ar" ? "rtl" : "ltr"}
+          >
             {LANGUAGE_NAMES[code] ?? code.toUpperCase()}
           </SelectItem>
         ))}
