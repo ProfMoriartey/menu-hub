@@ -36,8 +36,10 @@ There are three audiences:
 - **Next.js 15.2** (App Router, server actions, `after()`), **React 19**, TypeScript.
   Dev runs with Turbopack (`next dev --turbo`).
 - **Tailwind CSS v4** (CSS-first config in `src/styles/globals.css`), shadcn/ui
-  components on Radix (`src/components/ui`), `lucide-react` icons, `framer-motion`
-  on the public pages.
+  components on Radix (`src/components/ui`), `lucide-react` icons. Animation
+  is CSS (`tw-animate-css`, `components/shared/Reveal`); `framer-motion` and
+  `react-scroll-parallax` are no longer imported and can be removed from
+  `package.json`.
 - **Drizzle ORM** on **PostgreSQL** (driver `postgres`). Schema in
   `src/server/db/schema.ts`, migrations in `src/server/db/migrations`.
 - **Clerk** for auth (`@clerk/nextjs` v6). The admin role comes from the Clerk
@@ -176,7 +178,10 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
   `DietaryBadges`, `CategoryNav` (scroll-following bar),
   `MenuItemDetail` (server), `PublicPageControls`, `PreviewBanner`,
   `SoldOutBadge`, `menu-types.ts`.
-- `components/shared/`: `Navbar`, `ThemeToggle`, `LanguageSwitcher`,
+- `components/shared/`: `Navbar` (slim sticky bar; phones get a panel),
+  `SiteFooter` (marketing pages, via `LayoutWrapper`), `Reveal` /
+  `DoodleReveal` (slide in on scroll, motion-safe), `VenueTypeIcon`,
+  `ThemeToggle`, `LanguageSwitcher`,
   `RestaurantLogo` (logo or initials; admin, dashboard and public).
 
 ---
@@ -445,11 +450,20 @@ and tap dishes; it renders the real dish components and
 `DishSheetInPlaceProvider`, a sheet that opens inside the phone frame and
 keeps its state instead of using `?dish=`, and is non-modal so the page
 keeps scrolling while it is open), feature groups, and a contact
-block. The home page's "Why choose" section shows the same demo with fewer
-controls. Prices for the demo are formatted on the server
+block. The home page's hero shows the same demo without controls. Prices for the demo are formatted on the server
 (`server/demo-menu.ts`). **Contact details live only in
-`lib/site-contact.ts`** (email, WhatsApp/phone; still the ones the home page
-showed, to be confirmed by the owner). When a feature is added, add it to
+`lib/site-contact.ts`** (email, WhatsApp/phone; to be confirmed by the
+owner).
+
+**Home page** (`(site)/page.tsx`, for restaurant owners): hero with the
+demo phone, "How it works" (3 steps), six feature tiles (texts reused from
+`featuresPage.features`), "Menus in <country>" or "Menus on Menupedia" (six
+`MenuCard`s from `server/directory-venues`, featured first) and the
+`#contact` band (WhatsApp, email). The navbar's "Get in touch" points
+there (`CONTACT_HREF`). Texts: `HomePage`; footer: `Footer`. **Doodles**
+(`components/svg/*`) draw their blob in `--doodle-fill` (default primary)
+and outline in `--doodle-ink` (default current text colour); set those on a
+parent to adapt them, as the contact band does. When a feature is added, add it to
 the Features page's `GROUPS` and messages (`featuresPage.features`).
 
 **About page** (`/about`, server component, no animation library): the
@@ -549,9 +563,6 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 
 **Known leftovers:**
 - `package-lock.json` is stale (pnpm is canonical).
-- `next lint` still warns in three files nobody has reworked yet:
-  `app/[locale]/layout.tsx`, `app/[locale]/(site)/page.tsx`,
-  `components/svg/GroovySittingDoodle.tsx`.
 - Signed-out visits to the dashboard/admin redirect to sign-in with status 200
   (the redirect streams after `(site)/loading.tsx`). Harmless: crawlers are
   kept out by robots.txt.

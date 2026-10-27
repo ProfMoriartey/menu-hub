@@ -10,6 +10,18 @@
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* The home page doodles bob gently once they've slid in (motion-safe only). */
+  --animate-doodle-float: doodle-float 7s ease-in-out infinite;
+  @keyframes doodle-float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(-1.5deg);
+    }
+  }
 }
 
 @theme inline {

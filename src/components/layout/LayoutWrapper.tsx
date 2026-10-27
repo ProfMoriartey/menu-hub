@@ -3,7 +3,8 @@
 
 import { usePathname } from "next/navigation";
 import { useLocale } from "next-intl"; // CORRECTED: Import useLocale directly from 'next-intl'
-import { Navbar } from "~/components/shared/Navbar"; // Import your Navbar component
+import { Navbar } from "~/components/shared/Navbar";
+import { SiteFooter } from "~/components/shared/SiteFooter";
 import type React from "react";
 
 interface LayoutWrapperProps {
@@ -38,6 +39,7 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
     <>
       {isPublicNavbarVisible && <Navbar />}
       {children}
+      {isPublicNavbarVisible && <SiteFooter />}
     </>
   );
 }
