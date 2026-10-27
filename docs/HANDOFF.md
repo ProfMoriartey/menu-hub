@@ -194,7 +194,7 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 | Table | Notes |
 |---|---|
 | `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
-| `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card. Public pages per branch (see Branch pages); the Menus page still reads only the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
+| `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card. Public pages per branch (see Branch pages); the Menus page uses every branch. Restaurant-level reads that need one location use the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
 | `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
 | `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
@@ -435,6 +435,15 @@ the sitemap lists branch pages. `/r/<id>` takes a restaurant or a branch
 id; Share has a "Code and link for" choice (whole restaurant or a branch),
 and the print page takes `?branch=<id>`. Scans are still counted per
 restaurant (on the branch's day); a per-branch count needs a migration.
+
+**Menus page and branches:** a card is a restaurant, with its branches
+(`DirectoryVenue.branches`, each with city, country and open now). Local
+scope, country, city and open now keep a venue when any branch matches,
+and narrow its card to those branches (`venueWithBranches`): one branch
+shows its own city and hours and links to its page (`venueHref`); several
+show "2 branches · Istanbul, Ankara" and "Open now at 1 branch". Country
+and city options count a chain once per place; the local count and the
+home page's "menus near you" use any branch in the country.
 
 **Opening hours:** per branch, `components/restaurant-settings/OpeningHoursSettings`
 inside each branch of the Branches card (`actions/branches.updateBranchHours`). Up to 3 ranges a day; a close time before

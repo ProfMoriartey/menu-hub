@@ -849,7 +849,11 @@
     "showOnly": "Показывать только",
     "clearAll": "Сбросить всё",
     "showResults": "{count, plural, =0 {Нет подходящих меню} one {Показать # меню} few {Показать # меню} many {Показать # меню} other {Показать # меню}}",
-    "removeFilter": "Убрать фильтр: {name}"
+    "removeFilter": "Убрать фильтр: {name}",
+    "branchesCount": "{count, plural, one {# филиал} few {# филиала} many {# филиалов} other {# филиала}}",
+    "branchesPlace": "{count, plural, one {# филиал} few {# филиала} many {# филиалов} other {# филиала}} · {places}",
+    "openAtBranches": "Открыто сейчас: {count, plural, one {# филиал} few {# филиала} many {# филиалов} other {# филиала}}",
+    "closedAtBranches": "Сейчас закрыто"
   },
   "HomePage": {
     "metaTitle": "Menupedia: цифровые меню для ресторанов и кафе",

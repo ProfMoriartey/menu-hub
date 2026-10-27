@@ -849,7 +849,11 @@
     "showOnly": "اعرض فقط",
     "clearAll": "مسح الكل",
     "showResults": "{count, plural, =0 {لا توجد قوائم مطابقة} one {عرض قائمة واحدة} two {عرض قائمتين} few {عرض # قوائم} many {عرض # قائمة} other {عرض # قائمة}}",
-    "removeFilter": "إزالة الفلتر: {name}"
+    "removeFilter": "إزالة الفلتر: {name}",
+    "branchesCount": "{count, plural, one {فرع واحد} two {فرعان} few {# فروع} many {# فرعًا} other {# فرع}}",
+    "branchesPlace": "{count, plural, one {فرع واحد} two {فرعان} few {# فروع} many {# فرعًا} other {# فرع}} · {places}",
+    "openAtBranches": "مفتوح الآن في {count, plural, one {فرع واحد} two {فرعين} few {# فروع} many {# فرعًا} other {# فرع}}",
+    "closedAtBranches": "مغلق الآن"
   },
   "HomePage": {
     "metaTitle": "Menupedia: قوائم رقمية للمطاعم والمقاهي",

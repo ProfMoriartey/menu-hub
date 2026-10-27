@@ -849,7 +849,11 @@
     "showOnly": "Show only",
     "clearAll": "Clear all",
     "showResults": "{count, plural, =0 {No menus match} one {Show # menu} other {Show # menus}}",
-    "removeFilter": "Remove filter: {name}"
+    "removeFilter": "Remove filter: {name}",
+    "branchesCount": "{count, plural, one {# branch} other {# branches}}",
+    "branchesPlace": "{count, plural, one {# branch} other {# branches}} · {places}",
+    "openAtBranches": "{count, plural, one {Open now at # branch} other {Open now at # branches}}",
+    "closedAtBranches": "Closed now"
   },
   "HomePage": {
     "metaTitle": "Menupedia: digital menus for restaurants and cafés",

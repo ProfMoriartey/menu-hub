@@ -127,8 +127,9 @@ export const getPublicMenuItem = cache(
 const PHOTOS_PER_CARD = 3;
 
 /**
- * Every live venue for the Menus page: its card details, its first few dish
- * photos (in menu order) and how many dishes guests can see.
+ * Every live venue for the Menus page: its card details, where each of its
+ * branches is, its first few dish photos (in menu order) and how many
+ * dishes guests can see.
  */
 export const getMenusDirectory = cache(
   unstable_cache(
@@ -147,7 +148,12 @@ export const getMenusDirectory = cache(
           mainLanguage: true,
           extraLanguages: true,
         },
-        with: MAIN_BRANCH,
+        with: {
+          branches: {
+            columns: { slug: true, city: true, country: true, openingHours: true, timeZone: true },
+            orderBy: [asc(branches.order), asc(branches.createdAt)],
+          },
+        },
       });
 
       const ranked = db
@@ -180,7 +186,7 @@ export const getMenusDirectory = cache(
           .groupBy(menuItems.restaurantId),
       ]);
 
-      return venues.map(withMainBranch).map((venue) => ({
+      return venues.map((venue) => ({
         ...venue,
         photos: photos
           .filter((p) => p.restaurantId === venue.id && p.imageUrl)

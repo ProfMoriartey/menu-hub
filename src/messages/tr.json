@@ -849,7 +849,11 @@
     "showOnly": "Yalnızca göster",
     "clearAll": "Tümünü temizle",
     "showResults": "{count, plural, =0 {Eşleşen menü yok} one {# menüyü göster} other {# menüyü göster}}",
-    "removeFilter": "Filtreyi kaldır: {name}"
+    "removeFilter": "Filtreyi kaldır: {name}",
+    "branchesCount": "{count} şube",
+    "branchesPlace": "{count} şube · {places}",
+    "openAtBranches": "{count} şubede şu an açık",
+    "closedAtBranches": "Şu an kapalı"
   },
   "HomePage": {
     "metaTitle": "Menupedia: restoran ve kafeler için dijital menüler",

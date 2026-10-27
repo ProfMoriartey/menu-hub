@@ -849,7 +849,11 @@
     "showOnly": "Mostrar solo",
     "clearAll": "Quitar todo",
     "showResults": "{count, plural, =0 {Ningún menú coincide} one {Ver # menú} other {Ver # menús}}",
-    "removeFilter": "Quitar filtro: {name}"
+    "removeFilter": "Quitar filtro: {name}",
+    "branchesCount": "{count, plural, one {# sucursal} other {# sucursales}}",
+    "branchesPlace": "{count, plural, one {# sucursal} other {# sucursales}} · {places}",
+    "openAtBranches": "{count, plural, one {Abierto ahora en # sucursal} other {Abierto ahora en # sucursales}}",
+    "closedAtBranches": "Cerrado ahora"
   },
   "HomePage": {
     "metaTitle": "Menupedia: menús digitales para restaurantes y cafés",

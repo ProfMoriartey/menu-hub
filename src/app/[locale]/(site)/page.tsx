@@ -26,6 +26,7 @@ import SittingDoodle from "~/components/svg/SittingDoodle";
 import ZombieingDoodle from "~/components/svg/ZombieingDoodle";
 import { getDemoMenus } from "~/server/demo-menu";
 import { getDirectoryVenues } from "~/server/directory-venues";
+import { venueWithBranches } from "~/lib/menus-directory";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -65,7 +66,10 @@ export default async function HomePage() {
   ]);
 
   const isLocal = local !== null && local.count > 0;
-  const nearby = isLocal ? venues.filter((v) => v.countryCode === local.code) : venues;
+  // A chain shows its branches in the visitor's country.
+  const nearby = isLocal
+    ? venues.flatMap((v) => venueWithBranches(v, (b) => b.countryCode === local.code) ?? [])
+    : venues;
   // Featured first; the sort keeps name order otherwise.
   const shown = [...nearby]
     .sort((a, b) => Number(b.featured) - Number(a.featured))

@@ -6,12 +6,14 @@ import { Link } from "~/i18n/navigation";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { VenueTypeIcon } from "~/components/shared/VenueTypeIcon";
 import { cn } from "~/lib/utils";
-import type { DirectoryVenue } from "~/lib/menus-directory";
+import { venueHref, type DirectoryVenue } from "~/lib/menus-directory";
 
 /**
  * A venue on the Menus page: a strip of its own dish photos, so guests see
  * the food before they open the menu, then its name, type, place, whether
  * it's open and the languages its menu is in. The whole card is one link.
+ * A chain's card covers the branches in view: "2 branches · Bursa, Ankara"
+ * and "Open now at 1 branch", or one branch's own place, hours and page.
  */
 export function MenuCard({
   venue,
@@ -27,11 +29,35 @@ export function MenuCard({
 }) {
   const t = useTranslations("MenusPage");
   const kind = [venue.typeLabel, venue.cuisine].filter(Boolean).join(" · ");
-  const place = [venue.city, hideCountry ? null : venue.country].filter(Boolean).join(", ");
+  const { branches } = venue;
+  const single = branches.length === 1 ? branches[0]! : null;
+  const unique = (values: (string | null)[]) => [...new Set(values.filter((v): v is string => !!v))];
+
+  let place: string;
+  let open: { isOpen: boolean; label: string } | null;
+  if (single) {
+    place = [single.city, hideCountry ? null : single.country].filter(Boolean).join(", ");
+    open = single.open;
+  } else {
+    // Their cities, or their countries when no city is set.
+    const cities = unique(branches.map((b) => b.city));
+    const names = cities.length > 0 ? cities : hideCountry ? [] : unique(branches.map((b) => b.country));
+    place = names.length
+      ? t("branchesPlace", { count: branches.length, places: names.slice(0, 3).join(", ") })
+      : t("branchesCount", { count: branches.length });
+    const withHours = branches.filter((b) => b.open);
+    const openCount = withHours.filter((b) => b.open!.isOpen).length;
+    open =
+      withHours.length === 0
+        ? null
+        : openCount > 0
+          ? { isOpen: true, label: t("openAtBranches", { count: openCount }) }
+          : { isOpen: false, label: t("closedAtBranches") };
+  }
 
   return (
     <Link
-      href={`/${venue.slug}`}
+      href={venueHref(venue)}
       className={cn(
         "group bg-card text-card-foreground border-border flex flex-col overflow-hidden rounded-2xl border shadow-sm transition-shadow hover:shadow-md",
         "focus-visible:ring-ring outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
@@ -63,11 +89,11 @@ export function MenuCard({
         )}
 
         <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">
-          {venue.open && (
+          {open && (
             <span
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium",
-                venue.open.isOpen
+                open.isOpen
                   ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
                   : "bg-muted text-muted-foreground",
               )}
@@ -75,11 +101,11 @@ export function MenuCard({
               <span
                 className={cn(
                   "h-1.5 w-1.5 rounded-full",
-                  venue.open.isOpen ? "bg-emerald-500" : "bg-muted-foreground/60",
+                  open.isOpen ? "bg-emerald-500" : "bg-muted-foreground/60",
                 )}
                 aria-hidden
               />
-              {venue.open.label}
+              {open.label}
             </span>
           )}
           {venue.dishCount > 0 && (
