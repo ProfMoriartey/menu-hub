@@ -4,6 +4,7 @@ import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { and, count, eq, isNotNull, lte, ne, sql } from "drizzle-orm";
 import { db } from "~/server/db";
 import { categories, menuItems, restaurants } from "~/server/db/schema";
+import { MAIN_BRANCH, withMainBranch } from "~/server/branches";
 
 /*
  * Reads for the public restaurant pages (menu, about, item), cached across
@@ -41,16 +42,20 @@ const ITEM_COLUMNS = {
 } as const;
 
 /**
- * Restaurant row by slug, without relations or timestamps. React cache()
- * on top shares one lookup between the layout, the page and its metadata.
+ * Restaurant row by slug, with its main branch's location and without
+ * timestamps. React cache() on top shares one lookup between the layout,
+ * the page and its metadata.
  */
 export const getRestaurantBySlug = cache((slug: string) =>
   unstable_cache(
-    async () =>
-      (await db.query.restaurants.findFirst({
+    async () => {
+      const row = await db.query.restaurants.findFirst({
         where: eq(restaurants.slug, slug),
         columns: { createdAt: false, updatedAt: false },
-      })) ?? null,
+        with: MAIN_BRANCH,
+      });
+      return row ? withMainBranch(row) : null;
+    },
     ["public-restaurant", slug],
     { tags: [RESTAURANTS_TAG], revalidate: MAX_AGE_SECONDS },
   )(),
@@ -123,15 +128,12 @@ export const getMenusDirectory = cache(
           logoUrl: true,
           typeOfEstablishment: true,
           foodType: true,
-          city: true,
-          country: true,
           isDisplayed: true,
-          openingHours: true,
-          timeZone: true,
           multilingualEnabled: true,
           mainLanguage: true,
           extraLanguages: true,
         },
+        with: MAIN_BRANCH,
       });
 
       const ranked = db
@@ -164,7 +166,7 @@ export const getMenusDirectory = cache(
           .groupBy(menuItems.restaurantId),
       ]);
 
-      return venues.map((venue) => ({
+      return venues.map(withMainBranch).map((venue) => ({
         ...venue,
         photos: photos
           .filter((p) => p.restaurantId === venue.id && p.imageUrl)

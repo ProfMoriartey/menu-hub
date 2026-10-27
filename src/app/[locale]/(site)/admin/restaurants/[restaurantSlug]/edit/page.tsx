@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
+import { MAIN_BRANCH, withMainBranch } from "~/server/branches";
 import { updateRestaurant } from "~/app/actions/restaurant";
 import { AdminRestaurantForm } from "~/components/admin/restaurant-form/AdminRestaurantForm";
 import { countryOptions } from "~/lib/countries";
@@ -19,10 +20,12 @@ export default async function EditRestaurantPage({
 }) {
   const { restaurantSlug } = await params;
 
-  const row = await db.query.restaurants.findFirst({
+  const found = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
+    with: MAIN_BRANCH,
   });
-  if (!row) notFound();
+  if (!found) notFound();
+  const row = withMainBranch(found);
 
   const restaurant: Restaurant = {
     ...row,

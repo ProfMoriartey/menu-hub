@@ -8,6 +8,7 @@ import { after, NextResponse, type NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
+import { MAIN_BRANCH, withMainBranch } from "~/server/branches";
 import { isUuid } from "~/lib/slug";
 import { isLikelyBot, recordScan } from "~/server/qr-scans";
 
@@ -20,12 +21,14 @@ export async function GET(
 ) {
   const { restaurantId } = await params;
 
-  const restaurant = isUuid(restaurantId)
+  const row = isUuid(restaurantId)
     ? await db.query.restaurants.findFirst({
         where: eq(restaurants.id, restaurantId),
-        columns: { id: true, slug: true, timeZone: true },
+        columns: { id: true, slug: true },
+        with: MAIN_BRANCH,
       })
     : undefined;
+  const restaurant = row && withMainBranch(row);
 
   // No language prefix: the next-intl middleware picks the guest's language
   // on the next request. A deleted restaurant goes to the restaurant list.

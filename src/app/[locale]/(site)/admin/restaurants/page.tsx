@@ -1,6 +1,7 @@
 // app/admin/restaurants/page.tsx
 import { Plus } from "lucide-react";
 import { db } from "~/server/db";
+import { MAIN_BRANCH, withMainBranch } from "~/server/branches";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { RestaurantManagementClient } from "~/components/admin/RestaurantManagementClient";
@@ -15,10 +16,11 @@ export default async function AdminRestaurantsPage() {
   // items are loaded on each restaurant's own admin pages.
   const rawRestaurants = await db.query.restaurants.findMany({
     orderBy: (restaurants, { asc }) => [asc(restaurants.name)],
+    with: MAIN_BRANCH,
   });
 
   // 🛑 FIX: Map through the raw results and cast the JSONB fields
-  const allRestaurants: Restaurant[] = rawRestaurants.map((restaurant) => ({
+  const allRestaurants: Restaurant[] = rawRestaurants.map(withMainBranch).map((restaurant) => ({
     ...restaurant,
     categories: [],
     socialMedia: restaurant.socialMedia as SocialMediaLinks,

@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
+import { MAIN_BRANCH, withMainBranch } from "~/server/branches";
 import { getShareLinks } from "~/server/public-origin";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
 import { SharePanel } from "~/components/share/SharePanel";
@@ -16,10 +17,12 @@ export default async function AdminSharePage({
 }) {
   const { restaurantSlug } = await params;
 
-  const restaurant = await db.query.restaurants.findFirst({
+  const row = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
+    with: MAIN_BRANCH,
   });
-  if (!restaurant) notFound();
+  if (!row) notFound();
+  const restaurant = withMainBranch(row);
 
   const [{ menuUrl, permanentUrl }, scanStats] = await Promise.all([
     getShareLinks(restaurant),

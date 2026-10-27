@@ -6,6 +6,7 @@ import { menuItems, restaurants } from "~/server/db/schema";
 import { deleteUploadedFiles } from "~/server/uploads";
 import { and, eq, ne } from "drizzle-orm";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
+import { MAIN_BRANCH, saveMainBranch } from "~/server/branches";
 import type { ZodIssue } from "zod";
 import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
@@ -59,6 +60,28 @@ const readRestaurantFields = (formData: FormData) => ({
 // The id comes from the request target, never from the submitted fields.
 const restaurantFields = restaurantSchema.omit({ id: true });
 
+// Validated restaurant fields, split into the restaurant's own and those
+// that live on its main branch (server/branches).
+const splitLocation = <T extends Record<string, unknown>>({
+  address,
+  city,
+  country,
+  phoneNumber,
+  mapUrl,
+  deliveryApps,
+  ...restaurant
+}: T & {
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  phoneNumber?: string | null;
+  mapUrl?: string | null;
+  deliveryApps?: unknown;
+}) => ({
+  restaurant,
+  location: { address, city, country, phoneNumber, mapUrl, deliveryApps },
+});
+
 // The forms validate first, so this mostly catches a bad slug sent by hand.
 const invalidInput = (issues: ZodIssue[]) =>
   new ActionError(issues.some((issue) => issue.path[0] === "slug") ? "slugInvalid" : "invalidInput");
@@ -88,7 +111,14 @@ export async function addRestaurant(formData: FormData): Promise<ActionResult> {
       throw new ActionError("slugTaken");
     }
 
-    await db.insert(restaurants).values(data);
+    const { restaurant, location } = splitLocation(data);
+    await db.transaction(async (tx) => {
+      const [created] = await tx
+        .insert(restaurants)
+        .values(restaurant)
+        .returning({ id: restaurants.id });
+      await saveMainBranch(tx, created!.id, location);
+    });
     revalidatePublicRestaurant();
   });
 }
@@ -134,7 +164,7 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
 
     const submitted = { id: restaurantId, ...readRestaurantFields(formData) };
 
-    const current = await db.query.restaurants.findFirst({
+    const row = await db.query.restaurants.findFirst({
       where: eq(restaurants.id, restaurantId),
       columns: {
         logoUrl: true,
@@ -145,15 +175,17 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
         currency: true,
         theme: true,
         typeOfEstablishment: true,
-        country: true,
         foodType: true,
         metaTitle: true,
         metaDescription: true,
         ogImage: true,
       },
+      with: { branches: { ...MAIN_BRANCH.branches, columns: { country: true } } },
     });
-    if (!current) throw new ActionError("restaurantNotFound");
-    const { logoUrl: previousLogoUrl, ...adminOnly } = current;
+    if (!row) throw new ActionError("restaurantNotFound");
+    const { branches: [mainBranch], logoUrl: previousLogoUrl, ...restaurantAdminOnly } = row;
+    // The country, on the main branch, is admin-only too.
+    const adminOnly = { ...restaurantAdminOnly, country: mainBranch?.country ?? null };
 
     // Owners edit what their dashboard shows (name, address, contact, logo,
     // links). The slug, visibility, theme, cuisine and SEO settings stay
@@ -178,10 +210,14 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
       throw new ActionError("slugTaken");
     }
 
-    await db
-      .update(restaurants)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(restaurants.id, restaurantId));
+    const { restaurant, location } = splitLocation(data);
+    await db.transaction(async (tx) => {
+      await tx
+        .update(restaurants)
+        .set({ ...restaurant, updatedAt: new Date() })
+        .where(eq(restaurants.id, restaurantId));
+      await saveMainBranch(tx, restaurantId, location);
+    });
 
     // A replaced or removed logo / share image leaves its old file behind.
     await deleteUploadedFiles([

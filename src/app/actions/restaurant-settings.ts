@@ -10,6 +10,7 @@ import { isValidTimeZone, parseOpeningHours } from "~/lib/opening-hours";
 import { parseColorTheme } from "~/lib/color-theme";
 import { isMenuDesign } from "~/lib/menu-design";
 import { runAction } from "~/server/run-action";
+import { saveMainBranch } from "~/server/branches";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
 
 /*
@@ -32,14 +33,10 @@ export async function updateOpeningHours(
     const hours = input.hours === null ? null : parseOpeningHours(input.hours);
     if (input.hours !== null && !hours) throw new ActionError("invalidHours");
 
-    await db
-      .update(restaurants)
-      .set({
-        timeZone: input.timeZone,
-        openingHours: hours,
-        updatedAt: new Date(),
-      })
-      .where(eq(restaurants.id, restaurantId));
+    await saveMainBranch(db, restaurantId, {
+      timeZone: input.timeZone,
+      openingHours: hours,
+    });
     revalidatePublicRestaurant(restaurantId);
   });
 }
