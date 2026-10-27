@@ -164,6 +164,28 @@
   --sidebar-ring: oklch(80.52% 0.177 82.8); /* amber-400 */
 }
 
+/* Rows that scroll sideways (chips, category bars) without a scrollbar. */
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* A slim, quiet scrollbar for small scrolling boxes like the demo phone. */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, currentColor 25%, transparent) transparent;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: color-mix(in oklch, currentColor 25%, transparent);
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

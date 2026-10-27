@@ -203,7 +203,7 @@ function DishSheetContent({
           <X className="h-4 w-4" aria-hidden />
         </DialogPrimitive.Close>
 
-        <div className="overflow-y-auto overscroll-contain">
+        <div className="scrollbar-thin overflow-y-auto overscroll-contain">
           {item.imageUrl && (
             <div className="relative aspect-[4/3] w-full">
               <Image
