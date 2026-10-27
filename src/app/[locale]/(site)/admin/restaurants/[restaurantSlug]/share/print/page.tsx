@@ -3,13 +3,15 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
-import { getShareLinks } from "~/server/public-origin";
+import { tableCardFor } from "~/server/share-card";
 import { TableCardSheet } from "~/components/share/TableCardSheet";
 
 export default async function AdminPrintCardsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ restaurantSlug: string }>;
+  searchParams: Promise<{ branch?: string | string[] }>;
 }) {
   const { restaurantSlug } = await params;
 
@@ -18,11 +20,14 @@ export default async function AdminPrintCardsPage({
   });
   if (!restaurant) notFound();
 
-  const { menuUrl, permanentUrl } = await getShareLinks(restaurant);
+  const { menuUrl, permanentUrl, name } = await tableCardFor(
+    restaurant,
+    (await searchParams).branch,
+  );
 
   return (
     <TableCardSheet
-      restaurant={restaurant}
+      restaurant={{ ...restaurant, name }}
       menuUrl={menuUrl}
       permanentUrl={permanentUrl}
       backHref={`/admin/restaurants/${restaurant.slug}/share`}

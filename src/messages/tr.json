@@ -46,7 +46,9 @@
       "countryLabel": "Ülke",
       "locationLabel": "Konum",
       "addressLabel": "Adres",
-      "getDirections": "Yol Tarifi Al"
+      "getDirections": "Yol Tarifi Al",
+      "branchesHeading": "Şubeler",
+      "branchDetails": "Saatler ve bilgiler"
     },
   "Dashboard": {
     "title": "Atanmış Menüleriniz",
@@ -368,7 +370,11 @@
     "scanCount": "{count, plural, =0 {Okutma yok} other {# okutma}}",
     "dayColumn": "Gün",
     "scansColumn": "Okutma",
-    "scansNote": "Yalnızca QR kod okutmaları sayılır, yazılan bağlantıdan gelen ziyaretler sayılmaz. Aynı telefondan 30 dakika içindeki tekrar okutmalar bir kez sayılır ve sohbet uygulamalarındaki bağlantı önizlemeleri sayılmaz. Günler UTC saatine göredir. Hiçbir kişisel veri saklanmaz."
+    "scansNote": "Yalnızca QR kod okutmaları sayılır, yazılan bağlantıdan gelen ziyaretler sayılmaz. Aynı telefondan 30 dakika içindeki tekrar okutmalar bir kez sayılır ve sohbet uygulamalarındaki bağlantı önizlemeleri sayılmaz. Günler UTC saatine göredir. Hiçbir kişisel veri saklanmaz.",
+    "targetLabel": "Kod ve bağlantı",
+    "targetAll": "Tüm restoran: misafirler şube seçer",
+    "targetUnnamed": "Ana şube",
+    "targetHint": "Bir şubenin kodu, adresi ve saatleriyle o şubenin sayfasını açar. O şubenin masalarında kullanın."
   },
   "Availability": {
     "label": "Durum",
@@ -454,7 +460,13 @@
     "filterLabel": "{count, plural, =0 {Beslenme filtreleri} other {Beslenme filtreleri, # seçili}}",
     "closeDish": "Kapat",
     "ingredients": "İçindekiler",
-    "dishPage": "Ürün sayfasını aç"
+    "dishPage": "Ürün sayfasını aç",
+    "chooseBranch": "{count} şubeden birini seçin",
+    "branchPickerTitle": "{name} şubeleri",
+    "branchPickerIntro": "Menü tüm şubelerde aynıdır. Adresini, saatlerini ve iletişim bilgilerini görmek için birini seçin.",
+    "allBranches": "Tüm şubeler",
+    "mainBranch": "Ana şube",
+    "branchTitle": "{name} – {branch}"
   },
   "Team": {
     "inviteTitle": "Editör davet edin",

@@ -1,10 +1,10 @@
 // src/server/public-menu.ts
 import { cache } from "react";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
-import { and, count, eq, isNotNull, lte, ne, sql } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull, lte, ne, sql } from "drizzle-orm";
 import { db } from "~/server/db";
-import { categories, menuItems, restaurants } from "~/server/db/schema";
-import { MAIN_BRANCH, withMainBranch } from "~/server/branches";
+import { branches, categories, menuItems, restaurants } from "~/server/db/schema";
+import { LOCATION_COLUMNS, MAIN_BRANCH, withMainBranch } from "~/server/branches";
 
 /*
  * Reads for the public restaurant pages (menu, about, item), cached across
@@ -58,6 +58,20 @@ export const getRestaurantBySlug = cache((slug: string) =>
     },
     ["public-restaurant", slug],
     { tags: [RESTAURANTS_TAG], revalidate: MAX_AGE_SECONDS },
+  )(),
+);
+
+/** The restaurant's branches, main branch first, with where each one is. */
+export const getPublicBranches = cache((restaurantId: string) =>
+  unstable_cache(
+    () =>
+      db.query.branches.findMany({
+        where: eq(branches.restaurantId, restaurantId),
+        orderBy: [asc(branches.order), asc(branches.createdAt)],
+        columns: { id: true, name: true, slug: true, ...LOCATION_COLUMNS },
+      }),
+    ["public-branches", restaurantId],
+    { tags: [menuTag(restaurantId)], revalidate: MAX_AGE_SECONDS },
   )(),
 );
 

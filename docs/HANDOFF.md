@@ -91,6 +91,9 @@ comes from Clerk). `src/env.js` validates the server ones and
                       Gives the browser only CLIENT_NAMESPACES translations.
     page.tsx          the menu (hidden items excluded)
     about/, item/[itemSlug]/   (id-based item URLs permanently redirect to slugs)
+    [branchSlug]/, [branchSlug]/about/   a branch's menu and about page
+    _pages/           menu-page, about-page: shared by the restaurant's and
+                      the branch's routes (server/public-branch picks the branch)
   (site)/             every other page. layout.tsx adds ClerkProvider, all
                       translations, UploadThing's NextSSRPlugin, Navbar
     page.tsx, menus/, features/, about/        public marketing + directory
@@ -191,7 +194,7 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 | Table | Notes |
 |---|---|
 | `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
-| `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card; the public pages, Menus page and QR scans still read only the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
+| `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card. Public pages per branch (see Branch pages); the Menus page still reads only the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
 | `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
 | `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
@@ -418,6 +421,20 @@ A name is required once there are two; the slug follows the name (unique
 per restaurant, never `about` or `item`). The restaurant forms no longer
 have address, contact or delivery fields; a new restaurant gets an empty
 branch and the admin form goes on to its edit page.
+
+**Branch pages:** with one branch, `/lokanta` and `/lokanta/about` show it
+and `/lokanta/<branch>` redirects there. With several, `/lokanta` is the
+whole restaurant: no hours or map in the menu header, a `BranchPicker`
+("Choose from N branches") under the name, and the about page lists every
+branch (address, open now, phone, directions) instead of one address;
+delivery links and hours are on each branch's page. `/lokanta/kadikoy`
+and `/lokanta/kadikoy/about` show that branch, with the picker to switch.
+Item pages stay `/lokanta/item/<dish>`. Titles become "Lokanta – Kadıköy";
+the restaurant page's structured data lists branches as `department`;
+the sitemap lists branch pages. `/r/<id>` takes a restaurant or a branch
+id; Share has a "Code and link for" choice (whole restaurant or a branch),
+and the print page takes `?branch=<id>`. Scans are still counted per
+restaurant (on the branch's day); a per-branch count needs a migration.
 
 **Opening hours:** per branch, `components/restaurant-settings/OpeningHoursSettings`
 inside each branch of the Branches card (`actions/branches.updateBranchHours`). Up to 3 ranges a day; a close time before

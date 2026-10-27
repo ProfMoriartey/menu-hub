@@ -46,7 +46,9 @@
       "countryLabel": "Country",
       "locationLabel": "Location",
       "addressLabel": "Address",
-      "getDirections": "Get Directions"
+      "getDirections": "Get Directions",
+      "branchesHeading": "Branches",
+      "branchDetails": "Hours and details"
   },
   "Dashboard": {
     "title": "Your Assigned Menus",
@@ -368,7 +370,11 @@
     "scanCount": "{count, plural, =0 {No scans} one {# scan} other {# scans}}",
     "dayColumn": "Day",
     "scansColumn": "Scans",
-    "scansNote": "Counts scans of the QR code only, not visits from the typed link. Repeat scans from the same phone within 30 minutes count once, and link previews in chat apps aren't counted. Days follow UTC time. No personal data is stored."
+    "scansNote": "Counts scans of the QR code only, not visits from the typed link. Repeat scans from the same phone within 30 minutes count once, and link previews in chat apps aren't counted. Days follow UTC time. No personal data is stored.",
+    "targetLabel": "Code and link for",
+    "targetAll": "The whole restaurant: guests choose a branch",
+    "targetUnnamed": "Main branch",
+    "targetHint": "A branch's code opens that branch's page, with its address and hours. Use it on that branch's tables."
   },
   "Availability": {
     "label": "Availability",
@@ -454,7 +460,13 @@
     "filterLabel": "{count, plural, =0 {Dietary filters} one {Dietary filters, # selected} other {Dietary filters, # selected}}",
     "closeDish": "Close",
     "ingredients": "Ingredients",
-    "dishPage": "Open the dish page"
+    "dishPage": "Open the dish page",
+    "chooseBranch": "Choose from {count} branches",
+    "branchPickerTitle": "{name}'s branches",
+    "branchPickerIntro": "The menu is the same at every branch. Pick one to see its address, hours and contact details.",
+    "allBranches": "All branches",
+    "mainBranch": "Main branch",
+    "branchTitle": "{name} – {branch}"
   },
   "Team": {
     "inviteTitle": "Invite an editor",

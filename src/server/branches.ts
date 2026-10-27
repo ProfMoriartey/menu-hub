@@ -22,7 +22,7 @@ export interface BranchLocation {
   openingHours: OpeningHours | null;
 }
 
-const LOCATION_COLUMNS = {
+export const LOCATION_COLUMNS = {
   address: true,
   city: true,
   country: true,
@@ -33,7 +33,7 @@ const LOCATION_COLUMNS = {
   openingHours: true,
 } satisfies Record<keyof BranchLocation, true>;
 
-const EMPTY_LOCATION: BranchLocation = {
+export const EMPTY_LOCATION: BranchLocation = {
   address: null,
   city: null,
   country: null,
