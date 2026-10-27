@@ -2,20 +2,19 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Clock, Globe, Languages, MapPin, Navigation, Search, SearchX, X } from "lucide-react";
+import { Globe, Navigation, Search, SearchX, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import { VenueTypeIcon } from "~/components/shared/VenueTypeIcon";
 import { MenuCard } from "~/components/menus/MenuCard";
 import { DishResults } from "~/components/menus/DishResults";
+import {
+  ActiveFilterPills,
+  FilterSheetButton,
+  InlineFilters,
+  type FilterModel,
+  type FilterOption,
+} from "~/components/menus/DirectoryFilters";
 import { searchDishes, type DishResult } from "~/app/actions/search";
 import { LANGUAGE_NAMES, isMenuLanguage } from "~/lib/menu-languages";
 import { VENUE_TYPES, type VenueType } from "~/lib/venue-types";
@@ -33,18 +32,15 @@ export interface DirectoryFilters {
   query: string;
   // A venue type key, or "" for all.
   type: string;
+  // A country key (countryKey), or "" for all. Only when not local.
+  country: string;
   // A folded city name (foldText), or "" for all.
   city: string;
   openNow: boolean;
   inMyLanguage: boolean;
 }
 
-// An unpressed chip; on hover it takes the accent colour and its text.
-const CHIP_IDLE =
-  "border-border bg-card hover:border-accent hover:bg-accent hover:text-accent-foreground";
-
-const NO_FILTERS = { type: "", city: "", openNow: false, inMyLanguage: false };
-const ALL_CITIES = "all";
+const NO_FILTERS = { type: "", country: "", city: "", openNow: false, inMyLanguage: false };
 const SEARCH_DELAY_MS = 250;
 
 type DishSearch =
@@ -53,12 +49,34 @@ type DishSearch =
   | { state: "done"; results: DishResult[] }
   | { state: "error" };
 
+// Countries stored as codes match by code; older typed names by their text.
+const countryKey = (v: DirectoryVenue, locale: string) =>
+  v.countryCode ?? (v.country ? `~${foldText(v.country, locale)}` : null);
+
+/** Counts venues by a key, as options sorted by name in `locale`. */
+function optionsBy(
+  venues: DirectoryVenue[],
+  pick: (v: DirectoryVenue) => { key: string; name: string } | null,
+  locale: string,
+): FilterOption[] {
+  const found = new Map<string, FilterOption>();
+  for (const v of venues) {
+    const picked = pick(v);
+    if (!picked) continue;
+    const entry = found.get(picked.key) ?? { ...picked, count: 0 };
+    entry.count++;
+    found.set(picked.key, entry);
+  }
+  const collator = new Intl.Collator(locale);
+  return [...found.values()].sort((a, b) => collator.compare(a.name, b.name));
+}
+
 /**
- * The Menus page: every live venue, filtered by type, city, open now and
- * menu language, with one search box that finds both places and dishes
- * across all menus. Visitors start with menus from their own country (when
- * it has any) and can switch to everywhere. Filters are kept in the
- * address, so a shared link or the back button brings them back.
+ * The Menus page: every live venue, filtered by type, country, city, open
+ * now and menu language, with one search box that finds both places and
+ * dishes across all menus. Visitors start with menus from their own
+ * country (when it has any) and can switch to everywhere. Filters are kept
+ * in the address, so a shared link or the back button brings them back.
  */
 export function MenusDirectory({
   venues: allVenues,
@@ -90,8 +108,8 @@ export function MenusDirectory({
     () => (localCode ? allVenues.filter((v) => v.countryCode === localCode) : allVenues),
     [allVenues, localCode],
   );
-  // Cities differ from one scope to the other.
-  const setScope = (next: DirectoryScope) => update({ scope: next, city: "" });
+  // Countries and cities differ from one scope to the other.
+  const setScope = (next: DirectoryScope) => update({ scope: next, country: "", city: "" });
 
   // Only filters that match at least one venue are offered.
   const typeOptions = useMemo(() => {
@@ -108,20 +126,32 @@ export function MenusDirectory({
     }));
   }, [venues]);
 
-  const cityOptions = useMemo(() => {
-    const found = new Map<string, { name: string; count: number }>();
-    for (const v of venues) {
-      if (!v.city) continue;
-      const key = foldText(v.city, locale);
-      const entry = found.get(key) ?? { name: v.city, count: 0 };
-      entry.count++;
-      found.set(key, entry);
-    }
-    const collator = new Intl.Collator(locale);
-    return [...found.entries()]
-      .map(([key, value]) => ({ key, ...value }))
-      .sort((a, b) => collator.compare(a.name, b.name));
-  }, [venues, locale]);
+  const countryOptions = useMemo(
+    () =>
+      scope === "local"
+        ? []
+        : optionsBy(
+            venues,
+            (v) => {
+              const key = countryKey(v, locale);
+              return key && v.country ? { key, name: v.country } : null;
+            },
+            locale,
+          ),
+    [venues, scope, locale],
+  );
+  const country = countryOptions.some((o) => o.key === filters.country) ? filters.country : "";
+
+  // Cities of the chosen country only.
+  const cityOptions = useMemo(
+    () =>
+      optionsBy(
+        country ? venues.filter((v) => countryKey(v, locale) === country) : venues,
+        (v) => (v.city ? { key: foldText(v.city, locale), name: v.city } : null),
+        locale,
+      ),
+    [venues, country, locale],
+  );
 
   const anyHours = venues.some((v) => v.open);
   const myLanguage = isMenuLanguage(locale) ? locale : null;
@@ -133,10 +163,12 @@ export function MenusDirectory({
   const city = cityOptions.some((o) => o.key === filters.city) ? filters.city : "";
   const openNow = anyHours && filters.openNow;
   const inMyLanguage = anyInMyLanguage && filters.inMyLanguage;
-  const anyFilter = Boolean(type || city || openNow || inMyLanguage);
+  const activeCount = [type, country, city, openNow, inMyLanguage].filter(Boolean).length;
+  const anyFilter = activeCount > 0;
 
   const passesFilters = (v: DirectoryVenue) =>
     (!type || v.type === type) &&
+    (!country || countryKey(v, locale) === country) &&
     (!city || (v.city !== null && fold(v.city) === city)) &&
     (!openNow || Boolean(v.open?.isOpen)) &&
     (!inMyLanguage || (myLanguage !== null && v.languages.includes(myLanguage)));
@@ -150,6 +182,8 @@ export function MenusDirectory({
 
   const places = venues.filter((v) => passesFilters(v) && (!query || matchesQuery(v)));
   const featured = venues.filter((v) => v.featured);
+  // Every card would name the same country.
+  const hideCountry = scope === "local" || Boolean(country);
 
   // Dishes come from the server, a moment after typing stops. Only the
   // answer to the latest query is shown.
@@ -190,6 +224,7 @@ export function MenusDirectory({
     set("scope", filters.scope === defaultScope ? "" : filters.scope);
     set("q", filters.query.trim());
     set("type", filters.type);
+    set("country", filters.country);
     set("city", filters.city);
     set("open", filters.openNow ? "1" : "");
     set("lang", filters.inMyLanguage ? "1" : "");
@@ -206,6 +241,34 @@ export function MenusDirectory({
 
   const clearFilters = () => update(NO_FILTERS);
   const searching = query.length > 0;
+
+  const model: FilterModel = {
+    types: typeOptions,
+    type,
+    setType: (next) => update({ type: next }),
+    showOpenNow: anyHours,
+    openNow,
+    setOpenNow: (on) => update({ openNow: on }),
+    myLanguageName: anyInMyLanguage && myLanguage ? LANGUAGE_NAMES[myLanguage] : null,
+    inMyLanguage,
+    setInMyLanguage: (on) => update({ inMyLanguage: on }),
+    countries: countryOptions,
+    country,
+    // A city of another country would hide everything.
+    setCountry: (next) => update({ country: next, city: "" }),
+    cities: cityOptions,
+    city,
+    setCity: (next) => update({ city: next }),
+    activeCount,
+    clear: clearFilters,
+    resultCount: places.length,
+  };
+
+  const searchEverywhere = (
+    <Button variant="outline" onClick={() => setScope("global")}>
+      <Globe className="h-4 w-4" aria-hidden /> {t("searchEverywhere")}
+    </Button>
+  );
 
   return (
     <div className="space-y-8">
@@ -236,103 +299,37 @@ export function MenusDirectory({
           )
         )}
 
-        <form role="search" onSubmit={(e) => e.preventDefault()} className="relative">
-          <Search
-            className="text-muted-foreground pointer-events-none absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2"
-            aria-hidden
-          />
-          <Input
-            type="search"
-            value={filters.query}
-            onChange={(e) => update({ query: e.target.value })}
-            placeholder={t("searchPlaceholder")}
-            aria-label={t("searchLabel")}
-            enterKeyHint="search"
-            className="bg-card h-12 rounded-full ps-12 pe-12 text-base shadow-sm [&::-webkit-search-cancel-button]:hidden"
-          />
-          {filters.query && (
-            <button
-              type="button"
-              onClick={() => update({ query: "" })}
-              className="text-muted-foreground hover:bg-accent hover:text-accent-foreground absolute end-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full"
-              aria-label={t("clearSearch")}
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </form>
-
-        {typeOptions.length > 0 && (
-          <div
-            role="group"
-            aria-label={t("typeFilterLabel")}
-            className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 pb-1"
-          >
-            <Chip pressed={!type} onClick={() => update({ type: "" })}>
-              {t("allTypes")}
-            </Chip>
-            {typeOptions.map((option) => (
-              <Chip
-                key={option.type}
-                pressed={type === option.type}
-                onClick={() => update({ type: type === option.type ? "" : option.type })}
+        <div className="flex items-center gap-2">
+          <form role="search" onSubmit={(e) => e.preventDefault()} className="relative flex-1">
+            <Search
+              className="text-muted-foreground pointer-events-none absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2"
+              aria-hidden
+            />
+            <Input
+              type="search"
+              value={filters.query}
+              onChange={(e) => update({ query: e.target.value })}
+              placeholder={t("searchPlaceholder")}
+              aria-label={t("searchLabel")}
+              enterKeyHint="search"
+              className="bg-card h-12 rounded-full ps-12 pe-12 text-base shadow-sm [&::-webkit-search-cancel-button]:hidden"
+            />
+            {filters.query && (
+              <button
+                type="button"
+                onClick={() => update({ query: "" })}
+                className="text-muted-foreground hover:bg-accent hover:text-accent-foreground absolute end-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full"
+                aria-label={t("clearSearch")}
               >
-                <VenueTypeIcon type={option.type} className="h-4 w-4" />
-                {option.label}
-                <span className="opacity-60 tabular-nums">{option.count}</span>
-              </Chip>
-            ))}
-          </div>
-        )}
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </form>
+          <FilterSheetButton model={model} />
+        </div>
 
-        {(anyHours || anyInMyLanguage || cityOptions.length > 1) && (
-          <div className="flex flex-wrap items-center gap-2">
-            {anyHours && (
-              <Chip pressed={openNow} onClick={() => update({ openNow: !openNow })}>
-                <Clock className="h-4 w-4" aria-hidden />
-                {t("openNow")}
-              </Chip>
-            )}
-            {anyInMyLanguage && myLanguage && (
-              <Chip pressed={inMyLanguage} onClick={() => update({ inMyLanguage: !inMyLanguage })}>
-                <Languages className="h-4 w-4" aria-hidden />
-                {t("inLanguage", { language: LANGUAGE_NAMES[myLanguage] })}
-              </Chip>
-            )}
-            {cityOptions.length > 1 && (
-              <Select
-                value={city || ALL_CITIES}
-                onValueChange={(value) => update({ city: value === ALL_CITIES ? "" : value })}
-              >
-                <SelectTrigger
-                  aria-label={t("cityLabel")}
-                  className={cn(
-                    "h-9 w-auto gap-1.5 rounded-full px-3.5 text-sm font-medium transition-colors",
-                    city
-                      ? "border-primary bg-primary text-primary-foreground [&_svg]:!text-primary-foreground"
-                      : `${CHIP_IDLE} hover:[&_svg]:!text-accent-foreground`,
-                  )}
-                >
-                  <MapPin className="h-4 w-4" aria-hidden />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={ALL_CITIES}>{t("allCities")}</SelectItem>
-                  {cityOptions.map((option) => (
-                    <SelectItem key={option.key} value={option.key}>
-                      {option.name} ({option.count})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-            {anyFilter && (
-              <Button type="button" variant="ghost" size="sm" onClick={clearFilters}>
-                {t("clearFilters")}
-              </Button>
-            )}
-          </div>
-        )}
+        <ActiveFilterPills model={model} />
+        <InlineFilters model={model} />
       </div>
 
       <p className="sr-only" role="status" aria-live="polite">
@@ -348,7 +345,7 @@ export function MenusDirectory({
         <>
           {places.length > 0 && (
             <Section title={t("places")} count={places.length}>
-              <CardGrid venues={places} hideCountry={scope === "local"} />
+              <CardGrid venues={places} hideCountry={hideCountry} />
             </Section>
           )}
           {query.length >= MIN_DISH_QUERY && (
@@ -376,9 +373,7 @@ export function MenusDirectory({
                 title={t("noResults", { query })}
                 action={
                   scope === "local" ? (
-                    <Button variant="outline" onClick={() => setScope("global")}>
-                      <Globe className="h-4 w-4" aria-hidden /> {t("searchEverywhere")}
-                    </Button>
+                    searchEverywhere
                   ) : anyFilter ? (
                     <Button variant="outline" onClick={clearFilters}>
                       {t("clearFilters")}
@@ -398,7 +393,7 @@ export function MenusDirectory({
                     key={venue.id}
                     venue={venue}
                     priority={i < 2}
-                    hideCountry={scope === "local"}
+                    hideCountry={hideCountry}
                     className="w-[82%] shrink-0 snap-start sm:w-80"
                   />
                 ))}
@@ -407,7 +402,7 @@ export function MenusDirectory({
           )}
           <Section title={anyFilter ? t("matching") : t("allMenus")} count={places.length}>
             {places.length > 0 ? (
-              <CardGrid venues={places} hideCountry={scope === "local"} />
+              <CardGrid venues={places} hideCountry={hideCountry} />
             ) : (
               <EmptyState
                 title={t("noMatches")}
@@ -416,11 +411,7 @@ export function MenusDirectory({
                     <Button variant="outline" onClick={clearFilters}>
                       {t("clearFilters")}
                     </Button>
-                    {scope === "local" && (
-                      <Button variant="ghost" onClick={() => setScope("global")}>
-                        <Globe className="h-4 w-4" aria-hidden /> {t("searchEverywhere")}
-                      </Button>
-                    )}
+                    {scope === "local" && searchEverywhere}
                   </div>
                 }
               />
@@ -429,33 +420,6 @@ export function MenusDirectory({
         </>
       )}
     </div>
-  );
-}
-
-function Chip({
-  pressed,
-  onClick,
-  children,
-}: {
-  pressed: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={pressed}
-      onClick={onClick}
-      className={cn(
-        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium whitespace-nowrap transition-colors",
-        "focus-visible:ring-ring outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-        pressed
-          ? "border-primary bg-primary text-primary-foreground"
-          : CHIP_IDLE,
-      )}
-    >
-      {children}
-    </button>
   );
 }
 

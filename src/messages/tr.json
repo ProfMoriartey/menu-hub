@@ -976,6 +976,16 @@
     "scopeLabel": "Menülerin gösterileceği yer",
     "everywhere": "Her yer",
     "noLocalMenus": "{country} içinde henüz menü yok, bu yüzden her yerden menüler gösteriliyor.",
-    "searchEverywhere": "Her yerde ara"
+    "searchEverywhere": "Her yerde ara",
+    "countryLabel": "Ülke",
+    "allCountries": "Tüm ülkeler",
+    "filters": "Filtreler",
+    "filtersActive": "{count, plural, one {Filtreler, # filtre açık} other {Filtreler, # filtre açık}}",
+    "filtersDescription": "Menüleri türe, çalışma saatlerine, dile ve yere göre daraltın.",
+    "closeFilters": "Filtreleri kapat",
+    "showOnly": "Yalnızca göster",
+    "clearAll": "Tümünü temizle",
+    "showResults": "{count, plural, =0 {Eşleşen menü yok} one {# menüyü göster} other {# menüyü göster}}",
+    "removeFilter": "Filtreyi kaldır: {name}"
   }
 }

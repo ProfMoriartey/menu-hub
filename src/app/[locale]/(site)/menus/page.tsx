@@ -89,6 +89,7 @@ export default async function MenusPage({ searchParams }: { searchParams: Search
     scope: scopeParam === "local" || scopeParam === "global" ? scopeParam : defaultScope,
     query: one(params.q),
     type: one(params.type),
+    country: one(params.country),
     city: one(params.city),
     openNow: one(params.open) === "1",
     inMyLanguage: one(params.lang) === "1",

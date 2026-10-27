@@ -976,6 +976,16 @@
     "scopeLabel": "عرض القوائم من",
     "everywhere": "كل مكان",
     "noLocalMenus": "لا توجد قوائم في {country} بعد، لذا نعرض قوائم من كل مكان.",
-    "searchEverywhere": "ابحث في كل مكان"
+    "searchEverywhere": "ابحث في كل مكان",
+    "countryLabel": "البلد",
+    "allCountries": "كل البلدان",
+    "filters": "الفلاتر",
+    "filtersActive": "{count, plural, zero {الفلاتر} one {الفلاتر، فلتر واحد مفعّل} two {الفلاتر، فلتران مفعّلان} few {الفلاتر، # فلاتر مفعّلة} many {الفلاتر، # فلترًا مفعّلًا} other {الفلاتر، # فلتر مفعّل}}",
+    "filtersDescription": "حدّد القوائم حسب النوع وساعات العمل واللغة والمكان.",
+    "closeFilters": "إغلاق الفلاتر",
+    "showOnly": "اعرض فقط",
+    "clearAll": "مسح الكل",
+    "showResults": "{count, plural, =0 {لا توجد قوائم مطابقة} one {عرض قائمة واحدة} two {عرض قائمتين} few {عرض # قوائم} many {عرض # قائمة} other {عرض # قائمة}}",
+    "removeFilter": "إزالة الفلتر: {name}"
   }
 }

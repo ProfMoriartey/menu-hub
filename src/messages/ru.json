@@ -976,6 +976,16 @@
     "scopeLabel": "Показывать меню",
     "everywhere": "Везде",
     "noLocalMenus": "В стране «{country}» пока нет меню, поэтому показаны меню отовсюду.",
-    "searchEverywhere": "Искать везде"
+    "searchEverywhere": "Искать везде",
+    "countryLabel": "Страна",
+    "allCountries": "Все страны",
+    "filters": "Фильтры",
+    "filtersActive": "{count, plural, one {Фильтры, включён #} few {Фильтры, включено #} many {Фильтры, включено #} other {Фильтры, включено #}}",
+    "filtersDescription": "Отберите меню по типу, часам работы, языку и месту.",
+    "closeFilters": "Закрыть фильтры",
+    "showOnly": "Показывать только",
+    "clearAll": "Сбросить всё",
+    "showResults": "{count, plural, =0 {Нет подходящих меню} one {Показать # меню} few {Показать # меню} many {Показать # меню} other {Показать # меню}}",
+    "removeFilter": "Убрать фильтр: {name}"
   }
 }

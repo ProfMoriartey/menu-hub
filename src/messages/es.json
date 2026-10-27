@@ -976,6 +976,16 @@
     "scopeLabel": "Mostrar menús de",
     "everywhere": "Todas partes",
     "noLocalMenus": "Aún no hay menús en {country}, así que ves menús de todas partes.",
-    "searchEverywhere": "Buscar en todas partes"
+    "searchEverywhere": "Buscar en todas partes",
+    "countryLabel": "País",
+    "allCountries": "Todos los países",
+    "filters": "Filtros",
+    "filtersActive": "{count, plural, one {Filtros, # activo} other {Filtros, # activos}}",
+    "filtersDescription": "Filtra los menús por tipo, horario, idioma y lugar.",
+    "closeFilters": "Cerrar filtros",
+    "showOnly": "Mostrar solo",
+    "clearAll": "Quitar todo",
+    "showResults": "{count, plural, =0 {Ningún menú coincide} one {Ver # menú} other {Ver # menús}}",
+    "removeFilter": "Quitar filtro: {name}"
   }
 }

@@ -9,7 +9,7 @@ import { localizeItem } from "~/server/localize-menu";
 import { formatPrice } from "~/lib/format-price";
 import { menuLanguagesOf } from "~/lib/menu-languages";
 import { MIN_DISH_QUERY } from "~/lib/menus-directory";
-import { FOLD_FROM, FOLD_TO, foldText } from "~/lib/fold-text";
+import { FOLD_FROM, FOLD_TO, droppedMarksClass, foldText } from "~/lib/fold-text";
 
 export interface DishResult {
   id: string;
@@ -29,10 +29,11 @@ const MAX_RESULTS = 60;
 const likePattern = (text: string) =>
   `%${text.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
 
-// The column's text folded like the query (lib/fold-text), so accents and
+// The column's text folded like the query (lib/fold-text): lower case,
+// decomposed, accent marks removed, then the letter table. So accents and
 // letter variants don't stop a match.
 const folded = (column: SQL | AnyColumn) =>
-  sql`translate(lower(${column}), ${FOLD_FROM}, ${FOLD_TO})`;
+  sql`translate(regexp_replace(normalize(lower(${column}), NFD), ${droppedMarksClass()}, '', 'g'), ${FOLD_FROM}, ${FOLD_TO})`;
 
 /**
  * Dishes on any live menu (or those in `country`) whose name or description contains `query`, in

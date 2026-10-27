@@ -462,8 +462,12 @@ here rather than on Features. Texts: `aboutPage` messages.
 **Menus page** (`/menus`, was `/restaurants`, which redirects): every live
 venue as a card with a strip of its first three dish photos, logo, venue
 type and cuisine, city and country, open/closed now and menu languages.
-Filters: type chips, open now, "menu in my language", city (each shown
-only when some venue matches); a featured row when nothing is filtered.
+Filters: type, open now, "menu in my language", country (only when not
+local) and its cities, each shown only when some venue matches; a
+featured row when nothing is filtered. Wider screens show them inline
+(chips and dropdowns); phones get a Filters button beside the search that
+opens a bottom sheet, with the filters in use as removable pills
+(`components/menus/DirectoryFilters.tsx`).
 Visitors start with menus from their own country when it has any (a
 Local / Everywhere toggle; `server/visitor-country.ts` reads the host's IP
 country header, `x-vercel-ip-country` or `cf-ipcountry`, no permission
@@ -472,15 +476,18 @@ search follow the chosen scope.
 One search box matches places on the page and dishes on the server
 (`searchDishes` in `app/actions/search.ts`: names and descriptions in any
 menu language, localized names and prices, sold-out marked, links to the
-item page). Filters live in the address (`?q=&type=&city=&open=1&lang=1`).
+item page). Filters live in the address (`?q=&type=&country=&city=&open=1&lang=1&scope=`).
 The directory data (`getMenusDirectory`) is cached and cleared by both
 revalidate helpers; open status is worked out per request
 (`describeOpenStatus` in `components/public/OpeningHours`). Venue type and
 country are admin fields (pickers); city is edited by owners too. Texts:
-`MenusPage` messages. Search ignores case and accents on both sides with
-one table (`lib/fold-text.ts`: `foldText` in the browser, `translate()` in
-SQL; covers Latin and Turkish accents, Arabic alef/hamza forms and short
-vowels, ё).
+`MenusPage` messages. Search ignores case and accents in every language
+(`lib/fold-text.ts`): text is decomposed (NFD) and every combining mark
+dropped, plus a small table for letters that don't decompose (ı, ø, ł, ß,
+ة, ى, …). Marks are kept where they are vowels (Indic and Southeast Asian
+scripts, Japanese voicing marks). The browser runs `foldText`; SQL runs
+`normalize` + `regexp_replace(droppedMarksClass())` + `translate`, checked
+to give identical results on every dish text.
 
 **Search engines and link previews:** menu, about and item pages have their
 own title, description, preview image (admin SEO fields first, then

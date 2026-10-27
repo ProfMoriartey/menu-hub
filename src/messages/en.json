@@ -976,6 +976,16 @@
     "scopeLabel": "Show menus from",
     "everywhere": "Everywhere",
     "noLocalMenus": "There are no menus in {country} yet, so these are from everywhere.",
-    "searchEverywhere": "Search everywhere"
+    "searchEverywhere": "Search everywhere",
+    "countryLabel": "Country",
+    "allCountries": "All countries",
+    "filters": "Filters",
+    "filtersActive": "{count, plural, one {Filters, # in use} other {Filters, # in use}}",
+    "filtersDescription": "Narrow the menus by type, opening hours, language and place.",
+    "closeFilters": "Close filters",
+    "showOnly": "Show only",
+    "clearAll": "Clear all",
+    "showResults": "{count, plural, =0 {No menus match} one {Show # menu} other {Show # menus}}",
+    "removeFilter": "Remove filter: {name}"
   }
 }
