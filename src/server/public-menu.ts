@@ -138,7 +138,9 @@ export const getMenusDirectory = cache(
         .select({
           restaurantId: menuItems.restaurantId,
           imageUrl: menuItems.imageUrl,
-          rank: sql<number>`row_number() over (partition by ${menuItems.restaurantId} order by ${categories.order}, ${menuItems.order})`.as(
+          // Each photo once (dishes can share one), placed where it first
+          // appears in the menu.
+          rank: sql<number>`row_number() over (partition by ${menuItems.restaurantId} order by min(${categories.order}), min(${menuItems.order}))`.as(
             "rank",
           ),
         })
@@ -147,6 +149,7 @@ export const getMenusDirectory = cache(
         .where(
           and(isNotNull(menuItems.imageUrl), ne(menuItems.availability, "hidden")),
         )
+        .groupBy(menuItems.restaurantId, menuItems.imageUrl)
         .as("ranked");
       const [photos, dishCounts] = await Promise.all([
         db

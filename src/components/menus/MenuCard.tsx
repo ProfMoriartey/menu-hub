@@ -120,7 +120,8 @@ function PhotoStrip({ venue, priority }: { venue: DirectoryVenue; priority?: boo
     >
       {photos.map((src, i) => (
         <div
-          key={src}
+          // By position: two dishes may share a photo.
+          key={i}
           className={cn(
             "relative overflow-hidden",
             photos.length === 3 && (i === 0 ? "col-span-2 row-span-2" : "col-span-1"),

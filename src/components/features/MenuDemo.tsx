@@ -11,6 +11,7 @@ import {
 } from "~/components/public/MenuItemCard";
 import { DishSheetInPlaceProvider } from "~/components/public/DishSheet";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
+import { useTheme } from "~/context/ThemeContext";
 import { PRESETS, paletteTokens, type ThemeMode } from "~/lib/color-theme";
 import { DEMO_RESTAURANT } from "~/lib/demo-menu";
 import {
@@ -91,7 +92,10 @@ export function MenuDemo({
 
   const [design, setDesign] = useState<MenuDesign>("classic");
   const [preset, setPreset] = useState(PRESETS[0]!.id);
-  const [mode, setMode] = useState<ThemeMode>("light");
+  // Light or dark like the page, until a visitor picks one with the controls.
+  const { theme: pageTheme } = useTheme();
+  const [modeChoice, setMode] = useState<ThemeMode | null>(null);
+  const mode: ThemeMode = modeChoice ?? (pageTheme === "dark" ? "dark" : "light");
   const [lang, setLang] = useState<MenuLanguage>(
     isMenuLanguage(initialLanguage) ? initialLanguage : "en",
   );
@@ -191,8 +195,9 @@ export function MenuDemo({
       )}
 
       {/* The phone. Its screen gets the chosen colours and the menu's
-          language and direction; the sheet opens inside it. */}
-      <div className="border-foreground/85 relative h-[620px] w-[320px] shrink-0 overflow-hidden rounded-[2.5rem] border-[10px] shadow-2xl lg:order-1">
+          language and direction; the sheet opens inside it. "isolate"
+          keeps the sheet and its shade under the site's sticky navbar. */}
+      <div className="border-foreground/85 relative isolate h-[620px] w-[320px] shrink-0 overflow-hidden rounded-[2.5rem] border-[10px] shadow-2xl lg:order-1">
         <div
           ref={setFrame}
           style={style}

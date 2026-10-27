@@ -84,7 +84,10 @@ export function Navbar() {
 
         <div className="ms-auto flex items-center gap-1.5">
           <LanguageSwitcher compact className="hidden border-transparent shadow-none md:flex" />
-          <ThemeToggle />
+          {/* On small phones it moves into the panel, to leave room. */}
+          <div className="hidden sm:flex">
+            <ThemeToggle />
+          </div>
 
           <SignedOut>
             <SignInButton mode="modal">
@@ -152,8 +155,12 @@ export function Navbar() {
                 })}
               </ul>
             </nav>
-            <div className="border-border container mx-auto flex items-center justify-between gap-3 border-t px-4 py-4">
+            <div className="border-border container mx-auto flex items-center gap-2 border-t px-4 py-4">
               <LanguageSwitcher />
+              <div className="sm:hidden">
+                <ThemeToggle />
+              </div>
+              <div className="flex-1" />
               <SignedOut>
                 <SignInButton mode="modal">
                   <Button variant="outline" onClick={() => setOpen(false)}>

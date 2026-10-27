@@ -106,6 +106,12 @@
   --chart-3: oklch(35.03% 0.033 84.81); /* stone-600 */
   --chart-4: oklch(82.91% 0.093 120.93); /* yellow-500 */
   --chart-5: oklch(76.2% 0.12 100.9); /* lime-500 */
+
+  /* Doodles (components/svg): the blob, the ink and a tile behind them.
+     Light: amber blob, dark ink, no tile. */
+  --doodle-fill: var(--primary);
+  --doodle-ink: var(--foreground);
+  --doodle-backdrop: transparent;
 }
 
 .dark {
@@ -140,6 +146,13 @@
   --chart-3: oklch(50% 0.025 85); /* muted-foreground */
   --chart-4: oklch(89.5% 0.016 88.45); /* stone-200 */
   --chart-5: oklch(76.2% 0.12 100.9); /* lime-500 */
+
+  /* Dark: the drawings leave faces and skin see-through and draw hair and
+     outlines in solid ink, so light ink would look like a negative. They
+     keep dark ink and sit on a soft warm tile instead, like stickers. */
+  --doodle-fill: oklch(80.52% 0.177 82.8); /* amber-400 */
+  --doodle-ink: oklch(25.99% 0.026 82.52); /* stone-700 */
+  --doodle-backdrop: oklch(86% 0.035 80); /* warm beige */
 
   --sidebar: oklch(25.99% 0.026 82.52); /* Matches card background */
   --sidebar-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */

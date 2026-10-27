@@ -108,16 +108,7 @@ export default async function HomePage() {
           </div>
 
           <div className="relative flex flex-col items-center gap-4">
-            <DoodleReveal
-              from="start"
-              delay={300}
-              className="absolute -start-20 bottom-10 hidden w-72 xl:block"
-            >
-              <GroovySittingDoodle />
-            </DoodleReveal>
-            <div className="relative">
-              <MenuDemo menus={getDemoMenus()} initialLanguage={locale} controls={false} />
-            </div>
+            <MenuDemo menus={getDemoMenus()} initialLanguage={locale} controls={false} />
             <p className="text-muted-foreground text-sm">{t("hero.demoCaption")}</p>
           </div>
         </div>
@@ -191,11 +182,16 @@ export default async function HomePage() {
         <section aria-labelledby="menus-title" className="bg-card border-border border-y">
           <div className="container mx-auto px-4 py-16 lg:py-20">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <h2 id="menus-title" className="text-3xl font-bold tracking-tight">
-                  {isLocal ? t("menus.titleLocal", { country: local.name }) : t("menus.title")}
-                </h2>
-                <p className="text-muted-foreground mt-3">{t("menus.intro")}</p>
+              <div className="flex items-center gap-5">
+                <DoodleReveal from="start" className="hidden w-40 shrink-0 sm:block">
+                  <GroovySittingDoodle />
+                </DoodleReveal>
+                <div>
+                  <h2 id="menus-title" className="text-3xl font-bold tracking-tight">
+                    {isLocal ? t("menus.titleLocal", { country: local.name }) : t("menus.title")}
+                  </h2>
+                  <p className="text-muted-foreground mt-3">{t("menus.intro")}</p>
+                </div>
               </div>
               <Button variant="ghost" asChild>
                 <Link href="/menus">
@@ -218,7 +214,7 @@ export default async function HomePage() {
         aria-labelledby="contact-title"
         className="container mx-auto scroll-mt-20 px-4 py-16 lg:py-24"
       >
-        <div className="bg-primary text-primary-foreground relative overflow-hidden rounded-3xl px-6 py-12 sm:px-12 [--doodle-fill:var(--background)] [--doodle-ink:var(--primary-foreground)]">
+        <div className="bg-primary text-primary-foreground relative overflow-hidden rounded-3xl px-6 py-12 sm:px-12">
           <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_auto]">
             <div className="text-center lg:text-start">
               <h2 id="contact-title" className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -247,7 +243,11 @@ export default async function HomePage() {
                 </Button>
               </div>
             </div>
-            <DoodleReveal from="bottom" className="mx-auto w-56 sm:w-72">
+            {/* The band is amber in both themes: dark ink on a cream blob, no tile. */}
+            <DoodleReveal
+              from="bottom"
+              className="mx-auto w-56 sm:w-72 [--doodle-backdrop:transparent] [--doodle-fill:oklch(97%_0.02_85)] [--doodle-ink:oklch(25.99%_0.026_82.52)]"
+            >
               <ZombieingDoodle />
             </DoodleReveal>
           </div>

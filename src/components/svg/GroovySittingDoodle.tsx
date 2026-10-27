@@ -3,20 +3,20 @@
 import type React from "react";
 
 /*
- * A hand-drawn illustration in two colours that follow the theme: the
- * blob behind it is --doodle-fill (default: the primary colour) and the
- * outline is --doodle-ink (default: the current text colour). Set either
- * on a parent to adapt it, e.g. "[--doodle-fill:var(--background)]" on a
- * primary-coloured band.
+ * A hand-drawn illustration in theme colours (globals.css): the blob is
+ * --doodle-fill, the ink --doodle-ink, and --doodle-backdrop a rounded tile
+ * behind it (used in dark mode). Set them on a parent to adapt it, as the
+ * home page's amber contact band does.
  */
 const GroovySittingDoodle = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="100%"
     height="100%"
-    viewBox="0 0 1024 768"
+    viewBox="-56 9 1029 690"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
+    <rect x="-56" y="9" width="1029" height="690" rx="120" style={{ fill: "var(--doodle-backdrop, transparent)" }} />
     <g fillRule="evenodd">
       <g transform="translate(-54.000000, -30.000000)">
         <path
