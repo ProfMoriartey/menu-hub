@@ -6,7 +6,8 @@ import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"; // Add 
 
 import { FeaturedRestaurantsSection } from "~/components/home/FeaturedRestaurantsSection";
 import { cn } from "~/lib/utils";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { countryName } from "~/lib/countries";
 import { HeroScroll } from "~/components/home/HeroSectionScroll";
 import { AboutScroll } from "~/components/home/AboutSectionScroll";
 import { ThemesScroll } from "~/components/home/ThemesSectionScroll";
@@ -20,6 +21,7 @@ import { a } from "framer-motion/client";
 
 export default async function HomePage() {
   const t = await getTranslations("hero");
+  const locale = await getLocale();
 
   // Fetch raw data without the strict type hint
   const rawRestaurants = await db.query.restaurants.findMany({
@@ -33,6 +35,8 @@ export default async function HomePage() {
   const featuredRestaurants: Restaurant[] = rawRestaurants.map(
     (restaurant) => ({
       ...restaurant,
+      // Named here: browsers name some countries differently from Node.
+      country: countryName(restaurant.country, locale),
       categories: [],
       socialMedia: restaurant.socialMedia as SocialMediaLinks,
       deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,

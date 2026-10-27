@@ -14,6 +14,8 @@ import type { Metadata } from "next"
 import { clip, publicPageMetadata, restaurantPreviewImage } from "~/server/public-metadata"
 import { allMenuLanguages, menuLanguagesOf } from "~/lib/menu-languages"
 import { localizeDescription } from "~/server/localize-menu"
+import { countryName } from "~/lib/countries"
+import { venueTypeLabel } from "~/lib/venue-types"
 
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"
 import { DeliveryOptionsDialog } from "~/components/public/DeliveryOptionsDialog"
@@ -31,8 +33,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!restaurant) return {}
   const t = await getTranslations("PublicMenu")
   // Where it is and how to reach it: what people look for on this page.
-  const place = [restaurant.address, restaurant.country].filter(Boolean).join(", ")
   const locale = await getLocale()
+  const place = [restaurant.address, restaurant.city, countryName(restaurant.country, locale)]
+    .filter(Boolean)
+    .join(", ")
   const languages = menuLanguagesOf(restaurant)
   const description = localizeDescription(restaurant, languages, locale).text
   return publicPageMetadata({
@@ -53,6 +57,8 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
   const { restaurantSlug } = await params
   const t = await getTranslations("restaurantProfilePage")
   const tMenu = await getTranslations("PublicMenu")
+  const tVenue = await getTranslations("VenueTypes")
+  const locale = await getLocale()
 
   const rawData = await getRestaurantBySlug(restaurantSlug)
 
@@ -70,8 +76,12 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
   const description = localizeDescription(
     restaurantDetails,
     menuLanguagesOf(restaurantDetails),
-    await getLocale(),
+    locale,
   )
+  const venueType = venueTypeLabel(restaurantDetails.typeOfEstablishment, tVenue)
+  const cityAndCountry = [restaurantDetails.city, countryName(restaurantDetails.country, locale)]
+    .filter(Boolean)
+    .join(", ")
 
   const socials = restaurantDetails.socialMedia ?? ({} as SocialMediaLinks)
   const deliveryApps = restaurantDetails.deliveryApps ?? ({} as DeliveryAppLinks)
@@ -185,12 +195,12 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
                 </div>
               )}
 
-              {restaurantDetails.typeOfEstablishment && (
+              {venueType && (
                 <div className="flex items-center gap-4">
                   <Info className="text-primary h-6 w-6 shrink-0" />
                   <div>
                     <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{t("establishmentTypeLabel")}</p>
-                    <p className="text-lg">{restaurantDetails.typeOfEstablishment}</p>
+                    <p className="text-lg">{venueType}</p>
                   </div>
                 </div>
               )}
@@ -206,12 +216,12 @@ export default async function RestaurantProfilePage({ params }: PageProps) {
                 </div>
               )}
 
-              {restaurantDetails.country && (
+              {cityAndCountry && (
                 <div className="flex items-center gap-4">
                   <Globe className="text-primary h-6 w-6 shrink-0" />
                   <div>
-                    <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{t("countryLabel")}</p>
-                    <p className="text-lg">{restaurantDetails.country}</p>
+                    <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{t("locationLabel")}</p>
+                    <p className="text-lg">{cityAndCountry}</p>
                   </div>
                 </div>
               )}

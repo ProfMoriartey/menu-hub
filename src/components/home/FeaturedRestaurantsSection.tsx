@@ -92,7 +92,7 @@ export function FeaturedRestaurantsSection({
           </div>
         )}
         <div className="mt-12 text-center">
-          <Link href="/restaurants" passHref>
+          <Link href="/menus" passHref>
             {/* ADDED: motion.button for hover and tap effects, and semantic colors */}
             <motion.button
               whileHover={{ scale: 1.05 }}

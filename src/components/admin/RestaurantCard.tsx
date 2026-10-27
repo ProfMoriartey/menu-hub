@@ -2,12 +2,14 @@
 "use client";
 
 import { ExternalLink, Eye, MapPin, Pencil, Rocket, Star, UtensilsCrossed } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { DeleteRestaurantDialog } from "~/components/admin/DeleteRestaurantDialog";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { cn } from "~/lib/utils";
 import { formatDate } from "~/lib/format";
+import { venueTypeLabel } from "~/lib/venue-types";
 
 import type { ActionResult } from "~/lib/action-result";
 import type { Restaurant } from "~/types/restaurant";
@@ -58,9 +60,14 @@ export function RestaurantCard({
   setup,
   deleteRestaurantAction,
 }: RestaurantCardProps) {
-  const details = [restaurant.typeOfEstablishment, restaurant.foodType]
+  const tVenue = useTranslations("VenueTypes");
+  const details = [venueTypeLabel(restaurant.typeOfEstablishment, tVenue), restaurant.foodType]
     .filter(Boolean)
     .join(" · ");
+  // Countries as codes ("Bursa, TR"): short, and the same on server and client.
+  const location = [restaurant.address, restaurant.city, restaurant.country]
+    .filter(Boolean)
+    .join(", ");
 
   return (
     <article className="bg-card text-card-foreground border-border group flex h-full flex-col rounded-xl border shadow-sm transition-shadow hover:shadow-md">
@@ -106,12 +113,12 @@ export function RestaurantCard({
               <dd className="truncate">{details}</dd>
             </div>
           )}
-          {(restaurant.address ?? restaurant.country) && (
+          {location && (
             <div className="flex items-center gap-2">
               <dt className="sr-only">Location</dt>
               <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden />
               <dd className="truncate">
-                {[restaurant.address, restaurant.country].filter(Boolean).join(", ")}
+                {location}
               </dd>
             </div>
           )}

@@ -23,7 +23,7 @@ export function Navbar() {
 
   const navLinks = [
     { name: t("home"), href: "/" },
-    { name: t("restaurants"), href: "/restaurants" },
+    { name: t("restaurants"), href: "/menus" },
     { name: t("themes"), href: "/features" },
     { name: t("aboutUs"), href: "/about" },
   ];

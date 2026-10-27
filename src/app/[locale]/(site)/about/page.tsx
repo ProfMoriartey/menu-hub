@@ -189,7 +189,7 @@ export default async function AboutPage() {
               <Link href="/features">{t("cta.features")}</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/restaurants">{t("cta.restaurants")}</Link>
+              <Link href="/menus">{t("cta.restaurants")}</Link>
             </Button>
             <Button size="lg" variant="ghost" asChild>
               <Link href="/features#contact">{t("cta.contact")}</Link>

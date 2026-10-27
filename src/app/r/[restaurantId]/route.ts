@@ -30,7 +30,7 @@ export async function GET(
   // No language prefix: the next-intl middleware picks the guest's language
   // on the next request. A deleted restaurant goes to the restaurant list.
   const target = new URL(
-    restaurant ? `/${restaurant.slug}` : "/restaurants",
+    restaurant ? `/${restaurant.slug}` : "/menus",
     request.url,
   );
 

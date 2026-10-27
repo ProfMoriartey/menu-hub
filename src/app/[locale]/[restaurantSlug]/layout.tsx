@@ -112,5 +112,5 @@ export default async function DynamicPublicLayout({
     );
   }
 
-  return redirect({ href: "/restaurants", locale: await getLocale() });
+  return redirect({ href: "/menus", locale: await getLocale() });
 }

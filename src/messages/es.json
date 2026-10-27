@@ -17,7 +17,7 @@
     "empty": "No hay restaurantes destacados disponibles por el momento.",
     "button": {
       "single": "Ver Menú",
-      "all": "Ver Todos los Restaurantes"
+      "all": "Ver todos los menús"
     }
   },
   "themes": {
@@ -47,25 +47,12 @@
     "messageSent": "¡Mensaje enviado!",
     "errorSendingMessage": "No se pudo enviar el mensaje."
   },
-  "restaurantsPage": {
-    "mainTitle": "Descubre Restaurantes",
-    "description": "Busca y explora todos los restaurantes disponibles en Menupedia.",
-    "searchButton": "Buscar Restaurantes",
-    "searchPlaceholder": "Busca un restaurante, tipo de cocina o artículo del menú...",
-    "noResultsFound": "No se encontraron resultados para \"{searchTerm}\".",
-    "allRestaurantsTitle": "Todos los Restaurantes",
-    "noRestaurantsFound": "No se encontraron restaurantes.",
-    "adminPrompt": "Si eres el administrador, por favor, añade restaurantes a través del panel."
-  },
   "navbar": {
     "home": "Inicio",
-    "restaurants": "Restaurantes",
+    "restaurants": "Menús",
     "themes": "Funciones",
     "aboutUs": "Acerca de Nosotros",
     "language": "Idioma"
-  },
-  "restaurantCard": {
-    "viewMenu": "Ver Menú"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Explora nuestro delicioso menú",
@@ -90,6 +77,7 @@
       "establishmentTypeLabel": "Tipo",
       "phoneLabel": "Contacto",
       "countryLabel": "País",
+      "locationLabel": "Ubicación",
       "addressLabel": "Dirección",
       "getDirections": "Cómo Llegar"
     },
@@ -404,7 +392,10 @@
     "discard": "Descartar",
     "save": "Guardar cambios",
     "saveFailed": "No se pudo guardar el restaurante.",
-    "logoTooLarge": "Este logo es demasiado grande incluso después de reducirlo. Prueba con una imagen más pequeña (hasta 4 MB)."
+    "logoTooLarge": "Este logo es demasiado grande incluso después de reducirlo. Prueba con una imagen más pequeña (hasta 4 MB).",
+    "city": "Ciudad",
+    "cityHint": "Los clientes pueden encontrar tu menú por ciudad.",
+    "cityPlaceholder": "p. ej., Bursa"
   },
   "ActionErrors": {
     "createRestaurantFailed": "No se pudo crear el restaurante. Inténtalo de nuevo.",
@@ -937,8 +928,50 @@
       "title": "Compruébalo tú mismo",
       "text": "Prueba nuestro restaurante de demostración o mira los menús que ya están en Menupedia.",
       "features": "Ver las funciones",
-      "restaurants": "Ver restaurantes",
+      "restaurants": "Ver menús",
       "contact": "Contactar"
     }
+  },
+  "VenueTypes": {
+    "restaurant": "Restaurante",
+    "cafe": "Café",
+    "coffee_shop": "Cafetería",
+    "bakery": "Panadería y pastelería",
+    "dessert": "Postres",
+    "fast_food": "Comida rápida",
+    "bar": "Bar",
+    "home_cooking": "Comida casera"
+  },
+  "MenusPage": {
+    "metaTitle": "Menús",
+    "metaDescription": "Explora los menús de restaurantes, cafés y más en Menupedia, o busca un plato en todos ellos.",
+    "title": "Menús",
+    "intro": "Restaurantes, cafés y más. Encuentra un lugar o busca un plato en todos los menús.",
+    "searchLabel": "Buscar lugares y platos",
+    "searchPlaceholder": "Busca lugares o platos",
+    "clearSearch": "Borrar búsqueda",
+    "typeFilterLabel": "Tipo de lugar",
+    "allTypes": "Todos",
+    "openNow": "Abierto ahora",
+    "inLanguage": "Menú en {language}",
+    "cityLabel": "Ciudad",
+    "allCities": "Todas las ciudades",
+    "clearFilters": "Quitar filtros",
+    "count": "{count, plural, =0 {Ningún menú} one {# menú} other {# menús}}",
+    "searchStatus": "{places, plural, =0 {Ningún lugar} one {# lugar} other {# lugares}}, {dishes, plural, =0 {ningún plato} one {# plato} other {# platos}}",
+    "featured": "Destacados",
+    "allMenus": "Todos los menús",
+    "matching": "Menús que coinciden",
+    "places": "Lugares",
+    "dishes": "Platos",
+    "searchingDishes": "Buscando platos…",
+    "dishSearchFailed": "No se pudieron buscar los platos. Inténtalo de nuevo.",
+    "noDishes": "Ningún plato coincide con «{query}».",
+    "noResults": "Nada coincide con «{query}». Prueba otra palabra o menos filtros.",
+    "noMatches": "Ningún menú coincide con estos filtros.",
+    "empty": "Todavía no hay menús.",
+    "dishCount": "{count, plural, one {# plato} other {# platos}}",
+    "menuLanguages": "Idiomas del menú",
+    "soldOut": "Agotado"
   }
 }

@@ -1,83 +1,97 @@
 // src/app/actions/search.ts
 "use server";
 
+import { getLocale } from "next-intl/server";
+import { and, asc, eq, ne, or, sql } from "drizzle-orm";
 import { db } from "~/server/db";
-import { categories, menuItems } from "~/server/db/schema";
-import { eq, exists, and, ne } from "drizzle-orm";
-import type { Restaurant } from "~/types/restaurant";
+import { menuItems, restaurants } from "~/server/db/schema";
+import { localizeItem } from "~/server/localize-menu";
+import { formatPrice } from "~/lib/format-price";
+import { menuLanguagesOf } from "~/lib/menu-languages";
+import { MIN_DISH_QUERY } from "~/lib/menus-directory";
 
-// ADDED: Import schemas for casting
-import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
+export interface DishResult {
+  id: string;
+  slug: string;
+  name: string;
+  // Set when the name is in another language than the page.
+  lang?: string;
+  price: string;
+  imageUrl: string | null;
+  soldOut: boolean;
+  restaurantId: string;
+}
 
-// NEW SERVER ACTION: Search Restaurants from the database
-export async function searchRestaurants(
-  searchTerm: string,
-): Promise<Restaurant[]> {
-  if (!searchTerm || searchTerm.trim() === "") {
-    return []; // Return empty array if search term is empty
-  }
+const MAX_RESULTS = 60;
 
-  const lowerCaseSearchTerm = `%${searchTerm.toLowerCase()}%`; // Use % for LIKE wildcards
+// ILIKE treats % and _ as wildcards; a guest typing them means the character.
+const likePattern = (text: string) =>
+  `%${text.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
 
-  try {
-    const results = await db.query.restaurants.findMany({
-      where: (
-        restaurant,
-        { and: drizzleAnd, eq: drizzleEq, or: drizzleOr, ilike: drizzleIlike },
-      ) =>
-        drizzleAnd(
-          drizzleEq(restaurant.isActive, true),
-          drizzleOr(
-            // Primary restaurant fields
-            drizzleIlike(restaurant.name, lowerCaseSearchTerm),
-            drizzleIlike(restaurant.slug, lowerCaseSearchTerm),
-            drizzleIlike(restaurant.country, lowerCaseSearchTerm),
-            drizzleIlike(restaurant.foodType, lowerCaseSearchTerm),
-            drizzleIlike(restaurant.address, lowerCaseSearchTerm),
+/**
+ * Dishes on any live menu whose name or description contains `query`, in
+ * the main language or a translation. Names come back in the page's
+ * language where the menu has it, prices formatted for it. Dishes whose
+ * name matches come first.
+ */
+export async function searchDishes(query: string): Promise<DishResult[]> {
+  const text = query.trim().slice(0, 100);
+  if (text.length < MIN_DISH_QUERY) return [];
+  const pattern = likePattern(text);
+  const locale = await getLocale();
 
-            // Search within categories (by name)
-            exists(
-              db
-                .select()
-                .from(categories)
-                .where(
-                  and(
-                    eq(categories.restaurantId, restaurant.id), // Link category to current restaurant
-                    drizzleIlike(categories.name, lowerCaseSearchTerm), // Search category name
-                  ),
-                ),
-            ),
+  // Only the translated texts, not the field names stored beside them.
+  const inTranslations = sql`exists (
+    select 1 from jsonb_each(coalesce(${menuItems.translations}, '{}'::jsonb)) as l(lang, fields),
+      jsonb_each_text(l.fields) as f(field, value)
+    where f.value ilike ${pattern}
+  )`;
+  const nameMatches = sql`${menuItems.name} ilike ${pattern}`;
 
-            // Search within menu items (by name)
-            exists(
-              db
-                .select()
-                .from(menuItems)
-                .where(
-                  and(
-                    eq(menuItems.restaurantId, restaurant.id), // Link menu item to current restaurant
-                    drizzleIlike(menuItems.name, lowerCaseSearchTerm), // Search menu item name
-                    ne(menuItems.availability, "hidden"), // Hidden items aren't public
-                  ),
-                ),
-            ),
-          ),
+  const rows = await db
+    .select({
+      id: menuItems.id,
+      slug: menuItems.slug,
+      name: menuItems.name,
+      description: menuItems.description,
+      ingredients: menuItems.ingredients,
+      translations: menuItems.translations,
+      price: menuItems.price,
+      imageUrl: menuItems.imageUrl,
+      availability: menuItems.availability,
+      restaurantId: menuItems.restaurantId,
+      currency: restaurants.currency,
+      multilingualEnabled: restaurants.multilingualEnabled,
+      mainLanguage: restaurants.mainLanguage,
+      extraLanguages: restaurants.extraLanguages,
+    })
+    .from(menuItems)
+    .innerJoin(restaurants, eq(restaurants.id, menuItems.restaurantId))
+    .where(
+      and(
+        eq(restaurants.isActive, true),
+        ne(menuItems.availability, "hidden"),
+        or(
+          nameMatches,
+          sql`${menuItems.description} ilike ${pattern}`,
+          inTranslations,
         ),
-    });
+      ),
+    )
+    .orderBy(sql`(${nameMatches}) desc`, asc(menuItems.name))
+    .limit(MAX_RESULTS);
 
-    // 🛑 FIX: Map and cast the JSONB fields before returning
-    const formattedResults: Restaurant[] = results.map((restaurant) => ({
-      ...restaurant,
-      categories: [],
-      socialMedia: restaurant.socialMedia as SocialMediaLinks,
-      deliveryApps: restaurant.deliveryApps as DeliveryAppLinks,
-    }));
-
-    return formattedResults;
-  } catch (error) {
-    console.error("Error searching restaurants:", error);
-    throw new Error(
-      `Failed to search restaurants: ${error instanceof Error ? error.message : String(error)}`,
-    );
-  }
+  return rows.map((row) => {
+    const item = localizeItem(row, menuLanguagesOf(row), locale);
+    return {
+      id: row.id,
+      slug: row.slug,
+      name: item.name,
+      lang: item.lang,
+      price: formatPrice(row.price, row.currency, locale),
+      imageUrl: row.imageUrl,
+      soldOut: row.availability === "sold_out",
+      restaurantId: row.restaurantId,
+    };
+  });
 }

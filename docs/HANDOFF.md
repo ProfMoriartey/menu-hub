@@ -25,7 +25,7 @@ There are three audiences:
 
 | Audience | Where | Language |
 |---|---|---|
-| Guests | public menu `/<slug>`, item pages, `/restaurants` | 5 languages |
+| Guests | public menu `/<slug>`, item pages, `/menus` (directory) | 5 languages |
 | Restaurant staff (owners, editors) | `/dashboard/...` | 5 languages |
 | The project owner (system admin) | `/admin/...` | English (shared components follow the URL locale) |
 
@@ -91,7 +91,7 @@ comes from Clerk). `src/env.js` validates the server ones and
     about/, item/[itemSlug]/   (id-based item URLs permanently redirect to slugs)
   (site)/             every other page. layout.tsx adds ClerkProvider, all
                       translations, UploadThing's NextSSRPlugin, Navbar
-    page.tsx, restaurants/, themes/, about/        public marketing + directory
+    page.tsx, menus/, features/, about/        public marketing + directory
   (site)/(client)/dashboard/                        restaurant staff
     layout.tsx        top bar: dashboard link, LanguageSwitcher, ThemeToggle, UserButton
     page.tsx          "Your restaurants" cards (+ setup progress)
@@ -135,7 +135,7 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 | `server/run-action.ts` | `runAction(fallbackCode, body)`: translates errors with the request locale; server-only |
 | `app/actions/auth.ts` | `isSystemAdmin`, `getRestaurantRole`, `checkAuthorization` (any access), `checkOwnerAuthorization` (owner/admin) |
 | `lib/access.ts` | `ACCESS_LEVELS` (`owner`, `editor`), `RestaurantRole` (+ `admin`), `canEditDetails` |
-| `server/public-menu.ts` | cached reads for public pages (`getRestaurantBySlug`, `getPublicMenu`, `getPublicMenuItem`; `unstable_cache`, no Date columns) and `revalidatePublicMenu(id)` / `revalidatePublicRestaurant(id?)`, which every save action must call |
+| `server/public-menu.ts` | cached reads for public pages (`getRestaurantBySlug`, `getPublicMenu`, `getPublicMenuItem`, `getMenusDirectory`; `unstable_cache`, no Date columns) and `revalidatePublicMenu(id)` / `revalidatePublicRestaurant(id?)`, which every save action must call |
 | `lib/format-price.ts` | guest-language prices, server only (see §6) |
 | `lib/category-section.ts`, `lib/dietary-labels.ts` | menu section ids; dietary label → translation key |
 | `server/menu-data.ts` | category summaries / category with items, shared by admin + dashboard |
@@ -147,6 +147,8 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 | `server/clerk-profiles.ts` | batch Clerk profile lookup (name, photo, last sign-in, admin) |
 | `lib/slug.ts` | `slugify`, `uniqueSlug`, `isUuid` |
 | `lib/schemas.ts` | restaurant zod schema, `RESERVED_SLUGS` |
+| `lib/venue-types.ts` | fixed venue types (`VENUE_TYPES`), stored as keys in `typeOfEstablishment`; labels in `VenueTypes` messages; icons in `components/shared/VenueTypeIcon` |
+| `lib/countries.ts` | ISO country codes, `countryName(code, locale)`, `countryOptions(locale)`. Name countries on the server (browser and Node name data differ) |
 | `lib/menu-item-schemas.ts` | item zod schemas, `ITEM_AVAILABILITY` |
 | `lib/resize-image.ts` | browser-side image shrinking before upload |
 | `lib/qr-code.ts` | QR to SVG/PNG (logo in the middle), logo loading via `/_next/image` |
@@ -199,7 +201,10 @@ days, `0004` item availability, `0005` restaurant invitations, `0006` menu
 translations, `0007` time zone, opening hours and brand colour, `0008` colour
 theme (all add columns only), `0009` renames stored designs to the new
 three (data only; `menuDesignOf` maps old names too, so the order of deploy
-and migrate doesn't matter). The
+and migrate doesn't matter), `0010` adds `city` and turns typed venue
+types and countries into keys/ISO codes where they clearly match (the rest
+stay as typed and are shown as they are). **0010 must run before deploying
+the Menus page: every restaurant query reads `city`.** The
 development database has 0001–0004 applied (checked 2026-10-23); **0005 was
 created 2026-10-26 and must be applied with `pnpm db:migrate` in dev and in
 production before the Team tab, admin People tab or dashboard invitations
@@ -209,7 +214,7 @@ public restaurant page and the menu editors read its columns.** The same
 goes for **0007 and 0008 (2026-10-26)**: public pages read their columns.
 
 **Reserved slugs** (`RESERVED_SLUGS`): app routes like `admin`, `dashboard`,
-`restaurants`, … plus `new` (admin route), `r` (QR link route) and `invite`
+`restaurants`, `menus`, … plus `new` (admin route), `r` (QR link route) and `invite`
 (invitation links).
 
 ---
@@ -451,8 +456,24 @@ the Features page's `GROUPS` and messages (`featuresPage.features`).
 story, "How it works" in four steps (account and team invites, building
 the menu with the checklist and preview, design/colours/hours/languages,
 QR table cards and scan stats), who it's for, values, and links to
-Features, restaurants and contact. Getting started and teamwork are told
+Features, menus and contact. Getting started and teamwork are told
 here rather than on Features. Texts: `aboutPage` messages.
+
+**Menus page** (`/menus`, was `/restaurants`, which redirects): every live
+venue as a card with a strip of its first three dish photos, logo, venue
+type and cuisine, city and country, open/closed now and menu languages.
+Filters: type chips, open now, "menu in my language", city (each shown
+only when some venue matches); a featured row when nothing is filtered.
+One search box matches places on the page and dishes on the server
+(`searchDishes` in `app/actions/search.ts`: names and descriptions in any
+menu language, localized names and prices, sold-out marked, links to the
+item page). Filters live in the address (`?q=&type=&city=&open=1&lang=1`).
+The directory data (`getMenusDirectory`) is cached and cleared by both
+revalidate helpers; open status is worked out per request
+(`describeOpenStatus` in `components/public/OpeningHours`). Venue type and
+country are admin fields (pickers); city is edited by owners too. Texts:
+`MenusPage` messages. Dish search doesn't ignore accents ("kofte" won't
+find "Köfte"); Postgres `unaccent` would fix that.
 
 **Search engines and link previews:** menu, about and item pages have their
 own title, description, preview image (admin SEO fields first, then
@@ -495,9 +516,10 @@ who changed what.
 unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 
 **Still to check with the owner:**
-- `pnpm db:migrate` in production for migrations 0002–0009, before deploying
+- `pnpm db:migrate` in production for migrations 0002–0010, before deploying
   (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
-  colour themes; 0009: design names).
+  colour themes; 0009: design names; 0010: city, venue types, country codes).
+  Dev also needs 0010.
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**

@@ -10,13 +10,20 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // The old Themes page became Features; keep shared links working.
+  // Renamed pages: Themes became Features, Restaurants became Menus. Keep
+  // shared links working.
   async redirects() {
     return [
       { source: "/themes", destination: "/features", permanent: true },
       {
         source: "/:locale(en|tr|ar|es|ru)/themes",
         destination: "/:locale/features",
+        permanent: true,
+      },
+      { source: "/restaurants", destination: "/menus", permanent: true },
+      {
+        source: "/:locale(en|tr|ar|es|ru)/restaurants",
+        destination: "/:locale/menus",
         permanent: true,
       },
     ];

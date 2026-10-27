@@ -17,7 +17,7 @@
     "empty": "Şu anda öne çıkan restoran bulunmamaktadır.",
     "button": {
       "single": "Menüyü Görüntüle",
-      "all": "Tüm Restoranları Görüntüle"
+      "all": "Tüm menüleri görüntüle"
     }
   },
   "themes": {
@@ -47,25 +47,12 @@
     "messageSent": "Mesaj gönderildi!",
     "errorSendingMessage": "Mesaj gönderilemedi."
   },
-  "restaurantsPage": {
-    "mainTitle": "Restoranları Keşfet",
-    "description": "Menupedia'da bulunan tüm restoranları arayın ve keşfedin.",
-    "searchButton": "Restoran Ara",
-    "searchPlaceholder": "Bir restoran, mutfak veya menü öğesi arayın...",
-    "noResultsFound": "\"{searchTerm}\" için sonuç bulunamadı.",
-    "allRestaurantsTitle": "Tüm Restoranlar",
-    "noRestaurantsFound": "Restoran bulunamadı.",
-    "adminPrompt": "Yönetici iseniz, lütfen panodan restoran ekleyin."
-  },
   "navbar": {
     "home": "Ana Sayfa",
-    "restaurants": "Restoranlar",
+    "restaurants": "Menüler",
     "themes": "Özellikler",
     "aboutUs": "Hakkımızda",
     "language": "Dil"
-  },
-  "restaurantCard": {
-    "viewMenu": "Menüyü Görüntüle"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Lezzetli menümüzü inceleyin",
@@ -90,6 +77,7 @@
       "establishmentTypeLabel": "Tür",
       "phoneLabel": "İletişim",
       "countryLabel": "Ülke",
+      "locationLabel": "Konum",
       "addressLabel": "Adres",
       "getDirections": "Yol Tarifi Al"
     },
@@ -404,7 +392,10 @@
     "discard": "Vazgeç",
     "save": "Değişiklikleri kaydet",
     "saveFailed": "Restoran kaydedilemedi.",
-    "logoTooLarge": "Bu logo küçültüldükten sonra bile çok büyük. Daha küçük bir görsel deneyin (en fazla 4 MB)."
+    "logoTooLarge": "Bu logo küçültüldükten sonra bile çok büyük. Daha küçük bir görsel deneyin (en fazla 4 MB).",
+    "city": "Şehir",
+    "cityHint": "Misafirler menünüzü şehre göre bulabilir.",
+    "cityPlaceholder": "örn. Bursa"
   },
   "ActionErrors": {
     "createRestaurantFailed": "Restoran oluşturulamadı. Lütfen tekrar deneyin.",
@@ -937,8 +928,50 @@
       "title": "Kendiniz görün",
       "text": "Demo restoranımızı deneyin ya da Menupedia'daki menülere göz atın.",
       "features": "Özellikleri keşfedin",
-      "restaurants": "Restoranlara göz atın",
+      "restaurants": "Menülere göz atın",
       "contact": "Bize ulaşın"
     }
+  },
+  "VenueTypes": {
+    "restaurant": "Restoran",
+    "cafe": "Kafe",
+    "coffee_shop": "Kahveci",
+    "bakery": "Fırın & pastane",
+    "dessert": "Tatlıcı",
+    "fast_food": "Fast food",
+    "bar": "Bar",
+    "home_cooking": "Ev yemekleri"
+  },
+  "MenusPage": {
+    "metaTitle": "Menüler",
+    "metaDescription": "Menupedia'daki restoran, kafe ve diğer mekânların menülerine göz atın ya da tüm menülerde bir yemek arayın.",
+    "title": "Menüler",
+    "intro": "Restoranlar, kafeler ve daha fazlası. Bir mekân bulun ya da tüm menülerde bir yemek arayın.",
+    "searchLabel": "Mekân ve yemek ara",
+    "searchPlaceholder": "Mekân veya yemek ara",
+    "clearSearch": "Aramayı temizle",
+    "typeFilterLabel": "Mekân türü",
+    "allTypes": "Tümü",
+    "openNow": "Şu an açık",
+    "inLanguage": "{language} menü",
+    "cityLabel": "Şehir",
+    "allCities": "Tüm şehirler",
+    "clearFilters": "Filtreleri temizle",
+    "count": "{count, plural, =0 {Menü yok} one {# menü} other {# menü}}",
+    "searchStatus": "{places, plural, =0 {Mekân yok} one {# mekân} other {# mekân}}, {dishes, plural, =0 {yemek yok} one {# yemek} other {# yemek}}",
+    "featured": "Öne çıkanlar",
+    "allMenus": "Tüm menüler",
+    "matching": "Eşleşen menüler",
+    "places": "Mekânlar",
+    "dishes": "Yemekler",
+    "searchingDishes": "Yemekler aranıyor…",
+    "dishSearchFailed": "Yemekler aranamadı. Lütfen tekrar deneyin.",
+    "noDishes": "“{query}” ile eşleşen yemek yok.",
+    "noResults": "“{query}” ile eşleşen bir şey yok. Başka bir kelime deneyin ya da filtreleri azaltın.",
+    "noMatches": "Bu filtrelerle eşleşen menü yok.",
+    "empty": "Burada henüz menü yok.",
+    "dishCount": "{count, plural, one {# yemek} other {# yemek}}",
+    "menuLanguages": "Menü dilleri",
+    "soldOut": "Tükendi"
   }
 }

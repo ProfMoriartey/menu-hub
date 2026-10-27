@@ -63,6 +63,7 @@ const SHOWN_FIELDS = new Set([
   "name",
   "description",
   "address",
+  "city",
   "phoneNumber",
   "mapUrl",
   "logoUrl",
@@ -195,6 +196,14 @@ export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant
             />
           </Field>
           <div className="grid gap-5 sm:grid-cols-2">
+            <Field label={t("city")} htmlFor="city" hint={t("cityHint")}>
+              <Input
+                id="city"
+                value={values.city}
+                onChange={(e) => set("city", e.target.value)}
+                placeholder={t("cityPlaceholder")}
+              />
+            </Field>
             <Field label={t("phone")} htmlFor="phoneNumber">
               <div className="relative" dir="ltr">
                 <Phone className="text-muted-foreground pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2" />

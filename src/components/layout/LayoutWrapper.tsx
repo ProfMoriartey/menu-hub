@@ -18,14 +18,14 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
   const basePublicPaths = [
     "/", // For the root path accessed directly (e.g., example.com/)
     "", // For the root path when locale prefix is removed (e.g., example.com/en -> "")
-    "/restaurants",
+    "/menus",
     "/features",
     "/about",
     // Add other base paths that should always show the navbar, e.g., "/contact"
   ];
 
   // Check if the current path (without locale prefix) is in the list of public paths
-  // This makes the check robust to different locales (e.g., /en/restaurants, /ar/restaurants)
+  // This makes the check robust to different locales (e.g., /en/menus, /ar/menus)
   const cleanPathname = pathname.startsWith(`/${locale}`)
     ? pathname.substring(`/${locale}`.length)
     : pathname;

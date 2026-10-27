@@ -44,12 +44,12 @@ import { cn } from "~/lib/utils";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 import { slugify } from "~/lib/slug";
+import { VENUE_TYPES, isVenueType } from "~/lib/venue-types";
+import { isCountryCode, type CountryOption } from "~/lib/countries";
 import { CharCount, Field, FormSection, ToggleRow, UrlInput } from "~/components/forms/fields";
 import {
-  COUNTRY_SUGGESTIONS,
   CURRENCIES,
   EMPTY_VALUES,
-  ESTABLISHMENT_SUGGESTIONS,
   FOOD_TYPE_SUGGESTIONS,
   SECTIONS,
   THEMES,
@@ -80,17 +80,23 @@ const DELIVERY_FIELDS: { key: keyof DeliveryAppLinks; label: string }[] = [
   { key: "customLink", label: "Other delivery link" },
 ];
 
+// Radix Select items can't have an empty value.
+const NOT_SET = "none";
+
 interface AdminRestaurantFormProps {
   restaurant?: Restaurant;
+  // Named on the server (lib/countries).
+  countries: CountryOption[];
   action: (formData: FormData) => Promise<ActionResult>;
 }
 
-export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormProps) {
+export function AdminRestaurantForm({ restaurant, countries, action }: AdminRestaurantFormProps) {
   const isEditing = Boolean(restaurant);
   const router = useRouter();
   // Sent with logo uploads so upload errors come back in this language.
   const locale = useLocale();
   const tUnsaved = useTranslations("UnsavedChanges");
+  const tVenue = useTranslations("VenueTypes");
   const [isPending, startTransition] = useTransition();
 
   const initialValues = useMemo(
@@ -301,17 +307,31 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
                   />
                 </div>
               </Field>
-              <Field label="Type of place" htmlFor="typeOfEstablishment" hint="Pick a suggestion or type your own.">
-                <Input
-                  id="typeOfEstablishment"
-                  list="establishment-suggestions"
-                  value={values.typeOfEstablishment}
-                  onChange={(e) => set("typeOfEstablishment", e.target.value)}
-                  placeholder="e.g. Cafe"
-                />
-                <datalist id="establishment-suggestions">
-                  {ESTABLISHMENT_SUGGESTIONS.map((s) => <option key={s} value={s} />)}
-                </datalist>
+              <Field
+                label="Type of place"
+                htmlFor="typeOfEstablishment"
+                hint={
+                  values.typeOfEstablishment && !isVenueType(values.typeOfEstablishment)
+                    ? `Was typed as "${values.typeOfEstablishment}". Pick the closest type.`
+                    : "Guests filter the Menus page by it."
+                }
+              >
+                <Select
+                  value={isVenueType(values.typeOfEstablishment) ? values.typeOfEstablishment : NOT_SET}
+                  onValueChange={(value) => set("typeOfEstablishment", value === NOT_SET ? "" : value)}
+                >
+                  <SelectTrigger id="typeOfEstablishment" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NOT_SET}>Not set</SelectItem>
+                    {VENUE_TYPES.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {tVenue(type)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </Field>
               <Field label="Cuisine" htmlFor="foodType" hint="Used in search and filters.">
                 <Input
@@ -468,16 +488,39 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
               />
             </Field>
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Country" htmlFor="country">
+              <Field label="City" htmlFor="city" hint="Guests filter the Menus page by it.">
                 <Input
-                  id="country"
-                  list="country-suggestions"
-                  value={values.country}
-                  onChange={(e) => set("country", e.target.value)}
+                  id="city"
+                  value={values.city}
+                  onChange={(e) => set("city", e.target.value)}
+                  placeholder="e.g. Bursa"
                 />
-                <datalist id="country-suggestions">
-                  {COUNTRY_SUGGESTIONS.map((s) => <option key={s} value={s} />)}
-                </datalist>
+              </Field>
+              <Field
+                label="Country"
+                htmlFor="country"
+                hint={
+                  values.country && !isCountryCode(values.country)
+                    ? `Was typed as "${values.country}". Pick it from the list.`
+                    : undefined
+                }
+              >
+                <Select
+                  value={isCountryCode(values.country) ? values.country : NOT_SET}
+                  onValueChange={(value) => set("country", value === NOT_SET ? "" : value)}
+                >
+                  <SelectTrigger id="country" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NOT_SET}>Not set</SelectItem>
+                    {countries.map((c) => (
+                      <SelectItem key={c.code} value={c.code}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </Field>
               <Field label="Phone number" htmlFor="phoneNumber">
                 <div className="relative">

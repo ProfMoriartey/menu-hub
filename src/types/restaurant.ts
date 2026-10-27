@@ -7,6 +7,7 @@ export interface Restaurant {
   name: string;
   slug: string;
   address: string | null;
+  city: string | null;
   country: string | null;
   foodType: string | null;
   isActive: boolean;

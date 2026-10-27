@@ -45,6 +45,7 @@ export function RestaurantManagementClient({
     [
       restaurant.name,
       restaurant.slug,
+      restaurant.city,
       restaurant.country,
       restaurant.foodType,
       restaurant.typeOfEstablishment,
