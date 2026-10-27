@@ -33,6 +33,41 @@ const SCHEMA_TYPES: Partial<Record<VenueType | (string & {}), string>> = {
   bar: "BarOrPub",
 };
 
+// A branch's address, phone and hours, as schema.org properties.
+interface Place {
+  phoneNumber: string | null;
+  address: string | null;
+  city: string | null;
+  country: string | null;
+  openingHours?: OpeningHours | null;
+}
+
+function placeData(place: Place) {
+  return {
+    telephone: place.phoneNumber ?? undefined,
+    address:
+      place.address || place.city || place.country
+        ? {
+            "@type": "PostalAddress",
+            streetAddress: place.address ?? undefined,
+            addressLocality: place.city ?? undefined,
+            addressCountry: place.country ?? undefined,
+          }
+        : undefined,
+    // A range closing before it opens runs past midnight, as schema.org allows.
+    openingHoursSpecification: place.openingHours
+      ? WEEK_DAYS.flatMap((day) =>
+          place.openingHours![day].map((range) => ({
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: `https://schema.org/${SCHEMA_DAYS[day]}`,
+            opens: range.open,
+            closes: range.close,
+          })),
+        )
+      : undefined,
+  };
+}
+
 /**
  * schema.org Restaurant data for a menu page, so search engines can show the
  * restaurant and its dishes. Prices are only included when they can be read
@@ -45,6 +80,7 @@ export function restaurantStructuredData({
   pageUrl,
   itemUrl,
   inLanguage,
+  branches,
 }: {
   restaurant: Pick<
     Restaurant,
@@ -67,41 +103,33 @@ export function restaurantStructuredData({
   itemUrl: (itemSlug: string) => string;
   // The menu text's language, when known (translations on).
   inLanguage?: string;
+  // On a restaurant's own page when it has several branches: each one,
+  // with its page. (The restaurant then has no address of its own.)
+  branches?: (Place & { name: string; url: string })[];
 }) {
+  const type = SCHEMA_TYPES[restaurant.typeOfEstablishment ?? ""] ?? "Restaurant";
   const sameAs = Object.values(restaurant.socialMedia ?? {}).filter(
     (url): url is string => typeof url === "string" && url.trim() !== "",
   );
 
   return {
     "@context": "https://schema.org",
-    "@type": SCHEMA_TYPES[restaurant.typeOfEstablishment ?? ""] ?? "Restaurant",
+    "@type": type,
     name: restaurant.name,
     url: pageUrl,
     description: restaurant.description ?? undefined,
     image: restaurant.logoUrl ?? undefined,
-    telephone: restaurant.phoneNumber ?? undefined,
-    address:
-      restaurant.address || restaurant.city || restaurant.country
-        ? {
-            "@type": "PostalAddress",
-            streetAddress: restaurant.address ?? undefined,
-            addressLocality: restaurant.city ?? undefined,
-            addressCountry: restaurant.country ?? undefined,
-          }
-        : undefined,
+    ...placeData(restaurant),
     servesCuisine: restaurant.foodType ?? undefined,
-    // A range closing before it opens runs past midnight, as schema.org allows.
-    openingHoursSpecification: restaurant.openingHours
-      ? WEEK_DAYS.flatMap((day) =>
-          restaurant.openingHours![day].map((range) => ({
-            "@type": "OpeningHoursSpecification",
-            dayOfWeek: `https://schema.org/${SCHEMA_DAYS[day]}`,
-            opens: range.open,
-            closes: range.close,
-          })),
-        )
-      : undefined,
     sameAs: sameAs.length ? sameAs : undefined,
+    department: branches?.length
+      ? branches.map((branch) => ({
+          "@type": type,
+          name: branch.name,
+          url: branch.url,
+          ...placeData(branch),
+        }))
+      : undefined,
     hasMenu: {
       "@type": "Menu",
       url: pageUrl,

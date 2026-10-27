@@ -20,6 +20,8 @@ import { LANGUAGE_NAMES, isMenuLanguage } from "~/lib/menu-languages";
 import { VENUE_TYPES, type VenueType } from "~/lib/venue-types";
 import {
   MIN_DISH_QUERY,
+  venueWithBranches,
+  type DirectoryBranch,
   type DirectoryScope,
   type DirectoryVenue,
   type LocalArea,
@@ -50,22 +52,30 @@ type DishSearch =
   | { state: "error" };
 
 // Countries stored as codes match by code; older typed names by their text.
-const countryKey = (v: DirectoryVenue, locale: string) =>
-  v.countryCode ?? (v.country ? `~${foldText(v.country, locale)}` : null);
+const countryKey = (b: DirectoryBranch, locale: string) =>
+  b.countryCode ?? (b.country ? `~${foldText(b.country, locale)}` : null);
 
-/** Counts venues by a key, as options sorted by name in `locale`. */
+/**
+ * Counts venues by a key of their branches (a chain counts once in each
+ * country or city it's in), as options sorted by name in `locale`.
+ */
 function optionsBy(
   venues: DirectoryVenue[],
-  pick: (v: DirectoryVenue) => { key: string; name: string } | null,
+  pick: (b: DirectoryBranch) => { key: string; name: string } | null,
   locale: string,
 ): FilterOption[] {
   const found = new Map<string, FilterOption>();
   for (const v of venues) {
-    const picked = pick(v);
-    if (!picked) continue;
-    const entry = found.get(picked.key) ?? { ...picked, count: 0 };
-    entry.count++;
-    found.set(picked.key, entry);
+    const picked = new Map<string, string>();
+    for (const b of v.branches) {
+      const option = pick(b);
+      if (option && !picked.has(option.key)) picked.set(option.key, option.name);
+    }
+    for (const [key, name] of picked) {
+      const entry = found.get(key) ?? { key, name, count: 0 };
+      entry.count++;
+      found.set(key, entry);
+    }
   }
   const collator = new Intl.Collator(locale);
   return [...found.values()].sort((a, b) => collator.compare(a.name, b.name));
@@ -73,7 +83,8 @@ function optionsBy(
 
 /**
  * The Menus page: every live venue, filtered by type, country, city, open
- * now and menu language, with one search box that finds both places and
+ * now and menu language (a chain matches by any of its branches, and its
+ * card then covers only those), with one search box that finds both places and
  * dishes across all menus. Visitors start with menus from their own
  * country (when it has any) and can switch to everywhere. Filters are kept
  * in the address, so a shared link or the back button brings them back.
@@ -105,7 +116,10 @@ export function MenusDirectory({
   const scope: DirectoryScope = canBeLocal ? filters.scope : "global";
   const localCode = scope === "local" ? local!.code : null;
   const venues = useMemo(
-    () => (localCode ? allVenues.filter((v) => v.countryCode === localCode) : allVenues),
+    () =>
+      localCode
+        ? allVenues.flatMap((v) => venueWithBranches(v, (b) => b.countryCode === localCode) ?? [])
+        : allVenues,
     [allVenues, localCode],
   );
   // Countries and cities differ from one scope to the other.
@@ -132,9 +146,9 @@ export function MenusDirectory({
         ? []
         : optionsBy(
             venues,
-            (v) => {
-              const key = countryKey(v, locale);
-              return key && v.country ? { key, name: v.country } : null;
+            (b) => {
+              const key = countryKey(b, locale);
+              return key && b.country ? { key, name: b.country } : null;
             },
             locale,
           ),
@@ -146,14 +160,16 @@ export function MenusDirectory({
   const cityOptions = useMemo(
     () =>
       optionsBy(
-        country ? venues.filter((v) => countryKey(v, locale) === country) : venues,
-        (v) => (v.city ? { key: foldText(v.city, locale), name: v.city } : null),
+        country
+          ? venues.flatMap((v) => venueWithBranches(v, (b) => countryKey(b, locale) === country) ?? [])
+          : venues,
+        (b) => (b.city ? { key: foldText(b.city, locale), name: b.city } : null),
         locale,
       ),
     [venues, country, locale],
   );
 
-  const anyHours = venues.some((v) => v.open);
+  const anyHours = venues.some((v) => v.branches.some((b) => b.open));
   const myLanguage = isMenuLanguage(locale) ? locale : null;
   const anyInMyLanguage =
     myLanguage !== null && venues.some((v) => v.languages.includes(myLanguage));
@@ -166,21 +182,30 @@ export function MenusDirectory({
   const activeCount = [type, country, city, openNow, inMyLanguage].filter(Boolean).length;
   const anyFilter = activeCount > 0;
 
-  const passesFilters = (v: DirectoryVenue) =>
-    (!type || v.type === type) &&
-    (!country || countryKey(v, locale) === country) &&
-    (!city || (v.city !== null && fold(v.city) === city)) &&
-    (!openNow || Boolean(v.open?.isOpen)) &&
-    (!inMyLanguage || (myLanguage !== null && v.languages.includes(myLanguage)));
+  // The venue with only the branches the filters accept, or null.
+  const filtered = (v: DirectoryVenue) => {
+    if (type && v.type !== type) return null;
+    if (inMyLanguage && !(myLanguage !== null && v.languages.includes(myLanguage))) return null;
+    return venueWithBranches(
+      v,
+      (b) =>
+        (!country || countryKey(b, locale) === country) &&
+        (!city || (b.city !== null && fold(b.city) === city)) &&
+        (!openNow || Boolean(b.open?.isOpen)),
+    );
+  };
 
   const query = filters.query.trim();
   const folded = fold(query);
   const matchesQuery = (v: DirectoryVenue) =>
-    [v.name, v.typeLabel, v.cuisine, v.city, v.country].some(
+    [v.name, v.typeLabel, v.cuisine, ...v.branches.flatMap((b) => [b.city, b.country])].some(
       (text) => text && fold(text).includes(folded),
     );
 
-  const places = venues.filter((v) => passesFilters(v) && (!query || matchesQuery(v)));
+  const places = venues.flatMap((v) => {
+    const kept = filtered(v);
+    return kept && (!query || matchesQuery(kept)) ? [kept] : [];
+  });
   const featured = venues.filter((v) => v.featured);
   // Every card would name the same country.
   const hideCountry = scope === "local" || Boolean(country);
@@ -212,7 +237,7 @@ export function MenusDirectory({
     dishSearch.state === "done"
       ? dishSearch.results.filter((d) => {
           const venue = byId.get(d.restaurantId);
-          return venue !== undefined && passesFilters(venue);
+          return venue !== undefined && filtered(venue) !== null;
         })
       : [];
 

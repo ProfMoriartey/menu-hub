@@ -46,7 +46,9 @@
       "countryLabel": "Ülke",
       "locationLabel": "Konum",
       "addressLabel": "Adres",
-      "getDirections": "Yol Tarifi Al"
+      "getDirections": "Yol Tarifi Al",
+      "branchesHeading": "Şubeler",
+      "branchDetails": "Saatler ve bilgiler"
     },
   "Dashboard": {
     "title": "Atanmış Menüleriniz",
@@ -215,24 +217,14 @@
     "adminOnlyNote": "Menü adresiniz, görünürlük, tema ve arama ayarlarınız bir yönetici tarafından yönetilir.",
     "basicsTitle": "Temel bilgiler",
     "basicsDescription": "Restoranın adı ve misafirlere kendinizi nasıl tanıttığınız.",
-    "contactTitle": "İletişim ve konum",
-    "contactDescription": "Misafirlerin sizi bulmasına ve size ulaşmasına yardımcı olur.",
     "logoTitle": "Logo",
     "logoDescription": "Menünüzün en üstünde gösterilir.",
     "linksTitle": "Web sitesi ve sosyal medya",
     "linksDescription": "Menünüzde düğme olarak gösterilir. Gizlemek için boş bırakın.",
-    "deliveryTitle": "Teslimat uygulamaları",
-    "deliveryDescription": "Misafirlerin sizden sipariş verebileceği yerler. Gizlemek için boş bırakın.",
     "name": "Ad",
     "description": "Açıklama",
     "descriptionHint": "Restoranın hakkında sayfasında gösterilir.",
     "descriptionPlaceholder": "Mekân, yemekleri ve hikâyesi hakkında birkaç cümle.",
-    "address": "Adres",
-    "addressPlaceholder": "Sokak, numara, semt, şehir",
-    "phone": "Telefon numarası",
-    "mapUrl": "Harita bağlantısı",
-    "mapUrlHint": "Google Haritalar veya Apple Haritalar paylaşım bağlantısını yapıştırın.",
-    "testLink": "Bağlantıyı dene",
     "logoHint": "En iyi sonuç için en az 256 × 256 piksel kare bir görsel kullanın.",
     "logoPreview": "Logo önizlemesi",
     "uploadLogo": "Logo yükle",
@@ -240,7 +232,6 @@
     "removeLogo": "Kaldır",
     "uploadFailed": "Logo yüklenemedi: {error}",
     "website": "Web sitesi",
-    "otherDelivery": "Diğer teslimat bağlantısı",
     "nameRequired": "Restoranın adını girin.",
     "invalidUrl": "https:// ile başlayan tam bir bağlantı girin",
     "saving": "Kaydediliyor…",
@@ -251,10 +242,7 @@
     "discard": "Vazgeç",
     "save": "Değişiklikleri kaydet",
     "saveFailed": "Restoran kaydedilemedi.",
-    "logoTooLarge": "Bu logo küçültüldükten sonra bile çok büyük. Daha küçük bir görsel deneyin (en fazla 4 MB).",
-    "city": "Şehir",
-    "cityHint": "Misafirler menünüzü şehre göre bulabilir.",
-    "cityPlaceholder": "örn. Bursa"
+    "logoTooLarge": "Bu logo küçültüldükten sonra bile çok büyük. Daha küçük bir görsel deneyin (en fazla 4 MB)."
   },
   "ActionErrors": {
     "createRestaurantFailed": "Restoran oluşturulamadı. Lütfen tekrar deneyin.",
@@ -316,7 +304,13 @@
     "invalidColor": "#d97706 gibi renkler girin.",
     "brandColorOff": "Bu restoran için özel renkler açık değil.",
     "saveDesignFailed": "Menü tasarımı kaydedilemedi. Lütfen tekrar deneyin.",
-    "invalidDesign": "Menü tasarımlarından birini seçin."
+    "invalidDesign": "Menü tasarımlarından birini seçin.",
+    "addBranchFailed": "Şube eklenemedi. Lütfen tekrar deneyin.",
+    "saveBranchFailed": "Şube kaydedilemedi. Lütfen tekrar deneyin.",
+    "deleteBranchFailed": "Şube silinemedi. Lütfen tekrar deneyin.",
+    "branchNotFound": "Bu şube artık yok. Sayfayı yenileyin.",
+    "branchNameRequired": "Misafirler şubelerinizi ayırt edebilsin diye şubeye bir ad verin.",
+    "lastBranch": "Bir restoranın en az bir şubesi olmalıdır."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -376,7 +370,11 @@
     "scanCount": "{count, plural, =0 {Okutma yok} other {# okutma}}",
     "dayColumn": "Gün",
     "scansColumn": "Okutma",
-    "scansNote": "Yalnızca QR kod okutmaları sayılır, yazılan bağlantıdan gelen ziyaretler sayılmaz. Aynı telefondan 30 dakika içindeki tekrar okutmalar bir kez sayılır ve sohbet uygulamalarındaki bağlantı önizlemeleri sayılmaz. Günler UTC saatine göredir. Hiçbir kişisel veri saklanmaz."
+    "scansNote": "Yalnızca QR kod okutmaları sayılır, yazılan bağlantıdan gelen ziyaretler sayılmaz. Aynı telefondan 30 dakika içindeki tekrar okutmalar bir kez sayılır ve sohbet uygulamalarındaki bağlantı önizlemeleri sayılmaz. Günler UTC saatine göredir. Hiçbir kişisel veri saklanmaz.",
+    "targetLabel": "Kod ve bağlantı",
+    "targetAll": "Tüm restoran: misafirler şube seçer",
+    "targetUnnamed": "Ana şube",
+    "targetHint": "Bir şubenin kodu, adresi ve saatleriyle o şubenin sayfasını açar. O şubenin masalarında kullanın."
   },
   "Availability": {
     "label": "Durum",
@@ -462,7 +460,13 @@
     "filterLabel": "{count, plural, =0 {Beslenme filtreleri} other {Beslenme filtreleri, # seçili}}",
     "closeDish": "Kapat",
     "ingredients": "İçindekiler",
-    "dishPage": "Ürün sayfasını aç"
+    "dishPage": "Ürün sayfasını aç",
+    "chooseBranch": "{count} şubeden birini seçin",
+    "branchPickerTitle": "{name} şubeleri",
+    "branchPickerIntro": "Menü tüm şubelerde aynıdır. Adresini, saatlerini ve iletişim bilgilerini görmek için birini seçin.",
+    "allBranches": "Tüm şubeler",
+    "mainBranch": "Ana şube",
+    "branchTitle": "{name} – {branch}"
   },
   "Team": {
     "inviteTitle": "Editör davet edin",
@@ -845,7 +849,11 @@
     "showOnly": "Yalnızca göster",
     "clearAll": "Tümünü temizle",
     "showResults": "{count, plural, =0 {Eşleşen menü yok} one {# menüyü göster} other {# menüyü göster}}",
-    "removeFilter": "Filtreyi kaldır: {name}"
+    "removeFilter": "Filtreyi kaldır: {name}",
+    "branchesCount": "{count} şube",
+    "branchesPlace": "{count} şube · {places}",
+    "openAtBranches": "{count} şubede şu an açık",
+    "closedAtBranches": "Şu an kapalı"
   },
   "HomePage": {
     "metaTitle": "Menupedia: restoran ve kafeler için dijital menüler",
@@ -908,5 +916,49 @@
     "signIn": "Giriş yap",
     "dashboard": "Panel",
     "rights": "© {year} Menupedia. Tüm hakları saklıdır."
+  },
+  "Branches": {
+    "title": "Şubeler",
+    "intro": "Misafirlerin sizi bulduğu yerler. Tüm şubeler bu menüyü paylaşır; her birinin kendi adresi, iletişim bilgileri ve çalışma saatleri vardır. İlk şube ana şubedir.",
+    "unnamed": "Ana şube",
+    "mainBadge": "Ana",
+    "noAddress": "Henüz adres yok",
+    "moveUp": "{name} şubesini yukarı taşı",
+    "moveDown": "{name} şubesini aşağı taşı",
+    "nameLabel": "Şube adı",
+    "nameHint": "Misafirler şubelerinizi ayırt edebilsin diye restoranın adının yanında gösterilir.",
+    "nameHintSingle": "Yalnızca başka bir şube eklediğinizde gerekir.",
+    "namePlaceholder": "örn. Kadıköy",
+    "nameRequired": "Misafirler şubelerinizi ayırt edebilsin diye bu şubeye bir ad verin.",
+    "country": "Ülke",
+    "countryNotSet": "Belirtilmedi",
+    "countryAdminOnly": "Bir yönetici tarafından belirlenir.",
+    "countryTyped": "\"{country}\" olarak yazılmış. Listeden seçin.",
+    "save": "Şubeyi kaydet",
+    "add": "Şube ekle",
+    "addLabel": "Yeni şubenin adı",
+    "addHint": "Ana şubenin ülkesi ve saat dilimiyle başlar. Adresini, iletişim bilgilerini ve saatlerini ardından girersiniz.",
+    "adding": "Ekleniyor…",
+    "cancel": "Vazgeç",
+    "delete": "Şubeyi sil",
+    "deleteTitle": "{name} silinsin mi?",
+    "deleteText": "Adresi, iletişim bilgileri, teslimat bağlantıları ve çalışma saatleri kaldırılır. Menü olduğu gibi kalır.",
+    "address": "Adres",
+    "addressPlaceholder": "Sokak, numara, semt, şehir",
+    "city": "Şehir",
+    "cityHint": "Misafirler menünüzü şehre göre bulabilir.",
+    "cityPlaceholder": "örn. Bursa",
+    "phone": "Telefon numarası",
+    "mapUrl": "Harita bağlantısı",
+    "mapUrlHint": "Google Haritalar veya Apple Haritalar paylaşım bağlantısını yapıştırın.",
+    "testLink": "Bağlantıyı dene",
+    "deliveryTitle": "Teslimat uygulamaları",
+    "deliveryDescription": "Misafirlerin sizden sipariş verebileceği yerler. Gizlemek için boş bırakın.",
+    "otherDelivery": "Diğer teslimat bağlantısı",
+    "invalidUrl": "https:// ile başlayan tam bir bağlantı girin",
+    "saving": "Kaydediliyor…",
+    "unsaved": "Kaydedilmemiş değişiklikler",
+    "discard": "Vazgeç",
+    "saved": "Kaydedildi"
   }
 }

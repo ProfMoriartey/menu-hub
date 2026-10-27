@@ -91,6 +91,9 @@ comes from Clerk). `src/env.js` validates the server ones and
                       Gives the browser only CLIENT_NAMESPACES translations.
     page.tsx          the menu (hidden items excluded)
     about/, item/[itemSlug]/   (id-based item URLs permanently redirect to slugs)
+    [branchSlug]/, [branchSlug]/about/   a branch's menu and about page
+    _pages/           menu-page, about-page: shared by the restaurant's and
+                      the branch's routes (server/public-branch picks the branch)
   (site)/             every other page. layout.tsx adds ClerkProvider, all
                       translations, UploadThing's NextSSRPlugin, Navbar
     page.tsx, menus/, features/, about/        public marketing + directory
@@ -190,7 +193,8 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 
 | Table | Notes |
 |---|---|
-| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social/delivery links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`), `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
+| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
+| `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card. Public pages per branch (see Branch pages); the Menus page uses every branch. Restaurant-level reads that need one location use the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
 | `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
 | `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
@@ -209,7 +213,13 @@ three (data only; `menuDesignOf` maps old names too, so the order of deploy
 and migrate doesn't matter), `0010` adds `city` and turns typed venue
 types and countries into keys/ISO codes where they clearly match (the rest
 stay as typed and are shown as they are). **0010 must run before deploying
-the Menus page: every restaurant query reads `city`.** The
+the Menus page: every restaurant query reads `city`.** `0011` adds
+`branches` and copies each restaurant's address, city, country, phone, map
+link, delivery apps, time zone and hours into a first branch (slug `main`).
+**0011 must run before deploying: location is only read from branches
+now.** The restaurant's old copies of those columns are left in the
+database as a backup (no longer in `schema.ts`); a later hand-written
+migration drops them once branches are confirmed. The
 development database has 0001–0004 applied (checked 2026-10-23); **0005 was
 created 2026-10-26 and must be applied with `pnpm db:migrate` in dev and in
 production before the Team tab, admin People tab or dashboard invitations
@@ -401,9 +411,42 @@ entries; other language pages name the main-language page as canonical. The
 admin SEO title/description (untranslated) are only used on main-language
 pages. Slugs stay in the main language. Automatic translation: deferred.
 
-**Opening hours:** card `components/restaurant-settings/OpeningHoursSettings`
-on the admin edit page and the owner Details tab,
-next to the menu-languages card. Up to 3 ranges a day; a close time before
+**Branches:** card `components/branches/BranchesSettings` on the admin
+edit page and the owner Details tab (actions in `actions/branches`). Each
+branch opens to its name, address, city, country (admins only; owners see
+it read-only), phone, map link, delivery links and its opening hours. Add
+(name only; it starts in the main branch's country and time zone), reorder
+with up/down (the first is the main branch), delete (never the last one).
+A name is required once there are two; the slug follows the name (unique
+per restaurant, never `about` or `item`). The restaurant forms no longer
+have address, contact or delivery fields; a new restaurant gets an empty
+branch and the admin form goes on to its edit page.
+
+**Branch pages:** with one branch, `/lokanta` and `/lokanta/about` show it
+and `/lokanta/<branch>` redirects there. With several, `/lokanta` is the
+whole restaurant: no hours or map in the menu header, a `BranchPicker`
+("Choose from N branches") under the name, and the about page lists every
+branch (address, open now, phone, directions) instead of one address;
+delivery links and hours are on each branch's page. `/lokanta/kadikoy`
+and `/lokanta/kadikoy/about` show that branch, with the picker to switch.
+Item pages stay `/lokanta/item/<dish>`. Titles become "Lokanta – Kadıköy";
+the restaurant page's structured data lists branches as `department`;
+the sitemap lists branch pages. `/r/<id>` takes a restaurant or a branch
+id; Share has a "Code and link for" choice (whole restaurant or a branch),
+and the print page takes `?branch=<id>`. Scans are still counted per
+restaurant (on the branch's day); a per-branch count needs a migration.
+
+**Menus page and branches:** a card is a restaurant, with its branches
+(`DirectoryVenue.branches`, each with city, country and open now). Local
+scope, country, city and open now keep a venue when any branch matches,
+and narrow its card to those branches (`venueWithBranches`): one branch
+shows its own city and hours and links to its page (`venueHref`); several
+show "2 branches · Istanbul, Ankara" and "Open now at 1 branch". Country
+and city options count a chain once per place; the local count and the
+home page's "menus near you" use any branch in the country.
+
+**Opening hours:** per branch, `components/restaurant-settings/OpeningHoursSettings`
+inside each branch of the Branches card (`actions/branches.updateBranchHours`). Up to 3 ranges a day; a close time before
 the open time runs past midnight; open == close means 24 hours. The menu
 header shows "Open now · until …" / "Closed · opens …" and the about page a
 week table (`components/public/OpeningHours.tsx`, server components, worked
@@ -546,8 +589,8 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 **Still to check with the owner:**
 - `pnpm db:migrate` in production for migrations 0002–0010, before deploying
   (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
-  colour themes; 0009: design names; 0010: city, venue types, country codes).
-  Dev also needs 0010.
+  colour themes; 0009: design names; 0010: city, venue types, country codes;
+  0011: branches). Dev also needs 0011.
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**

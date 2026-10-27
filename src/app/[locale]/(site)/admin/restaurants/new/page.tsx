@@ -3,7 +3,6 @@ import { ChevronLeft } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { addRestaurant } from "~/app/actions/restaurant";
 import { AdminRestaurantForm } from "~/components/admin/restaurant-form/AdminRestaurantForm";
-import { countryOptions } from "~/lib/countries";
 
 export default function NewRestaurantPage() {
   return (
@@ -17,10 +16,11 @@ export default function NewRestaurantPage() {
         </Link>
         <h1 className="text-foreground text-3xl font-bold tracking-tight">New restaurant</h1>
         <p className="text-muted-foreground">
-          Only the name and menu address are required. You can fill in the rest later.
+          Only the name and menu address are required. You can fill in the rest later. Its
+          address, contact and hours go under Branches, on the next page.
         </p>
       </div>
-      <AdminRestaurantForm countries={countryOptions("en")} action={addRestaurant} />
+      <AdminRestaurantForm action={addRestaurant} />
     </div>
   );
 }

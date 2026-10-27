@@ -1,7 +1,7 @@
 // app/[locale]/(client)/dashboard/[restaurantSlug]/share/page.tsx
 import { type Metadata } from "next";
 import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
-import { getShareLinks } from "~/server/public-origin";
+import { getShareTargets } from "~/server/public-origin";
 import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { SharePanel } from "~/components/share/SharePanel";
@@ -20,8 +20,8 @@ export default async function DashboardSharePage({
 }) {
   const { restaurantSlug } = await params;
   const { restaurant, role } = await getDashboardRestaurant(restaurantSlug);
-  const [{ menuUrl, permanentUrl }, scanStats] = await Promise.all([
-    getShareLinks(restaurant),
+  const [targets, scanStats] = await Promise.all([
+    getShareTargets(restaurant),
     getScanStats(restaurant.id, restaurant.timeZone),
   ]);
 
@@ -35,8 +35,7 @@ export default async function DashboardSharePage({
       <div className="space-y-6">
         <SharePanel
           restaurant={restaurant}
-          menuUrl={menuUrl}
-          permanentUrl={permanentUrl}
+          targets={targets}
           detailsHref={
             canEditDetails(role) ? `/dashboard/${restaurant.slug}/edit` : null
           }

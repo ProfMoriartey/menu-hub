@@ -46,7 +46,9 @@
       "countryLabel": "Country",
       "locationLabel": "Location",
       "addressLabel": "Address",
-      "getDirections": "Get Directions"
+      "getDirections": "Get Directions",
+      "branchesHeading": "Branches",
+      "branchDetails": "Hours and details"
   },
   "Dashboard": {
     "title": "Your Assigned Menus",
@@ -215,24 +217,14 @@
     "adminOnlyNote": "Your menu address, visibility, theme and search settings are managed by an administrator.",
     "basicsTitle": "Basics",
     "basicsDescription": "The restaurant's name and how you describe it to guests.",
-    "contactTitle": "Contact & location",
-    "contactDescription": "Helps guests find and reach you.",
     "logoTitle": "Logo",
     "logoDescription": "Shown at the top of your menu.",
     "linksTitle": "Website & social",
     "linksDescription": "Shown as buttons on your menu. Leave empty to hide.",
-    "deliveryTitle": "Delivery apps",
-    "deliveryDescription": "Where guests can order from you. Leave empty to hide.",
     "name": "Name",
     "description": "Description",
     "descriptionHint": "Shown on the restaurant's about page.",
     "descriptionPlaceholder": "A few sentences about the place, its food and its story.",
-    "address": "Address",
-    "addressPlaceholder": "Street, number, district, city",
-    "phone": "Phone number",
-    "mapUrl": "Map link",
-    "mapUrlHint": "Paste the share link from Google Maps or Apple Maps.",
-    "testLink": "Test link",
     "logoHint": "A square image works best, at least 256 × 256 px.",
     "logoPreview": "Logo preview",
     "uploadLogo": "Upload logo",
@@ -240,7 +232,6 @@
     "removeLogo": "Remove",
     "uploadFailed": "Logo upload failed: {error}",
     "website": "Website",
-    "otherDelivery": "Other delivery link",
     "nameRequired": "Enter the restaurant's name.",
     "invalidUrl": "Enter a full link, starting with https://",
     "saving": "Saving…",
@@ -251,10 +242,7 @@
     "discard": "Discard",
     "save": "Save changes",
     "saveFailed": "Couldn't save the restaurant.",
-    "logoTooLarge": "This logo is too large, even after shrinking. Try a smaller image (up to 4 MB).",
-    "city": "City",
-    "cityHint": "Guests can find your menu by city.",
-    "cityPlaceholder": "e.g. Bursa"
+    "logoTooLarge": "This logo is too large, even after shrinking. Try a smaller image (up to 4 MB)."
   },
   "ActionErrors": {
     "createRestaurantFailed": "Couldn't create the restaurant. Please try again.",
@@ -316,7 +304,13 @@
     "invalidColor": "Enter colours like #d97706.",
     "brandColorOff": "Custom colours aren't enabled for this restaurant.",
     "saveDesignFailed": "Couldn't save the menu design. Please try again.",
-    "invalidDesign": "Choose one of the menu designs."
+    "invalidDesign": "Choose one of the menu designs.",
+    "addBranchFailed": "Couldn't add the branch. Please try again.",
+    "saveBranchFailed": "Couldn't save the branch. Please try again.",
+    "deleteBranchFailed": "Couldn't delete the branch. Please try again.",
+    "branchNotFound": "This branch no longer exists. Reload the page.",
+    "branchNameRequired": "Give the branch a name, so guests can tell your branches apart.",
+    "lastBranch": "A restaurant needs at least one branch."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -376,7 +370,11 @@
     "scanCount": "{count, plural, =0 {No scans} one {# scan} other {# scans}}",
     "dayColumn": "Day",
     "scansColumn": "Scans",
-    "scansNote": "Counts scans of the QR code only, not visits from the typed link. Repeat scans from the same phone within 30 minutes count once, and link previews in chat apps aren't counted. Days follow UTC time. No personal data is stored."
+    "scansNote": "Counts scans of the QR code only, not visits from the typed link. Repeat scans from the same phone within 30 minutes count once, and link previews in chat apps aren't counted. Days follow UTC time. No personal data is stored.",
+    "targetLabel": "Code and link for",
+    "targetAll": "The whole restaurant: guests choose a branch",
+    "targetUnnamed": "Main branch",
+    "targetHint": "A branch's code opens that branch's page, with its address and hours. Use it on that branch's tables."
   },
   "Availability": {
     "label": "Availability",
@@ -462,7 +460,13 @@
     "filterLabel": "{count, plural, =0 {Dietary filters} one {Dietary filters, # selected} other {Dietary filters, # selected}}",
     "closeDish": "Close",
     "ingredients": "Ingredients",
-    "dishPage": "Open the dish page"
+    "dishPage": "Open the dish page",
+    "chooseBranch": "Choose from {count} branches",
+    "branchPickerTitle": "{name}'s branches",
+    "branchPickerIntro": "The menu is the same at every branch. Pick one to see its address, hours and contact details.",
+    "allBranches": "All branches",
+    "mainBranch": "Main branch",
+    "branchTitle": "{name} – {branch}"
   },
   "Team": {
     "inviteTitle": "Invite an editor",
@@ -845,7 +849,11 @@
     "showOnly": "Show only",
     "clearAll": "Clear all",
     "showResults": "{count, plural, =0 {No menus match} one {Show # menu} other {Show # menus}}",
-    "removeFilter": "Remove filter: {name}"
+    "removeFilter": "Remove filter: {name}",
+    "branchesCount": "{count, plural, one {# branch} other {# branches}}",
+    "branchesPlace": "{count, plural, one {# branch} other {# branches}} · {places}",
+    "openAtBranches": "{count, plural, one {Open now at # branch} other {Open now at # branches}}",
+    "closedAtBranches": "Closed now"
   },
   "HomePage": {
     "metaTitle": "Menupedia: digital menus for restaurants and cafés",
@@ -908,5 +916,49 @@
     "signIn": "Sign in",
     "dashboard": "Dashboard",
     "rights": "© {year} Menupedia. All rights reserved."
+  },
+  "Branches": {
+    "title": "Branches",
+    "intro": "Where guests find you. All branches share this menu, and each has its own address, contact details and hours. The first one is the main branch.",
+    "unnamed": "Main branch",
+    "mainBadge": "Main",
+    "noAddress": "No address yet",
+    "moveUp": "Move {name} up",
+    "moveDown": "Move {name} down",
+    "nameLabel": "Branch name",
+    "nameHint": "Shown next to the restaurant's name, so guests can tell your branches apart.",
+    "nameHintSingle": "Only needed once you add another branch.",
+    "namePlaceholder": "e.g. Kadıköy",
+    "nameRequired": "Give this branch a name, so guests can tell your branches apart.",
+    "country": "Country",
+    "countryNotSet": "Not set",
+    "countryAdminOnly": "Set by an administrator.",
+    "countryTyped": "Was typed as \"{country}\". Pick it from the list.",
+    "save": "Save branch",
+    "add": "Add branch",
+    "addLabel": "New branch name",
+    "addHint": "It starts in the main branch's country and time zone. You fill in its address, contact and hours next.",
+    "adding": "Adding…",
+    "cancel": "Cancel",
+    "delete": "Delete branch",
+    "deleteTitle": "Delete {name}?",
+    "deleteText": "Its address, contact details, delivery links and opening hours are removed. The menu stays as it is.",
+    "address": "Address",
+    "addressPlaceholder": "Street, number, district, city",
+    "city": "City",
+    "cityHint": "Guests can find your menu by city.",
+    "cityPlaceholder": "e.g. Bursa",
+    "phone": "Phone number",
+    "mapUrl": "Map link",
+    "mapUrlHint": "Paste the share link from Google Maps or Apple Maps.",
+    "testLink": "Test link",
+    "deliveryTitle": "Delivery apps",
+    "deliveryDescription": "Where guests can order from you. Leave empty to hide.",
+    "otherDelivery": "Other delivery link",
+    "invalidUrl": "Enter a full link, starting with https://",
+    "saving": "Saving…",
+    "unsaved": "Unsaved changes",
+    "discard": "Discard",
+    "saved": "Saved"
   }
 }

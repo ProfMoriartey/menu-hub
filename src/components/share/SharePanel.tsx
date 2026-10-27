@@ -9,17 +9,28 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { loadLogo, qrToPng, qrToSvg } from "~/lib/qr-code";
+import type { ShareTarget } from "~/server/public-origin";
 
 interface SharePanelProps {
   restaurant: { name: string; slug: string; logoUrl: string | null; isActive: boolean };
-  menuUrl: string;
-  permanentUrl: string;
+  // The whole restaurant first, then each branch when it has several.
+  targets: ShareTarget[];
   // Where "add a logo" points, or null when the viewer can't edit details.
   detailsHref: string | null;
   // The printable table cards page.
   printHref: string;
 }
+
+// Radix Select items can't have an empty value.
+const WHOLE_RESTAURANT = "all";
 
 type Logo = Awaited<ReturnType<typeof loadLogo>>;
 
@@ -32,8 +43,11 @@ function download(blob: Blob, filename: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function SharePanel({ restaurant, menuUrl, permanentUrl, detailsHref, printHref }: SharePanelProps) {
+export function SharePanel({ restaurant, targets, detailsHref, printHref }: SharePanelProps) {
   const t = useTranslations("Share");
+  const [targetKey, setTargetKey] = useState(WHOLE_RESTAURANT);
+  const target = targets.find((x) => (x.branchId ?? WHOLE_RESTAURANT) === targetKey) ?? targets[0]!;
+  const { menuUrl, permanentUrl } = target;
   const [withLogo, setWithLogo] = useState(Boolean(restaurant.logoUrl));
   const [logo, setLogo] = useState<Logo | null>(null);
   const [logoFailed, setLogoFailed] = useState(false);
@@ -55,7 +69,7 @@ export function SharePanel({ restaurant, menuUrl, permanentUrl, detailsHref, pri
   // The logo shows once it has loaded and the switch is on.
   const activeLogo = withLogo ? logo : null;
   const svg = qrToSvg(permanentUrl, activeLogo?.dataUrl);
-  const fileBase = `${restaurant.slug}-menu-qr`;
+  const fileBase = `${target.slug}-menu-qr`;
 
   const copyLink = async () => {
     try {
@@ -97,6 +111,25 @@ export function SharePanel({ restaurant, menuUrl, permanentUrl, detailsHref, pri
             </Link>
           </span>
         </p>
+      )}
+
+      {targets.length > 1 && (
+        <div className="bg-card border-border space-y-1.5 rounded-xl border px-5 py-4 shadow-sm sm:px-6">
+          <Label htmlFor="share-target">{t("targetLabel")}</Label>
+          <Select value={targetKey} onValueChange={setTargetKey}>
+            <SelectTrigger id="share-target" className="w-full sm:max-w-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {targets.map((x) => (
+                <SelectItem key={x.branchId ?? WHOLE_RESTAURANT} value={x.branchId ?? WHOLE_RESTAURANT}>
+                  {x.branchId === null ? t("targetAll") : (x.label ?? t("targetUnnamed"))}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-muted-foreground text-xs">{t("targetHint")}</p>
+        </div>
       )}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -172,7 +205,7 @@ export function SharePanel({ restaurant, menuUrl, permanentUrl, detailsHref, pri
               <p className="text-sm font-medium">{t("cardsTitle")}</p>
               <p className="text-muted-foreground text-sm">{t("cardsDescription")}</p>
               <Button variant="secondary" asChild>
-                <Link href={printHref}>
+                <Link href={target.branchId ? `${printHref}?branch=${target.branchId}` : printHref}>
                   <Printer className="h-4 w-4" /> {t("printCards")}
                 </Link>
               </Button>

@@ -2,9 +2,9 @@
 "use server";
 
 import { getLocale } from "next-intl/server";
-import { and, asc, eq, ne, or, sql, type AnyColumn, type SQL } from "drizzle-orm";
+import { and, asc, eq, exists, ne, or, sql, type AnyColumn, type SQL } from "drizzle-orm";
 import { db } from "~/server/db";
-import { menuItems, restaurants } from "~/server/db/schema";
+import { branches, menuItems, restaurants } from "~/server/db/schema";
 import { localizeItem } from "~/server/localize-menu";
 import { formatPrice } from "~/lib/format-price";
 import { menuLanguagesOf } from "~/lib/menu-languages";
@@ -36,7 +36,7 @@ const folded = (column: SQL | AnyColumn) =>
   sql`translate(regexp_replace(normalize(lower(${column}), NFD), ${droppedMarksClass()}, '', 'g'), ${FOLD_FROM}, ${FOLD_TO})`;
 
 /**
- * Dishes on any live menu (or those in `country`) whose name or description contains `query`, in
+ * Dishes on any live menu (or those with a branch in `country`) whose name or description contains `query`, in
  * the main language or a translation, ignoring case and accents. Names come back in the page's
  * language where the menu has it, prices formatted for it. Dishes whose
  * name matches come first.
@@ -81,7 +81,17 @@ export async function searchDishes(
     .where(
       and(
         eq(restaurants.isActive, true),
-        country ? eq(restaurants.country, country) : undefined,
+        // Any of its branches there.
+        country
+          ? exists(
+              db
+                .select({ one: sql`1` })
+                .from(branches)
+                .where(
+                  and(eq(branches.restaurantId, restaurants.id), eq(branches.country, country)),
+                ),
+            )
+          : undefined,
         ne(menuItems.availability, "hidden"),
         or(
           nameMatches,

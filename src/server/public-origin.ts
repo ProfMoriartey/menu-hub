@@ -1,6 +1,7 @@
 // src/server/public-origin.ts
 import { headers } from "next/headers";
 import { env } from "~/env";
+import { getPublicBranches } from "~/server/public-menu";
 
 /**
  * The site's public address for links that leave the app, such as QR codes:
@@ -16,13 +17,58 @@ export async function getPublicOrigin(): Promise<string> {
   return `${protocol}://${host}`;
 }
 
-/** The links a restaurant is shared with. */
-export async function getShareLinks(restaurant: { id: string; slug: string }) {
+/** The links a restaurant, or one of its branches, is shared with. */
+export async function getShareLinks(
+  restaurant: { id: string; slug: string },
+  branch?: { id: string; slug: string },
+) {
   const origin = await getPublicOrigin();
   return {
-    // Readable, for typing or posting; changes if the slug changes.
-    menuUrl: `${origin}/${restaurant.slug}`,
+    // Readable, for typing or posting; changes if a slug changes.
+    menuUrl: branch
+      ? `${origin}/${restaurant.slug}/${branch.slug}`
+      : `${origin}/${restaurant.slug}`,
     // What QR codes encode; forwards to the current menu forever.
-    permanentUrl: `${origin}/r/${restaurant.id}`,
+    permanentUrl: `${origin}/r/${branch?.id ?? restaurant.id}`,
   };
+}
+
+/** Something to make a QR code for: the whole restaurant or one branch. */
+export interface ShareTarget {
+  // Null for the whole restaurant.
+  branchId: string | null;
+  slug: string;
+  // The branch's name (null for the whole restaurant or an unnamed branch).
+  label: string | null;
+  menuUrl: string;
+  permanentUrl: string;
+}
+
+/**
+ * The restaurant, then each of its branches when it has several: one code
+ * per branch takes guests straight to that branch's page.
+ */
+export async function getShareTargets(restaurant: {
+  id: string;
+  slug: string;
+}): Promise<ShareTarget[]> {
+  const all: ShareTarget = {
+    branchId: null,
+    slug: restaurant.slug,
+    label: null,
+    ...(await getShareLinks(restaurant)),
+  };
+  const branches = await getPublicBranches(restaurant.id);
+  if (branches.length < 2) return [all];
+  return [
+    all,
+    ...(await Promise.all(
+      branches.map(async (branch) => ({
+        branchId: branch.id,
+        slug: `${restaurant.slug}-${branch.slug}`,
+        label: branch.name ?? branch.city,
+        ...(await getShareLinks(restaurant, branch)),
+      })),
+    )),
+  ];
 }

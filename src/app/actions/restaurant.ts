@@ -6,13 +6,14 @@ import { menuItems, restaurants } from "~/server/db/schema";
 import { deleteUploadedFiles } from "~/server/uploads";
 import { and, eq, ne } from "drizzle-orm";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
+import { saveMainBranch } from "~/server/branches";
 import type { ZodIssue } from "zod";
 import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import { runAction } from "~/server/run-action";
 
 // 🛑 ADDED: Import the exported types directly from your schema
-import { restaurantSchema, type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
+import { restaurantSchema, type SocialMediaLinks } from "~/lib/schemas";
 
 const getStringValue = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -36,21 +37,15 @@ const getJsonValue = (formData: FormData, key: string): unknown => {
 const readRestaurantFields = (formData: FormData) => ({
   name: getStringValue(formData, "name"),
   slug: getStringValue(formData, "slug"),
-  address: getStringValue(formData, "address"),
-  city: getStringValue(formData, "city")?.trim() ?? null,
-  country: getStringValue(formData, "country"),
   foodType: getStringValue(formData, "foodType"),
   isActive: formData.get("isActive") === "on",
   isDisplayed: formData.get("isDisplayed") === "on",
   logoUrl: getStringValue(formData, "logoUrl"),
   currency: getStringValue(formData, "currency"),
-  phoneNumber: getStringValue(formData, "phoneNumber"),
   description: getStringValue(formData, "description"),
   theme: getStringValue(formData, "theme"),
   typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
   socialMedia: getJsonValue(formData, "socialMedia") as SocialMediaLinks | null,
-  deliveryApps: getJsonValue(formData, "deliveryApps") as DeliveryAppLinks | null,
-  mapUrl: getStringValue(formData, "mapUrl"),
   metaTitle: getStringValue(formData, "metaTitle"),
   metaDescription: getStringValue(formData, "metaDescription"),
   ogImage: getStringValue(formData, "ogImage"),
@@ -88,7 +83,15 @@ export async function addRestaurant(formData: FormData): Promise<ActionResult> {
       throw new ActionError("slugTaken");
     }
 
-    await db.insert(restaurants).values(data);
+    // Every restaurant has a branch; its details are filled in on the
+    // edit page.
+    await db.transaction(async (tx) => {
+      const [created] = await tx
+        .insert(restaurants)
+        .values(data)
+        .returning({ id: restaurants.id });
+      await saveMainBranch(tx, created!.id, {});
+    });
     revalidatePublicRestaurant();
   });
 }
@@ -145,7 +148,6 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
         currency: true,
         theme: true,
         typeOfEstablishment: true,
-        country: true,
         foodType: true,
         metaTitle: true,
         metaDescription: true,
@@ -155,7 +157,7 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
     if (!current) throw new ActionError("restaurantNotFound");
     const { logoUrl: previousLogoUrl, ...adminOnly } = current;
 
-    // Owners edit what their dashboard shows (name, address, contact, logo,
+    // Owners edit what their dashboard shows (name, description, logo,
     // links). The slug, visibility, theme, cuisine and SEO settings stay
     // admin-only, whatever the request contains.
     const rawData = role === "admin" ? submitted : { ...submitted, ...adminOnly };

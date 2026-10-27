@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { unstable_cache } from "next/cache";
 import { and, eq, ne } from "drizzle-orm";
 import { db } from "~/server/db";
-import { menuItems, restaurants } from "~/server/db/schema";
+import { branches, menuItems, restaurants } from "~/server/db/schema";
 import { routing } from "~/i18n/routing";
 import { allMenuLanguages, menuLanguagesOf } from "~/lib/menu-languages";
 import { getPublicOrigin } from "~/server/public-origin";
@@ -36,6 +36,11 @@ const getLivePaths = unstable_cache(
       })
       .from(restaurants)
       .where(eq(restaurants.isActive, true));
+    const branchRows = await db
+      .select({ restaurantId: branches.restaurantId, slug: branches.slug })
+      .from(branches)
+      .innerJoin(restaurants, eq(branches.restaurantId, restaurants.id))
+      .where(eq(restaurants.isActive, true));
     const items = await db
       .select({ restaurantId: menuItems.restaurantId, item: menuItems.slug })
       .from(menuItems)
@@ -63,11 +68,25 @@ const getLivePaths = unstable_cache(
         ];
       }),
     );
+    // Branches have pages of their own once a restaurant has several.
+    const branchCount = new Map<string, number>();
+    for (const { restaurantId } of branchRows) {
+      branchCount.set(restaurantId, (branchCount.get(restaurantId) ?? 0) + 1);
+    }
     return [
       ...[...byId.values()].flatMap(({ slug, languages }) => [
         { path: `/${slug}`, languages },
         { path: `/${slug}/about`, languages },
       ]),
+      ...branchRows.flatMap(({ restaurantId, slug }) => {
+        const restaurant = byId.get(restaurantId);
+        if (!restaurant || (branchCount.get(restaurantId) ?? 0) < 2) return [];
+        const { languages } = restaurant;
+        return [
+          { path: `/${restaurant.slug}/${slug}`, languages },
+          { path: `/${restaurant.slug}/${slug}/about`, languages },
+        ];
+      }),
       ...items.flatMap(({ restaurantId, item }) => {
         const restaurant = byId.get(restaurantId);
         return restaurant

@@ -42,31 +42,24 @@ export const itemAvailabilityEnum = pgEnum("item_availability", [
 // Define a TypeScript type for the values of the dietaryLabelEnum
 type DietaryLabelValue = (typeof dietaryLabelEnum.enumValues)[number];
 
+// A restaurant is the brand and its menu; where it is (address, contact,
+// hours) lives on its branches. Every restaurant has at least one branch.
 export const restaurants = pgTable("menu-hub_restaurants", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   slug: varchar("slug", { length: 256 }).notNull().unique(),
-  address: varchar("address", { length: 256 }),
-  // Town or city, for the Menus page filter.
-  city: varchar("city", { length: 128 }),
-  // ISO 3166 code (lib/countries), named in the reader's language. Older
-  // rows may still hold typed names, which are shown as they are.
-  country: varchar("country", { length: 256 }),
   foodType: varchar("food_type", { length: 256 }),
   isActive: boolean("is_active").default(true).notNull(),
   isDisplayed: boolean("is_displayed").default(false).notNull(),
   logoUrl: varchar("logo_url", { length: 256 }),
 
   currency: varchar("currency", { length: 10 }).default("USD").notNull(),
-  phoneNumber: varchar("phone_number", { length: 50 }),
   description: text("description"),
   theme: varchar("theme", { length: 50 }),
   // A venue type key (lib/venue-types); older rows may hold free text.
   typeOfEstablishment: varchar("type_of_establishment", { length: 100 }),
 
   socialMedia: jsonb("social_media"),
-  deliveryApps: jsonb("delivery_apps"),
-  mapUrl: varchar("map_url", { length: 512 }),
   metaTitle: varchar("meta_title", { length: 256 }),
   metaDescription: text("meta_description"),
   ogImage: varchar("og_image", { length: 256 }),
@@ -83,11 +76,6 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   // Translated description, keyed by language.
   translations: jsonb("translations").$type<RestaurantTranslations>(),
 
-  // IANA time zone (e.g. "Europe/Istanbul"): opening hours and the QR scan
-  // statistics' days are in it. Null = not set (scan days fall back to UTC).
-  timeZone: varchar("time_zone", { length: 64 }),
-  // Weekly hours (lib/opening-hours). Null = not set: nothing is shown.
-  openingHours: jsonb("opening_hours").$type<OpeningHours>(),
   // Custom colours on the public pages. Only an admin turns the feature on
   // (brandColorEnabled); owners and admins then design `colorTheme` (light
   // and dark palettes, lib/color-theme). `brandColor` is the single accent
@@ -104,7 +92,52 @@ export const restaurants = pgTable("menu-hub_restaurants", {
 // Define relations for restaurants
 export const restaurantsRelations = relations(restaurants, ({ many }) => ({
   categories: many(categories),
+  branches: many(branches),
   usersToRestaurants: many(usersToRestaurants), // ADDED LINK
+}));
+
+// The places a restaurant is at. They share its menu; the first (lowest
+// order) is the main branch, the only one until a restaurant has several.
+export const branches = pgTable(
+  "menu-hub_branches",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    restaurantId: uuid("restaurant_id")
+      .notNull()
+      .references(() => restaurants.id, { onDelete: "cascade" }),
+    // Shown next to the restaurant's name ("Kadıköy"). Null on a
+    // restaurant's only branch.
+    name: varchar("name", { length: 128 }),
+    // Unique within the restaurant.
+    slug: varchar("slug", { length: 128 }).notNull(),
+    order: integer("order").notNull().default(0),
+
+    address: varchar("address", { length: 256 }),
+    // Town or city, for the Menus page filter.
+    city: varchar("city", { length: 128 }),
+    // ISO 3166 code (lib/countries), named in the reader's language. Older
+    // rows may still hold typed names, which are shown as they are.
+    country: varchar("country", { length: 256 }),
+    phoneNumber: varchar("phone_number", { length: 50 }),
+    mapUrl: varchar("map_url", { length: 512 }),
+    deliveryApps: jsonb("delivery_apps"),
+    // IANA time zone (e.g. "Europe/Istanbul"): opening hours and the QR scan
+    // statistics' days are in it. Null = not set (scan days fall back to UTC).
+    timeZone: varchar("time_zone", { length: 64 }),
+    // Weekly hours (lib/opening-hours). Null = not set: nothing is shown.
+    openingHours: jsonb("opening_hours").$type<OpeningHours>(),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (t) => [uniqueIndex("branches_restaurant_slug_idx").on(t.restaurantId, t.slug)],
+);
+
+export const branchesRelations = relations(branches, ({ one }) => ({
+  restaurant: one(restaurants, {
+    fields: [branches.restaurantId],
+    references: [restaurants.id],
+  }),
 }));
 
 export const categories = pgTable(

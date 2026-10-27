@@ -17,8 +17,8 @@ const textOrNull = (value: string | null) => {
 
 /**
  * Every live venue as a Menus page card, in the request's language and
- * sorted by name, with open/closed worked out now; and the visitor's
- * country with how many of the venues are in it. Used by the Menus page
+ * sorted by name, with each branch's open/closed worked out now; and the
+ * visitor's country with how many of the venues have a branch in it. Used by the Menus page
  * and the home page's "menus near you".
  */
 export async function getDirectoryVenues(): Promise<{
@@ -38,10 +38,6 @@ export async function getDirectoryVenues(): Promise<{
   const venues: DirectoryVenue[] = rows
     .map((row) => {
       const languages = menuLanguagesOf(row);
-      const open =
-        row.openingHours && row.timeZone
-          ? describeOpenStatus(row.openingHours, row.timeZone, now, tMenu, locale)
-          : null;
       return {
         id: row.id,
         slug: row.slug,
@@ -50,26 +46,39 @@ export async function getDirectoryVenues(): Promise<{
         type: isVenueType(row.typeOfEstablishment) ? row.typeOfEstablishment : null,
         typeLabel: venueTypeLabel(row.typeOfEstablishment, tVenue),
         cuisine: textOrNull(row.foodType),
-        city: textOrNull(row.city),
-        country: countryName(row.country, locale),
-        countryCode: isCountryCode(row.country) ? row.country : null,
+        branches: row.branches.map((branch) => {
+          const open =
+            branch.openingHours && branch.timeZone
+              ? describeOpenStatus(branch.openingHours, branch.timeZone, now, tMenu, locale)
+              : null;
+          return {
+            slug: branch.slug,
+            city: textOrNull(branch.city),
+            country: countryName(branch.country, locale),
+            countryCode: isCountryCode(branch.country) ? branch.country : null,
+            open: open && {
+              isOpen: open.isOpen,
+              label: [open.label, open.detail].filter(Boolean).join(" · "),
+            },
+          };
+        }),
+        branchCount: row.branches.length,
         featured: row.isDisplayed,
         photos: row.photos,
         dishCount: row.dishCount,
         languages: languages ? allMenuLanguages(languages) : [],
-        open: open && {
-          isOpen: open.isOpen,
-          label: [open.label, open.detail].filter(Boolean).join(" · "),
-        },
       };
     })
+    // Every restaurant has a branch; one without (mid-delete) has no card.
+    .filter((venue) => venue.branchCount > 0)
     .sort((a, b) => collator.compare(a.name, b.name));
 
   const local: LocalArea | null = visitorCountry
     ? {
         code: visitorCountry,
         name: countryName(visitorCountry, locale) ?? visitorCountry,
-        count: venues.filter((v) => v.countryCode === visitorCountry).length,
+        count: venues.filter((v) => v.branches.some((b) => b.countryCode === visitorCountry))
+          .length,
       }
     : null;
 

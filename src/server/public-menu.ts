@@ -1,9 +1,10 @@
 // src/server/public-menu.ts
 import { cache } from "react";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
-import { and, count, eq, isNotNull, lte, ne, sql } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull, lte, ne, sql } from "drizzle-orm";
 import { db } from "~/server/db";
-import { categories, menuItems, restaurants } from "~/server/db/schema";
+import { branches, categories, menuItems, restaurants } from "~/server/db/schema";
+import { LOCATION_COLUMNS, MAIN_BRANCH, withMainBranch } from "~/server/branches";
 
 /*
  * Reads for the public restaurant pages (menu, about, item), cached across
@@ -41,18 +42,36 @@ const ITEM_COLUMNS = {
 } as const;
 
 /**
- * Restaurant row by slug, without relations or timestamps. React cache()
- * on top shares one lookup between the layout, the page and its metadata.
+ * Restaurant row by slug, with its main branch's location and without
+ * timestamps. React cache() on top shares one lookup between the layout,
+ * the page and its metadata.
  */
 export const getRestaurantBySlug = cache((slug: string) =>
   unstable_cache(
-    async () =>
-      (await db.query.restaurants.findFirst({
+    async () => {
+      const row = await db.query.restaurants.findFirst({
         where: eq(restaurants.slug, slug),
         columns: { createdAt: false, updatedAt: false },
-      })) ?? null,
+        with: MAIN_BRANCH,
+      });
+      return row ? withMainBranch(row) : null;
+    },
     ["public-restaurant", slug],
     { tags: [RESTAURANTS_TAG], revalidate: MAX_AGE_SECONDS },
+  )(),
+);
+
+/** The restaurant's branches, main branch first, with where each one is. */
+export const getPublicBranches = cache((restaurantId: string) =>
+  unstable_cache(
+    () =>
+      db.query.branches.findMany({
+        where: eq(branches.restaurantId, restaurantId),
+        orderBy: [asc(branches.order), asc(branches.createdAt)],
+        columns: { id: true, name: true, slug: true, ...LOCATION_COLUMNS },
+      }),
+    ["public-branches", restaurantId],
+    { tags: [menuTag(restaurantId)], revalidate: MAX_AGE_SECONDS },
   )(),
 );
 
@@ -108,8 +127,9 @@ export const getPublicMenuItem = cache(
 const PHOTOS_PER_CARD = 3;
 
 /**
- * Every live venue for the Menus page: its card details, its first few dish
- * photos (in menu order) and how many dishes guests can see.
+ * Every live venue for the Menus page: its card details, where each of its
+ * branches is, its first few dish photos (in menu order) and how many
+ * dishes guests can see.
  */
 export const getMenusDirectory = cache(
   unstable_cache(
@@ -123,14 +143,16 @@ export const getMenusDirectory = cache(
           logoUrl: true,
           typeOfEstablishment: true,
           foodType: true,
-          city: true,
-          country: true,
           isDisplayed: true,
-          openingHours: true,
-          timeZone: true,
           multilingualEnabled: true,
           mainLanguage: true,
           extraLanguages: true,
+        },
+        with: {
+          branches: {
+            columns: { slug: true, city: true, country: true, openingHours: true, timeZone: true },
+            orderBy: [asc(branches.order), asc(branches.createdAt)],
+          },
         },
       });
 

@@ -29,6 +29,9 @@ export const ACTION_ERROR_CODES = [
   "saveHoursFailed",
   "saveColorFailed",
   "saveDesignFailed",
+  "addBranchFailed",
+  "saveBranchFailed",
+  "deleteBranchFailed",
   // Access
   "signInAgain",
   "noAccess",
@@ -71,6 +74,10 @@ export const ACTION_ERROR_CODES = [
   "invalidColor",
   "brandColorOff",
   "invalidDesign",
+  // Branches
+  "branchNotFound",
+  "branchNameRequired",
+  "lastBranch",
   // Uploads
   "signInToUpload",
   "adminOnlyNewLogo",

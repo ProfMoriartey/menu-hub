@@ -11,17 +11,13 @@ import {
 } from "react";
 import Image from "next/image";
 import {
-  Bike,
   Check,
   CircleAlert,
-  ExternalLink,
   Facebook,
   Globe,
   ImagePlus,
   Instagram,
-  MapPin,
   Music2,
-  Phone,
   Twitter,
   type LucideIcon,
 } from "lucide-react";
@@ -41,11 +37,10 @@ import {
 import { UploadButton, uploadButtonClass } from "~/utils/uploadthing";
 import { LOGO, resizeImages } from "~/lib/resize-image";
 import { cn } from "~/lib/utils";
-import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
+import type { SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 import { slugify } from "~/lib/slug";
 import { VENUE_TYPES, isVenueType } from "~/lib/venue-types";
-import { isCountryCode, type CountryOption } from "~/lib/countries";
 import { CharCount, Field, FormSection, ToggleRow, UrlInput } from "~/components/forms/fields";
 import {
   CURRENCIES,
@@ -70,27 +65,15 @@ const SOCIAL_FIELDS: { key: keyof SocialMediaLinks; label: string; icon: LucideI
   { key: "twitter", label: "X (Twitter)", icon: Twitter, placeholder: "https://x.com/…" },
 ];
 
-const DELIVERY_FIELDS: { key: keyof DeliveryAppLinks; label: string }[] = [
-  { key: "yemeksepeti", label: "Yemeksepeti" },
-  { key: "getir", label: "Getir" },
-  { key: "trendyolYemek", label: "Trendyol Yemek" },
-  { key: "migrosYemek", label: "Migros Yemek" },
-  { key: "uberEats", label: "Uber Eats" },
-  { key: "deliveroo", label: "Deliveroo" },
-  { key: "customLink", label: "Other delivery link" },
-];
-
 // Radix Select items can't have an empty value.
 const NOT_SET = "none";
 
 interface AdminRestaurantFormProps {
   restaurant?: Restaurant;
-  // Named on the server (lib/countries).
-  countries: CountryOption[];
   action: (formData: FormData) => Promise<ActionResult>;
 }
 
-export function AdminRestaurantForm({ restaurant, countries, action }: AdminRestaurantFormProps) {
+export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormProps) {
   const isEditing = Boolean(restaurant);
   const router = useRouter();
   // Sent with logo uploads so upload errors come back in this language.
@@ -130,7 +113,7 @@ export function AdminRestaurantForm({ restaurant, countries, action }: AdminRest
     clearError(key);
   };
 
-  const setLink = <G extends "socialMedia" | "deliveryApps">(group: G, key: string, value: string) => {
+  const setLink = (group: "socialMedia", key: string, value: string) => {
     setValues((prev) => ({ ...prev, [group]: { ...prev[group], [key]: value } }));
     setJustSaved(false);
     clearError(`${group}.${key}`);
@@ -185,7 +168,8 @@ export function AdminRestaurantForm({ restaurant, countries, action }: AdminRest
             router.replace(`/admin/restaurants/${values.slug}/edit`);
           }
         } else {
-          router.push("/admin/restaurants");
+          // On to its edit page, where its first branch is filled in.
+          router.push(`/admin/restaurants/${values.slug}/edit`);
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : "Something went wrong while saving.";
@@ -477,93 +461,9 @@ export function AdminRestaurantForm({ restaurant, countries, action }: AdminRest
             </Field>
           </FormSection>
 
-          {/* LOCATION & CONTACT */}
-          <FormSection id="location" title="Location & contact" description="Helps guests find and reach the restaurant.">
-            <Field label="Address" htmlFor="address">
-              <Input
-                id="address"
-                value={values.address}
-                onChange={(e) => set("address", e.target.value)}
-                placeholder="Street, number, district, city"
-              />
-            </Field>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="City" htmlFor="city" hint="Guests filter the Menus page by it.">
-                <Input
-                  id="city"
-                  value={values.city}
-                  onChange={(e) => set("city", e.target.value)}
-                  placeholder="e.g. Bursa"
-                />
-              </Field>
-              <Field
-                label="Country"
-                htmlFor="country"
-                hint={
-                  values.country && !isCountryCode(values.country)
-                    ? `Was typed as "${values.country}". Pick it from the list.`
-                    : undefined
-                }
-              >
-                <Select
-                  value={isCountryCode(values.country) ? values.country : NOT_SET}
-                  onValueChange={(value) => set("country", value === NOT_SET ? "" : value)}
-                >
-                  <SelectTrigger id="country" className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={NOT_SET}>Not set</SelectItem>
-                    {countries.map((c) => (
-                      <SelectItem key={c.code} value={c.code}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Phone number" htmlFor="phoneNumber">
-                <div className="relative">
-                  <Phone className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-                  <Input
-                    id="phoneNumber"
-                    type="tel"
-                    value={values.phoneNumber}
-                    onChange={(e) => set("phoneNumber", e.target.value)}
-                    placeholder="+90 555 123 45 67"
-                    className="pl-9"
-                  />
-                </div>
-              </Field>
-            </div>
-            <Field
-              label="Map link"
-              htmlFor="mapUrl"
-              error={errors.mapUrl}
-              hint="Paste the share link from Google Maps or Apple Maps."
-              aside={
-                values.mapUrl && !errors.mapUrl ? (
-                  <a href={values.mapUrl} target="_blank" rel="noreferrer" className="text-primary inline-flex items-center gap-1 text-xs hover:underline">
-                    Test link <ExternalLink className="h-3 w-3" />
-                  </a>
-                ) : undefined
-              }
-            >
-              <UrlInput
-                id="mapUrl"
-                icon={MapPin}
-                value={values.mapUrl}
-                onValueChange={(v) => set("mapUrl", v)}
-                error={errors.mapUrl}
-                placeholder="https://maps.app.goo.gl/…"
-              />
-            </Field>
-          </FormSection>
-
-          {/* LINKS & DELIVERY */}
-          <FormSection id="links" title="Links & delivery" description="Shown as buttons on the menu. Leave empty to hide.">
+          {/* LINKS (address, contact and delivery are per branch) */}
+          <FormSection id="links" title="Website & social" description="Shown as buttons on the menu. Leave empty to hide.">
             <div className="space-y-3">
-              <h3 className="text-sm font-medium">Website & social</h3>
               <div className="grid gap-4 sm:grid-cols-2">
                 {SOCIAL_FIELDS.map(({ key, label, icon, placeholder }) => {
                   const id = `socialMedia.${key}`;
@@ -576,26 +476,6 @@ export function AdminRestaurantForm({ restaurant, countries, action }: AdminRest
                         onValueChange={(v) => setLink("socialMedia", key, v)}
                         error={errors[id]}
                         placeholder={placeholder}
-                      />
-                    </Field>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="border-border space-y-3 border-t pt-5">
-              <h3 className="text-sm font-medium">Delivery apps</h3>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {DELIVERY_FIELDS.map(({ key, label }) => {
-                  const id = `deliveryApps.${key}`;
-                  return (
-                    <Field key={key} label={label} htmlFor={id} error={errors[id]}>
-                      <UrlInput
-                        id={id}
-                        icon={Bike}
-                        value={values.deliveryApps[key] ?? ""}
-                        onValueChange={(v) => setLink("deliveryApps", key, v)}
-                        error={errors[id]}
-                        placeholder="https://…"
                       />
                     </Field>
                   );

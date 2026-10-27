@@ -3,7 +3,8 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
-import { getShareLinks } from "~/server/public-origin";
+import { MAIN_BRANCH, withMainBranch } from "~/server/branches";
+import { getShareTargets } from "~/server/public-origin";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
 import { SharePanel } from "~/components/share/SharePanel";
 import { ScanStats } from "~/components/share/ScanStats";
@@ -16,13 +17,15 @@ export default async function AdminSharePage({
 }) {
   const { restaurantSlug } = await params;
 
-  const restaurant = await db.query.restaurants.findFirst({
+  const row = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
+    with: MAIN_BRANCH,
   });
-  if (!restaurant) notFound();
+  if (!row) notFound();
+  const restaurant = withMainBranch(row);
 
-  const [{ menuUrl, permanentUrl }, scanStats] = await Promise.all([
-    getShareLinks(restaurant),
+  const [targets, scanStats] = await Promise.all([
+    getShareTargets(restaurant),
     getScanStats(restaurant.id, restaurant.timeZone),
   ]);
 
@@ -31,8 +34,7 @@ export default async function AdminSharePage({
       <RestaurantAdminHeader restaurant={restaurant} activeTab="share" />
       <SharePanel
         restaurant={restaurant}
-        menuUrl={menuUrl}
-        permanentUrl={permanentUrl}
+        targets={targets}
         detailsHref={`/admin/restaurants/${restaurant.slug}/edit`}
         printHref={`/admin/restaurants/${restaurant.slug}/share/print`}
       />
