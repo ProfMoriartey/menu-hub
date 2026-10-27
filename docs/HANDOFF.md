@@ -191,7 +191,7 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 | Table | Notes |
 |---|---|
 | `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
-| `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one; for now everything reads and writes the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`, `saveMainBranch`) |
+| `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card; the public pages, Menus page and QR scans still read only the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
 | `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
 | `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
@@ -408,9 +408,19 @@ entries; other language pages name the main-language page as canonical. The
 admin SEO title/description (untranslated) are only used on main-language
 pages. Slugs stay in the main language. Automatic translation: deferred.
 
-**Opening hours:** card `components/restaurant-settings/OpeningHoursSettings`
-on the admin edit page and the owner Details tab,
-next to the menu-languages card. Up to 3 ranges a day; a close time before
+**Branches:** card `components/branches/BranchesSettings` on the admin
+edit page and the owner Details tab (actions in `actions/branches`). Each
+branch opens to its name, address, city, country (admins only; owners see
+it read-only), phone, map link, delivery links and its opening hours. Add
+(name only; it starts in the main branch's country and time zone), reorder
+with up/down (the first is the main branch), delete (never the last one).
+A name is required once there are two; the slug follows the name (unique
+per restaurant, never `about` or `item`). The restaurant forms no longer
+have address, contact or delivery fields; a new restaurant gets an empty
+branch and the admin form goes on to its edit page.
+
+**Opening hours:** per branch, `components/restaurant-settings/OpeningHoursSettings`
+inside each branch of the Branches card (`actions/branches.updateBranchHours`). Up to 3 ranges a day; a close time before
 the open time runs past midnight; open == close means 24 hours. The menu
 header shows "Open now · until …" / "Closed · opens …" and the about page a
 week table (`components/public/OpeningHours.tsx`, server components, worked

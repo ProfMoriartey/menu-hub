@@ -5,18 +5,14 @@ import { useState, useTransition, type FormEvent } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import {
-  Bike,
   Check,
   CircleAlert,
-  ExternalLink,
   Facebook,
   Globe,
   ImagePlus,
   Info,
   Instagram,
-  MapPin,
   Music2,
-  Phone,
   Twitter,
   type LucideIcon,
 } from "lucide-react";
@@ -37,7 +33,7 @@ import {
   type FormErrors,
   type RestaurantFormValues,
 } from "~/components/admin/restaurant-form/form-state";
-import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
+import type { SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
 // Brand names stay the same in every language.
@@ -49,27 +45,8 @@ const SOCIAL_FIELDS: { key: keyof SocialMediaLinks; label?: string; icon: Lucide
   { key: "twitter", label: "X (Twitter)", icon: Twitter, placeholder: "https://x.com/…" },
 ];
 
-const DELIVERY_FIELDS: { key: keyof DeliveryAppLinks; label?: string }[] = [
-  { key: "yemeksepeti", label: "Yemeksepeti" },
-  { key: "getir", label: "Getir" },
-  { key: "trendyolYemek", label: "Trendyol Yemek" },
-  { key: "migrosYemek", label: "Migros Yemek" },
-  { key: "uberEats", label: "Uber Eats" },
-  { key: "deliveroo", label: "Deliveroo" },
-  { key: "customLink" },
-];
-
-const SHOWN_FIELDS = new Set([
-  "name",
-  "description",
-  "address",
-  "city",
-  "phoneNumber",
-  "mapUrl",
-  "logoUrl",
-  "socialMedia",
-  "deliveryApps",
-]);
+// Address, contact and delivery links are per branch (BranchesSettings).
+const SHOWN_FIELDS = new Set(["name", "description", "logoUrl", "socialMedia"]);
 
 export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant }) {
   const t = useTranslations("RestaurantDetails");
@@ -103,7 +80,7 @@ export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant
     clearError(key);
   };
 
-  const setLink = (group: "socialMedia" | "deliveryApps", key: string, value: string) => {
+  const setLink = (group: "socialMedia", key: string, value: string) => {
     setValues((prev) => ({ ...prev, [group]: { ...prev[group], [key]: value } }));
     setJustSaved(false);
     clearError(`${group}.${key}`);
@@ -186,67 +163,6 @@ export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant
           </Field>
         </FormSection>
 
-        <FormSection id="contact" title={t("contactTitle")} description={t("contactDescription")}>
-          <Field label={t("address")} htmlFor="address">
-            <Input
-              id="address"
-              value={values.address}
-              onChange={(e) => set("address", e.target.value)}
-              placeholder={t("addressPlaceholder")}
-            />
-          </Field>
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field label={t("city")} htmlFor="city" hint={t("cityHint")}>
-              <Input
-                id="city"
-                value={values.city}
-                onChange={(e) => set("city", e.target.value)}
-                placeholder={t("cityPlaceholder")}
-              />
-            </Field>
-            <Field label={t("phone")} htmlFor="phoneNumber">
-              <div className="relative" dir="ltr">
-                <Phone className="text-muted-foreground pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2" />
-                <Input
-                  id="phoneNumber"
-                  type="tel"
-                  value={values.phoneNumber}
-                  onChange={(e) => set("phoneNumber", e.target.value)}
-                  placeholder="+90 555 123 45 67"
-                  className="ps-9"
-                />
-              </div>
-            </Field>
-            <Field
-              label={t("mapUrl")}
-              htmlFor="mapUrl"
-              error={errors.mapUrl}
-              hint={t("mapUrlHint")}
-              aside={
-                values.mapUrl && !errors.mapUrl ? (
-                  <a
-                    href={values.mapUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-primary inline-flex items-center gap-1 text-xs hover:underline"
-                  >
-                    {t("testLink")} <ExternalLink className="h-3 w-3" />
-                  </a>
-                ) : undefined
-              }
-            >
-              <UrlInput
-                id="mapUrl"
-                icon={MapPin}
-                value={values.mapUrl}
-                onValueChange={(v) => set("mapUrl", v)}
-                error={errors.mapUrl}
-                placeholder="https://maps.app.goo.gl/…"
-              />
-            </Field>
-          </div>
-        </FormSection>
-
         <FormSection id="logo" title={t("logoTitle")} description={t("logoDescription")}>
           <Field label={t("logoTitle")} htmlFor="logoUrl" error={errors.logoUrl} hint={t("logoHint")}>
             <div className="flex flex-wrap items-center gap-5">
@@ -308,25 +224,6 @@ export function RestaurantDetailsEditor({ restaurant }: { restaurant: Restaurant
           </div>
         </FormSection>
 
-        <FormSection id="delivery" title={t("deliveryTitle")} description={t("deliveryDescription")}>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {DELIVERY_FIELDS.map(({ key, label }) => {
-              const id = `deliveryApps.${key}`;
-              return (
-                <Field key={key} label={label ?? t("otherDelivery")} htmlFor={id} error={errors[id]}>
-                  <UrlInput
-                    id={id}
-                    icon={Bike}
-                    value={values.deliveryApps[key] ?? ""}
-                    onValueChange={(v) => setLink("deliveryApps", key, v)}
-                    error={errors[id]}
-                    placeholder="https://…"
-                  />
-                </Field>
-              );
-            })}
-          </div>
-        </FormSection>
       </div>
 
       {/* Sticky save bar */}

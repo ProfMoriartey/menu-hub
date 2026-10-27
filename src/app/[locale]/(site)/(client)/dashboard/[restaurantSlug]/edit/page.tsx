@@ -7,7 +7,9 @@ import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { RestaurantDetailsEditor } from "~/components/dashboard/RestaurantDetailsEditor";
 import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
-import { OpeningHoursSettings } from "~/components/restaurant-settings/OpeningHoursSettings";
+import { BranchesSettings } from "~/components/branches/BranchesSettings";
+import { getBranchesForEdit } from "~/server/branches";
+import { countryOptions } from "~/lib/countries";
 import type { DeliveryAppLinks, SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
@@ -51,6 +53,12 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
       />
       <RestaurantDetailsEditor restaurant={restaurant} />
       <div className="mt-8 space-y-8">
+        <BranchesSettings
+          restaurantId={row.id}
+          branches={await getBranchesForEdit(row.id)}
+          isAdmin={role === "admin"}
+          countries={countryOptions(await getLocale())}
+        />
         <MenuLanguagesSettings
           restaurantId={row.id}
           isAdmin={role === "admin"}
@@ -59,11 +67,6 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
           extraLanguages={row.extraLanguages}
           description={row.description}
           translations={row.translations}
-        />
-        <OpeningHoursSettings
-          restaurantId={row.id}
-          timeZone={row.timeZone}
-          hours={row.openingHours}
         />
       </div>
     </>

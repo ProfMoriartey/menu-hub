@@ -59,28 +59,39 @@ export const restaurantSchema = z.object({
     .refine((slug) => !RESERVED_SLUGS.includes(slug), {
       message: `This slug is reserved by the site. Avoid: ${RESERVED_SLUGS.join(", ")}.`,
     }),
-  address: z.string().nullable().optional(),
-  city: z.string().max(128).nullable().optional(),
-  country: z.string().nullable().optional(),
   foodType: z.string().nullable().optional(),
   isActive: z.coerce.boolean().default(true),
   isDisplayed: z.coerce.boolean().default(true),
   logoUrl: z.string().url("Invalid URL format.").nullable().optional().or(z.literal("")),
   currency: z.string().min(1, { message: "Currency is required." }).default("USD"),
-  phoneNumber: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   theme: z.string().nullable().optional(),
   typeOfEstablishment: z.string().nullable().optional(),
 
   socialMedia: socialMediaSchema.nullable().optional(),
-  deliveryApps: deliveryAppsSchema.nullable().optional(),
-  mapUrl: z.string().url("Invalid URL format.").nullable().optional().or(z.literal("")),
   metaTitle: z.string().max(256).nullable().optional(),
   metaDescription: z.string().nullable().optional(),
   ogImage: z.string().url("Invalid URL format.").nullable().optional().or(z.literal("")),
 });
 
 export type RestaurantFormData = z.infer<typeof restaurantSchema>;
+
+// Branch pages will live at /[restaurantSlug]/[branchSlug], next to these.
+export const RESERVED_BRANCH_SLUGS = ["about", "item"];
+
+// A branch's own details (server/branches). The country is an ISO code
+// (lib/countries); owners can't change it.
+export const branchSchema = z.object({
+  name: z.string().trim().max(128).nullable(),
+  address: z.string().trim().max(256).nullable(),
+  city: z.string().trim().max(128).nullable(),
+  country: z.string().max(256).nullable(),
+  phoneNumber: z.string().trim().max(50).nullable(),
+  mapUrl: z.string().url("Invalid URL format.").max(512).nullable().or(z.literal("")),
+  deliveryApps: deliveryAppsSchema.nullable(),
+});
+
+export type BranchFields = z.infer<typeof branchSchema>;
 
 
 // Category Schemas

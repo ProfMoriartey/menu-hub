@@ -1,7 +1,7 @@
 // src/components/restaurant-settings/OpeningHoursSettings.tsx
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useId, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Check, CircleAlert, Clock, Plus, X } from "lucide-react";
 import { useRouter } from "~/i18n/navigation";
@@ -9,7 +9,8 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import { Field } from "~/components/forms/fields";
-import { updateOpeningHours } from "~/app/actions/restaurant-settings";
+import { cn } from "~/lib/utils";
+import { updateBranchHours } from "~/app/actions/branches";
 import {
   MAX_RANGES_PER_DAY,
   WEEK_DAYS,
@@ -21,20 +22,25 @@ import {
 const DEFAULT_RANGE = { open: "09:00", close: "22:00" };
 
 interface OpeningHoursSettingsProps {
-  restaurantId: string;
+  branchId: string;
   timeZone: string | null;
   hours: OpeningHours | null;
+  // Inside another card (a branch's), without a card of its own.
+  embedded?: boolean;
 }
 
 /**
- * Weekly opening hours and the restaurant's time zone. Shared by the admin
- * edit page and the owner's Details tab (the action checks owner or admin).
+ * A branch's weekly opening hours and time zone, on the admin edit page and
+ * the owner's Details tab (the action checks owner or admin). Several can
+ * be on one page, one per branch.
  */
 export function OpeningHoursSettings({
-  restaurantId,
+  branchId,
   timeZone,
   hours,
+  embedded = false,
 }: OpeningHoursSettingsProps) {
+  const id = useId();
   const t = useTranslations("OpeningHours");
   const locale = useLocale();
   const router = useRouter();
@@ -81,7 +87,7 @@ export function OpeningHoursSettings({
   const save = () => {
     setError(null);
     startTransition(async () => {
-      const result = await updateOpeningHours(restaurantId, values);
+      const result = await updateBranchHours(branchId, values);
       if (!result.ok) return setError(result.error);
       setInitial(values);
       setSaved(true);
@@ -91,13 +97,19 @@ export function OpeningHoursSettings({
 
   return (
     <section
-      aria-labelledby="opening-hours-title"
-      className="bg-card border-border space-y-5 rounded-xl border p-5 shadow-sm sm:p-6"
+      aria-labelledby={`${id}-title`}
+      className={cn(
+        "space-y-5",
+        !embedded && "bg-card border-border rounded-xl border p-5 shadow-sm sm:p-6",
+      )}
     >
       <div>
         <h2
-          id="opening-hours-title"
-          className="flex items-center gap-2 text-base font-semibold"
+          id={`${id}-title`}
+          className={cn(
+            "flex items-center gap-2 font-semibold",
+            embedded ? "text-sm" : "text-base",
+          )}
         >
           <Clock className="h-4 w-4" aria-hidden /> {t("title")}
         </h2>
@@ -106,12 +118,12 @@ export function OpeningHoursSettings({
 
       <Field
         label={t("timeZoneLabel")}
-        htmlFor="time-zone"
+        htmlFor={`${id}-time-zone`}
         hint={t("timeZoneHint")}
       >
         <Input
-          id="time-zone"
-          list="time-zones"
+          id={`${id}-time-zone`}
+          list={`${id}-time-zones`}
           dir="ltr"
           autoComplete="off"
           value={values.timeZone}
@@ -119,7 +131,7 @@ export function OpeningHoursSettings({
           placeholder="Europe/Istanbul"
           className="sm:max-w-xs"
         />
-        <datalist id="time-zones">
+        <datalist id={`${id}-time-zones`}>
           {zones.map((zone) => (
             <option key={zone} value={zone} />
           ))}
@@ -156,14 +168,14 @@ export function OpeningHoursSettings({
                 >
                   <div className="flex w-40 shrink-0 items-center gap-3 pt-1.5">
                     <Switch
-                      id={`open-${day}`}
+                      id={`${id}-open-${day}`}
                       checked={open}
                       onCheckedChange={(on) =>
                         setDay(day, on ? [DEFAULT_RANGE] : [])
                       }
                     />
                     <label
-                      htmlFor={`open-${day}`}
+                      htmlFor={`${id}-open-${day}`}
                       className="text-sm font-medium"
                     >
                       {dayName(day, locale)}

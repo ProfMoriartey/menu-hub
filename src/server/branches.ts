@@ -1,8 +1,9 @@
 // src/server/branches.ts
 import { asc, eq } from "drizzle-orm";
-import type { db as database } from "~/server/db";
+import { db as database } from "~/server/db";
 import { branches } from "~/server/db/schema";
 import type { OpeningHours } from "~/lib/opening-hours";
+import type { DeliveryAppLinks } from "~/lib/schemas";
 
 /*
  * A restaurant's location, contact and hours live on its branches
@@ -83,4 +84,22 @@ export async function saveMainBranch(
   } else {
     await tx.insert(branches).values({ ...location, restaurantId, slug: "main" });
   }
+}
+
+/** A branch as the Branches settings card edits it. */
+export interface BranchDetails extends BranchLocation {
+  id: string;
+  name: string | null;
+  slug: string;
+  deliveryApps: DeliveryAppLinks | null;
+}
+
+/** Every branch of a restaurant, main branch first. */
+export async function getBranchesForEdit(restaurantId: string): Promise<BranchDetails[]> {
+  const rows = await database.query.branches.findMany({
+    where: eq(branches.restaurantId, restaurantId),
+    orderBy: MAIN_FIRST,
+    columns: { id: true, name: true, slug: true, ...LOCATION_COLUMNS },
+  });
+  return rows.map((row) => ({ ...row, deliveryApps: row.deliveryApps as DeliveryAppLinks | null }));
 }

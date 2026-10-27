@@ -1,9 +1,5 @@
 // src/components/admin/restaurant-form/form-state.ts
-import {
-  restaurantSchema,
-  type SocialMediaLinks,
-  type DeliveryAppLinks,
-} from "~/lib/schemas";
+import { restaurantSchema, type SocialMediaLinks } from "~/lib/schemas";
 import type { Restaurant } from "~/types/restaurant";
 
 export interface RestaurantFormValues {
@@ -17,13 +13,7 @@ export interface RestaurantFormValues {
   logoUrl: string;
   theme: string;
   currency: string;
-  address: string;
-  city: string;
-  country: string;
-  phoneNumber: string;
-  mapUrl: string;
   socialMedia: SocialMediaLinks;
-  deliveryApps: DeliveryAppLinks;
   metaTitle: string;
   metaDescription: string;
   ogImage: string;
@@ -42,13 +32,7 @@ export const EMPTY_VALUES: RestaurantFormValues = {
   logoUrl: "",
   theme: "classic",
   currency: "USD",
-  address: "",
-  city: "",
-  country: "",
-  phoneNumber: "",
-  mapUrl: "",
   socialMedia: {},
-  deliveryApps: {},
   metaTitle: "",
   metaDescription: "",
   ogImage: "",
@@ -66,32 +50,25 @@ export function valuesFromRestaurant(restaurant: Restaurant): RestaurantFormValu
     logoUrl: restaurant.logoUrl ?? "",
     theme: restaurant.theme ?? "classic",
     currency: restaurant.currency,
-    address: restaurant.address ?? "",
-    city: restaurant.city ?? "",
-    country: restaurant.country ?? "",
-    phoneNumber: restaurant.phoneNumber ?? "",
-    mapUrl: restaurant.mapUrl ?? "",
     socialMedia: restaurant.socialMedia ?? {},
-    deliveryApps: restaurant.deliveryApps ?? {},
     metaTitle: restaurant.metaTitle ?? "",
     metaDescription: restaurant.metaDescription ?? "",
     ogImage: restaurant.ogImage ?? "",
   };
 }
 
-// The server actions read checkboxes as "on" and the link groups as JSON.
+// The server actions read checkboxes as "on" and the links as JSON.
 export function toFormData(values: RestaurantFormValues, id?: string): FormData {
   const formData = new FormData();
   if (id) formData.set("id", id);
 
-  const { socialMedia, deliveryApps, isActive, isDisplayed, ...strings } = values;
+  const { socialMedia, isActive, isDisplayed, ...strings } = values;
   for (const [key, value] of Object.entries(strings)) {
     formData.set(key, value);
   }
   formData.set("isActive", isActive ? "on" : "");
   formData.set("isDisplayed", isDisplayed ? "on" : "");
   formData.set("socialMedia", JSON.stringify(socialMedia));
-  formData.set("deliveryApps", JSON.stringify(deliveryApps));
   return formData;
 }
 
@@ -123,8 +100,7 @@ export const SECTIONS = [
   { id: "basics", label: "Basics", fields: ["name", "slug", "typeOfEstablishment", "foodType", "description"] },
   { id: "visibility", label: "Visibility", fields: ["isActive", "isDisplayed"] },
   { id: "branding", label: "Branding", fields: ["logoUrl", "theme", "currency"] },
-  { id: "location", label: "Location & contact", fields: ["address", "city", "country", "phoneNumber", "mapUrl"] },
-  { id: "links", label: "Links & delivery", fields: ["socialMedia", "deliveryApps"] },
+  { id: "links", label: "Website & social", fields: ["socialMedia"] },
   { id: "seo", label: "Search & sharing", fields: ["metaTitle", "metaDescription", "ogImage"] },
 ] as const;
 

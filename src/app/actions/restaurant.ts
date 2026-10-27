@@ -6,14 +6,14 @@ import { menuItems, restaurants } from "~/server/db/schema";
 import { deleteUploadedFiles } from "~/server/uploads";
 import { and, eq, ne } from "drizzle-orm";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
-import { MAIN_BRANCH, saveMainBranch } from "~/server/branches";
+import { saveMainBranch } from "~/server/branches";
 import type { ZodIssue } from "zod";
 import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import { runAction } from "~/server/run-action";
 
 // 🛑 ADDED: Import the exported types directly from your schema
-import { restaurantSchema, type SocialMediaLinks, type DeliveryAppLinks } from "~/lib/schemas";
+import { restaurantSchema, type SocialMediaLinks } from "~/lib/schemas";
 
 const getStringValue = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -37,21 +37,15 @@ const getJsonValue = (formData: FormData, key: string): unknown => {
 const readRestaurantFields = (formData: FormData) => ({
   name: getStringValue(formData, "name"),
   slug: getStringValue(formData, "slug"),
-  address: getStringValue(formData, "address"),
-  city: getStringValue(formData, "city")?.trim() ?? null,
-  country: getStringValue(formData, "country"),
   foodType: getStringValue(formData, "foodType"),
   isActive: formData.get("isActive") === "on",
   isDisplayed: formData.get("isDisplayed") === "on",
   logoUrl: getStringValue(formData, "logoUrl"),
   currency: getStringValue(formData, "currency"),
-  phoneNumber: getStringValue(formData, "phoneNumber"),
   description: getStringValue(formData, "description"),
   theme: getStringValue(formData, "theme"),
   typeOfEstablishment: getStringValue(formData, "typeOfEstablishment"),
   socialMedia: getJsonValue(formData, "socialMedia") as SocialMediaLinks | null,
-  deliveryApps: getJsonValue(formData, "deliveryApps") as DeliveryAppLinks | null,
-  mapUrl: getStringValue(formData, "mapUrl"),
   metaTitle: getStringValue(formData, "metaTitle"),
   metaDescription: getStringValue(formData, "metaDescription"),
   ogImage: getStringValue(formData, "ogImage"),
@@ -59,28 +53,6 @@ const readRestaurantFields = (formData: FormData) => ({
 
 // The id comes from the request target, never from the submitted fields.
 const restaurantFields = restaurantSchema.omit({ id: true });
-
-// Validated restaurant fields, split into the restaurant's own and those
-// that live on its main branch (server/branches).
-const splitLocation = <T extends Record<string, unknown>>({
-  address,
-  city,
-  country,
-  phoneNumber,
-  mapUrl,
-  deliveryApps,
-  ...restaurant
-}: T & {
-  address?: string | null;
-  city?: string | null;
-  country?: string | null;
-  phoneNumber?: string | null;
-  mapUrl?: string | null;
-  deliveryApps?: unknown;
-}) => ({
-  restaurant,
-  location: { address, city, country, phoneNumber, mapUrl, deliveryApps },
-});
 
 // The forms validate first, so this mostly catches a bad slug sent by hand.
 const invalidInput = (issues: ZodIssue[]) =>
@@ -111,13 +83,14 @@ export async function addRestaurant(formData: FormData): Promise<ActionResult> {
       throw new ActionError("slugTaken");
     }
 
-    const { restaurant, location } = splitLocation(data);
+    // Every restaurant has a branch; its details are filled in on the
+    // edit page.
     await db.transaction(async (tx) => {
       const [created] = await tx
         .insert(restaurants)
-        .values(restaurant)
+        .values(data)
         .returning({ id: restaurants.id });
-      await saveMainBranch(tx, created!.id, location);
+      await saveMainBranch(tx, created!.id, {});
     });
     revalidatePublicRestaurant();
   });
@@ -164,7 +137,7 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
 
     const submitted = { id: restaurantId, ...readRestaurantFields(formData) };
 
-    const row = await db.query.restaurants.findFirst({
+    const current = await db.query.restaurants.findFirst({
       where: eq(restaurants.id, restaurantId),
       columns: {
         logoUrl: true,
@@ -180,14 +153,11 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
         metaDescription: true,
         ogImage: true,
       },
-      with: { branches: { ...MAIN_BRANCH.branches, columns: { country: true } } },
     });
-    if (!row) throw new ActionError("restaurantNotFound");
-    const { branches: [mainBranch], logoUrl: previousLogoUrl, ...restaurantAdminOnly } = row;
-    // The country, on the main branch, is admin-only too.
-    const adminOnly = { ...restaurantAdminOnly, country: mainBranch?.country ?? null };
+    if (!current) throw new ActionError("restaurantNotFound");
+    const { logoUrl: previousLogoUrl, ...adminOnly } = current;
 
-    // Owners edit what their dashboard shows (name, address, contact, logo,
+    // Owners edit what their dashboard shows (name, description, logo,
     // links). The slug, visibility, theme, cuisine and SEO settings stay
     // admin-only, whatever the request contains.
     const rawData = role === "admin" ? submitted : { ...submitted, ...adminOnly };
@@ -210,14 +180,10 @@ export async function updateRestaurant(formData: FormData): Promise<ActionResult
       throw new ActionError("slugTaken");
     }
 
-    const { restaurant, location } = splitLocation(data);
-    await db.transaction(async (tx) => {
-      await tx
-        .update(restaurants)
-        .set({ ...restaurant, updatedAt: new Date() })
-        .where(eq(restaurants.id, restaurantId));
-      await saveMainBranch(tx, restaurantId, location);
-    });
+    await db
+      .update(restaurants)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(restaurants.id, restaurantId));
 
     // A replaced or removed logo / share image leaves its old file behind.
     await deleteUploadedFiles([

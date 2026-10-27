@@ -6,40 +6,16 @@ import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
 import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
-import { isValidTimeZone, parseOpeningHours } from "~/lib/opening-hours";
 import { parseColorTheme } from "~/lib/color-theme";
 import { isMenuDesign } from "~/lib/menu-design";
 import { runAction } from "~/server/run-action";
-import { saveMainBranch } from "~/server/branches";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
 
 /*
- * Opening hours, time zone and brand colour. Owners and admins change them;
- * the brand colour is a feature a system admin turns on per restaurant.
+ * Brand colour and menu design. Owners and admins change them; the brand
+ * colour is a feature a system admin turns on per restaurant. (Opening
+ * hours are per branch: actions/branches.)
  */
-
-/**
- * The time zone (needed for "open now" and for which day a QR scan counts
- * on) and the weekly hours. `hours: null` removes them from the public pages.
- */
-export async function updateOpeningHours(
-  restaurantId: string,
-  input: { timeZone: string; hours: unknown },
-): Promise<ActionResult> {
-  return runAction("saveHoursFailed", async () => {
-    await checkOwnerAuthorization(restaurantId);
-    if (!isValidTimeZone(input.timeZone))
-      throw new ActionError("invalidTimeZone");
-    const hours = input.hours === null ? null : parseOpeningHours(input.hours);
-    if (input.hours !== null && !hours) throw new ActionError("invalidHours");
-
-    await saveMainBranch(db, restaurantId, {
-      timeZone: input.timeZone,
-      openingHours: hours,
-    });
-    revalidatePublicRestaurant(restaurantId);
-  });
-}
 
 /** Admin only. Off goes back to the theme's colour but keeps the choice. */
 export async function setBrandColorEnabled(
