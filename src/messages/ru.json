@@ -972,6 +972,10 @@
     "empty": "Здесь пока нет меню.",
     "dishCount": "{count, plural, one {# блюдо} few {# блюда} many {# блюд} other {# блюда}}",
     "menuLanguages": "Языки меню",
-    "soldOut": "Нет в наличии"
+    "soldOut": "Нет в наличии",
+    "scopeLabel": "Показывать меню",
+    "everywhere": "Везде",
+    "noLocalMenus": "В стране «{country}» пока нет меню, поэтому показаны меню отовсюду.",
+    "searchEverywhere": "Искать везде"
   }
 }

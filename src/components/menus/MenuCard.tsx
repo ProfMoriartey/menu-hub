@@ -16,15 +16,18 @@ import type { DirectoryVenue } from "~/lib/menus-directory";
 export function MenuCard({
   venue,
   priority,
+  hideCountry,
   className,
 }: {
   venue: DirectoryVenue;
   priority?: boolean;
+  // When every card shown is in the same country, the city says enough.
+  hideCountry?: boolean;
   className?: string;
 }) {
   const t = useTranslations("MenusPage");
   const kind = [venue.typeLabel, venue.cuisine].filter(Boolean).join(" · ");
-  const place = [venue.city, venue.country].filter(Boolean).join(", ");
+  const place = [venue.city, hideCountry ? null : venue.country].filter(Boolean).join(", ");
 
   return (
     <Link

@@ -972,6 +972,10 @@
     "empty": "لا توجد قوائم هنا بعد.",
     "dishCount": "{count, plural, one {طبق واحد} two {طبقان} few {# أطباق} many {# طبقًا} other {# طبق}}",
     "menuLanguages": "لغات القائمة",
-    "soldOut": "نفد"
+    "soldOut": "نفد",
+    "scopeLabel": "عرض القوائم من",
+    "everywhere": "كل مكان",
+    "noLocalMenus": "لا توجد قوائم في {country} بعد، لذا نعرض قوائم من كل مكان.",
+    "searchEverywhere": "ابحث في كل مكان"
   }
 }

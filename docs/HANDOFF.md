@@ -464,6 +464,11 @@ venue as a card with a strip of its first three dish photos, logo, venue
 type and cuisine, city and country, open/closed now and menu languages.
 Filters: type chips, open now, "menu in my language", city (each shown
 only when some venue matches); a featured row when nothing is filtered.
+Visitors start with menus from their own country when it has any (a
+Local / Everywhere toggle; `server/visitor-country.ts` reads the host's IP
+country header, `x-vercel-ip-country` or `cf-ipcountry`, no permission
+prompt; `VISITOR_COUNTRY_FALLBACK` stands in locally). Filters and the dish
+search follow the chosen scope.
 One search box matches places on the page and dishes on the server
 (`searchDishes` in `app/actions/search.ts`: names and descriptions in any
 menu language, localized names and prices, sold-out marked, links to the
@@ -472,8 +477,10 @@ The directory data (`getMenusDirectory`) is cached and cleared by both
 revalidate helpers; open status is worked out per request
 (`describeOpenStatus` in `components/public/OpeningHours`). Venue type and
 country are admin fields (pickers); city is edited by owners too. Texts:
-`MenusPage` messages. Dish search doesn't ignore accents ("kofte" won't
-find "Köfte"); Postgres `unaccent` would fix that.
+`MenusPage` messages. Search ignores case and accents on both sides with
+one table (`lib/fold-text.ts`: `foldText` in the browser, `translate()` in
+SQL; covers Latin and Turkish accents, Arabic alef/hamza forms and short
+vowels, ё).
 
 **Search engines and link previews:** menu, about and item pages have their
 own title, description, preview image (admin SEO fields first, then

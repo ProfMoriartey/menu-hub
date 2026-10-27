@@ -14,7 +14,9 @@ export interface DirectoryVenue {
   typeLabel: string | null;
   cuisine: string | null;
   city: string | null;
+  // The country's name, and its ISO code when it is stored as one.
   country: string | null;
+  countryCode: string | null;
   featured: boolean;
   photos: string[];
   dishCount: number;
@@ -24,17 +26,15 @@ export interface DirectoryVenue {
   open: { isOpen: boolean; label: string } | null;
 }
 
+/** The visitor's country (from the host's IP lookup) and its menus. */
+export interface LocalArea {
+  code: string;
+  name: string;
+  count: number;
+}
+
+// Menus from the visitor's country only, or from everywhere.
+export type DirectoryScope = "local" | "global";
+
 // Fewer letters match too many dishes to be useful.
 export const MIN_DISH_QUERY = 2;
-
-/**
- * Text folded for matching: lower case in the page's language, without
- * accents, so "cafe" finds "Café" and "kofte" finds "Köfte".
- */
-export function foldText(text: string, locale: string): string {
-  return text
-    .toLocaleLowerCase(locale)
-    .normalize("NFD")
-    .replace(/\p{Mn}/gu, "")
-    .replace(/ı/g, "i");
-}

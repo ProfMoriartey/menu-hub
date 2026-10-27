@@ -5,10 +5,11 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getMenusDirectory } from "~/server/public-menu";
 import { describeOpenStatus } from "~/components/public/OpeningHours";
 import { MenusDirectory, type DirectoryFilters } from "~/components/menus/MenusDirectory";
-import { countryName } from "~/lib/countries";
+import { countryName, isCountryCode } from "~/lib/countries";
 import { allMenuLanguages, menuLanguagesOf } from "~/lib/menu-languages";
 import { isVenueType, venueTypeLabel } from "~/lib/venue-types";
-import type { DirectoryVenue } from "~/lib/menus-directory";
+import { getVisitorCountry } from "~/server/visitor-country";
+import type { DirectoryScope, DirectoryVenue, LocalArea } from "~/lib/menus-directory";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("MenusPage");
@@ -30,13 +31,14 @@ const textOrNull = (value: string | null) => {
 export default async function MenusPage({ searchParams }: { searchParams: SearchParams }) {
   // Open now is worked out per request, so the page is never served stale.
   await connection();
-  const [t, tMenu, tVenue, locale, params, rows] = await Promise.all([
+  const [t, tMenu, tVenue, locale, params, rows, visitorCountry] = await Promise.all([
     getTranslations("MenusPage"),
     getTranslations("PublicMenu"),
     getTranslations("VenueTypes"),
     getLocale(),
     searchParams,
     getMenusDirectory(),
+    getVisitorCountry(),
   ]);
 
   const now = new Date();
@@ -58,6 +60,7 @@ export default async function MenusPage({ searchParams }: { searchParams: Search
         cuisine: textOrNull(row.foodType),
         city: textOrNull(row.city),
         country: countryName(row.country, locale),
+        countryCode: isCountryCode(row.country) ? row.country : null,
         featured: row.isDisplayed,
         photos: row.photos,
         dishCount: row.dishCount,
@@ -70,8 +73,20 @@ export default async function MenusPage({ searchParams }: { searchParams: Search
     })
     .sort((a, b) => collator.compare(a.name, b.name));
 
+  // Visitors start with menus from their own country, when it has any.
+  const local: LocalArea | null = visitorCountry
+    ? {
+        code: visitorCountry,
+        name: countryName(visitorCountry, locale) ?? visitorCountry,
+        count: venues.filter((v) => v.countryCode === visitorCountry).length,
+      }
+    : null;
+  const defaultScope: DirectoryScope = local && local.count > 0 ? "local" : "global";
+  const scopeParam = one(params.scope);
+
   // Filters from the address, so a shared or reloaded link keeps them.
   const initialFilters: DirectoryFilters = {
+    scope: scopeParam === "local" || scopeParam === "global" ? scopeParam : defaultScope,
     query: one(params.q),
     type: one(params.type),
     city: one(params.city),
@@ -86,7 +101,12 @@ export default async function MenusPage({ searchParams }: { searchParams: Search
         <p className="text-muted-foreground mt-3 max-w-2xl text-base sm:text-lg">{t("intro")}</p>
       </header>
       <main className="mx-auto max-w-5xl px-4 pb-16">
-        <MenusDirectory venues={venues} initialFilters={initialFilters} />
+        <MenusDirectory
+          venues={venues}
+          local={local}
+          defaultScope={defaultScope}
+          initialFilters={initialFilters}
+        />
       </main>
     </div>
   );

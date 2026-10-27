@@ -972,6 +972,10 @@
     "empty": "There are no menus here yet.",
     "dishCount": "{count, plural, one {# dish} other {# dishes}}",
     "menuLanguages": "Menu languages",
-    "soldOut": "Sold out"
+    "soldOut": "Sold out",
+    "scopeLabel": "Show menus from",
+    "everywhere": "Everywhere",
+    "noLocalMenus": "There are no menus in {country} yet, so these are from everywhere.",
+    "searchEverywhere": "Search everywhere"
   }
 }

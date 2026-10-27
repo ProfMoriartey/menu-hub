@@ -972,6 +972,10 @@
     "empty": "Burada henüz menü yok.",
     "dishCount": "{count, plural, one {# yemek} other {# yemek}}",
     "menuLanguages": "Menü dilleri",
-    "soldOut": "Tükendi"
+    "soldOut": "Tükendi",
+    "scopeLabel": "Menülerin gösterileceği yer",
+    "everywhere": "Her yer",
+    "noLocalMenus": "{country} içinde henüz menü yok, bu yüzden her yerden menüler gösteriliyor.",
+    "searchEverywhere": "Her yerde ara"
   }
 }

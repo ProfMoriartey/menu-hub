@@ -9,6 +9,9 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
     CLERK_WEBHOOK_SECRET: z.string().min(1),
+    // The country (ISO code, e.g. "TR") the Menus page assumes when the host
+    // doesn't report the visitor's country, as in local development.
+    VISITOR_COUNTRY_FALLBACK: z.string().length(2).optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -34,6 +37,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
+    VISITOR_COUNTRY_FALLBACK: process.env.VISITOR_COUNTRY_FALLBACK,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   /**

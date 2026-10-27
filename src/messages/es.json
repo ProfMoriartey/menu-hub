@@ -972,6 +972,10 @@
     "empty": "Todavía no hay menús.",
     "dishCount": "{count, plural, one {# plato} other {# platos}}",
     "menuLanguages": "Idiomas del menú",
-    "soldOut": "Agotado"
+    "soldOut": "Agotado",
+    "scopeLabel": "Mostrar menús de",
+    "everywhere": "Todas partes",
+    "noLocalMenus": "Aún no hay menús en {country}, así que ves menús de todas partes.",
+    "searchEverywhere": "Buscar en todas partes"
   }
 }
