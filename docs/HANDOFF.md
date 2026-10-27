@@ -195,7 +195,7 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 |---|---|
 | `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
 | `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card. Public pages per branch (see Branch pages); the Menus page uses every branch. Restaurant-level reads that need one location use the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
-| `menu-hub_restaurant_billing` | Admin-only, one row per billed restaurant: `planName` (null = not billed), `monthlyPrice` (numeric; 0 = free), `currency`, `notes`. Kept out of `restaurants` so it never reaches the cached public data |
+| `menu-hub_restaurant_billing` | Admin-only, one row per billed restaurant: `planName` (null = not billed), `monthlyPrice` (numeric; 0 = free), `currency`, `startsOn` (first billed day), `notes`. Kept out of `restaurants` so it never reaches the cached public data |
 | `menu-hub_payments` | Payments recorded by hand: `paidOn`, `amount`, `currency`, `coversFrom`–`coversUntil` (inclusive), `method`, `note`, `recordedBy`. Paid-until = latest `coversUntil`. `restaurantId` is set null if the restaurant is deleted (`restaurantName` keeps the name for the books) |
 | `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
 | `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
@@ -219,8 +219,9 @@ the Menus page: every restaurant query reads `city`.** `0011` adds
 `branches` and copies each restaurant's address, city, country, phone, map
 link, delivery apps, time zone and hours into a first branch (slug `main`).
 **0011 must run before deploying: location is only read from branches
-now.** `0012` adds the billing tables (`restaurant_billing`, `payments`);
-only the admin Billing pages need it. The restaurant's old copies of those columns are left in the
+now.** `0012` adds the billing tables (`restaurant_billing`, `payments`) and
+`0013` the plan's `starts_on`; only the admin Plan tab and Payments page
+need them. The restaurant's old copies of those columns are left in the
 database as a backup (no longer in `schema.ts`); a later hand-written
 migration drops them once branches are confirmed. The
 development database has 0001–0004 applied (checked 2026-10-23); **0005 was
@@ -449,17 +450,28 @@ and city options count a chain once per place; the local count and the
 home page's "menus near you" use any branch in the country.
 
 **Billing (admin only):** payments are collected by hand (bank transfer,
-cash) for now, so the site only records them. `/admin/billing` lists every
-restaurant with its plan, monthly price, paid-until date and status (most
-urgent first; filters Needs attention / Billed / All), tiles for overdue,
-due in 7 days, expected per month and received this month (per currency),
-and the latest payments. Each restaurant's Billing tab sets the plan and
-records a payment: paid on, months, period start (defaults to the day after
-the paid period ends, so late payments leave no gap), amount (plan price ×
-months), method, note; deleting a payment moves paid-until back. Rules in
-`lib/billing` (dates in Europe/Istanbul; due soon = 7 days), reads in
-`server/billing`, actions in `actions/billing`. A payment provider (iyzico
-or PayTR once there is a business) can later insert `payments` rows itself.
+cash) for now, so the site only records them.
+- *Plan tab* (`/admin/restaurants/<slug>/plan`): the restaurant's standing
+  (Paid / Due in N days / Due tomorrow / Due today / Overdue N days / Never
+  paid / Starts in N days / Free / Not billed), paid-until date, what it
+  owes when late, the plan form (name, monthly price, currency, "billed
+  from" start date, notes) and its latest payments, with links to record a
+  payment or see all of them on Payments.
+- *Payments* (`/admin/payments`, in the admin menu): reports (received this
+  month, last month, this year; owed now and by how many; expected each
+  month), "Due and late" with a Record payment button each, the payment
+  form for any restaurant (`?record=<id>` picks one), every payment with
+  restaurant and period filters (`?restaurant=<id>&period=month|lastMonth|
+  year`) and delete, all plans most urgent first, and received by month
+  for 12 months. Totals are per currency, never mixed.
+- Rules in `lib/billing`: dates in Europe/Istanbul; a payment's period
+  starts the day after the covered period (latest paid day, or the day
+  before "billed from"), so late payments leave no gap; due on the first
+  unpaid day, "due soon" within 7 days; owed = monthly periods begun since
+  then × price (one for a never-paid plan without a start date). Reads in
+  `server/billing`, actions in `actions/billing`. A payment provider
+  (iyzico or PayTR once there is a business) can later insert `payments`
+  rows itself.
 
 **Opening hours:** per branch, `components/restaurant-settings/OpeningHoursSettings`
 inside each branch of the Branches card (`actions/branches.updateBranchHours`). Up to 3 ranges a day; a close time before
@@ -606,8 +618,8 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 - `pnpm db:migrate` in production for migrations 0002–0010, before deploying
   (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
   colour themes; 0009: design names; 0010: city, venue types, country codes;
-  0011: branches; 0012: billing). 0002–0011 are applied (owner, 2026-10-27);
-  0012 still needs `pnpm db:migrate` in dev and production.
+  0011: branches; 0012: billing; 0013: plan start date). Dev has up to 0012
+  (2026-10-27); 0013 still needs `pnpm db:migrate`.
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**

@@ -1,13 +1,13 @@
-// app/admin/restaurants/[restaurantSlug]/billing/page.tsx
+// app/admin/restaurants/[restaurantSlug]/plan/page.tsx
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
-import { getRestaurantBilling } from "~/server/billing";
+import { getRestaurantPlan } from "~/server/billing";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
-import { RestaurantBillingPanel } from "~/components/admin/billing/RestaurantBillingPanel";
+import { RestaurantPlanPanel } from "~/components/admin/billing/RestaurantPlanPanel";
 
-export default async function RestaurantBillingPage({
+export default async function RestaurantPlanPage({
   params,
 }: {
   params: Promise<{ restaurantSlug: string }>;
@@ -20,12 +20,12 @@ export default async function RestaurantBillingPage({
   });
   if (!restaurant) notFound();
 
-  const billing = await getRestaurantBilling(restaurant.id);
+  const plan = await getRestaurantPlan(restaurant.id);
 
   return (
     <div className="space-y-8">
-      <RestaurantAdminHeader restaurant={restaurant} activeTab="billing" />
-      <RestaurantBillingPanel restaurantId={restaurant.id} {...billing} />
+      <RestaurantAdminHeader restaurant={restaurant} activeTab="plan" />
+      <RestaurantPlanPanel restaurantId={restaurant.id} {...plan} />
     </div>
   );
 }

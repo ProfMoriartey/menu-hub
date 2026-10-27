@@ -340,6 +340,8 @@ export const restaurantBilling = pgTable("menu-hub_restaurant_billing", {
   planName: varchar("plan_name", { length: 64 }),
   monthlyPrice: numeric("monthly_price", { precision: 12, scale: 2 }),
   currency: varchar("currency", { length: 3 }).notNull().default("TRY"),
+  // The first day billed: unpaid days count from here. Null = not set.
+  startsOn: date("starts_on", { mode: "string" }),
   notes: text("notes"),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -15,9 +15,15 @@ export function billingStatusText(status: BillingStatus): string {
     case "overdue":
       return `Overdue ${plural(status.days, "day")}`;
     case "dueSoon":
-      return status.days === 0 ? "Due today" : `Due in ${plural(status.days, "day")}`;
+      return status.days === 0
+        ? "Due today"
+        : status.days === 1
+          ? "Due tomorrow"
+          : `Due in ${plural(status.days, "day")}`;
     case "paid":
       return "Paid";
+    case "notStarted":
+      return `Starts in ${plural(status.days, "day")}`;
   }
 }
 
@@ -27,6 +33,7 @@ const TONE: Record<BillingStatus["kind"], string> = {
   dueSoon: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/40",
   paid: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
   free: "bg-muted text-muted-foreground border-border",
+  notStarted: "bg-muted text-muted-foreground border-border",
   notBilled: "bg-muted text-muted-foreground border-border",
 };
 

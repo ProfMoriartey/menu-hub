@@ -35,6 +35,7 @@ const planSchema = z.object({
   planName: z.string().trim().max(64),
   monthlyPrice: z.union([z.literal(""), money]),
   currency,
+  startsOn: z.union([z.literal(""), z.string().refine(isDay)]),
   notes: z.string().trim().max(2000),
 });
 
@@ -54,6 +55,7 @@ export async function saveBillingPlan(restaurantId: string, input: unknown): Pro
       planName: parsed.data.planName || null,
       monthlyPrice: parsed.data.monthlyPrice || null,
       currency: parsed.data.currency,
+      startsOn: parsed.data.startsOn || null,
       notes: parsed.data.notes || null,
       updatedAt: new Date(),
     };

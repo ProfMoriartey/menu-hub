@@ -58,39 +58,88 @@ export const coversUntil = (from: string, months: number) => addDays(addMonths(f
 export const daysBetween = (from: string, to: string) =>
   Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000);
 
+export interface PlanTerms {
+  planName: string | null;
+  monthlyPrice: string | null;
+  startsOn: string | null;
+}
+
 /**
- * Where a new payment's period starts: the day after the current one ends,
- * so periods follow each other with no gap (a late payment still pays for
- * the days since), or the payment day when nothing was paid before.
+ * The last day covered: the latest paid day, or the day before the plan
+ * starts when nothing was paid yet (null when neither is known).
  */
-export const nextPeriodStart = (paidUntil: string | null, paidOn: string) =>
-  paidUntil ? addDays(paidUntil, 1) : paidOn;
+export const coveredUntil = (plan: PlanTerms | null, paidUntil: string | null) =>
+  paidUntil ?? (plan?.startsOn ? addDays(plan.startsOn, -1) : null);
+
+/**
+ * Where a new payment's period starts: the day after the covered period
+ * ends, so periods follow each other with no gap (a late payment still pays
+ * for the days since), or the payment day when nothing is known.
+ */
+export const nextPeriodStart = (plan: PlanTerms | null, paidUntil: string | null, paidOn: string) => {
+  const covered = coveredUntil(plan, paidUntil);
+  return covered ? addDays(covered, 1) : paidOn;
+};
+
+/**
+ * How many monthly periods have begun since the covered period ended, up
+ * to `today`: what a late restaurant owes. One for a plan that was never
+ * paid and has no start date (its first payment).
+ */
+export function unpaidPeriods(plan: PlanTerms | null, paidUntil: string | null, today: string): number {
+  const covered = coveredUntil(plan, paidUntil);
+  if (!covered) return 1;
+  const start = addDays(covered, 1);
+  let periods = 0;
+  while (addMonths(start, periods) <= today) periods++;
+  return periods;
+}
+
+/** What a restaurant owes on `today`, or null when it owes nothing. */
+export function amountOwed(
+  plan: (PlanTerms & { currency: string }) | null,
+  paidUntil: string | null,
+  status: BillingStatus,
+  today: string,
+): { amount: number; currency: string; periods: number } | null {
+  if (!plan?.monthlyPrice || (status.kind !== "overdue" && status.kind !== "unpaid")) return null;
+  const periods = unpaidPeriods(plan, paidUntil, today);
+  const amount = Math.round(Number(plan.monthlyPrice) * periods * 100) / 100;
+  return amount > 0 ? { amount, currency: plan.currency, periods } : null;
+}
 
 export type BillingStatus =
   | { kind: "notBilled" }
   | { kind: "free" }
   | { kind: "unpaid" }
+  | { kind: "notStarted"; days: number }
   | { kind: "overdue"; days: number }
   | { kind: "dueSoon"; days: number }
   | { kind: "paid"; days: number };
 
 /**
  * A restaurant's standing on `today`: not billed (no plan), free (price 0),
- * never paid, overdue by N days, due within DUE_SOON_DAYS, or paid.
+ * never paid (no start date), starting later, overdue by N days, due within
+ * DUE_SOON_DAYS, or paid.
  */
 export function billingStatus(
-  plan: { planName: string | null; monthlyPrice: string | null } | null,
+  plan: PlanTerms | null,
   paidUntil: string | null,
   today: string,
 ): BillingStatus {
   if (!plan?.planName) return paidUntil ? statusByDate(paidUntil, today) : { kind: "notBilled" };
   if (plan.monthlyPrice !== null && Number(plan.monthlyPrice) === 0) return { kind: "free" };
-  if (!paidUntil) return { kind: "unpaid" };
-  return statusByDate(paidUntil, today);
+  const covered = coveredUntil(plan, paidUntil);
+  if (!covered) return { kind: "unpaid" };
+  const status = statusByDate(covered, today);
+  // Nothing paid yet and the plan starts well ahead.
+  if (!paidUntil && status.kind === "paid") return { kind: "notStarted", days: status.days };
+  return status;
 }
 
+// Counted to the due day: the first day not paid for.
 function statusByDate(paidUntil: string, today: string): BillingStatus {
-  const days = daysBetween(today, paidUntil);
+  const days = daysBetween(today, addDays(paidUntil, 1));
   if (days < 0) return { kind: "overdue", days: -days };
   if (days <= DUE_SOON_DAYS) return { kind: "dueSoon", days };
   return { kind: "paid", days };
@@ -107,6 +156,8 @@ export function statusRank(status: BillingStatus): number {
       return status.days;
     case "paid":
       return 1_000 + status.days;
+    case "notStarted":
+      return 2_000 + status.days;
     case "free":
       return 100_000;
     case "notBilled":
