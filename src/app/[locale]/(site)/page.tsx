@@ -111,7 +111,7 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section aria-labelledby="steps-title" className="soft-band">
+      <section aria-labelledby="steps-title">
         <div className="container mx-auto grid items-center gap-10 px-4 py-16 lg:grid-cols-[1fr_auto] lg:py-20">
           <div>
             <h2 id="steps-title" className="text-3xl font-bold tracking-tight">
@@ -175,7 +175,7 @@ export default async function HomePage() {
 
       {/* Menus near you */}
       {shown.length > 0 && (
-        <section aria-labelledby="menus-title" className="soft-band">
+        <section aria-labelledby="menus-title">
           <div className="container mx-auto px-4 py-16 lg:py-20">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="flex items-center gap-5">

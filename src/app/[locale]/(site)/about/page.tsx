@@ -78,7 +78,7 @@ export default async function AboutPage() {
 
       <section
         aria-labelledby="steps-title"
-        className="soft-band py-16"
+        className="py-16"
       >
         <div className="container mx-auto max-w-5xl px-4">
           <h2
