@@ -1,43 +1,4 @@
 {
-  "hero": {
-    "title": {
-      "main": "Bir Sonraki",
-      "highlight": "Favori Yemeğinizi Keşfedin"
-    },
-    "description": "Yerel restoranların çeşitli menülerini keşfedin, mutfak ilhamı bulun ve sorunsuz yemek deneyimlerinin tadını çıkarın.",
-    "cta": "Keşfetmeye Başla"
-  },
-  "about": {
-    "title": "Menupedia Hakkında Daha Fazla Bilgi Edinin",
-    "description": "Menupedia, yerel restoranları ve lezzetli menülerini keşfetmek için önde gelen çevrimiçi adresinizdir. Tutkulu yemek severleri çeşitli mutfak deneyimleriyle buluşturarak tam olarak istediğiniz şeyi bulmayı zahmetsiz hale getiriyoruz. Temel misyonumuz, yemek seçiminizi basitleştirmek, yerel işletmeleri desteklemek ve yerel gastronomiyi en iyi şekilde sergilemektir.",
-    "cta": "Menupedia Hakkında Daha Fazla Bilgi Edinin"
-  },
-  "featured": {
-    "title": "Öne Çıkan Restoranlar",
-    "empty": "Şu anda öne çıkan restoran bulunmamaktadır.",
-    "button": {
-      "single": "Menüyü Görüntüle",
-      "all": "Tüm Restoranları Görüntüle"
-    }
-  },
-  "themes": {
-    "title": "Neden Menupedia'yı Seçmelisiniz?",
-    "description": "Menupedia, restoran menüsü yönetimini ve keşfini basitleştirir. İşletmeler için sezgisel araçlar ve yemek yiyenler için zengin, kullanıcı dostu bir deneyim sunuyoruz. Yerel gastronomiye odaklanmamız, çeşitli mutfak seçeneklerini keşfederken topluluğunuzu desteklemeniz anlamına gelir. Sorunsuz entegrasyon ve dinamik görüntü temalarıyla dijital menüleri ilgi çekici ve zahmetsiz hale getiriyoruz.",
-    "previewTitle": "Dijital Menülerimizi Çalışırken Görün",
-    "example": {
-      "classic": "Klasik Düzen",
-      "accordion": "Akordeon Kart Düzeni",
-      "sidebarList": "Yan Menü Listesi Düzeni",
-      "categoryCardsImageDominant": "Kategori Kartları Resim Odaklı Düzen"
-    },
-    "cta": "Tüm Özellikleri Keşfet"
-  },
-  "contact": {
-    "title": "Bize Ulaşın",
-    "description": "Sorularınız mı var veya desteğe mi ihtiyacınız var? Bize ulaşın!",
-    "emailLabel": "E-posta",
-    "phoneLabel": "Telefon"
-  },
   "messages": {
     "title": "Mesajlarınız",
     "empty": "Henüz mesaj yok. Bir konuşma başlatın!",
@@ -47,25 +8,18 @@
     "messageSent": "Mesaj gönderildi!",
     "errorSendingMessage": "Mesaj gönderilemedi."
   },
-  "restaurantsPage": {
-    "mainTitle": "Restoranları Keşfet",
-    "description": "Menupedia'da bulunan tüm restoranları arayın ve keşfedin.",
-    "searchButton": "Restoran Ara",
-    "searchPlaceholder": "Bir restoran, mutfak veya menü öğesi arayın...",
-    "noResultsFound": "\"{searchTerm}\" için sonuç bulunamadı.",
-    "allRestaurantsTitle": "Tüm Restoranlar",
-    "noRestaurantsFound": "Restoran bulunamadı.",
-    "adminPrompt": "Yönetici iseniz, lütfen panodan restoran ekleyin."
-  },
   "navbar": {
     "home": "Ana Sayfa",
-    "restaurants": "Restoranlar",
+    "restaurants": "Menüler",
     "themes": "Özellikler",
     "aboutUs": "Hakkımızda",
-    "language": "Dil"
-  },
-  "restaurantCard": {
-    "viewMenu": "Menüyü Görüntüle"
+    "language": "Dil",
+    "mainNav": "Ana menü",
+    "signIn": "Giriş yap",
+    "getInTouch": "Bize ulaşın",
+    "dashboard": "Panel",
+    "openMenu": "Menüyü aç",
+    "closeMenu": "Menüyü kapat"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Lezzetli menümüzü inceleyin",
@@ -90,117 +44,10 @@
       "establishmentTypeLabel": "Tür",
       "phoneLabel": "İletişim",
       "countryLabel": "Ülke",
+      "locationLabel": "Konum",
       "addressLabel": "Adres",
       "getDirections": "Yol Tarifi Al"
     },
-  "classicThemeExample": {
-    "exampleTitle": "Örnek:",
-    "noItemsMessage": "Bu kategoride öğe bulunmamaktadır.",
-    "categories": {
-      "appetizers": "Mezeler",
-      "mainCourses": "Ana Yemekler",
-      "desserts": "Tatlılar",
-      "drinks": "İçecekler"
-    },
-    "items": {
-      "a1": "Bahar Böreği",
-      "a2": "Sarımsaklı Ekmek",
-      "a3": "Domates Bruschetta",
-      "m1": "Izgara Somon",
-      "m2": "Frites ile Biftek",
-      "m3": "Sebzeli Burger",
-      "m4": "Tavuk Alfredo",
-      "d1": "Cheesecake",
-      "d2": "Çikolatalı Lava Kek",
-      "dr1": "Buzlu Çay",
-      "dr2": "Limonata",
-      "dr3": "Kahve",
-      "dr4": "Portakal Suyu"
-    }
-  },
-  "accordionCardThemeExample": {
-    "exampleTitle": "Örnek:",
-    "noItemsMessage": "Bu kategoride öğe bulunmamaktadır.",
-    "categories": {
-      "coffee": "Kahve İçecekleri",
-      "pastries": "Taze Hamur İşleri",
-      "sandwiches": "Hafif Atıştırmalıklar"
-    },
-    "items": {
-      "c1": {
-        "name": "Espresso",
-        "desc": "Güçlü, zengin bir shot."
-      },
-      "c2": {
-        "name": "Latte",
-        "desc": "Buharda sütlü espresso."
-      },
-      "c3": {
-        "name": "Cappuccino",
-        "desc": "Eşit oranda espresso, buharda süt, köpük."
-      },
-      "p1": {
-        "name": "Kruvasan",
-        "desc": "Kat kat, tereyağlı mükemmellik."
-      },
-      "p2": {
-        "name": "Muffin",
-        "desc": "Yaban mersinli veya çikolatalı."
-      },
-      "s1": {
-        "name": "BLT",
-        "desc": "Pastırma, marul, domates."
-      },
-      "s2": {
-        "name": "Sebzeli Dürüm",
-        "desc": "Taze sebzeler, humus."
-      }
-    }
-  },
-  "sidebarListThemeExample": {
-    "exampleTitle": "Örnek:",
-    "noItemsMessage": "Bu kategoride öğe bulunmamaktadır.",
-    "categories": {
-      "appetizers": "Mezeler",
-      "mainCourses": "Ana Yemekler",
-      "desserts": "Tatlılar",
-      "drinks": "İçecekler"
-    },
-    "items": {
-      "a1": "Günün Çorbası",
-      "a2": "Ev Salatası",
-      "m1": "Makarna Primavera",
-      "m2": "Izgara Tavuk",
-      "m3": "Sebzeli Köri",
-      "d1": "Çikolatalı Kek",
-      "dr1": "Taze Portakal Suyu",
-      "dr2": "Maden Suyu"
-    }
-  },
-  "categoryCardsImageDominantThemeExample": {
-    "exampleTitle": "Örnek:",
-    "selectCategoryMessage": "Bir örnek öğe görmek için bir kategori seçin.",
-    "categories": {
-      "appetizers": "Mezeler",
-      "mainCourses": "Ana Yemekler",
-      "desserts": "Tatlılar",
-      "drinks": "İçecekler"
-    },
-    "items": {
-      "frenchFries": {
-        "name": "Patates Kızartması"
-      },
-      "deliciousBowl": {
-        "name": "Lezzetli Kase"
-      },
-      "lemonCheesecake": {
-        "name": "Limonlu Cheesecake"
-      },
-      "cocaCola": {
-        "name": "Coca Cola"
-      }
-    }
-  },
   "Dashboard": {
     "title": "Atanmış Menüleriniz",
     "emptyTitle": "Atanmış Menü Yok",
@@ -404,7 +251,10 @@
     "discard": "Vazgeç",
     "save": "Değişiklikleri kaydet",
     "saveFailed": "Restoran kaydedilemedi.",
-    "logoTooLarge": "Bu logo küçültüldükten sonra bile çok büyük. Daha küçük bir görsel deneyin (en fazla 4 MB)."
+    "logoTooLarge": "Bu logo küçültüldükten sonra bile çok büyük. Daha küçük bir görsel deneyin (en fazla 4 MB).",
+    "city": "Şehir",
+    "cityHint": "Misafirler menünüzü şehre göre bulabilir.",
+    "cityPlaceholder": "örn. Bursa"
   },
   "ActionErrors": {
     "createRestaurantFailed": "Restoran oluşturulamadı. Lütfen tekrar deneyin.",
@@ -937,8 +787,126 @@
       "title": "Kendiniz görün",
       "text": "Demo restoranımızı deneyin ya da Menupedia'daki menülere göz atın.",
       "features": "Özellikleri keşfedin",
-      "restaurants": "Restoranlara göz atın",
+      "restaurants": "Menülere göz atın",
       "contact": "Bize ulaşın"
     }
+  },
+  "VenueTypes": {
+    "restaurant": "Restoran",
+    "cafe": "Kafe",
+    "coffee_shop": "Kahveci",
+    "bakery": "Fırın & pastane",
+    "dessert": "Tatlıcı",
+    "fast_food": "Fast food",
+    "bar": "Bar",
+    "home_cooking": "Ev yemekleri"
+  },
+  "MenusPage": {
+    "metaTitle": "Menüler",
+    "metaDescription": "Menupedia'daki restoran, kafe ve diğer mekânların menülerine göz atın ya da tüm menülerde bir yemek arayın.",
+    "title": "Menüler",
+    "intro": "Restoranlar, kafeler ve daha fazlası. Bir mekân bulun ya da tüm menülerde bir yemek arayın.",
+    "searchLabel": "Mekân ve yemek ara",
+    "searchPlaceholder": "Mekân veya yemek ara",
+    "clearSearch": "Aramayı temizle",
+    "typeFilterLabel": "Mekân türü",
+    "allTypes": "Tümü",
+    "openNow": "Şu an açık",
+    "inLanguage": "{language} menü",
+    "cityLabel": "Şehir",
+    "allCities": "Tüm şehirler",
+    "clearFilters": "Filtreleri temizle",
+    "count": "{count, plural, =0 {Menü yok} one {# menü} other {# menü}}",
+    "searchStatus": "{places, plural, =0 {Mekân yok} one {# mekân} other {# mekân}}, {dishes, plural, =0 {yemek yok} one {# yemek} other {# yemek}}",
+    "featured": "Öne çıkanlar",
+    "allMenus": "Tüm menüler",
+    "matching": "Eşleşen menüler",
+    "places": "Mekânlar",
+    "dishes": "Yemekler",
+    "searchingDishes": "Yemekler aranıyor…",
+    "dishSearchFailed": "Yemekler aranamadı. Lütfen tekrar deneyin.",
+    "noDishes": "“{query}” ile eşleşen yemek yok.",
+    "noResults": "“{query}” ile eşleşen bir şey yok. Başka bir kelime deneyin ya da filtreleri azaltın.",
+    "noMatches": "Bu filtrelerle eşleşen menü yok.",
+    "empty": "Burada henüz menü yok.",
+    "dishCount": "{count, plural, one {# yemek} other {# yemek}}",
+    "menuLanguages": "Menü dilleri",
+    "soldOut": "Tükendi",
+    "scopeLabel": "Menülerin gösterileceği yer",
+    "everywhere": "Her yer",
+    "noLocalMenus": "{country} içinde henüz menü yok, bu yüzden her yerden menüler gösteriliyor.",
+    "searchEverywhere": "Her yerde ara",
+    "countryLabel": "Ülke",
+    "allCountries": "Tüm ülkeler",
+    "filters": "Filtreler",
+    "filtersActive": "{count, plural, one {Filtreler, # filtre açık} other {Filtreler, # filtre açık}}",
+    "filtersDescription": "Menüleri türe, çalışma saatlerine, dile ve yere göre daraltın.",
+    "closeFilters": "Filtreleri kapat",
+    "showOnly": "Yalnızca göster",
+    "clearAll": "Tümünü temizle",
+    "showResults": "{count, plural, =0 {Eşleşen menü yok} one {# menüyü göster} other {# menüyü göster}}",
+    "removeFilter": "Filtreyi kaldır: {name}"
+  },
+  "HomePage": {
+    "metaTitle": "Menupedia: restoran ve kafeler için dijital menüler",
+    "metaDescription": "Misafirlerinizin telefonda, kendi dillerinde açtığı ve sizin saniyeler içinde güncellediğiniz bir QR menü. Restoranlar, kafeler, fırınlar ve daha fazlası için.",
+    "hero": {
+      "eyebrow": "Restoranlar, kafeler ve daha fazlası için dijital menüler",
+      "title": "Menünüz her telefonda, her dilde",
+      "intro": "Misafirler QR kodu okutur ve menünüz fotoğraflar, fiyatlar ve çalışma saatleriyle hemen açılır. Değişiklikleri kendiniz yaparsınız, saniyeler içinde yayında olur.",
+      "ctaContact": "Bize ulaşın",
+      "ctaMenus": "Menülere göz atın",
+      "point1": "Uygulama gerekmez",
+      "point2": "5 dil",
+      "point3": "Saniyeler içinde yayında",
+      "demoCaption": "Çalışan bir demo menü. Bir yemeğe dokunun."
+    },
+    "steps": {
+      "title": "Nasıl çalışır",
+      "intro": "İlk mesajdan masalardaki menülere kadar, hiçbir şeyi yeniden bastırmadan.",
+      "s1": {
+        "title": "Sizi kuruyoruz",
+        "text": "Bize mekânınızı anlatın. Menü sayfanızı oluşturup size ve ekibinize giriş bağlantıları göndeririz."
+      },
+      "s2": {
+        "title": "Menünüzü ekleyin",
+        "text": "Yemekler, fiyatlar, fotoğraflar ve diyet etiketleri. Kontrol listesi ve özel önizleme, misafirler görmeden her şeyi hazırlamanıza yardım eder."
+      },
+      "s3": {
+        "title": "Masalara koyun",
+        "text": "QR masa kartlarını yazdırın. Misafirler okutur, siz de menünüzün her gün kaç kez açıldığını görürsünüz."
+      }
+    },
+    "features": {
+      "title": "Menünüzün ihtiyacı olan her şey",
+      "intro": "Masadaki telefonlar ve değişiklikleri kendisi yapmak isteyen işletme sahipleri için tasarlandı.",
+      "cta": "Tüm özellikleri görün"
+    },
+    "menus": {
+      "title": "Menupedia'daki menüler",
+      "titleLocal": "{country} içindeki menüler",
+      "intro": "Menupedia'yı kullanan mekânlar. Birini açıp misafirlerin gördüğü gibi görün.",
+      "cta": "Tüm menüleri görün"
+    },
+    "contact": {
+      "title": "Menünüzü internete taşıyın",
+      "text": "Bize restoranınızı, kafenizi ya da dükkânınızı anlatın; menünüzü sizinle birlikte kuralım."
+    }
+  },
+  "Footer": {
+    "home": "Menupedia ana sayfa",
+    "tagline": "Restoranların, kafelerin ve dükkânların kendi yönettiği dijital menüler. Misafirler okutur, kendi dilinde okur ve gönül rahatlığıyla sipariş verir.",
+    "product": "Ürün",
+    "menus": "Menüler",
+    "features": "Özellikler",
+    "demo": "Demo menü",
+    "company": "Şirket",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
+    "forRestaurants": "İşletmeler için",
+    "email": "E-posta gönderin",
+    "signIn": "Giriş yap",
+    "dashboard": "Panel",
+    "rights": "© {year} Menupedia. Tüm hakları saklıdır."
   }
 }

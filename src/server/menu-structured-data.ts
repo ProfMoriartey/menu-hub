@@ -3,6 +3,7 @@ import { parsePrice } from "~/lib/format-price";
 import { WEEK_DAYS, type OpeningHours } from "~/lib/opening-hours";
 import type { SocialMediaLinks } from "~/lib/schemas";
 import type { PublicCategory } from "~/components/public/menu-types";
+import type { VenueType } from "~/lib/venue-types";
 import type { DietaryLabel, Restaurant } from "~/types/restaurant";
 
 const SCHEMA_DAYS = {
@@ -21,6 +22,15 @@ const DIETS: Partial<Record<DietaryLabel, string>> = {
   vegetarian: "https://schema.org/VegetarianDiet",
   vegan: "https://schema.org/VeganDiet",
   "gluten-free": "https://schema.org/GlutenFreeDiet",
+};
+
+// The closest schema.org type for each venue type; others are a Restaurant.
+const SCHEMA_TYPES: Partial<Record<VenueType | (string & {}), string>> = {
+  cafe: "CafeOrCoffeeShop",
+  coffee_shop: "CafeOrCoffeeShop",
+  bakery: "Bakery",
+  fast_food: "FastFoodRestaurant",
+  bar: "BarOrPub",
 };
 
 /**
@@ -43,7 +53,9 @@ export function restaurantStructuredData({
     | "logoUrl"
     | "phoneNumber"
     | "address"
+    | "city"
     | "country"
+    | "typeOfEstablishment"
     | "foodType"
     | "currency"
   > & {
@@ -62,17 +74,18 @@ export function restaurantStructuredData({
 
   return {
     "@context": "https://schema.org",
-    "@type": "Restaurant",
+    "@type": SCHEMA_TYPES[restaurant.typeOfEstablishment ?? ""] ?? "Restaurant",
     name: restaurant.name,
     url: pageUrl,
     description: restaurant.description ?? undefined,
     image: restaurant.logoUrl ?? undefined,
     telephone: restaurant.phoneNumber ?? undefined,
     address:
-      restaurant.address || restaurant.country
+      restaurant.address || restaurant.city || restaurant.country
         ? {
             "@type": "PostalAddress",
             streetAddress: restaurant.address ?? undefined,
+            addressLocality: restaurant.city ?? undefined,
             addressCountry: restaurant.country ?? undefined,
           }
         : undefined,

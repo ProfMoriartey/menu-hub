@@ -10,6 +10,18 @@
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* The home page doodles bob gently once they've slid in (motion-safe only). */
+  --animate-doodle-float: doodle-float 7s ease-in-out infinite;
+  @keyframes doodle-float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(-1.5deg);
+    }
+  }
 }
 
 @theme inline {
@@ -94,6 +106,12 @@
   --chart-3: oklch(35.03% 0.033 84.81); /* stone-600 */
   --chart-4: oklch(82.91% 0.093 120.93); /* yellow-500 */
   --chart-5: oklch(76.2% 0.12 100.9); /* lime-500 */
+
+  /* Doodles (components/svg): the blob, the ink and a tile behind them.
+     Light: amber blob, dark ink, no tile. */
+  --doodle-fill: var(--primary);
+  --doodle-ink: var(--foreground);
+  --doodle-backdrop: transparent;
 }
 
 .dark {
@@ -129,6 +147,13 @@
   --chart-4: oklch(89.5% 0.016 88.45); /* stone-200 */
   --chart-5: oklch(76.2% 0.12 100.9); /* lime-500 */
 
+  /* Dark: the drawings leave faces and skin see-through and draw hair and
+     outlines in solid ink, so light ink would look like a negative. They
+     keep dark ink and sit on a soft warm tile instead, like stickers. */
+  --doodle-fill: oklch(80.52% 0.177 82.8); /* amber-400 */
+  --doodle-ink: oklch(25.99% 0.026 82.52); /* stone-700 */
+  --doodle-backdrop: oklch(86% 0.035 80); /* warm beige */
+
   --sidebar: oklch(25.99% 0.026 82.52); /* Matches card background */
   --sidebar-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
   --sidebar-primary: oklch(80.52% 0.177 82.8); /* amber-400 */
@@ -137,6 +162,53 @@
   --sidebar-accent-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
   --sidebar-border: oklch(35.03% 0.033 84.81); /* stone-600 */
   --sidebar-ring: oklch(80.52% 0.177 82.8); /* amber-400 */
+}
+
+/* Rows that scroll sideways (chips, category bars) without a scrollbar. */
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* A slim, quiet scrollbar for small scrolling boxes like the demo phone. */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, currentColor 25%, transparent) transparent;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: color-mix(in oklch, currentColor 25%, transparent);
+  }
+}
+
+/* The marketing pages' background: separate round amber glows of
+   different sizes, on the sides and in the middle, the largest behind the
+   hero and none near the footer. Positions are a share of the page's
+   height, so every page gets the same pattern. Mirrored in Arabic,
+   and gentler in dark mode. */
+.site-glow {
+  /* The primary amber, see-through. Plain colours rather than color-mix,
+     which older browsers would replace with solid amber. */
+  --glow: oklch(63.09% 0.129 65.4 / 0.26);
+  --glow-soft: oklch(63.09% 0.129 65.4 / 0.16);
+  background-image:
+    radial-gradient(circle 26rem at 88% 6%, var(--glow), transparent),
+    radial-gradient(circle 14rem at 6% 24%, var(--glow-soft), transparent),
+    radial-gradient(circle 20rem at 52% 42%, var(--glow-soft), transparent),
+    radial-gradient(circle 11rem at 94% 56%, var(--glow-soft), transparent),
+    radial-gradient(circle 17rem at 14% 72%, var(--glow-soft), transparent);
+}
+.dark .site-glow {
+  --glow: oklch(80.52% 0.177 82.8 / 0.15);
+  --glow-soft: oklch(80.52% 0.177 82.8 / 0.09);
+}
+[dir="rtl"] .site-glow {
+  transform: scaleX(-1);
 }
 
 @layer base {

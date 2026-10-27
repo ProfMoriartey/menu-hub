@@ -1,43 +1,4 @@
 {
-  "hero": {
-    "title": {
-      "main": "Discover Your Next",
-      "highlight": "Favorite Meal"
-    },
-    "description": "Explore diverse menus from local restaurants, find culinary inspiration, and enjoy seamless dining experiences.",
-    "cta": "Start Exploring"
-  },
-  "about": {
-    "title": "Discover More About Menupedia",
-    "description": "Menupedia is your premier online destination for exploring local eateries and their delightful menus. We connect passionate food lovers with a diverse array of culinary experiences, making it effortless to find exactly what you crave. Our core mission is to simplify your dining choices, champion local businesses, and showcase the very best of local gastronomy.",
-    "cta": "Learn More About Menupedia"
-  },
-  "featured": {
-    "title": "Featured Restaurants",
-    "empty": "No featured restaurants available at the moment.",
-    "button": {
-      "single": "View Menu",
-      "all": "View All Restaurants"
-    }
-  },
-  "themes": {
-    "title": "Why Choose Menupedia?",
-    "description": "Menupedia simplifies restaurant menu management and discovery. We offer intuitive tools for businesses and a rich, user-friendly experience for diners. Our focus on local gastronomy means you support your community while exploring diverse culinary options. With seamless integration and dynamic display themes, we make digital menus engaging and effortless.",
-    "previewTitle": "See Our Digital Menus in Action",
-    "example": {
-      "classic": "Classic Layout",
-      "accordion": "Accordion Card Layout",
-      "sidebarList": "Sidebar List Layout",
-      "categoryCardsImageDominant": "Category Cards Image Dominant Layout"
-    },
-    "cta": "Explore All Features"
-  },
-  "contact": {
-    "title": "Get in Touch",
-    "description": "Have questions or need support? Reach out to us!",
-    "emailLabel": "Email",
-    "phoneLabel": "Phone"
-  },
   "messages": {
     "title": "Your Messages",
     "empty": "No messages yet. Start a conversation!",
@@ -47,25 +8,18 @@
     "messageSent": "Message sent!",
     "errorSendingMessage": "Failed to send message."
   },
-  "restaurantsPage": {
-    "mainTitle": "Discover Restaurants",
-    "description": "Search and explore all restaurants available on Menupedia.",
-    "searchButton": "Search Restaurants",
-    "searchPlaceholder": "Search for a restaurant, cuisine, or menu item...",
-    "noResultsFound": "No results found for \"{searchTerm}\".",
-    "allRestaurantsTitle": "All Restaurants",
-    "noRestaurantsFound": "No restaurants found.",
-    "adminPrompt": "If you are the admin, please add restaurants via the dashboard."
-  },
   "navbar": {
     "home": "Home",
-    "restaurants": "Restaurants",
+    "restaurants": "Menus",
     "themes": "Features",
     "aboutUs": "About Us",
-    "language": "Language"
-  },
-  "restaurantCard": {
-    "viewMenu": "View Menu"
+    "language": "Language",
+    "mainNav": "Main",
+    "signIn": "Sign in",
+    "getInTouch": "Get in touch",
+    "dashboard": "Dashboard",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Browse our delicious menu",
@@ -90,116 +44,9 @@
       "establishmentTypeLabel": "Type",
       "phoneLabel": "Contact",
       "countryLabel": "Country",
+      "locationLabel": "Location",
       "addressLabel": "Address",
       "getDirections": "Get Directions"
-  },
-  "classicThemeExample": {
-    "exampleTitle": "Example:",
-    "noItemsMessage": "No items in this category.",
-    "categories": {
-      "appetizers": "Appetizers",
-      "mainCourses": "Main Courses",
-      "desserts": "Desserts",
-      "drinks": "Drinks"
-    },
-    "items": {
-      "a1": "Spring Rolls",
-      "a2": "Garlic Bread",
-      "a3": "Tomato Bruschetta",
-      "m1": "Grilled Salmon",
-      "m2": "Steak Frites",
-      "m3": "Veggie Burger",
-      "m4": "Chicken Alfredo",
-      "d1": "Cheesecake",
-      "d2": "Chocolate Lava Cake",
-      "dr1": "Iced Tea",
-      "dr2": "Lemonade",
-      "dr3": "Coffee",
-      "dr4": "Orange Juice"
-    }
-  },
-  "accordionCardThemeExample": {
-    "exampleTitle": "Example:",
-    "noItemsMessage": "No items in this category.",
-    "categories": {
-      "coffee": "Coffee Drinks",
-      "pastries": "Fresh Pastries",
-      "sandwiches": "Light Bites"
-    },
-    "items": {
-      "c1": {
-        "name": "Espresso",
-        "desc": "Strong, rich shot."
-      },
-      "c2": {
-        "name": "Latte",
-        "desc": "Espresso with steamed milk."
-      },
-      "c3": {
-        "name": "Cappuccino",
-        "desc": "Equal parts espresso, steamed milk, foam."
-      },
-      "p1": {
-        "name": "Croissant",
-        "desc": "Flaky, buttery perfection."
-      },
-      "p2": {
-        "name": "Muffin",
-        "desc": "Blueberry or chocolate chip."
-      },
-      "s1": {
-        "name": "BLT",
-        "desc": "Bacon, lettuce, tomato."
-      },
-      "s2": {
-        "name": "Veggie Wrap",
-        "desc": "Fresh vegetables, hummus."
-      }
-    }
-  },
-  "sidebarListThemeExample": {
-    "exampleTitle": "Example:",
-    "noItemsMessage": "No items in this category.",
-    "categories": {
-      "appetizers": "Appetizers",
-      "mainCourses": "Main Courses",
-      "desserts": "Desserts",
-      "drinks": "Drinks"
-    },
-    "items": {
-      "a1": "Soup of the Day",
-      "a2": "House Salad",
-      "m1": "Pasta Primavera",
-      "m2": "Grilled Chicken",
-      "m3": "Vegetable Curry",
-      "d1": "Chocolate Cake",
-      "dr1": "Fresh Orange Juice",
-      "dr2": "Sparkling Water"
-    }
-  },
-  "categoryCardsImageDominantThemeExample": {
-    "exampleTitle": "Example:",
-    "selectCategoryMessage": "Select a category to see an example item.",
-    "categories": {
-      "appetizers": "Appetizers",
-      "mainCourses": "Main Courses",
-      "desserts": "Desserts",
-      "drinks": "Drinks"
-    },
-    "items": {
-      "frenchFries": {
-        "name": "French Fries"
-      },
-      "deliciousBowl": {
-        "name": "Delicious Bowl"
-      },
-      "lemonCheesecake": {
-        "name": "Lemon Cheesecake"
-      },
-      "cocaCola": {
-        "name": "Coca Cola"
-      }
-    }
   },
   "Dashboard": {
     "title": "Your Assigned Menus",
@@ -404,7 +251,10 @@
     "discard": "Discard",
     "save": "Save changes",
     "saveFailed": "Couldn't save the restaurant.",
-    "logoTooLarge": "This logo is too large, even after shrinking. Try a smaller image (up to 4 MB)."
+    "logoTooLarge": "This logo is too large, even after shrinking. Try a smaller image (up to 4 MB).",
+    "city": "City",
+    "cityHint": "Guests can find your menu by city.",
+    "cityPlaceholder": "e.g. Bursa"
   },
   "ActionErrors": {
     "createRestaurantFailed": "Couldn't create the restaurant. Please try again.",
@@ -937,8 +787,126 @@
       "title": "See it for yourself",
       "text": "Try our demo restaurant, or browse the menus already on Menupedia.",
       "features": "Explore the features",
-      "restaurants": "Browse restaurants",
+      "restaurants": "Browse menus",
       "contact": "Get in touch"
     }
+  },
+  "VenueTypes": {
+    "restaurant": "Restaurant",
+    "cafe": "Café",
+    "coffee_shop": "Coffee shop",
+    "bakery": "Bakery & pastry",
+    "dessert": "Desserts",
+    "fast_food": "Fast food",
+    "bar": "Bar",
+    "home_cooking": "Home cooking"
+  },
+  "MenusPage": {
+    "metaTitle": "Menus",
+    "metaDescription": "Browse the menus of restaurants, cafés and more on Menupedia, or search for a dish across all of them.",
+    "title": "Menus",
+    "intro": "Restaurants, cafés and more. Find a place, or search for a dish across every menu.",
+    "searchLabel": "Search places and dishes",
+    "searchPlaceholder": "Search places or dishes",
+    "clearSearch": "Clear search",
+    "typeFilterLabel": "Type of place",
+    "allTypes": "All",
+    "openNow": "Open now",
+    "inLanguage": "Menu in {language}",
+    "cityLabel": "City",
+    "allCities": "All cities",
+    "clearFilters": "Clear filters",
+    "count": "{count, plural, =0 {No menus} one {# menu} other {# menus}}",
+    "searchStatus": "{places, plural, =0 {No places} one {# place} other {# places}}, {dishes, plural, =0 {no dishes} one {# dish} other {# dishes}}",
+    "featured": "Featured",
+    "allMenus": "All menus",
+    "matching": "Matching menus",
+    "places": "Places",
+    "dishes": "Dishes",
+    "searchingDishes": "Searching dishes…",
+    "dishSearchFailed": "Couldn't search dishes. Please try again.",
+    "noDishes": "No dishes match “{query}”.",
+    "noResults": "Nothing matches “{query}”. Try another word, or fewer filters.",
+    "noMatches": "No menus match these filters.",
+    "empty": "There are no menus here yet.",
+    "dishCount": "{count, plural, one {# dish} other {# dishes}}",
+    "menuLanguages": "Menu languages",
+    "soldOut": "Sold out",
+    "scopeLabel": "Show menus from",
+    "everywhere": "Everywhere",
+    "noLocalMenus": "There are no menus in {country} yet, so these are from everywhere.",
+    "searchEverywhere": "Search everywhere",
+    "countryLabel": "Country",
+    "allCountries": "All countries",
+    "filters": "Filters",
+    "filtersActive": "{count, plural, one {Filters, # in use} other {Filters, # in use}}",
+    "filtersDescription": "Narrow the menus by type, opening hours, language and place.",
+    "closeFilters": "Close filters",
+    "showOnly": "Show only",
+    "clearAll": "Clear all",
+    "showResults": "{count, plural, =0 {No menus match} one {Show # menu} other {Show # menus}}",
+    "removeFilter": "Remove filter: {name}"
+  },
+  "HomePage": {
+    "metaTitle": "Menupedia: digital menus for restaurants and cafés",
+    "metaDescription": "A QR menu your guests open on their phone, in their language, and that you update yourself in seconds. For restaurants, cafés, bakeries and more.",
+    "hero": {
+      "eyebrow": "Digital menus for restaurants, cafés and more",
+      "title": "Your menu on every phone, in every language",
+      "intro": "Guests scan a QR code and your menu opens instantly, with photos, prices and opening hours. You change it yourself, and it's live in seconds.",
+      "ctaContact": "Get in touch",
+      "ctaMenus": "Browse menus",
+      "point1": "No app to install",
+      "point2": "5 languages",
+      "point3": "Live in seconds",
+      "demoCaption": "A working demo menu. Tap a dish."
+    },
+    "steps": {
+      "title": "How it works",
+      "intro": "From first message to menus on the tables, without reprinting anything.",
+      "s1": {
+        "title": "We set you up",
+        "text": "Tell us about your place. We create your menu page and send sign-in links to you and your staff."
+      },
+      "s2": {
+        "title": "Add your menu",
+        "text": "Dishes, prices, photos and dietary labels. A checklist and a private preview help you get it right before guests see it."
+      },
+      "s3": {
+        "title": "Put it on the tables",
+        "text": "Print QR table cards. Guests scan, and you see how many opened your menu each day."
+      }
+    },
+    "features": {
+      "title": "Everything your menu needs",
+      "intro": "Made for phones at the table, and for owners who want to change things themselves.",
+      "cta": "See all features"
+    },
+    "menus": {
+      "title": "Menus on Menupedia",
+      "titleLocal": "Menus in {country}",
+      "intro": "Places already using Menupedia. Open one to see it as guests do.",
+      "cta": "See all menus"
+    },
+    "contact": {
+      "title": "Get your menu online",
+      "text": "Tell us about your restaurant, café or shop, and we'll set up your menu with you."
+    }
+  },
+  "Footer": {
+    "home": "Menupedia home",
+    "tagline": "Digital menus that restaurants, cafés and shops run themselves. Guests scan, read in their language, and order with confidence.",
+    "product": "Product",
+    "menus": "Menus",
+    "features": "Features",
+    "demo": "Demo menu",
+    "company": "Company",
+    "about": "About",
+    "contact": "Contact",
+    "forRestaurants": "For restaurants",
+    "email": "Email us",
+    "signIn": "Sign in",
+    "dashboard": "Dashboard",
+    "rights": "© {year} Menupedia. All rights reserved."
   }
 }

@@ -3,7 +3,8 @@
 
 import { usePathname } from "next/navigation";
 import { useLocale } from "next-intl"; // CORRECTED: Import useLocale directly from 'next-intl'
-import { Navbar } from "~/components/shared/Navbar"; // Import your Navbar component
+import { Navbar } from "~/components/shared/Navbar";
+import { SiteFooter } from "~/components/shared/SiteFooter";
 import type React from "react";
 
 interface LayoutWrapperProps {
@@ -18,14 +19,14 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
   const basePublicPaths = [
     "/", // For the root path accessed directly (e.g., example.com/)
     "", // For the root path when locale prefix is removed (e.g., example.com/en -> "")
-    "/restaurants",
+    "/menus",
     "/features",
     "/about",
     // Add other base paths that should always show the navbar, e.g., "/contact"
   ];
 
   // Check if the current path (without locale prefix) is in the list of public paths
-  // This makes the check robust to different locales (e.g., /en/restaurants, /ar/restaurants)
+  // This makes the check robust to different locales (e.g., /en/menus, /ar/menus)
   const cleanPathname = pathname.startsWith(`/${locale}`)
     ? pathname.substring(`/${locale}`.length)
     : pathname;
@@ -36,8 +37,17 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
 
   return (
     <>
-      {isPublicNavbarVisible && <Navbar />}
-      {children}
+      {isPublicNavbarVisible ? (
+        // The marketing pages share a soft amber glow behind everything.
+        <div className="relative isolate">
+          <div className="site-glow pointer-events-none absolute inset-0 -z-10" aria-hidden />
+          <Navbar />
+          {children}
+          <SiteFooter />
+        </div>
+      ) : (
+        children
+      )}
     </>
   );
 }

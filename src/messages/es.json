@@ -1,43 +1,4 @@
 {
-  "hero": {
-    "title": {
-      "main": "Descubre tu Próxima",
-      "highlight": "Comida Favorita"
-    },
-    "description": "Explora diversos menús de restaurantes locales, encuentra inspiración culinaria y disfruta de experiencias gastronómicas sin interrupciones.",
-    "cta": "Empezar a Explorar"
-  },
-  "about": {
-    "title": "Descubre Más Sobre Menupedia",
-    "description": "Menupedia es tu destino principal en línea para explorar restaurantes locales y sus deliciosos menús. Conectamos a los amantes de la comida apasionados con una amplia gama de experiencias culinarias, haciendo que sea fácil encontrar exactamente lo que anhelas. Nuestra misión principal es simplificar tus elecciones gastronómicas, apoyar a los negocios locales y mostrar lo mejor de la gastronomía local.",
-    "cta": "Aprende Más Sobre Menupedia"
-  },
-  "featured": {
-    "title": "Restaurantes Destacados",
-    "empty": "No hay restaurantes destacados disponibles por el momento.",
-    "button": {
-      "single": "Ver Menú",
-      "all": "Ver Todos los Restaurantes"
-    }
-  },
-  "themes": {
-    "title": "¿Por Qué Elegir Menupedia?",
-    "description": "Menupedia simplifica la gestión y el descubrimiento de menús de restaurantes. Ofrecemos herramientas intuitivas para empresas y una experiencia rica y fácil de usar para los comensales. Nuestro enfoque en la gastronomía local significa que apoyas a tu comunidad mientras exploras diversas opciones culinarias. Con una integración perfecta y temas de visualización dinámicos, hacemos que los menús digitales sean atractivos y sin esfuerzo.",
-    "previewTitle": "Ver Nuestros Menús Digitales en Acción",
-    "example": {
-      "classic": "Diseño Clásico",
-      "accordion": "Diseño de Tarjeta de Acordeón",
-      "sidebarList": "Diseño de Lista en Barra Lateral",
-      "categoryCardsImageDominant": "Diseño de Tarjetas de Categorías con Imagen Dominante"
-    },
-    "cta": "Explorar Todas las Características"
-  },
-  "contact": {
-    "title": "Ponte en Contacto",
-    "description": "¿Tienes preguntas o necesitas soporte? ¡Contáctanos!",
-    "emailLabel": "Correo Electrónico",
-    "phoneLabel": "Teléfono"
-  },
   "messages": {
     "title": "Tus Mensajes",
     "empty": "Aún no hay mensajes. ¡Inicia una conversación!",
@@ -47,25 +8,18 @@
     "messageSent": "¡Mensaje enviado!",
     "errorSendingMessage": "No se pudo enviar el mensaje."
   },
-  "restaurantsPage": {
-    "mainTitle": "Descubre Restaurantes",
-    "description": "Busca y explora todos los restaurantes disponibles en Menupedia.",
-    "searchButton": "Buscar Restaurantes",
-    "searchPlaceholder": "Busca un restaurante, tipo de cocina o artículo del menú...",
-    "noResultsFound": "No se encontraron resultados para \"{searchTerm}\".",
-    "allRestaurantsTitle": "Todos los Restaurantes",
-    "noRestaurantsFound": "No se encontraron restaurantes.",
-    "adminPrompt": "Si eres el administrador, por favor, añade restaurantes a través del panel."
-  },
   "navbar": {
     "home": "Inicio",
-    "restaurants": "Restaurantes",
+    "restaurants": "Menús",
     "themes": "Funciones",
     "aboutUs": "Acerca de Nosotros",
-    "language": "Idioma"
-  },
-  "restaurantCard": {
-    "viewMenu": "Ver Menú"
+    "language": "Idioma",
+    "mainNav": "Principal",
+    "signIn": "Iniciar sesión",
+    "getInTouch": "Contáctanos",
+    "dashboard": "Panel",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Explora nuestro delicioso menú",
@@ -90,117 +44,10 @@
       "establishmentTypeLabel": "Tipo",
       "phoneLabel": "Contacto",
       "countryLabel": "País",
+      "locationLabel": "Ubicación",
       "addressLabel": "Dirección",
       "getDirections": "Cómo Llegar"
     },
-  "classicThemeExample": {
-    "exampleTitle": "Ejemplo:",
-    "noItemsMessage": "No hay elementos en esta categoría.",
-    "categories": {
-      "appetizers": "Entrantes",
-      "mainCourses": "Platos Principales",
-      "desserts": "Postres",
-      "drinks": "Bebidas"
-    },
-    "items": {
-      "a1": "Rollitos de Primavera",
-      "a2": "Pan de Ajo",
-      "a3": "Bruschetta de Tomate",
-      "m1": "Salmón a la Plancha",
-      "m2": "Bistec con Patatas Fritas",
-      "m3": "Hamburguesa Vegetariana",
-      "m4": "Pollo Alfredo",
-      "d1": "Tarta de Queso",
-      "d2": "Coulant de Chocolate",
-      "dr1": "Té Helado",
-      "dr2": "Limonada",
-      "dr3": "Café",
-      "dr4": "Zumo de Naranja"
-    }
-  },
-  "accordionCardThemeExample": {
-    "exampleTitle": "Ejemplo:",
-    "noItemsMessage": "No hay elementos en esta categoría.",
-    "categories": {
-      "coffee": "Bebidas de Café",
-      "pastries": "Bollería Fresca",
-      "sandwiches": "Bocadillos Ligeros"
-    },
-    "items": {
-      "c1": {
-        "name": "Espresso",
-        "desc": "Un shot fuerte y rico."
-      },
-      "c2": {
-        "name": "Latte",
-        "desc": "Espresso con leche vaporizada."
-      },
-      "c3": {
-        "name": "Cappuccino",
-        "desc": "Partes iguales de espresso, leche vaporizada y espuma."
-      },
-      "p1": {
-        "name": "Cruasán",
-        "desc": "Perfección hojaldrada y con mantequilla."
-      },
-      "p2": {
-        "name": "Muffin",
-        "desc": "De arándanos o chispas de chocolate."
-      },
-      "s1": {
-        "name": "BLT",
-        "desc": "Tocino, lechuga, tomate."
-      },
-      "s2": {
-        "name": "Wrap Vegetariano",
-        "desc": "Vegetales frescos, hummus."
-      }
-    }
-  },
-  "sidebarListThemeExample": {
-    "exampleTitle": "Ejemplo:",
-    "noItemsMessage": "No hay elementos en esta categoría.",
-    "categories": {
-      "appetizers": "Entrantes",
-      "mainCourses": "Platos Principales",
-      "desserts": "Postres",
-      "drinks": "Bebidas"
-    },
-    "items": {
-      "a1": "Sopa del Día",
-      "a2": "Ensalada de la Casa",
-      "m1": "Pasta Primavera",
-      "m2": "Pollo a la Plancha",
-      "m3": "Curry de Verduras",
-      "d1": "Tarta de Chocolate",
-      "dr1": "Zumo de Naranja Natural",
-      "dr2": "Agua con Gas"
-    }
-  },
-  "categoryCardsImageDominantThemeExample": {
-    "exampleTitle": "Ejemplo:",
-    "selectCategoryMessage": "Selecciona una categoría para ver un elemento de ejemplo.",
-    "categories": {
-      "appetizers": "Entrantes",
-      "mainCourses": "Platos Principales",
-      "desserts": "Postres",
-      "drinks": "Bebidas"
-    },
-    "items": {
-      "frenchFries": {
-        "name": "Patatas Fritas"
-      },
-      "deliciousBowl": {
-        "name": "Tazón Delicioso"
-      },
-      "lemonCheesecake": {
-        "name": "Tarta de Queso de Limón"
-      },
-      "cocaCola": {
-        "name": "Coca Cola"
-      }
-    }
-  },
   "Dashboard": {
     "title": "Sus Menús Asignados",
     "emptyTitle": "No hay menús asignados",
@@ -404,7 +251,10 @@
     "discard": "Descartar",
     "save": "Guardar cambios",
     "saveFailed": "No se pudo guardar el restaurante.",
-    "logoTooLarge": "Este logo es demasiado grande incluso después de reducirlo. Prueba con una imagen más pequeña (hasta 4 MB)."
+    "logoTooLarge": "Este logo es demasiado grande incluso después de reducirlo. Prueba con una imagen más pequeña (hasta 4 MB).",
+    "city": "Ciudad",
+    "cityHint": "Los clientes pueden encontrar tu menú por ciudad.",
+    "cityPlaceholder": "p. ej., Bursa"
   },
   "ActionErrors": {
     "createRestaurantFailed": "No se pudo crear el restaurante. Inténtalo de nuevo.",
@@ -937,8 +787,126 @@
       "title": "Compruébalo tú mismo",
       "text": "Prueba nuestro restaurante de demostración o mira los menús que ya están en Menupedia.",
       "features": "Ver las funciones",
-      "restaurants": "Ver restaurantes",
+      "restaurants": "Ver menús",
       "contact": "Contactar"
     }
+  },
+  "VenueTypes": {
+    "restaurant": "Restaurante",
+    "cafe": "Café",
+    "coffee_shop": "Cafetería",
+    "bakery": "Panadería y pastelería",
+    "dessert": "Postres",
+    "fast_food": "Comida rápida",
+    "bar": "Bar",
+    "home_cooking": "Comida casera"
+  },
+  "MenusPage": {
+    "metaTitle": "Menús",
+    "metaDescription": "Explora los menús de restaurantes, cafés y más en Menupedia, o busca un plato en todos ellos.",
+    "title": "Menús",
+    "intro": "Restaurantes, cafés y más. Encuentra un lugar o busca un plato en todos los menús.",
+    "searchLabel": "Buscar lugares y platos",
+    "searchPlaceholder": "Busca lugares o platos",
+    "clearSearch": "Borrar búsqueda",
+    "typeFilterLabel": "Tipo de lugar",
+    "allTypes": "Todos",
+    "openNow": "Abierto ahora",
+    "inLanguage": "Menú en {language}",
+    "cityLabel": "Ciudad",
+    "allCities": "Todas las ciudades",
+    "clearFilters": "Quitar filtros",
+    "count": "{count, plural, =0 {Ningún menú} one {# menú} other {# menús}}",
+    "searchStatus": "{places, plural, =0 {Ningún lugar} one {# lugar} other {# lugares}}, {dishes, plural, =0 {ningún plato} one {# plato} other {# platos}}",
+    "featured": "Destacados",
+    "allMenus": "Todos los menús",
+    "matching": "Menús que coinciden",
+    "places": "Lugares",
+    "dishes": "Platos",
+    "searchingDishes": "Buscando platos…",
+    "dishSearchFailed": "No se pudieron buscar los platos. Inténtalo de nuevo.",
+    "noDishes": "Ningún plato coincide con «{query}».",
+    "noResults": "Nada coincide con «{query}». Prueba otra palabra o menos filtros.",
+    "noMatches": "Ningún menú coincide con estos filtros.",
+    "empty": "Todavía no hay menús.",
+    "dishCount": "{count, plural, one {# plato} other {# platos}}",
+    "menuLanguages": "Idiomas del menú",
+    "soldOut": "Agotado",
+    "scopeLabel": "Mostrar menús de",
+    "everywhere": "Todas partes",
+    "noLocalMenus": "Aún no hay menús en {country}, así que ves menús de todas partes.",
+    "searchEverywhere": "Buscar en todas partes",
+    "countryLabel": "País",
+    "allCountries": "Todos los países",
+    "filters": "Filtros",
+    "filtersActive": "{count, plural, one {Filtros, # activo} other {Filtros, # activos}}",
+    "filtersDescription": "Filtra los menús por tipo, horario, idioma y lugar.",
+    "closeFilters": "Cerrar filtros",
+    "showOnly": "Mostrar solo",
+    "clearAll": "Quitar todo",
+    "showResults": "{count, plural, =0 {Ningún menú coincide} one {Ver # menú} other {Ver # menús}}",
+    "removeFilter": "Quitar filtro: {name}"
+  },
+  "HomePage": {
+    "metaTitle": "Menupedia: menús digitales para restaurantes y cafés",
+    "metaDescription": "Un menú QR que tus clientes abren en su móvil, en su idioma, y que actualizas tú mismo en segundos. Para restaurantes, cafés, panaderías y más.",
+    "hero": {
+      "eyebrow": "Menús digitales para restaurantes, cafés y más",
+      "title": "Tu menú en cada móvil, en cada idioma",
+      "intro": "Tus clientes escanean un código QR y tu menú se abre al instante, con fotos, precios y horario. Lo cambias tú mismo y está publicado en segundos.",
+      "ctaContact": "Contáctanos",
+      "ctaMenus": "Ver menús",
+      "point1": "Sin instalar apps",
+      "point2": "5 idiomas",
+      "point3": "Publicado en segundos",
+      "demoCaption": "Un menú de demostración que funciona. Toca un plato."
+    },
+    "steps": {
+      "title": "Cómo funciona",
+      "intro": "Del primer mensaje a los menús en las mesas, sin volver a imprimir nada.",
+      "s1": {
+        "title": "Te lo preparamos",
+        "text": "Cuéntanos sobre tu local. Creamos la página de tu menú y te enviamos enlaces de acceso para ti y tu equipo."
+      },
+      "s2": {
+        "title": "Añade tu menú",
+        "text": "Platos, precios, fotos y etiquetas dietéticas. Una lista de pasos y una vista previa privada te ayudan a dejarlo listo antes de que lo vean tus clientes."
+      },
+      "s3": {
+        "title": "Ponlo en las mesas",
+        "text": "Imprime tarjetas QR para las mesas. Tus clientes escanean y tú ves cuántos abrieron tu menú cada día."
+      }
+    },
+    "features": {
+      "title": "Todo lo que tu menú necesita",
+      "intro": "Pensado para el móvil en la mesa y para dueños que quieren hacer los cambios ellos mismos.",
+      "cta": "Ver todas las funciones"
+    },
+    "menus": {
+      "title": "Menús en Menupedia",
+      "titleLocal": "Menús en {country}",
+      "intro": "Locales que ya usan Menupedia. Abre uno para verlo como lo ven sus clientes.",
+      "cta": "Ver todos los menús"
+    },
+    "contact": {
+      "title": "Pon tu menú en línea",
+      "text": "Cuéntanos sobre tu restaurante, café o tienda y prepararemos tu menú contigo."
+    }
+  },
+  "Footer": {
+    "home": "Inicio de Menupedia",
+    "tagline": "Menús digitales que los restaurantes, cafés y tiendas gestionan ellos mismos. Los clientes escanean, leen en su idioma y piden con confianza.",
+    "product": "Producto",
+    "menus": "Menús",
+    "features": "Funciones",
+    "demo": "Menú de demostración",
+    "company": "Empresa",
+    "about": "Quiénes somos",
+    "contact": "Contacto",
+    "forRestaurants": "Para restaurantes",
+    "email": "Escríbenos",
+    "signIn": "Iniciar sesión",
+    "dashboard": "Panel",
+    "rights": "© {year} Menupedia. Todos los derechos reservados."
   }
 }

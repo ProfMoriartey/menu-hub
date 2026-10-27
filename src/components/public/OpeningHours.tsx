@@ -15,6 +15,40 @@ interface Props {
   timeZone: string | null;
 }
 
+type PublicMenuT = Awaited<ReturnType<typeof getTranslations<"PublicMenu">>>;
+
+/**
+ * Whether the place is open at `now` in its time zone, with the words for
+ * it: "Open now" and "until 23:00", or "Closed" and "opens tomorrow at 09:00".
+ */
+export function describeOpenStatus(
+  hours: OpeningHours,
+  timeZone: string,
+  now: Date,
+  t: PublicMenuT,
+  locale: string,
+) {
+  const status = openStatus(hours, timeZone, now);
+
+  let detail: string | null = null;
+  if (status.open) {
+    detail = t("openUntil", { time: formatTime(status.closesAt, locale) });
+  } else if (status.opensAt) {
+    const time = formatTime(status.opensAt, locale);
+    detail =
+      status.inDays === 0
+        ? t("opensToday", { time })
+        : status.inDays === 1
+          ? t("opensTomorrow", { time })
+          : t("opensOn", { day: dayName(status.opensDay, locale), time });
+  }
+  return {
+    isOpen: status.open,
+    label: status.open ? t("openNow") : t("closedNow"),
+    detail,
+  };
+}
+
 /**
  * "Open now · until 23:00" or "Closed · opens tomorrow at 09:00", at the
  * time of the request in the restaurant's time zone. Nothing without hours.
@@ -30,20 +64,7 @@ export async function OpeningStatus({
     getTranslations("PublicMenu"),
     getLocale(),
   ]);
-  const status = openStatus(hours, timeZone, new Date());
-
-  let detail: string | null = null;
-  if (status.open) {
-    detail = t("openUntil", { time: formatTime(status.closesAt, locale) });
-  } else if (status.opensAt) {
-    const time = formatTime(status.opensAt, locale);
-    detail =
-      status.inDays === 0
-        ? t("opensToday", { time })
-        : status.inDays === 1
-          ? t("opensTomorrow", { time })
-          : t("opensOn", { day: dayName(status.opensDay, locale), time });
-  }
+  const status = describeOpenStatus(hours, timeZone, new Date(), t, locale);
 
   return (
     <p
@@ -52,7 +73,7 @@ export async function OpeningStatus({
         size === "sm"
           ? "gap-1.5 px-2 py-0.5 text-xs"
           : "gap-2 px-3 py-1 text-sm",
-        status.open
+        status.isOpen
           ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
           : "bg-muted text-muted-foreground",
         className,
@@ -61,13 +82,13 @@ export async function OpeningStatus({
       <span
         className={cn(
           "h-2 w-2 rounded-full",
-          status.open ? "bg-emerald-500" : "bg-muted-foreground/60",
+          status.isOpen ? "bg-emerald-500" : "bg-muted-foreground/60",
         )}
         aria-hidden
       />
       <span>
-        {status.open ? t("openNow") : t("closedNow")}
-        {detail && <span className="font-normal"> · {detail}</span>}
+        {status.label}
+        {status.detail && <span className="font-normal"> · {status.detail}</span>}
       </span>
     </p>
   );

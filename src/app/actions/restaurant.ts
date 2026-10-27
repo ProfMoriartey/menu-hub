@@ -37,6 +37,7 @@ const readRestaurantFields = (formData: FormData) => ({
   name: getStringValue(formData, "name"),
   slug: getStringValue(formData, "slug"),
   address: getStringValue(formData, "address"),
+  city: getStringValue(formData, "city")?.trim() ?? null,
   country: getStringValue(formData, "country"),
   foodType: getStringValue(formData, "foodType"),
   isActive: formData.get("isActive") === "on",

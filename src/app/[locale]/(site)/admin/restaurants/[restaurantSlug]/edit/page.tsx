@@ -5,6 +5,7 @@ import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
 import { updateRestaurant } from "~/app/actions/restaurant";
 import { AdminRestaurantForm } from "~/components/admin/restaurant-form/AdminRestaurantForm";
+import { countryOptions } from "~/lib/countries";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
 import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
 import { OpeningHoursSettings } from "~/components/restaurant-settings/OpeningHoursSettings";
@@ -33,7 +34,11 @@ export default async function EditRestaurantPage({
   return (
     <div className="space-y-8">
       <RestaurantAdminHeader restaurant={restaurant} activeTab="details" />
-      <AdminRestaurantForm restaurant={restaurant} action={updateRestaurant} />
+      <AdminRestaurantForm
+        restaurant={restaurant}
+        countries={countryOptions("en")}
+        action={updateRestaurant}
+      />
       {/* Saved on its own, outside the form's save bar. */}
       <MenuLanguagesSettings
         restaurantId={row.id}

@@ -18,6 +18,7 @@ export interface RestaurantFormValues {
   theme: string;
   currency: string;
   address: string;
+  city: string;
   country: string;
   phoneNumber: string;
   mapUrl: string;
@@ -42,6 +43,7 @@ export const EMPTY_VALUES: RestaurantFormValues = {
   theme: "classic",
   currency: "USD",
   address: "",
+  city: "",
   country: "",
   phoneNumber: "",
   mapUrl: "",
@@ -65,6 +67,7 @@ export function valuesFromRestaurant(restaurant: Restaurant): RestaurantFormValu
     theme: restaurant.theme ?? "classic",
     currency: restaurant.currency,
     address: restaurant.address ?? "",
+    city: restaurant.city ?? "",
     country: restaurant.country ?? "",
     phoneNumber: restaurant.phoneNumber ?? "",
     mapUrl: restaurant.mapUrl ?? "",
@@ -120,7 +123,7 @@ export const SECTIONS = [
   { id: "basics", label: "Basics", fields: ["name", "slug", "typeOfEstablishment", "foodType", "description"] },
   { id: "visibility", label: "Visibility", fields: ["isActive", "isDisplayed"] },
   { id: "branding", label: "Branding", fields: ["logoUrl", "theme", "currency"] },
-  { id: "location", label: "Location & contact", fields: ["address", "country", "phoneNumber", "mapUrl"] },
+  { id: "location", label: "Location & contact", fields: ["address", "city", "country", "phoneNumber", "mapUrl"] },
   { id: "links", label: "Links & delivery", fields: ["socialMedia", "deliveryApps"] },
   { id: "seo", label: "Search & sharing", fields: ["metaTitle", "metaDescription", "ogImage"] },
 ] as const;
@@ -150,6 +153,4 @@ export const CURRENCIES = [
   { value: "SAR", label: "SAR — Saudi riyal" },
 ];
 
-export const ESTABLISHMENT_SUGGESTIONS = ["Restaurant", "Cafe", "Bar", "Bakery", "Fast food", "Fine dining", "Patisserie"];
 export const FOOD_TYPE_SUGGESTIONS = ["Turkish", "Italian", "Burgers", "Pizza", "Seafood", "Kebab", "Asian", "Desserts", "Coffee"];
-export const COUNTRY_SUGGESTIONS = ["Türkiye", "United States", "United Kingdom", "Germany", "United Arab Emirates"];

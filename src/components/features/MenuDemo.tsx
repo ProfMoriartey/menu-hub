@@ -11,6 +11,7 @@ import {
 } from "~/components/public/MenuItemCard";
 import { DishSheetInPlaceProvider } from "~/components/public/DishSheet";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
+import { useTheme } from "~/context/ThemeContext";
 import { PRESETS, paletteTokens, type ThemeMode } from "~/lib/color-theme";
 import { DEMO_RESTAURANT } from "~/lib/demo-menu";
 import {
@@ -91,7 +92,11 @@ export function MenuDemo({
 
   const [design, setDesign] = useState<MenuDesign>("classic");
   const [preset, setPreset] = useState(PRESETS[0]!.id);
-  const [mode, setMode] = useState<ThemeMode>("light");
+  // Light or dark like the page, until a visitor picks one with the controls.
+  const { theme: pageTheme } = useTheme();
+  const [modeChoice, setMode] = useState<ThemeMode | null>(null);
+  const mode: ThemeMode =
+    modeChoice ?? (pageTheme === "dark" ? "dark" : "light");
   const [lang, setLang] = useState<MenuLanguage>(
     isMenuLanguage(initialLanguage) ? initialLanguage : "en",
   );
@@ -191,109 +196,113 @@ export function MenuDemo({
       )}
 
       {/* The phone. Its screen gets the chosen colours and the menu's
-          language and direction; the sheet opens inside it. */}
-      <div className="border-foreground/85 relative h-[620px] w-[320px] shrink-0 overflow-hidden rounded-[2.5rem] border-[10px] shadow-2xl lg:order-1">
-        <div
-          ref={setFrame}
-          style={style}
-          lang={lang}
-          dir={lang === "ar" ? "rtl" : "ltr"}
-          className="bg-background text-foreground relative h-full"
-        >
-          <DishSheetInPlaceProvider
-            categories={menu.categories}
-            container={frame}
+          language and direction; the sheet opens inside it. A slim bezel in
+          the site's card colour; "isolate" keeps the sheet and its shade
+          under the site's sticky navbar. */}
+      <div className="bg-card ring-foreground/15 relative isolate h-[620px] w-[320px] shrink-0 rounded-[2.5rem] p-[5px] shadow-[0_30px_60px_-24px_rgba(120,60,10,0.45)] ring-1 lg:order-1">
+        <div className="ring-border relative h-full overflow-hidden rounded-[2.2rem] ring-1">
+          <div
+            ref={setFrame}
+            style={style}
+            lang={lang}
+            dir={lang === "ar" ? "rtl" : "ltr"}
+            className="bg-background text-foreground relative h-full"
           >
-            <div
-              ref={scroller}
-              className="h-full overflow-y-auto overscroll-contain"
+            <DishSheetInPlaceProvider
+              categories={menu.categories}
+              container={frame}
             >
-              <header className="bg-card border-border border-b px-3 pt-4 pb-3">
-                <div className="flex items-start gap-3">
-                  <RestaurantLogo
-                    restaurant={{ name: DEMO_RESTAURANT.name, logoUrl: null }}
-                    className="h-12 w-12 rounded-xl text-base"
-                  />
-                  <div className="min-w-0">
-                    <p className="truncate text-lg leading-tight font-bold">
-                      {DEMO_RESTAURANT.name}
-                    </p>
-                    <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
-                      <span
-                        className="h-1.5 w-1.5 rounded-full bg-emerald-500"
-                        aria-hidden
-                      />
-                      {tMenu("openNow")}
-                    </p>
+              <div
+                ref={scroller}
+                className="scrollbar-thin h-full overflow-y-auto overscroll-contain"
+              >
+                <header className="bg-card border-border border-b px-3 pt-4 pb-3">
+                  <div className="flex items-start gap-3">
+                    <RestaurantLogo
+                      restaurant={DEMO_RESTAURANT}
+                      className="h-12 w-12 rounded-xl text-base"
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-lg leading-tight font-bold">
+                        {DEMO_RESTAURANT.name}
+                      </p>
+                      <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                        <span
+                          className="h-1.5 w-1.5 rounded-full bg-emerald-500"
+                          aria-hidden
+                        />
+                        {tMenu("openNow")}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <p className="text-muted-foreground mt-2 line-clamp-1 text-sm">
-                  {menu.description}
-                </p>
-              </header>
+                  <p className="text-muted-foreground mt-2 line-clamp-1 text-sm">
+                    {menu.description}
+                  </p>
+                </header>
 
-              <nav className="bg-card border-border sticky top-0 z-10 flex gap-1.5 overflow-x-auto border-b px-2 py-2">
-                {menu.categories.map((category) => {
-                  const active =
-                    (activeCategory ?? menu.categories[0]?.slug) ===
-                    category.slug;
-                  return (
-                    <button
-                      key={category.slug}
-                      type="button"
-                      onClick={() => showCategory(category.slug)}
-                      className={cn(
-                        "shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                        active
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground",
-                      )}
-                      aria-current={active ? "true" : undefined}
-                    >
-                      {category.name}
-                    </button>
-                  );
-                })}
-              </nav>
+                <nav className="bg-card border-border scrollbar-hide sticky top-0 z-10 flex gap-1.5 overflow-x-auto border-b px-2 py-2">
+                  {menu.categories.map((category) => {
+                    const active =
+                      (activeCategory ?? menu.categories[0]?.slug) ===
+                      category.slug;
+                    return (
+                      <button
+                        key={category.slug}
+                        type="button"
+                        onClick={() => showCategory(category.slug)}
+                        className={cn(
+                          "shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                          active
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground",
+                        )}
+                        aria-current={active ? "true" : undefined}
+                      >
+                        {category.name}
+                      </button>
+                    );
+                  })}
+                </nav>
 
-              <div className="space-y-5 p-3">
-                {menu.categories.map((category) => (
-                  <section key={category.slug} data-category={category.slug}>
-                    <h3 className="mb-2 text-base font-semibold">
-                      {category.name}
-                    </h3>
-                    {design === "compact" ? (
-                      <ul className="bg-card border-border divide-border divide-y overflow-hidden rounded-xl border">
-                        {category.menuItems.map((item) => (
-                          <li key={item.id}>
+                <div className="space-y-5 p-3">
+                  {menu.categories.map((category) => (
+                    <section key={category.slug} data-category={category.slug}>
+                      <h3 className="mb-2 text-base font-semibold">
+                        {category.name}
+                      </h3>
+                      {design === "compact" ? (
+                        <ul className="bg-card border-border divide-border divide-y overflow-hidden rounded-xl border">
+                          {category.menuItems.map((item) => (
+                            <li key={item.id}>
+                              <Dish
+                                item={item}
+                                restaurantSlug={DEMO_RESTAURANT.slug}
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <div
+                          className={cn(
+                            "grid gap-2.5",
+                            design === "photo-grid" && "grid-cols-2",
+                          )}
+                        >
+                          {category.menuItems.map((item) => (
                             <Dish
+                              key={item.id}
                               item={item}
                               restaurantSlug={DEMO_RESTAURANT.slug}
                             />
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <div
-                        className={cn(
-                          "grid gap-2.5",
-                          design === "photo-grid" && "grid-cols-2",
-                        )}
-                      >
-                        {category.menuItems.map((item) => (
-                          <Dish
-                            key={item.id}
-                            item={item}
-                            restaurantSlug={DEMO_RESTAURANT.slug}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </section>
-                ))}
+                          ))}
+                        </div>
+                      )}
+                    </section>
+                  ))}
+                </div>
               </div>
-            </div>
-          </DishSheetInPlaceProvider>
+            </DishSheetInPlaceProvider>
+          </div>
         </div>
       </div>
     </div>

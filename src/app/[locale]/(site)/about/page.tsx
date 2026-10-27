@@ -45,7 +45,7 @@ export default async function AboutPage() {
   const t = await getTranslations("aboutPage");
 
   return (
-    <div className="bg-background text-foreground">
+    <div className="text-foreground">
       <section className="container mx-auto flex max-w-5xl flex-col items-center gap-8 px-4 pt-16 pb-12 sm:pt-24 md:flex-row">
         <div className="flex-1 text-center md:text-start">
           <p className="text-primary text-sm font-semibold tracking-wide uppercase">
@@ -78,7 +78,7 @@ export default async function AboutPage() {
 
       <section
         aria-labelledby="steps-title"
-        className="bg-muted/40 border-border border-y py-16"
+        className="py-16"
       >
         <div className="container mx-auto max-w-5xl px-4">
           <h2
@@ -189,7 +189,7 @@ export default async function AboutPage() {
               <Link href="/features">{t("cta.features")}</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/restaurants">{t("cta.restaurants")}</Link>
+              <Link href="/menus">{t("cta.restaurants")}</Link>
             </Button>
             <Button size="lg" variant="ghost" asChild>
               <Link href="/features#contact">{t("cta.contact")}</Link>

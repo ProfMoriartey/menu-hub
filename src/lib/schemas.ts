@@ -38,6 +38,8 @@ export const RESERVED_SLUGS = [
   // Team invitation links live at /invite/<token>.
   "invite",
   // Permanent menu links (QR codes) live at /r/<id>.
+  // The Menus page, and its old address.
+  "menus",
   "r",
   "restaurants",
   "sign-in",
@@ -58,6 +60,7 @@ export const restaurantSchema = z.object({
       message: `This slug is reserved by the site. Avoid: ${RESERVED_SLUGS.join(", ")}.`,
     }),
   address: z.string().nullable().optional(),
+  city: z.string().max(128).nullable().optional(),
   country: z.string().nullable().optional(),
   foodType: z.string().nullable().optional(),
   isActive: z.coerce.boolean().default(true),

@@ -47,6 +47,10 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   name: varchar("name", { length: 256 }).notNull(),
   slug: varchar("slug", { length: 256 }).notNull().unique(),
   address: varchar("address", { length: 256 }),
+  // Town or city, for the Menus page filter.
+  city: varchar("city", { length: 128 }),
+  // ISO 3166 code (lib/countries), named in the reader's language. Older
+  // rows may still hold typed names, which are shown as they are.
   country: varchar("country", { length: 256 }),
   foodType: varchar("food_type", { length: 256 }),
   isActive: boolean("is_active").default(true).notNull(),
@@ -57,6 +61,7 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   phoneNumber: varchar("phone_number", { length: 50 }),
   description: text("description"),
   theme: varchar("theme", { length: 50 }),
+  // A venue type key (lib/venue-types); older rows may hold free text.
   typeOfEstablishment: varchar("type_of_establishment", { length: 100 }),
 
   socialMedia: jsonb("social_media"),

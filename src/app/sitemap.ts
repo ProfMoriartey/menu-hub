@@ -14,7 +14,7 @@ import { getPublicOrigin } from "~/server/public-origin";
 export const dynamic = "force-dynamic";
 
 // Marketing pages, by path without the locale.
-const SITE_PAGES = ["", "/restaurants", "/about", "/features"];
+const SITE_PAGES = ["", "/menus", "/about", "/features"];
 
 interface LivePath {
   path: string;

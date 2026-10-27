@@ -1,180 +1,180 @@
 // src/components/shared/Navbar.tsx
 "use client";
 
-import { Link, usePathname } from "~/i18n/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
-import { cn } from "~/lib/utils";
+import { useTranslations } from "next-intl";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Link, usePathname } from "~/i18n/navigation";
+import { Button } from "~/components/ui/button";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
 import { LanguageSwitcher } from "~/components/shared/LanguageSwitcher";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
-import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import AuthNavButtons from "~/components/layout/AuthNavButtons"; // Assuming this path
+import { cn } from "~/lib/utils";
 
-// Locale-aware client-side link that keeps the existing hover/enter animations
-const MotionLink = motion.create(Link);
+// The home page's contact band; restaurants join by getting in touch.
+export const CONTACT_HREF = "/#contact";
 
+/**
+ * The site bar on the marketing pages: logo (home), the main pages, then
+ * language, theme and the account. Signed out, restaurants see "Get in
+ * touch"; signed in, "Dashboard". On phones the links, language and
+ * account move into a panel under the bar.
+ */
 export function Navbar() {
-  const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = useTranslations("navbar");
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
-  const navLinks = [
-    { name: t("home"), href: "/" },
-    { name: t("restaurants"), href: "/restaurants" },
+  const links = [
+    { name: t("restaurants"), href: "/menus" },
     { name: t("themes"), href: "/features" },
     { name: t("aboutUs"), href: "/about" },
   ];
+  const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-  const navItemVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: { opacity: 1, y: 0 },
-    hover: { scale: 1.05, color: "var(--color-primary)" },
-  };
-
-  const mobileMenuVariants = {
-    hidden: { opacity: 0, y: -100 },
-    visible: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -100 },
-  };
-
+  // Close the panel on navigation, and keep the page still while it's open.
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   return (
-    <motion.nav
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-card sticky top-0 z-50 w-full rounded-lg p-4 shadow-md"
-    >
-      <div className="container mx-auto flex items-center justify-between">
-        {/* Left Side: Website Logo (Always Visible) */}
-        <Link href="/" className="flex items-center space-x-2">
+    <header className="border-border bg-background/85 supports-[backdrop-filter]:bg-background/70 sticky top-0 z-50 border-b backdrop-blur">
+      <div className="container mx-auto flex h-16 items-center gap-2 px-4">
+        <Link href="/" className="me-4 flex shrink-0 items-center" aria-label={t("home")}>
           <Image
             src="/menupedia-logo.png"
-            alt="Menupedia Logo"
+            alt="Menupedia"
             width={240}
             height={64}
-            className="h-8 w-auto md:h-12"
+            priority
+            className="h-8 w-auto"
           />
         </Link>
 
-        {/* Right Side: Controls */}
-        <div className="flex items-center space-x-4 md:space-x-6">
-          {/* 1. Desktop Navigation Links (HIDDEN ON MOBILE) */}
-          <div className="hidden items-center space-x-6 md:flex">
-            {navLinks.map((link, index) => (
-              <MotionLink
-                key={link.name}
-                href={link.href}
-                variants={navItemVariants}
-                initial="hidden"
-                animate="visible"
-                whileHover="hover"
-                transition={{ delay: index * 0.05, duration: 0.3 }}
-                className={cn(
-                  "text-lg font-medium transition-colors",
-                  pathname === link.href ? "text-primary" : "text-foreground",
-                  "cursor-pointer",
-                )}
-              >
-                {link.name}
-              </MotionLink>
+        <nav aria-label={t("mainNav")} className="hidden md:block">
+          <ul className="flex items-center gap-1">
+            {links.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  aria-current={isCurrent(link.href) ? "page" : undefined}
+                  className={cn(
+                    "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
+                    isCurrent(link.href)
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  )}
+                >
+                  {link.name}
+                </Link>
+              </li>
             ))}
+          </ul>
+        </nav>
+
+        <div className="ms-auto flex items-center gap-1.5">
+          <LanguageSwitcher compact className="hidden border-transparent shadow-none md:flex" />
+          {/* On small phones it moves into the panel, to leave room. */}
+          <div className="hidden sm:flex">
+            <ThemeToggle />
           </div>
 
-          {/* 2. Language Toggle (HIDDEN ON MOBILE) */}
-          <LanguageSwitcher className="hidden md:flex" />
-
-          {/* 3. Theme Toggle (ALWAYS VISIBLE - Desktop & Mobile) */}
-          <ThemeToggle />
-
-          {/* 4. Auth/Dashboard Button (ALWAYS VISIBLE) */}
-          {/* 5. User Profile Button (HIDDEN ON MOBILE to save space) */}
           <SignedOut>
-            <AuthNavButtons />
+            <SignInButton mode="modal">
+              <Button variant="ghost" className="hidden md:inline-flex">
+                {t("signIn")}
+              </Button>
+            </SignInButton>
+            <Button asChild className="ms-1 rounded-full">
+              <Link href={CONTACT_HREF}>{t("getInTouch")}</Link>
+            </Button>
           </SignedOut>
-
           <SignedIn>
-            <div className="flex items-center space-x-4">
-              <AuthNavButtons />
-              <div className="hidden md:block">
-                {" "}
-                {/* Hide UserButton on mobile */}
-                <UserButton afterSignOutUrl="/" />
-              </div>
+            <Button asChild className="ms-1 rounded-full">
+              <Link href="/dashboard">{t("dashboard")}</Link>
+            </Button>
+            <div className="ms-1 hidden md:flex">
+              <UserButton />
             </div>
           </SignedIn>
 
-          {/* 6. Mobile Menu Button (Hamburger) (MOBILE ONLY) */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-foreground hover:text-primary focus:ring-primary rounded-md p-2 focus:ring-2 focus:outline-none"
-              aria-label="Toggle mobile menu"
-              aria-expanded={isMobileMenuOpen}
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            className="hover:bg-muted ms-1 flex h-10 w-10 items-center justify-center rounded-full md:hidden"
+            aria-label={open ? t("closeMenu") : t("openMenu")}
+            aria-expanded={open}
+            aria-controls="site-menu"
+          >
+            {open ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown/Overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            variants={mobileMenuVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-            className="bg-background fixed inset-0 z-40 flex flex-col items-center justify-center space-y-8 py-10 md:hidden"
+      {open && (
+        <>
+          {/* Tapping outside the panel closes it. */}
+          <div
+            className="fixed inset-x-0 top-16 bottom-0 bg-black/40 md:hidden"
+            onClick={() => setOpen(false)}
+            aria-hidden
+          />
+          <div
+            id="site-menu"
+            className="border-border bg-background animate-in slide-in-from-top-2 fade-in-0 absolute inset-x-0 top-full border-b shadow-lg md:hidden"
           >
-            <button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-foreground hover:text-primary focus:ring-primary absolute top-4 right-4 rounded-md p-2 focus:ring-2 focus:outline-none"
-              aria-label="Close mobile menu"
-            >
-              <X className="h-8 w-8" />
-            </button>
-
-            {/* Nav Links in Mobile Menu */}
-            {navLinks.map((link, index) => (
-              <MotionLink
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                variants={navItemVariants}
-                initial="hidden"
-                animate="visible"
-                whileHover="hover"
-                transition={{ delay: index * 0.05 + 0.2, duration: 0.3 }}
-                className={cn(
-                  "text-3xl font-semibold transition-colors",
-                  pathname === link.href ? "text-primary" : "text-foreground",
-                  "cursor-pointer",
-                )}
-              >
-                {link.name}
-              </MotionLink>
-            ))}
-
-            {/* Language Toggle in Mobile Menu (Moved here from main navbar row) */}
-            <LanguageSwitcher className="mt-8 h-11 text-lg" />
-
-            {/* User Profile Button in Mobile Menu (Visible here) */}
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+            <nav aria-label={t("mainNav")} className="container mx-auto px-4 py-3">
+              <ul className="space-y-1">
+                {[{ name: t("home"), href: "/" }, ...links].map((link) => {
+                  const current = link.href === "/" ? pathname === "/" : isCurrent(link.href);
+                  return (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        onClick={() => setOpen(false)}
+                        aria-current={current ? "page" : undefined}
+                        className={cn(
+                          "block rounded-xl px-4 py-3 text-base font-medium",
+                          current ? "bg-primary/10 text-primary" : "hover:bg-muted",
+                        )}
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+            <div className="border-border container mx-auto flex items-center gap-2 border-t px-4 py-4">
+              <LanguageSwitcher />
+              <div className="sm:hidden">
+                <ThemeToggle />
+              </div>
+              <div className="flex-1" />
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <Button variant="outline" onClick={() => setOpen(false)}>
+                    {t("signIn")}
+                  </Button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </div>
+          </div>
+        </>
+      )}
+    </header>
   );
 }

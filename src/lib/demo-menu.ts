@@ -29,6 +29,7 @@ interface DemoDish {
 export const DEMO_RESTAURANT = {
   name: "Lokanta Demo",
   slug: "demo",
+  logoUrl: "/demo/lokanta-logo.svg",
   currency: "TRY",
   description: {
     en: "Home-style Turkish cooking, fresh every day.",

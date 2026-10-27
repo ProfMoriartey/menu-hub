@@ -1,7 +1,7 @@
 // src/server/public-menu.ts
 import { cache } from "react";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
-import { and, eq, ne } from "drizzle-orm";
+import { and, count, eq, isNotNull, lte, ne, sql } from "drizzle-orm";
 import { db } from "~/server/db";
 import { categories, menuItems, restaurants } from "~/server/db/schema";
 
@@ -19,6 +19,9 @@ import { categories, menuItems, restaurants } from "~/server/db/schema";
 // stop resolving under its old slug, and its id isn't known before the lookup.
 const RESTAURANTS_TAG = "public-restaurants";
 const menuTag = (restaurantId: string) => `public-menu:${restaurantId}`;
+// The Menus page shows every venue with a few of its dish photos, so any
+// venue or menu change clears it.
+const DIRECTORY_TAG = "public-directory";
 
 // A backstop for changes made outside the app's actions (scripts, manual
 // database edits). Saves through the app clear the cache straight away.
@@ -101,6 +104,79 @@ export const getPublicMenuItem = cache(
     )(),
 );
 
+// Dish photos on each card of the Menus page.
+const PHOTOS_PER_CARD = 3;
+
+/**
+ * Every live venue for the Menus page: its card details, its first few dish
+ * photos (in menu order) and how many dishes guests can see.
+ */
+export const getMenusDirectory = cache(
+  unstable_cache(
+    async () => {
+      const venues = await db.query.restaurants.findMany({
+        where: eq(restaurants.isActive, true),
+        columns: {
+          id: true,
+          slug: true,
+          name: true,
+          logoUrl: true,
+          typeOfEstablishment: true,
+          foodType: true,
+          city: true,
+          country: true,
+          isDisplayed: true,
+          openingHours: true,
+          timeZone: true,
+          multilingualEnabled: true,
+          mainLanguage: true,
+          extraLanguages: true,
+        },
+      });
+
+      const ranked = db
+        .select({
+          restaurantId: menuItems.restaurantId,
+          imageUrl: menuItems.imageUrl,
+          // Each photo once (dishes can share one), placed where it first
+          // appears in the menu.
+          rank: sql<number>`row_number() over (partition by ${menuItems.restaurantId} order by min(${categories.order}), min(${menuItems.order}))`.as(
+            "rank",
+          ),
+        })
+        .from(menuItems)
+        .innerJoin(categories, eq(categories.id, menuItems.categoryId))
+        .where(
+          and(isNotNull(menuItems.imageUrl), ne(menuItems.availability, "hidden")),
+        )
+        .groupBy(menuItems.restaurantId, menuItems.imageUrl)
+        .as("ranked");
+      const [photos, dishCounts] = await Promise.all([
+        db
+          .select({ restaurantId: ranked.restaurantId, imageUrl: ranked.imageUrl })
+          .from(ranked)
+          .where(lte(ranked.rank, PHOTOS_PER_CARD))
+          .orderBy(ranked.restaurantId, ranked.rank),
+        db
+          .select({ restaurantId: menuItems.restaurantId, dishes: count() })
+          .from(menuItems)
+          .where(ne(menuItems.availability, "hidden"))
+          .groupBy(menuItems.restaurantId),
+      ]);
+
+      return venues.map((venue) => ({
+        ...venue,
+        photos: photos
+          .filter((p) => p.restaurantId === venue.id && p.imageUrl)
+          .map((p) => p.imageUrl!),
+        dishCount: dishCounts.find((c) => c.restaurantId === venue.id)?.dishes ?? 0,
+      }));
+    },
+    ["public-directory"],
+    { tags: [DIRECTORY_TAG], revalidate: MAX_AGE_SECONDS },
+  ),
+);
+
 // Public pages, the dashboard and the admin panel all show this data, so
 // every page under the locale segment is re-rendered too.
 const revalidateLocalePages = () => revalidatePath("/[locale]", "layout");
@@ -108,6 +184,7 @@ const revalidateLocalePages = () => revalidatePath("/[locale]", "layout");
 /** After a change to a restaurant's categories or items. */
 export function revalidatePublicMenu(restaurantId: string) {
   revalidateTag(menuTag(restaurantId));
+  revalidateTag(DIRECTORY_TAG);
   revalidateLocalePages();
 }
 
@@ -117,6 +194,7 @@ export function revalidatePublicMenu(restaurantId: string) {
  */
 export function revalidatePublicRestaurant(restaurantId?: string) {
   revalidateTag(RESTAURANTS_TAG);
+  revalidateTag(DIRECTORY_TAG);
   if (restaurantId) revalidateTag(menuTag(restaurantId));
   revalidateLocalePages();
 }

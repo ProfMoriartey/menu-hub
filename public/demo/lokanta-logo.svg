@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Lokanta Demo</title>
+  <!-- Terracotta tile; logo boxes round the corners themselves. -->
+  <rect width="512" height="512" fill="#A8432A"/>
+  <circle cx="256" cy="256" r="214" fill="none" stroke="#F7E6CF" stroke-width="6" opacity="0.25"/>
+  <g transform="translate(256 272) scale(1.12) translate(-256 -240)">
+  <!-- Steam -->
+  <g fill="none" stroke="#F7E6CF" stroke-width="16" stroke-linecap="round">
+    <path d="M204 142c-14-18 14-32 0-54"/>
+    <path d="M256 130c-14-18 14-32 0-54"/>
+    <path d="M308 142c-14-18 14-32 0-54"/>
+  </g>
+  <g fill="#F7E6CF">
+    <!-- Lid and knob -->
+    <circle cx="256" cy="176" r="15"/>
+    <path d="M150 224c18-34 58-50 106-50s88 16 106 50z"/>
+    <!-- Rim and handles -->
+    <rect x="112" y="226" width="288" height="28" rx="14"/>
+    <rect x="80" y="270" width="64" height="24" rx="12"/>
+    <rect x="368" y="270" width="64" height="24" rx="12"/>
+    <!-- Pot -->
+    <path d="M132 254h248v66c0 48-38 84-86 84h-76c-48 0-86-36-86-84z"/>
+  </g>
+  <!-- Engraved band, like Turkish copperware -->
+  <g fill="#A8432A">
+    <circle cx="186" cy="306" r="9"/>
+    <circle cx="221" cy="306" r="9"/>
+    <circle cx="256" cy="306" r="9"/>
+    <circle cx="291" cy="306" r="9"/>
+    <circle cx="326" cy="306" r="9"/>
+  </g>
+  </g>
+</svg>
