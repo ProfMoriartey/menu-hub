@@ -186,6 +186,39 @@
   }
 }
 
+/* The marketing pages' background: soft amber glows down the page,
+   alternating sides, the first one behind the hero. Mirrored in Arabic,
+   gentler in dark mode. */
+.site-glow {
+  /* The primary amber, see-through. Plain colours rather than color-mix,
+     which older browsers would replace with solid amber. */
+  --glow: oklch(63.09% 0.129 65.4 / 0.28);
+  --glow-soft: oklch(63.09% 0.129 65.4 / 0.18);
+  background-image:
+    radial-gradient(44rem 34rem at 100% 0%, var(--glow), transparent 70%),
+    radial-gradient(38rem 32rem at 0% 30%, var(--glow-soft), transparent 70%),
+    radial-gradient(40rem 34rem at 100% 60%, var(--glow-soft), transparent 70%),
+    radial-gradient(38rem 32rem at 0% 92%, var(--glow-soft), transparent 70%);
+}
+.dark .site-glow {
+  --glow: oklch(80.52% 0.177 82.8 / 0.16);
+  --glow-soft: oklch(80.52% 0.177 82.8 / 0.1);
+}
+/* A section set apart by a soft warm wash that fades in and out, so it
+   has no hard edges over the glow. */
+.soft-band {
+  background-image: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in oklch, var(--muted) 45%, transparent) 18%,
+    color-mix(in oklch, var(--muted) 45%, transparent) 82%,
+    transparent
+  );
+}
+[dir="rtl"] .site-glow {
+  transform: scaleX(-1);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -37,9 +37,17 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
 
   return (
     <>
-      {isPublicNavbarVisible && <Navbar />}
-      {children}
-      {isPublicNavbarVisible && <SiteFooter />}
+      {isPublicNavbarVisible ? (
+        // The marketing pages share a soft amber glow behind everything.
+        <div className="relative isolate">
+          <div className="site-glow pointer-events-none absolute inset-0 -z-10" aria-hidden />
+          <Navbar />
+          {children}
+          <SiteFooter />
+        </div>
+      ) : (
+        children
+      )}
     </>
   );
 }

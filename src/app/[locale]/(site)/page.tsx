@@ -72,14 +72,10 @@ export default async function HomePage() {
     .slice(0, MENUS_SHOWN);
 
   return (
-    <div className="bg-background text-foreground overflow-x-clip">
+    <div className="text-foreground overflow-x-clip">
       {/* Hero */}
-      <section className="relative">
-        <div
-          className="bg-primary/15 pointer-events-none absolute -top-32 end-[-10%] h-[28rem] w-[28rem] rounded-full blur-3xl"
-          aria-hidden
-        />
-        <div className="relative container mx-auto grid items-center gap-12 px-4 pt-12 pb-16 sm:pt-20 lg:grid-cols-2 lg:pb-24">
+      <section>
+        <div className="container mx-auto grid items-center gap-12 px-4 pt-8 pb-16 sm:pt-12 lg:grid-cols-2 lg:pb-24">
           <div className="text-center lg:text-start">
             <p className="text-primary text-sm font-semibold tracking-wide uppercase">
               {t("hero.eyebrow")}
@@ -115,7 +111,7 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section aria-labelledby="steps-title" className="bg-card border-border border-y">
+      <section aria-labelledby="steps-title" className="soft-band">
         <div className="container mx-auto grid items-center gap-10 px-4 py-16 lg:grid-cols-[1fr_auto] lg:py-20">
           <div>
             <h2 id="steps-title" className="text-3xl font-bold tracking-tight">
@@ -179,7 +175,7 @@ export default async function HomePage() {
 
       {/* Menus near you */}
       {shown.length > 0 && (
-        <section aria-labelledby="menus-title" className="bg-card border-border border-y">
+        <section aria-labelledby="menus-title" className="soft-band">
           <div className="container mx-auto px-4 py-16 lg:py-20">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="flex items-center gap-5">

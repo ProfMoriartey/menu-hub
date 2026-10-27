@@ -19,7 +19,7 @@ export function SiteFooter() {
   const tContact = useTranslations("featuresPage.contact");
 
   return (
-    <footer className="border-border bg-card border-t">
+    <footer className="border-border border-t">
       <div className="container mx-auto grid gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
         <div className="space-y-3">
           <Link href="/" className="inline-flex" aria-label={t("home")}>

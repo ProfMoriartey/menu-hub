@@ -80,7 +80,7 @@ export default async function FeaturesPage() {
   ]);
 
   return (
-    <div className="bg-background text-foreground">
+    <div className="text-foreground">
       <section className="container mx-auto max-w-3xl px-4 pt-16 pb-12 text-center sm:pt-24">
         <p className="text-primary text-sm font-semibold tracking-wide uppercase">
           {t("hero.eyebrow")}
