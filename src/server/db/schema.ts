@@ -11,6 +11,8 @@ import {
   date,
   primaryKey,
   uniqueIndex,
+  index,
+  numeric,
   text, // IMPORTANT: Add 'text' import for longer string fields like description
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
@@ -326,3 +328,52 @@ export const qrScanDays = pgTable(
   },
   (t) => [primaryKey({ columns: [t.restaurantId, t.day] })],
 );
+
+// Billing, recorded by hand by a system admin: the plan agreed with each
+// restaurant and the payments received (bank transfer, cash…). Kept out of
+// the restaurants table so it's never part of the public pages' data.
+export const restaurantBilling = pgTable("menu-hub_restaurant_billing", {
+  restaurantId: uuid("restaurant_id")
+    .primaryKey()
+    .references(() => restaurants.id, { onDelete: "cascade" }),
+  // What was agreed, e.g. "Standard". Null = not billed.
+  planName: varchar("plan_name", { length: 64 }),
+  monthlyPrice: numeric("monthly_price", { precision: 12, scale: 2 }),
+  currency: varchar("currency", { length: 3 }).notNull().default("TRY"),
+  notes: text("notes"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// One row per payment received. Each pays for a period (coversFrom to
+// coversUntil, both included); a restaurant is paid up to the latest
+// coversUntil. Rows outlive a deleted restaurant, for the books: the
+// restaurant id is cleared and its name kept.
+export const payments = pgTable(
+  "menu-hub_payments",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    restaurantId: uuid("restaurant_id").references(() => restaurants.id, {
+      onDelete: "set null",
+    }),
+    restaurantName: varchar("restaurant_name", { length: 256 }).notNull(),
+    paidOn: date("paid_on", { mode: "string" }).notNull(),
+    amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
+    currency: varchar("currency", { length: 3 }).notNull(),
+    coversFrom: date("covers_from", { mode: "string" }).notNull(),
+    coversUntil: date("covers_until", { mode: "string" }).notNull(),
+    // lib/billing PAYMENT_METHODS.
+    method: varchar("method", { length: 32 }).notNull(),
+    note: text("note"),
+    // The admin who recorded it (Clerk user id).
+    recordedBy: text("recorded_by"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [index("payments_restaurant_idx").on(t.restaurantId)],
+);
+
+export const paymentsRelations = relations(payments, ({ one }) => ({
+  restaurant: one(restaurants, {
+    fields: [payments.restaurantId],
+    references: [restaurants.id],
+  }),
+}));

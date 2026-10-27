@@ -310,7 +310,8 @@
     "deleteBranchFailed": "No se pudo eliminar la sucursal. Inténtalo de nuevo.",
     "branchNotFound": "Esta sucursal ya no existe. Recarga la página.",
     "branchNameRequired": "Ponle un nombre a la sucursal, para que los clientes distingan tus sucursales.",
-    "lastBranch": "Un restaurante necesita al menos una sucursal."
+    "lastBranch": "Un restaurante necesita al menos una sucursal.",
+    "saveBillingFailed": "No se pudieron guardar los datos de facturación. Inténtalo de nuevo."
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"

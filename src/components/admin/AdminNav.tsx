@@ -7,6 +7,7 @@ import { cn } from "~/lib/utils";
 const NAV_ITEMS = [
   { name: "Restaurants", href: "/admin/restaurants" },
   { name: "Users", href: "/admin/users" },
+  { name: "Billing", href: "/admin/billing" },
 ];
 
 export function AdminNav() {

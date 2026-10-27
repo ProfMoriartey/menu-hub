@@ -310,7 +310,8 @@
     "deleteBranchFailed": "Couldn't delete the branch. Please try again.",
     "branchNotFound": "This branch no longer exists. Reload the page.",
     "branchNameRequired": "Give the branch a name, so guests can tell your branches apart.",
-    "lastBranch": "A restaurant needs at least one branch."
+    "lastBranch": "A restaurant needs at least one branch.",
+    "saveBillingFailed": "Couldn't save the billing details. Please try again."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"

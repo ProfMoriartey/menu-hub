@@ -310,7 +310,8 @@
     "deleteBranchFailed": "Şube silinemedi. Lütfen tekrar deneyin.",
     "branchNotFound": "Bu şube artık yok. Sayfayı yenileyin.",
     "branchNameRequired": "Misafirler şubelerinizi ayırt edebilsin diye şubeye bir ad verin.",
-    "lastBranch": "Bir restoranın en az bir şubesi olmalıdır."
+    "lastBranch": "Bir restoranın en az bir şubesi olmalıdır.",
+    "saveBillingFailed": "Ödeme bilgileri kaydedilemedi. Lütfen tekrar deneyin."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"

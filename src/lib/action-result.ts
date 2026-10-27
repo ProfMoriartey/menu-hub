@@ -32,6 +32,7 @@ export const ACTION_ERROR_CODES = [
   "addBranchFailed",
   "saveBranchFailed",
   "deleteBranchFailed",
+  "saveBillingFailed",
   // Access
   "signInAgain",
   "noAccess",
