@@ -1023,7 +1023,6 @@
     "name": "Restaurant name",
     "namePlaceholder": "e.g. Lokanta",
     "slug": "Menu address",
-    "slugHint": "Lowercase letters, numbers and hyphens. Guests open your menu at this address.",
     "type": "Type of place",
     "typeNone": "Choose",
     "currency": "Prices on the menu in",
@@ -1045,14 +1044,12 @@
     "submit": "Create my restaurant",
     "submitting": "Creating…",
     "nameRequired": "Enter the restaurant's name.",
-    "slugInvalid": "Use lowercase letters, numbers and hyphens.",
     "countryRequired": "Choose the country.",
     "phoneRequired": "Enter a phone number we can reach you on.",
-    "signInTitle": "First, create your account",
-    "signInText": "Sign up or sign in, then set up your restaurant on the next step.",
     "waitingTitle": "{name} is waiting for approval",
     "waitingText": "We'll get in touch to agree on payment. Meanwhile you can build your menu. Once it's approved, you can add another restaurant.",
-    "toDashboard": "Go to your menu"
+    "toDashboard": "Go to your menu",
+    "slugPreviewHint": "Made from the name. If that address is taken, we add a number."
   },
   "OwnerPlan": {
     "planName": "{plan} plan",

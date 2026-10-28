@@ -1023,7 +1023,6 @@
     "name": "Nombre del restaurante",
     "namePlaceholder": "p. ej., Lokanta",
     "slug": "Dirección de la carta",
-    "slugHint": "Letras minúsculas, números y guiones. Los clientes abren tu carta en esta dirección.",
     "type": "Tipo de local",
     "typeNone": "Elige",
     "currency": "Moneda de los precios",
@@ -1045,14 +1044,12 @@
     "submit": "Crear mi restaurante",
     "submitting": "Creando…",
     "nameRequired": "Escribe el nombre del restaurante.",
-    "slugInvalid": "Usa letras minúsculas, números y guiones.",
     "countryRequired": "Elige el país.",
     "phoneRequired": "Escribe un teléfono en el que podamos contactarte.",
-    "signInTitle": "Primero, crea tu cuenta",
-    "signInText": "Regístrate o inicia sesión y luego crea tu restaurante en el siguiente paso.",
     "waitingTitle": "{name} está pendiente de aprobación",
     "waitingText": "Te contactaremos para acordar el pago. Mientras tanto puedes crear tu carta. Cuando se apruebe, podrás añadir otro restaurante.",
-    "toDashboard": "Ir a tu carta"
+    "toDashboard": "Ir a tu carta",
+    "slugPreviewHint": "Se crea a partir del nombre. Si esa dirección ya existe, añadimos un número."
   },
   "OwnerPlan": {
     "planName": "Plan {plan}",

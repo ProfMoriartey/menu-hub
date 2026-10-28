@@ -2,7 +2,7 @@
 "use server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, like } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "~/server/db";
 import {
@@ -16,7 +16,8 @@ import { ActionError, type ActionResult } from "~/lib/action-result";
 import { isCountryCode } from "~/lib/countries";
 import { isPaymentMethod } from "~/lib/billing";
 import { TIERS } from "~/lib/plans";
-import { restaurantSchema } from "~/lib/schemas";
+import { RESERVED_SLUGS } from "~/lib/schemas";
+import { slugify, uniqueSlug } from "~/lib/slug";
 import { isVenueType } from "~/lib/venue-types";
 import { saveMainBranch } from "~/server/branches";
 import { syncEntitlements } from "~/server/plans";
@@ -32,7 +33,6 @@ import { runAction } from "~/server/run-action";
 
 const startSchema = z.object({
   name: z.string().trim().min(1).max(256),
-  slug: restaurantSchema.shape.slug,
   typeOfEstablishment: z.string().refine((v) => v === "" || isVenueType(v)),
   currency: z.string().regex(/^[A-Z]{3}$/),
   city: z.string().trim().max(128),
@@ -49,10 +49,7 @@ export async function createOwnRestaurant(input: unknown): Promise<ActionResult<
     const { userId } = await auth();
     if (!userId) throw new ActionError("signInAgain");
     const parsed = startSchema.safeParse(input);
-    if (!parsed.success) {
-      const slugIssue = parsed.error.errors.some((issue) => issue.path[0] === "slug");
-      throw new ActionError(slugIssue ? "slugInvalid" : "invalidInput");
-    }
+    if (!parsed.success) throw new ActionError("invalidInput");
     const data = parsed.data;
 
     // One at a time: another restaurant once the first is approved.
@@ -66,11 +63,14 @@ export async function createOwnRestaurant(input: unknown): Promise<ActionResult<
     });
     if (waiting) throw new ActionError("restaurantLimit");
 
-    const taken = await db.query.restaurants.findFirst({
-      where: eq(restaurants.slug, data.slug),
-      columns: { id: true },
-    });
-    if (taken) throw new ActionError("slugTaken");
+    // The menu address comes from the name, with a number when it's
+    // taken; owners don't choose it (an admin can change it later).
+    const base = slugify(data.name) || "restaurant";
+    const similar = await db
+      .select({ slug: restaurants.slug })
+      .from(restaurants)
+      .where(like(restaurants.slug, `${base}%`));
+    const slug = uniqueSlug(data.name, [...RESERVED_SLUGS, ...similar.map((r) => r.slug)], "restaurant");
 
     // The Clerk webhook normally adds the account; it may not have yet.
     const user = await currentUser();
@@ -82,7 +82,7 @@ export async function createOwnRestaurant(input: unknown): Promise<ActionResult<
         .insert(restaurants)
         .values({
           name: data.name,
-          slug: data.slug,
+          slug,
           typeOfEstablishment: data.typeOfEstablishment || null,
           currency: data.currency,
           isActive: false,
@@ -117,6 +117,6 @@ export async function createOwnRestaurant(input: unknown): Promise<ActionResult<
     // The plan's features, so they can build with them right away.
     await syncEntitlements(restaurantId);
     revalidatePublicRestaurant(restaurantId);
-    return { slug: data.slug };
+    return { slug };
   });
 }

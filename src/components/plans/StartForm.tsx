@@ -18,7 +18,6 @@ import {
 import { Field } from "~/components/forms/fields";
 import { PlanFeatureList, usePlanMoney } from "~/components/plans/PlanFeatures";
 import { createOwnRestaurant } from "~/app/actions/onboarding";
-import { ActionFailure } from "~/lib/action-result";
 import { PAYMENT_METHODS } from "~/lib/billing";
 import { MONTHS_PAID_PER_YEAR, TIERS, TIER_FEATURES, periodPrice, type Tier } from "~/lib/plans";
 import { slugify } from "~/lib/slug";
@@ -41,9 +40,10 @@ interface StartFormProps {
 }
 
 /**
- * Sign-up's form: the plan, the restaurant (name, menu address, type,
- * prices' currency, city, country, phone) and how they'd like to pay.
- * Creates the restaurant and opens its menu editor.
+ * Sign-up's form: the plan, the restaurant (name, with a preview of the
+ * menu address made from it, type, prices' currency, city, country,
+ * phone) and how they'd like to pay. Creates the restaurant and opens its
+ * menu editor.
  */
 export function StartForm({ initialTier, initialCycle, countries, defaultCountry, addressPrefix }: StartFormProps) {
   const t = useTranslations("Start");
@@ -56,7 +56,6 @@ export function StartForm({ initialTier, initialCycle, countries, defaultCountry
     tier: initialTier,
     billingCycle: initialCycle,
     name: "",
-    slug: "",
     typeOfEstablishment: "",
     currency: defaultCountry === "TR" ? "TRY" : "USD",
     city: "",
@@ -65,8 +64,6 @@ export function StartForm({ initialTier, initialCycle, countries, defaultCountry
     paymentMethod: "bank_transfer",
     note: "",
   });
-  // The address follows the name until it's edited.
-  const [slugEdited, setSlugEdited] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -84,7 +81,6 @@ export function StartForm({ initialTier, initialCycle, countries, defaultCountry
     setServerError(null);
     const found: Record<string, string> = {};
     if (!values.name.trim()) found.name = t("nameRequired");
-    if (!/^[a-z0-9-]+$/.test(values.slug)) found.slug = t("slugInvalid");
     if (!values.country) found.country = t("countryRequired");
     if (values.phone.trim().length < 5) found.phone = t("phoneRequired");
     setErrors(found);
@@ -93,16 +89,7 @@ export function StartForm({ initialTier, initialCycle, countries, defaultCountry
 
     startTransition(async () => {
       const result = await createOwnRestaurant(values);
-      if (!result.ok) {
-        const error = new ActionFailure(result.error, result.code);
-        if (error.code === "slugTaken" || error.code === "slugInvalid") {
-          setErrors({ slug: error.message });
-          document.getElementById("start-slug")?.focus();
-        } else {
-          setServerError(error.message);
-        }
-        return;
-      }
+      if (!result.ok) return setServerError(result.error);
       router.push(`/dashboard/${result.data.slug}/menu`);
     });
   };
@@ -174,46 +161,31 @@ export function StartForm({ initialTier, initialCycle, countries, defaultCountry
           {t("detailsHeading")}
         </h2>
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field label={t("name")} htmlFor="start-name" required error={errors.name}>
+          <Field
+            label={t("name")}
+            htmlFor="start-name"
+            required
+            error={errors.name}
+            hint={
+              <>
+                {t("slug")}:{" "}
+                <span className="text-foreground font-mono" dir="ltr">
+                  {addressPrefix}
+                  {slugify(values.name) || "…"}
+                </span>
+                <br />
+                {t("slugPreviewHint")}
+              </>
+            }
+          >
             <Input
               id="start-name"
               value={values.name}
-              onChange={(e) =>
-                set({ name: e.target.value, ...(slugEdited ? {} : { slug: slugify(e.target.value) }) })
-              }
+              onChange={(e) => set({ name: e.target.value })}
               placeholder={t("namePlaceholder")}
               maxLength={256}
               aria-invalid={errors.name ? true : undefined}
             />
-          </Field>
-          <Field
-            label={t("slug")}
-            htmlFor="start-slug"
-            required
-            error={errors.slug}
-            hint={t("slugHint")}
-          >
-            <div
-              className={cn(
-                "border-input focus-within:border-ring focus-within:ring-ring/50 flex h-9 items-center rounded-md border shadow-xs focus-within:ring-[3px]",
-                errors.slug && "border-destructive",
-              )}
-              dir="ltr"
-            >
-              <span className="text-muted-foreground border-input bg-muted/50 flex h-full items-center rounded-l-md border-r px-3 text-sm">
-                {addressPrefix}
-              </span>
-              <input
-                id="start-slug"
-                value={values.slug}
-                onChange={(e) => {
-                  setSlugEdited(true);
-                  set({ slug: e.target.value.toLowerCase().replace(/\s+/g, "-") });
-                }}
-                aria-invalid={errors.slug ? true : undefined}
-                className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none"
-              />
-            </div>
           </Field>
           <Field label={t("type")} htmlFor="start-type">
             <Select

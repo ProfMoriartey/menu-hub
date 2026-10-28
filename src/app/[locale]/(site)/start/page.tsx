@@ -1,11 +1,10 @@
 // app/[locale]/(site)/start/page.tsx
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
-import { SignIn } from "@clerk/nextjs";
 import { and, eq, isNull } from "drizzle-orm";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Clock } from "lucide-react";
-import { Link } from "~/i18n/navigation";
+import { Link, redirect } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { StartForm } from "~/components/plans/StartForm";
 import { db } from "~/server/db";
@@ -23,10 +22,10 @@ export async function generateMetadata(): Promise<Metadata> {
 const one = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
 
 /**
- * Sign-up: create an account (or sign in), then the restaurant, with a
- * plan and how they'd like to pay. ?plan=pro&cycle=yearly comes from the
- * pricing section. Someone whose sign-up is waiting for approval is told
- * so instead.
+ * Sign-up's second step: creating the restaurant, with a plan and how
+ * they'd like to pay (?plan=pro&cycle=yearly comes from the pricing
+ * section). Signed-out visitors sign in or up first and come back here.
+ * Someone whose sign-up is waiting for approval is told so instead.
  */
 export default async function StartPage({
   searchParams,
@@ -40,27 +39,16 @@ export default async function StartPage({
   const [t, locale, { userId }] = await Promise.all([getTranslations("Start"), getLocale(), auth()]);
   const here = `/${locale}/start?plan=${tier}&cycle=${cycle}`;
 
+  if (!userId) {
+    return redirect({ href: `/sign-in?redirect_url=${encodeURIComponent(here)}`, locale });
+  }
+
   const header = (
-    <div className="max-w-2xl">
+    <div className="mx-auto max-w-2xl text-center">
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t("title")}</h1>
       <p className="text-muted-foreground mt-3 text-lg">{t("intro")}</p>
     </div>
   );
-
-  if (!userId) {
-    return (
-      <div className="container mx-auto space-y-8 px-4 py-12">
-        {header}
-        <div className="bg-card border-border max-w-2xl space-y-4 rounded-2xl border p-6 shadow-sm">
-          <h2 className="text-lg font-semibold">{t("signInTitle")}</h2>
-          <p className="text-muted-foreground text-sm">{t("signInText")}</p>
-          <div className="flex justify-center">
-            <SignIn withSignUp routing="hash" forceRedirectUrl={here} signUpForceRedirectUrl={here} />
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const waiting = await db.query.planRequests.findFirst({
     where: and(
@@ -74,7 +62,7 @@ export default async function StartPage({
     return (
       <div className="container mx-auto space-y-8 px-4 py-12">
         {header}
-        <div className="bg-primary/5 border-primary/20 flex max-w-2xl items-start gap-3 rounded-2xl border p-6">
+        <div className="bg-primary/5 border-primary/20 mx-auto flex max-w-2xl items-start gap-3 rounded-2xl border p-6">
           <Clock className="text-primary mt-0.5 h-5 w-5 shrink-0" aria-hidden />
           <div className="space-y-3">
             <h2 className="font-semibold">{t("waitingTitle", { name: waiting.restaurant.name })}</h2>

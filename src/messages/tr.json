@@ -1023,7 +1023,6 @@
     "name": "Restoran adı",
     "namePlaceholder": "örn. Lokanta",
     "slug": "Menü adresi",
-    "slugHint": "Küçük harf, rakam ve kısa çizgi. Misafirler menünüzü bu adreste açar.",
     "type": "İşletme türü",
     "typeNone": "Seçin",
     "currency": "Menüdeki fiyatların para birimi",
@@ -1045,14 +1044,12 @@
     "submit": "Restoranımı oluştur",
     "submitting": "Oluşturuluyor…",
     "nameRequired": "Restoranın adını girin.",
-    "slugInvalid": "Küçük harf, rakam ve kısa çizgi kullanın.",
     "countryRequired": "Ülkeyi seçin.",
     "phoneRequired": "Size ulaşabileceğimiz bir telefon numarası girin.",
-    "signInTitle": "Önce hesabınızı oluşturun",
-    "signInText": "Kaydolun ya da giriş yapın, ardından sonraki adımda restoranınızı oluşturun.",
     "waitingTitle": "{name} onay bekliyor",
     "waitingText": "Ödemede anlaşmak için sizinle iletişime geçeceğiz. Bu arada menünüzü hazırlayabilirsiniz. Onaylandıktan sonra başka bir restoran ekleyebilirsiniz.",
-    "toDashboard": "Menünüze gidin"
+    "toDashboard": "Menünüze gidin",
+    "slugPreviewHint": "Addan oluşturulur. Bu adres alınmışsa sonuna bir sayı ekleriz."
   },
   "OwnerPlan": {
     "planName": "{plan} planı",
