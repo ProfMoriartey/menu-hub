@@ -81,88 +81,49 @@ export const nextPeriodStart = (plan: PlanTerms | null, paidUntil: string | null
   return covered ? addDays(covered, 1) : paidOn;
 };
 
-/**
- * How many monthly periods have begun since the covered period ended, up
- * to `today`: what a late restaurant owes. One for a plan that was never
- * paid and has no start date (its first payment).
- */
-export function unpaidPeriods(plan: PlanTerms | null, paidUntil: string | null, today: string): number {
-  const covered = coveredUntil(plan, paidUntil);
-  if (!covered) return 1;
-  const start = addDays(covered, 1);
-  let periods = 0;
-  while (addMonths(start, periods) <= today) periods++;
-  return periods;
+/** A month a restaurant should pay for and hasn't (worked out, not stored). */
+export interface PendingDue {
+  // The first day of the month paid for, which is also the day it's due.
+  from: string;
+  until: string;
+  amount: number;
+  currency: string;
+  // Days until it's due; negative when overdue.
+  days: number;
 }
 
-/** What a restaurant owes on `today`, or null when it owes nothing. */
-export function amountOwed(
+// A plan left unpaid for years would otherwise list without end.
+const MAX_PENDING = 36;
+
+/**
+ * The months a billed restaurant hasn't paid for: each from the end of what
+ * it has paid (or its "billed from" date), up to those due within
+ * DUE_SOON_DAYS. A plan never paid and without a start date is due today.
+ * None for unbilled or free plans.
+ */
+export function pendingDues(
   plan: (PlanTerms & { currency: string }) | null,
   paidUntil: string | null,
-  status: BillingStatus,
   today: string,
-): { amount: number; currency: string; periods: number } | null {
-  if (!plan?.monthlyPrice || (status.kind !== "overdue" && status.kind !== "unpaid")) return null;
-  const periods = unpaidPeriods(plan, paidUntil, today);
-  const amount = Math.round(Number(plan.monthlyPrice) * periods * 100) / 100;
-  return amount > 0 ? { amount, currency: plan.currency, periods } : null;
-}
-
-export type BillingStatus =
-  | { kind: "notBilled" }
-  | { kind: "free" }
-  | { kind: "unpaid" }
-  | { kind: "notStarted"; days: number }
-  | { kind: "overdue"; days: number }
-  | { kind: "dueSoon"; days: number }
-  | { kind: "paid"; days: number };
-
-/**
- * A restaurant's standing on `today`: not billed (no plan), free (price 0),
- * never paid (no start date), starting later, overdue by N days, due within
- * DUE_SOON_DAYS, or paid.
- */
-export function billingStatus(
-  plan: PlanTerms | null,
-  paidUntil: string | null,
-  today: string,
-): BillingStatus {
-  if (!plan?.planName) return paidUntil ? statusByDate(paidUntil, today) : { kind: "notBilled" };
-  if (plan.monthlyPrice !== null && Number(plan.monthlyPrice) === 0) return { kind: "free" };
-  const covered = coveredUntil(plan, paidUntil);
-  if (!covered) return { kind: "unpaid" };
-  const status = statusByDate(covered, today);
-  // Nothing paid yet and the plan starts well ahead.
-  if (!paidUntil && status.kind === "paid") return { kind: "notStarted", days: status.days };
-  return status;
-}
-
-// Counted to the due day: the first day not paid for.
-function statusByDate(paidUntil: string, today: string): BillingStatus {
-  const days = daysBetween(today, addDays(paidUntil, 1));
-  if (days < 0) return { kind: "overdue", days: -days };
-  if (days <= DUE_SOON_DAYS) return { kind: "dueSoon", days };
-  return { kind: "paid", days };
-}
-
-/** Lists first what needs a reminder: most overdue, then unpaid, due soon… */
-export function statusRank(status: BillingStatus): number {
-  switch (status.kind) {
-    case "overdue":
-      return -100_000 - status.days;
-    case "unpaid":
-      return -50_000;
-    case "dueSoon":
-      return status.days;
-    case "paid":
-      return 1_000 + status.days;
-    case "notStarted":
-      return 2_000 + status.days;
-    case "free":
-      return 100_000;
-    case "notBilled":
-      return 200_000;
+): PendingDue[] {
+  if (!plan?.planName || !plan.monthlyPrice) return [];
+  const amount = Number(plan.monthlyPrice);
+  if (!(amount > 0)) return [];
+  const start = nextPeriodStart(plan, paidUntil, today);
+  const horizon = addDays(today, DUE_SOON_DAYS);
+  const dues: PendingDue[] = [];
+  for (let n = 0; n < MAX_PENDING; n++) {
+    const from = addMonths(start, n);
+    if (from > horizon) break;
+    dues.push({
+      from,
+      until: addDays(addMonths(start, n + 1), -1),
+      amount,
+      currency: plan.currency,
+      days: daysBetween(today, from),
+    });
   }
+  return dues;
 }
 
 /** "1.250,00 ₺"-style, in the admin's language. */

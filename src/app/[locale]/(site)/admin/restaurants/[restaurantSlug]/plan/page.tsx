@@ -25,7 +25,7 @@ export default async function RestaurantPlanPage({
   return (
     <div className="space-y-8">
       <RestaurantAdminHeader restaurant={restaurant} activeTab="plan" />
-      <RestaurantPlanPanel restaurantId={restaurant.id} {...plan} />
+      <RestaurantPlanPanel restaurantId={restaurant.id} plan={plan} />
     </div>
   );
 }

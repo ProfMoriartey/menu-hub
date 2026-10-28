@@ -1,20 +1,10 @@
 // src/server/billing.ts
 // Reads for the admin Plan tab and Payments page (lib/billing has the
 // rules). Admin pages only: nothing here is cached or shown publicly.
-import { and, desc, eq, gte, lte, max, sql, type SQL } from "drizzle-orm";
+import { desc, eq, max } from "drizzle-orm";
 import { db } from "~/server/db";
 import { payments, restaurantBilling } from "~/server/db/schema";
-import {
-  addDays,
-  addMonths,
-  amountOwed,
-  billingStatus,
-  billingToday,
-  nextPeriodStart,
-  type BillingStatus,
-} from "~/lib/billing";
-
-export type PaymentRow = typeof payments.$inferSelect;
+import { addMonths, billingToday, pendingDues } from "~/lib/billing";
 
 export interface BillingPlan {
   planName: string | null;
@@ -41,95 +31,59 @@ function byCurrency(rows: { currency: string; amount: string | number }[]): Mone
   return [...totals].map(([currency, total]) => ({ currency, total: Math.round(total * 100) / 100 }));
 }
 
-/** One restaurant's plan, standing and latest payments, for its Plan tab. */
-export async function getRestaurantPlan(restaurantId: string) {
-  const [plan, recent, [latest]] = await Promise.all([
-    db.query.restaurantBilling.findFirst({
+/** The plan agreed with one restaurant, for its Plan tab. */
+export async function getRestaurantPlan(restaurantId: string): Promise<BillingPlan | null> {
+  return (
+    (await db.query.restaurantBilling.findFirst({
       where: eq(restaurantBilling.restaurantId, restaurantId),
       columns: PLAN_COLUMNS,
-    }),
-    db.query.payments.findMany({
-      where: eq(payments.restaurantId, restaurantId),
-      orderBy: [desc(payments.paidOn), desc(payments.createdAt)],
-      limit: 5,
-    }),
-    db
-      .select({ paidUntil: max(payments.coversUntil), count: sql<number>`count(*)::int` })
-      .from(payments)
-      .where(eq(payments.restaurantId, restaurantId)),
-  ]);
-  const today = billingToday();
-  const paidUntil = latest?.paidUntil ?? null;
-  const status = billingStatus(plan ?? null, paidUntil, today);
-  return {
-    plan: plan ?? null,
-    recent,
-    paymentCount: latest?.count ?? 0,
-    paidUntil,
-    status,
-    owed: amountOwed(plan ?? null, paidUntil, status, today),
-  };
+    })) ?? null
+  );
 }
 
-/** A restaurant as the Payments page lists it and the payment form fills in. */
+/** A restaurant as the Payments page's form and filters know it. */
 export interface BillingRestaurant {
   id: string;
   name: string;
   slug: string;
-  logoUrl: string | null;
-  isActive: boolean;
   plan: BillingPlan | null;
   paidUntil: string | null;
-  status: BillingStatus;
-  owed: { amount: number; currency: string; periods: number } | null;
-  // Where the next payment's period starts (lib/billing nextPeriodStart).
-  nextStart: string;
-}
-
-export const PAYMENT_PERIODS = [
-  { id: "month", label: "This month" },
-  { id: "lastMonth", label: "Last month" },
-  { id: "year", label: "This year" },
-  { id: "all", label: "All time" },
-] as const;
-export type PaymentPeriod = (typeof PAYMENT_PERIODS)[number]["id"];
-
-/** First and last day of a period, around `today` (null = no limit). */
-function periodRange(period: PaymentPeriod, today: string): [string | null, string | null] {
-  const monthStart = `${today.slice(0, 7)}-01`;
-  switch (period) {
-    case "month":
-      return [monthStart, null];
-    case "lastMonth":
-      return [addMonths(monthStart, -1), addDays(monthStart, -1)];
-    case "year":
-      return [`${today.slice(0, 4)}-01-01`, null];
-    case "all":
-      return [null, null];
-  }
 }
 
 /**
- * Everything on the Payments page: every restaurant's standing (most
- * urgent first is up to the page), the payments matching the filters with
- * their total, and the money reports.
+ * One row of the Payments list: a payment received, or a month a restaurant
+ * hasn't paid for yet (overdue, or due within a week).
  */
-export async function getPaymentsPage(filters: { restaurantId: string | null; period: PaymentPeriod }) {
+export type PaymentEntry = {
+  id: string;
+  restaurantId: string | null;
+  restaurantName: string;
+  restaurantSlug: string | null;
+  // The day it was paid, or the day it's due.
+  date: string;
+  // The month (or months) paid for.
+  from: string;
+  until: string;
+  amount: number;
+  currency: string;
+} & (
+  | { kind: "paid"; method: string; note: string | null }
+  // `days` until it's due; negative when overdue.
+  | { kind: "overdue" | "due"; days: number }
+);
+
+/**
+ * Everything on the Payments page: every restaurant's plan and standing,
+ * every payment received with every month still unpaid, and the reports.
+ */
+export async function getPaymentsPage() {
   const today = billingToday();
   const monthStart = `${today.slice(0, 7)}-01`;
-  const lastMonthStart = addMonths(monthStart, -1);
   const yearStart = `${today.slice(0, 4)}-01-01`;
-  const twelveMonthsAgo = addMonths(monthStart, -11);
 
-  const [from, to] = periodRange(filters.period, today);
-  const where: SQL[] = [];
-  if (filters.restaurantId) where.push(eq(payments.restaurantId, filters.restaurantId));
-  if (from) where.push(gte(payments.paidOn, from));
-  if (to) where.push(lte(payments.paidOn, to));
-
-  const [list, plans, paidUntilRows, ledger, lastTwelveMonths] = await Promise.all([
+  const [list, plans, paidUntilRows, received] = await Promise.all([
     db.query.restaurants.findMany({
-      columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true },
+      columns: { id: true, name: true, slug: true },
       orderBy: (r, { asc }) => [asc(r.name)],
     }),
     db.query.restaurantBilling.findMany(),
@@ -138,15 +92,8 @@ export async function getPaymentsPage(filters: { restaurantId: string | null; pe
       .from(payments)
       .groupBy(payments.restaurantId),
     db.query.payments.findMany({
-      where: where.length ? and(...where) : undefined,
       orderBy: [desc(payments.paidOn), desc(payments.createdAt)],
       with: { restaurant: { columns: { slug: true } } },
-    }),
-    // Enough for this month, last month, this year and the monthly table.
-    db.query.payments.findMany({
-      // Twelve months back always reaches this year's start.
-      where: gte(payments.paidOn, twelveMonthsAgo),
-      columns: { paidOn: true, amount: true, currency: true },
     }),
   ]);
 
@@ -165,27 +112,51 @@ export async function getPaymentsPage(filters: { restaurantId: string | null; pe
         }
       : null;
     const paidUntil = paidUntilBy.get(r.id) ?? null;
-    const status = billingStatus(plan, paidUntil, today);
-    return {
-      ...r,
-      plan,
-      paidUntil,
-      status,
-      owed: amountOwed(plan, paidUntil, status, today),
-      nextStart: nextPeriodStart(plan, paidUntil, today),
-    };
+    return { ...r, plan, paidUntil };
   });
 
-  const inRange = (start: string, end?: string) =>
-    lastTwelveMonths.filter((p) => p.paidOn >= start && (!end || p.paidOn < end));
+  const pending: PaymentEntry[] = restaurants.flatMap((r) =>
+    pendingDues(r.plan, r.paidUntil, today).map((due) => ({
+      kind: due.days < 0 ? ("overdue" as const) : ("due" as const),
+      id: `${r.id}:${due.from}`,
+      restaurantId: r.id,
+      restaurantName: r.name,
+      restaurantSlug: r.slug,
+      date: due.from,
+      from: due.from,
+      until: due.until,
+      amount: due.amount,
+      currency: due.currency,
+      days: due.days,
+    })),
+  );
+  const paid: PaymentEntry[] = received.map((p) => ({
+    kind: "paid" as const,
+    id: p.id,
+    restaurantId: p.restaurantId,
+    restaurantName: p.restaurantName,
+    restaurantSlug: p.restaurant?.slug ?? null,
+    date: p.paidOn,
+    from: p.coversFrom,
+    until: p.coversUntil,
+    amount: Number(p.amount),
+    currency: p.currency,
+    method: p.method,
+    note: p.note,
+  }));
 
+  const receivedFrom = (start: string, end?: string) =>
+    received.filter((p) => p.paidOn >= start && (!end || p.paidOn < end));
   // Received per month, newest first, for the last 12 months.
   const months = Array.from({ length: 12 }, (_, i) => addMonths(monthStart, -i));
   const byMonth = months.map((start, i) => ({
     month: start,
-    received: byCurrency(inRange(start, i === 0 ? undefined : months[i - 1])),
+    received: byCurrency(receivedFrom(start, i === 0 ? undefined : months[i - 1])),
   }));
 
+  // Due today counts as owed; later this week as coming up.
+  const owed = pending.filter((e) => e.kind !== "paid" && e.days <= 0);
+  const upcoming = pending.filter((e) => e.kind !== "paid" && e.days > 0);
   const monthly = restaurants.flatMap((r) =>
     r.plan?.planName && r.plan.monthlyPrice && Number(r.plan.monthlyPrice) > 0
       ? [{ currency: r.plan.currency, amount: r.plan.monthlyPrice }]
@@ -195,16 +166,13 @@ export async function getPaymentsPage(filters: { restaurantId: string | null; pe
   return {
     today,
     restaurants,
-    ledger,
-    ledgerTotal: byCurrency(ledger),
+    entries: [...pending, ...paid],
     report: {
-      thisMonth: byCurrency(inRange(monthStart)),
-      lastMonth: byCurrency(inRange(lastMonthStart, monthStart)),
-      thisYear: byCurrency(inRange(yearStart)),
-      outstanding: byCurrency(
-        restaurants.flatMap((r) => (r.owed ? [{ currency: r.owed.currency, amount: r.owed.amount }] : [])),
-      ),
-      owingCount: restaurants.filter((r) => r.owed).length,
+      receivedThisMonth: byCurrency(receivedFrom(monthStart)),
+      receivedThisYear: byCurrency(receivedFrom(yearStart)),
+      owedNow: byCurrency(owed),
+      owingRestaurants: new Set(owed.map((e) => e.restaurantId)).size,
+      dueThisWeek: byCurrency(upcoming),
       expectedMonthly: byCurrency(monthly),
       byMonth,
     },

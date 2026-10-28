@@ -221,7 +221,7 @@ link, delivery apps, time zone and hours into a first branch (slug `main`).
 **0011 must run before deploying: location is only read from branches
 now.** `0012` adds the billing tables (`restaurant_billing`, `payments`) and
 `0013` the plan's `starts_on`; only the admin Plan tab and Payments page
-need them. The restaurant's old copies of those columns are left in the
+need them (dev has both, 2026-10-28). The restaurant's old copies of those columns are left in the
 database as a backup (no longer in `schema.ts`); a later hand-written
 migration drops them once branches are confirmed. The
 development database has 0001–0004 applied (checked 2026-10-23); **0005 was
@@ -451,24 +451,25 @@ home page's "menus near you" use any branch in the country.
 
 **Billing (admin only):** payments are collected by hand (bank transfer,
 cash) for now, so the site only records them.
-- *Plan tab* (`/admin/restaurants/<slug>/plan`): the restaurant's standing
-  (Paid / Due in N days / Due tomorrow / Due today / Overdue N days / Never
-  paid / Starts in N days / Free / Not billed), paid-until date, what it
-  owes when late, the plan form (name, monthly price, currency, "billed
-  from" start date, notes) and its latest payments, with links to record a
-  payment or see all of them on Payments.
-- *Payments* (`/admin/payments`, in the admin menu): reports (received this
-  month, last month, this year; owed now and by how many; expected each
-  month), "Due and late" with a Record payment button each, the payment
-  form for any restaurant (`?record=<id>` picks one), every payment with
-  restaurant and period filters (`?restaurant=<id>&period=month|lastMonth|
-  year`) and delete, all plans most urgent first, and received by month
-  for 12 months. Totals are per currency, never mixed.
-- Rules in `lib/billing`: dates in Europe/Istanbul; a payment's period
-  starts the day after the covered period (latest paid day, or the day
-  before "billed from"), so late payments leave no gap; due on the first
-  unpaid day, "due soon" within 7 days; owed = monthly periods begun since
-  then × price (one for a never-paid plan without a start date). Reads in
+- *Plan tab* (`/admin/restaurants/<slug>/plan`): only the plan agreed with
+  the restaurant (name, monthly price, currency, "billed from" date,
+  notes), and a link to its payments.
+- *Payments* (`/admin/payments`, in the admin menu): all the money work.
+  Tiles: received this month and this year, owed now (and by how many
+  restaurants), due in the next 7 days, expected each month. One list
+  (`components/admin/billing/PaymentsWorkspace`) of every payment received
+  ("Paid") and every month not paid yet ("Overdue", "Due today/in N days";
+  worked out, not stored), filtered by status (All / Pending / Overdue /
+  Paid), restaurant and period, sortable by status, restaurant, date and
+  amount; filters are kept in the address (`?status=&restaurant=&period=
+  &sort=&desc=1`, `lib/payment-filters`). "+ Add payment" and each pending
+  month's "Mark paid" open the payment form in a dialog; paid rows can be
+  deleted. Received by month for the last 12 months below.
+- Rules in `lib/billing`: dates in Europe/Istanbul. A restaurant's pending
+  months (`pendingDues`) run month by month from the day after its latest
+  paid day (or from "billed from"), up to those due within 7 days; a plan
+  never paid and without a start date is due today. A new payment's period
+  starts there too, so late payments leave no gap. Reads in
   `server/billing`, actions in `actions/billing`. A payment provider
   (iyzico or PayTR once there is a business) can later insert `payments`
   rows itself.
@@ -618,8 +619,8 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 - `pnpm db:migrate` in production for migrations 0002–0010, before deploying
   (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
   colour themes; 0009: design names; 0010: city, venue types, country codes;
-  0011: branches; 0012: billing; 0013: plan start date). Dev has up to 0012
-  (2026-10-27); 0013 still needs `pnpm db:migrate`.
+  0011: branches; 0012: billing; 0013: plan start date). Dev has all of
+  them (2026-10-28).
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**

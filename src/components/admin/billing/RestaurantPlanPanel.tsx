@@ -2,113 +2,21 @@
 "use client";
 
 import { useState, useTransition, type FormEvent } from "react";
-import { useLocale } from "next-intl";
-import { Plus, Receipt } from "lucide-react";
+import { Receipt } from "lucide-react";
 import { Link, useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Field, FormSection } from "~/components/forms/fields";
-import { BillingStatusBadge } from "~/components/admin/billing/BillingStatusBadge";
 import { CurrencySelect, SaveState } from "~/components/admin/billing/billing-fields";
 import { saveBillingPlan } from "~/app/actions/billing";
-import { formatDay, formatMoney, methodLabel, type BillingStatus } from "~/lib/billing";
-import type { BillingPlan, PaymentRow } from "~/server/billing";
-
-interface RestaurantPlanPanelProps {
-  restaurantId: string;
-  plan: BillingPlan | null;
-  recent: PaymentRow[];
-  paymentCount: number;
-  paidUntil: string | null;
-  status: BillingStatus;
-  owed: { amount: number; currency: string; periods: number } | null;
-}
+import type { BillingPlan } from "~/server/billing";
 
 /**
- * A restaurant's Plan tab: whether it's paid up (and what it owes when
- * late), the plan agreed with it, and its latest payments. Payments are
- * recorded on the Payments page, where all of them are.
+ * A restaurant's Plan tab: the plan agreed with it, and nothing else.
+ * Payments are on the Payments page (the link opens it for this restaurant).
  */
-export function RestaurantPlanPanel(props: RestaurantPlanPanelProps) {
-  const { restaurantId, plan, recent, paymentCount, paidUntil, status, owed } = props;
-  const locale = useLocale();
-  const paymentsHref = `/admin/payments?restaurant=${restaurantId}`;
-
-  return (
-    <div className="space-y-6">
-      <section className="bg-card border-border space-y-3 rounded-xl border px-6 py-5 shadow-sm">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-          <BillingStatusBadge status={status} className="text-sm" />
-          <p className="text-sm">
-            {paidUntil ? (
-              <>
-                Paid until <strong>{formatDay(paidUntil, locale)}</strong>
-              </>
-            ) : plan?.startsOn ? (
-              <>
-                Billed from <strong>{formatDay(plan.startsOn, locale)}</strong>, nothing paid yet
-              </>
-            ) : (
-              <span className="text-muted-foreground">No payments recorded yet</span>
-            )}
-          </p>
-          {owed && (
-            <p className="text-sm font-medium text-red-700 dark:text-red-400">
-              Owes {formatMoney(owed.amount, owed.currency, locale)} (
-              {owed.periods === 1 ? "1 month" : `${owed.periods} months`})
-            </p>
-          )}
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button asChild>
-            <Link href={`/admin/payments?record=${restaurantId}#record`}>
-              <Plus className="h-4 w-4" /> Record a payment
-            </Link>
-          </Button>
-          <Button variant="outline" asChild>
-            <Link href={paymentsHref}>
-              <Receipt className="h-4 w-4" /> All payments
-            </Link>
-          </Button>
-        </div>
-      </section>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <PlanForm restaurantId={restaurantId} plan={plan} />
-
-        <FormSection id="recent" title="Latest payments" description="Recorded on the Payments page.">
-          {recent.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No payments recorded yet.</p>
-          ) : (
-            <ul className="divide-border -my-2 divide-y">
-              {recent.map((p) => (
-                <li key={p.id} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2.5 text-sm">
-                  <span>
-                    <span className="font-medium">{formatDay(p.paidOn, locale)}</span>
-                    <span className="text-muted-foreground">
-                      {" "}
-                      · {methodLabel(p.method)} · for {formatDay(p.coversFrom, locale)} –{" "}
-                      {formatDay(p.coversUntil, locale)}
-                    </span>
-                  </span>
-                  <span className="font-medium tabular-nums">{formatMoney(p.amount, p.currency, locale)}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-          {paymentCount > recent.length && (
-            <Link href={paymentsHref} className="text-primary text-sm font-medium hover:underline">
-              See all {paymentCount} payments
-            </Link>
-          )}
-        </FormSection>
-      </div>
-    </div>
-  );
-}
-
-function PlanForm({ restaurantId, plan }: { restaurantId: string; plan: BillingPlan | null }) {
+export function RestaurantPlanPanel({ restaurantId, plan }: { restaurantId: string; plan: BillingPlan | null }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [values, setValues] = useState({
@@ -137,7 +45,7 @@ function PlanForm({ restaurantId, plan }: { restaurantId: string; plan: BillingP
   };
 
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={submit} className="max-w-2xl">
       <FormSection
         id="plan"
         title="Plan"
@@ -170,7 +78,7 @@ function PlanForm({ restaurantId, plan }: { restaurantId: string; plan: BillingP
         <Field
           label="Billed from"
           htmlFor="plan-start"
-          hint="The first day the restaurant pays for. Until a payment covers it, the days after count as unpaid."
+          hint="The first day the restaurant pays for. Each month from then on is due until a payment covers it."
         >
           <Input
             id="plan-start"
@@ -194,6 +102,11 @@ function PlanForm({ restaurantId, plan }: { restaurantId: string; plan: BillingP
             {isPending ? "Saving…" : "Save plan"}
           </Button>
           <SaveState error={error} saved={saved} />
+          <Button variant="ghost" className="ms-auto" asChild>
+            <Link href={`/admin/payments?restaurant=${restaurantId}`}>
+              <Receipt className="h-4 w-4" /> This restaurant&apos;s payments
+            </Link>
+          </Button>
         </div>
       </FormSection>
     </form>

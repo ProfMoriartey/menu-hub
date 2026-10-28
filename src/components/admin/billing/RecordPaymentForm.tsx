@@ -1,7 +1,7 @@
 // src/components/admin/billing/RecordPaymentForm.tsx
 "use client";
 
-import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
+import { useState, useTransition, type FormEvent } from "react";
 import { useLocale } from "next-intl";
 import { useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
@@ -20,7 +20,6 @@ import {
   PAYMENT_METHODS,
   coversUntil,
   formatDay,
-  formatMoney,
   isDay,
   nextPeriodStart,
 } from "~/lib/billing";
@@ -28,11 +27,17 @@ import type { BillingRestaurant } from "~/server/billing";
 
 type PaymentTarget = Pick<BillingRestaurant, "id" | "name" | "plan" | "paidUntil">;
 
+/** Filled in already, e.g. by a pending month's "Mark paid". */
+export interface PaymentPrefill {
+  restaurantId: string;
+  coversFrom?: string;
+}
+
 interface RecordPaymentFormProps {
   restaurants: PaymentTarget[];
-  // Chosen already, e.g. from a "Record payment" button.
-  initialRestaurantId: string | null;
+  prefill: PaymentPrefill | null;
   today: string;
+  onSaved: () => void;
 }
 
 /**
@@ -40,7 +45,7 @@ interface RecordPaymentFormProps {
  * its price, currency and where the period starts (right after what it
  * has paid for); everything stays editable.
  */
-export function RecordPaymentForm({ restaurants, initialRestaurantId, today }: RecordPaymentFormProps) {
+export function RecordPaymentForm({ restaurants, prefill, today, onSaved }: RecordPaymentFormProps) {
   const router = useRouter();
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
@@ -63,30 +68,18 @@ export function RecordPaymentForm({ restaurants, initialRestaurantId, today }: R
     note: "",
     ...defaultsFor(restaurantId, today, 1),
   });
-  const known = initialRestaurantId && restaurants.some((r) => r.id === initialRestaurantId);
-  const [values, setValues] = useState(() => blank(known ? initialRestaurantId : ""));
+  const known = prefill && restaurants.some((r) => r.id === prefill.restaurantId);
+  const [values, setValues] = useState(() => {
+    const start = blank(known ? prefill.restaurantId : "");
+    return prefill?.coversFrom ? { ...start, coversFrom: prefill.coversFrom } : start;
+  });
   // The period start and amount follow the restaurant, payment day and
-  // months until they're changed by hand.
-  const [fromEdited, setFromEdited] = useState(false);
+  // months until they're changed by hand (a prefilled month counts).
+  const [fromEdited, setFromEdited] = useState(Boolean(prefill?.coversFrom));
   const [amountEdited, setAmountEdited] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [saved, setSaved] = useState<string | null>(null);
-
-  // Fresh data after a save (a new paid-until date): fill in the defaults
-  // again, so the next payment continues where this one ends.
-  const firstRender = useRef(true);
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    setValues((v) => (v.restaurantId ? { ...v, ...defaultsFor(v.restaurantId, v.paidOn, v.months || 1) } : v));
-    // defaultsFor only reads `restaurants`.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [restaurants]);
 
   const set = (patch: Partial<typeof values>) => {
-    setSaved(null);
     setValues((v) => {
       const next = { ...v, ...patch };
       const changed = patch.restaurantId !== undefined || patch.paidOn !== undefined || patch.months !== undefined;
@@ -116,14 +109,8 @@ export function RecordPaymentForm({ restaurants, initialRestaurantId, today }: R
     startTransition(async () => {
       const result = await recordPayment(restaurantId, payment);
       if (!result.ok) return setError(result.error);
-      setSaved(
-        `${formatMoney(payment.amount.replace(",", "."), payment.currency, locale)} from ${restaurant.name} recorded.`,
-      );
-      // Ready for the next one: the same restaurant would continue after it.
-      setValues((v) => ({ ...v, note: "" }));
-      setFromEdited(false);
-      setAmountEdited(false);
       router.refresh();
+      onSaved();
     });
   };
 
@@ -131,7 +118,7 @@ export function RecordPaymentForm({ restaurants, initialRestaurantId, today }: R
     <form onSubmit={submit} className="space-y-5">
       <Field label="Restaurant" htmlFor="pay-restaurant" required>
         <Select value={values.restaurantId} onValueChange={(restaurantId) => set({ restaurantId })}>
-          <SelectTrigger id="pay-restaurant" className="w-full sm:max-w-md">
+          <SelectTrigger id="pay-restaurant" className="w-full">
             <SelectValue placeholder="Choose a restaurant" />
           </SelectTrigger>
           <SelectContent>
@@ -145,7 +132,7 @@ export function RecordPaymentForm({ restaurants, initialRestaurantId, today }: R
         </Select>
       </Field>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Paid on" htmlFor="pay-date">
           <Input
             id="pay-date"
@@ -225,13 +212,7 @@ export function RecordPaymentForm({ restaurants, initialRestaurantId, today }: R
         <Button type="submit" disabled={isPending || !restaurant || !until || !values.amount.trim()}>
           {isPending ? "Saving…" : "Record payment"}
         </Button>
-        {saved && !error ? (
-          <span className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
-            {saved}
-          </span>
-        ) : (
-          <SaveState error={error} saved={false} />
-        )}
+        <SaveState error={error} saved={false} />
       </div>
     </form>
   );
