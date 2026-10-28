@@ -9,7 +9,9 @@ const safeRedirect = (value: string | string[] | undefined) => {
 
 /**
  * Sign in, or create an account. ?redirect_url= (e.g. the sign-up's /start
- * page) is where people go afterwards.
+ * page) is where people go afterwards; otherwise their dashboard. Hash
+ * routing keeps that address while they move between signing in and up
+ * (path routing would drop it and send them home).
  */
 export default async function Page({
   searchParams,
@@ -19,7 +21,14 @@ export default async function Page({
   const target = safeRedirect((await searchParams).redirect_url);
   return (
     <div className="bg-background flex min-h-screen items-start justify-center p-4 pt-[15vh]">
-      <SignIn withSignUp forceRedirectUrl={target} signUpForceRedirectUrl={target} />
+      <SignIn
+        routing="hash"
+        withSignUp
+        forceRedirectUrl={target}
+        signUpForceRedirectUrl={target}
+        fallbackRedirectUrl="/dashboard"
+        signUpFallbackRedirectUrl="/dashboard"
+      />
     </div>
   );
 }

@@ -91,13 +91,14 @@ export function Navbar() {
           </div>
 
           <SignedOut>
-            <SignInButton mode="modal">
+            <SignInButton mode="modal" signUpFallbackRedirectUrl="/dashboard">
               <Button variant="ghost" className="hidden md:inline-flex">
                 {t("signIn")}
               </Button>
             </SignInButton>
             <Button asChild className="ms-1 rounded-full">
-              <Link href="/start">{t("getStarted")}</Link>
+              {/* Sign up first, then the dashboard (to create the restaurant). */}
+              <Link href="/sign-in?redirect_url=%2Fdashboard">{t("getStarted")}</Link>
             </Button>
           </SignedOut>
           <SignedIn>
@@ -163,7 +164,7 @@ export function Navbar() {
               </div>
               <div className="flex-1" />
               <SignedOut>
-                <SignInButton mode="modal">
+                <SignInButton mode="modal" signUpFallbackRedirectUrl="/dashboard">
                   <Button variant="outline" onClick={() => setOpen(false)}>
                     {t("signIn")}
                   </Button>
