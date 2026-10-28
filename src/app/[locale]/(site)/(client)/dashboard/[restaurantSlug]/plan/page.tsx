@@ -104,7 +104,12 @@ export default async function OwnerPlanPage({ params }: { params: Promise<{ rest
           />
         </div>
         <div className="space-y-6">
-          <GoLiveCard restaurantId={restaurant.id} isActive={restaurant.isActive} approved={approved} />
+          <GoLiveCard
+            restaurantId={restaurant.id}
+            isActive={restaurant.isActive}
+            approved={approved}
+            pausedReason={restaurant.pausedAt ? (plan.pauseReason ?? "other") : null}
+          />
           <section className="bg-card border-border space-y-3 rounded-xl border p-5 shadow-sm sm:p-6">
             <h2 className="text-base font-semibold">{t("contactTitle")}</h2>
             <p className="text-muted-foreground text-sm">{t("contactText")}</p>

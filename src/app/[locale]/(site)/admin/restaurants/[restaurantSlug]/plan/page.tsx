@@ -6,6 +6,7 @@ import { restaurants } from "~/server/db/schema";
 import { getRestaurantPlan } from "~/server/billing";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
 import { RestaurantPlanPanel } from "~/components/admin/billing/RestaurantPlanPanel";
+import { PauseMenuCard } from "~/components/admin/billing/PauseMenuCard";
 
 export default async function RestaurantPlanPage({
   params,
@@ -16,7 +17,7 @@ export default async function RestaurantPlanPage({
 
   const restaurant = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
-    columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true, isDisplayed: true },
+    columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true, isDisplayed: true, pausedAt: true },
   });
   if (!restaurant) notFound();
 
@@ -30,6 +31,12 @@ export default async function RestaurantPlanPage({
         plan={plan}
         branchCount={branchCount}
         detailsHref={`/admin/restaurants/${restaurant.slug}/edit`}
+      />
+      <PauseMenuCard
+        restaurantId={restaurant.id}
+        pausedAt={restaurant.pausedAt}
+        reason={plan?.pauseReason ?? null}
+        note={plan?.pauseNote ?? null}
       />
     </div>
   );

@@ -8,6 +8,7 @@ import { routing } from "~/i18n/routing";
 import { allMenuLanguages, menuLanguagesOf } from "~/lib/menu-languages";
 import { getPublicOrigin } from "~/server/public-origin";
 import { visibleBranches } from "~/server/branches";
+import { liveRestaurant } from "~/server/public-menu";
 
 // Built when requested, never at build time: a build-time sitemap would stay
 // frozen until the next deploy, and the build would need the database. The
@@ -38,12 +39,12 @@ const getLivePaths = unstable_cache(
         extraLanguages: restaurants.extraLanguages,
       })
       .from(restaurants)
-      .where(eq(restaurants.isActive, true));
+      .where(liveRestaurant());
     const branchRows = await db
       .select({ restaurantId: branches.restaurantId, slug: branches.slug })
       .from(branches)
       .innerJoin(restaurants, eq(branches.restaurantId, restaurants.id))
-      .where(eq(restaurants.isActive, true))
+      .where(liveRestaurant())
       .orderBy(branches.restaurantId, branches.order, branches.createdAt);
     const items = await db
       .select({ restaurantId: menuItems.restaurantId, item: menuItems.slug })
@@ -51,7 +52,7 @@ const getLivePaths = unstable_cache(
       .innerJoin(restaurants, eq(menuItems.restaurantId, restaurants.id))
       .where(
         and(
-          eq(restaurants.isActive, true),
+          liveRestaurant(),
           ne(menuItems.availability, "hidden"),
         ),
       );

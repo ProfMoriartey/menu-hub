@@ -23,3 +23,10 @@ export function toAccessLevel(value: string | null | undefined): AccessLevel {
 
 export const canEditDetails = (role: RestaurantRole | null) =>
   role === "admin" || role === "owner";
+
+/**
+ * Whether guests see the menu: put live (isActive) and not paused by an
+ * admin (pausedAt). Cached rows may hold the date as a string.
+ */
+export const isLive = (restaurant: { isActive: boolean; pausedAt?: Date | string | null }) =>
+  restaurant.isActive && !restaurant.pausedAt;

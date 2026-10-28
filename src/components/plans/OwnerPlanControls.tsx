@@ -3,7 +3,7 @@
 
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { CircleAlert, Clock, Globe, EyeOff } from "lucide-react";
+import { CircleAlert, Clock, Globe, EyeOff, PauseCircle } from "lucide-react";
 import { useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
@@ -23,16 +23,20 @@ function ErrorLine({ error }: { error: string | null }) {
 
 /**
  * Putting the menu live or taking it offline, once the sign-up is
- * approved. Until then, it says it's waiting.
+ * approved. Until then, it says it's waiting. While an admin has paused
+ * the menu, it says why and can only take it offline.
  */
 export function GoLiveCard({
   restaurantId,
   isActive,
   approved,
+  pausedReason,
 }: {
   restaurantId: string;
   isActive: boolean;
   approved: boolean;
+  // Set while an admin has paused the menu: "unpaid" or "other".
+  pausedReason: string | null;
 }) {
   const t = useTranslations("OwnerPlan");
   const router = useRouter();
@@ -55,10 +59,28 @@ export function GoLiveCard({
       className="bg-card border-border scroll-mt-24 space-y-3 rounded-xl border p-5 shadow-sm sm:p-6"
     >
       <h2 id="live-title" className="flex items-center gap-2 text-base font-semibold">
-        {isActive ? <Globe className="h-4 w-4 text-emerald-600" aria-hidden /> : <EyeOff className="h-4 w-4" aria-hidden />}
-        {isActive ? t("liveTitle") : t("offlineTitle")}
+        {pausedReason ? (
+          <PauseCircle className="h-4 w-4 text-red-600" aria-hidden />
+        ) : isActive ? (
+          <Globe className="h-4 w-4 text-emerald-600" aria-hidden />
+        ) : (
+          <EyeOff className="h-4 w-4" aria-hidden />
+        )}
+        {pausedReason ? t("pausedTitle") : isActive ? t("liveTitle") : t("offlineTitle")}
       </h2>
-      {!approved ? (
+      {pausedReason ? (
+        <div className="space-y-3">
+          <p className="flex items-start gap-2 rounded-lg border border-red-500/40 bg-red-500/5 p-3 text-sm">
+            <PauseCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden />
+            {pausedReason === "unpaid" ? t("pausedUnpaid") : t("pausedOther")}
+          </p>
+          {isActive && (
+            <Button variant="outline" onClick={() => change(false)} disabled={isPending}>
+              {isPending ? t("saving") : t("takeOffline")}
+            </Button>
+          )}
+        </div>
+      ) : !approved ? (
         <p className="text-muted-foreground flex items-start gap-2 text-sm">
           <Clock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden /> {t("waitingApproval")}
         </p>

@@ -52,6 +52,10 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   slug: varchar("slug", { length: 256 }).notNull().unique(),
   foodType: varchar("food_type", { length: 256 }),
   isActive: boolean("is_active").default(true).notNull(),
+  // Paused by a system admin (e.g. unpaid): not shown to guests whatever
+  // isActive says, and owners can't put it live. Null = not paused. Why is
+  // on restaurantBilling (admins and the owner only).
+  pausedAt: timestamp("paused_at"),
   isDisplayed: boolean("is_displayed").default(false).notNull(),
   logoUrl: varchar("logo_url", { length: 256 }),
 
@@ -352,6 +356,10 @@ export const restaurantBilling = pgTable("menu-hub_restaurant_billing", {
   currency: varchar("currency", { length: 3 }).notNull().default("USD"),
   // An admin's changes to the tier's features for this restaurant (a
   // special deal). Null = as the tier.
+  // Why the menu is paused (restaurants.pausedAt): "unpaid" or "other",
+  // shown to the owner, and a note only admins see.
+  pauseReason: varchar("pause_reason", { length: 16 }),
+  pauseNote: text("pause_note"),
   colorsOverride: boolean("colors_override"),
   languagesOverride: integer("languages_override"),
   branchesOverride: integer("branches_override"),

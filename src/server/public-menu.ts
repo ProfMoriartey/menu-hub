@@ -1,7 +1,7 @@
 // src/server/public-menu.ts
 import { cache } from "react";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
-import { and, asc, count, eq, isNotNull, lte, ne, sql } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull, isNull, lte, ne, sql } from "drizzle-orm";
 import { db } from "~/server/db";
 import { branches, categories, menuItems, restaurants } from "~/server/db/schema";
 import { LOCATION_COLUMNS, MAIN_BRANCH, withMainBranch } from "~/server/branches";
@@ -40,6 +40,9 @@ const ITEM_COLUMNS = {
   imageUrl: true,
   translations: true,
 } as const;
+
+/** For queries: restaurants guests see (lib/access isLive). */
+export const liveRestaurant = () => and(eq(restaurants.isActive, true), isNull(restaurants.pausedAt));
 
 /**
  * Restaurant row by slug, with its main branch's location and without
@@ -135,7 +138,7 @@ export const getMenusDirectory = cache(
   unstable_cache(
     async () => {
       const venues = await db.query.restaurants.findMany({
-        where: eq(restaurants.isActive, true),
+        where: liveRestaurant(),
         columns: {
           id: true,
           slug: true,

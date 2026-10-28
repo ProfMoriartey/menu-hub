@@ -1,5 +1,6 @@
 // app/admin/restaurants/[restaurantSlug]/share/page.tsx
 import { eq } from "drizzle-orm";
+import { isLive } from "~/lib/access";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
@@ -33,7 +34,7 @@ export default async function AdminSharePage({
     <div className="space-y-8">
       <RestaurantAdminHeader restaurant={restaurant} activeTab="share" />
       <SharePanel
-        restaurant={restaurant}
+        restaurant={{ ...restaurant, isActive: isLive(restaurant) }}
         targets={targets}
         detailsHref={`/admin/restaurants/${restaurant.slug}/edit`}
         printHref={`/admin/restaurants/${restaurant.slug}/share/print`}

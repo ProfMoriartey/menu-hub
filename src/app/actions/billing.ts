@@ -12,6 +12,7 @@ import { BILLING_CURRENCIES, coversUntil, isDay, isPaymentMethod } from "~/lib/b
 import { isUuid } from "~/lib/slug";
 import { runAction } from "~/server/run-action";
 import { syncEntitlements } from "~/server/plans";
+import { revalidatePublicRestaurant } from "~/server/public-menu";
 import { TIERS } from "~/lib/plans";
 import { MENU_LANGUAGES } from "~/lib/menu-languages";
 
@@ -150,5 +151,49 @@ export async function deletePayment(paymentId: string): Promise<ActionResult> {
     await requireAdmin();
     if (!isUuid(paymentId)) throw new ActionError("invalidInput");
     await db.delete(payments).where(eq(payments.id, paymentId));
+  });
+}
+
+const pauseSchema = z.object({
+  paused: z.boolean(),
+  reason: z.enum(["unpaid", "other"]),
+  note: z.string().trim().max(1000),
+});
+
+/**
+ * Pauses a menu (e.g. unpaid) or lifts the pause. A paused menu isn't shown
+ * to guests whatever its live switch says, and its owners can't put it
+ * live until an admin resumes it. The reason is shown to the owner; the
+ * note only to admins.
+ */
+export async function setMenuPaused(restaurantId: string, input: unknown): Promise<ActionResult> {
+  return runAction("saveBillingFailed", async () => {
+    await requireAdmin();
+    const parsed = pauseSchema.safeParse(input);
+    if (!parsed.success) throw new ActionError("invalidInput");
+    await requireRestaurant(restaurantId);
+    const { paused, reason, note } = parsed.data;
+
+    await db.transaction(async (tx) => {
+      const current = await tx.query.restaurants.findFirst({
+        where: eq(restaurants.id, restaurantId),
+        columns: { pausedAt: true },
+      });
+      await tx
+        .update(restaurants)
+        // Keeps the original date when only the reason changes.
+        .set({ pausedAt: paused ? (current?.pausedAt ?? new Date()) : null, updatedAt: new Date() })
+        .where(eq(restaurants.id, restaurantId));
+      const values = {
+        pauseReason: paused ? reason : null,
+        pauseNote: paused ? note || null : null,
+        updatedAt: new Date(),
+      };
+      await tx
+        .insert(restaurantBilling)
+        .values({ restaurantId, ...values })
+        .onConflictDoUpdate({ target: restaurantBilling.restaurantId, set: values });
+    });
+    revalidatePublicRestaurant(restaurantId);
   });
 }

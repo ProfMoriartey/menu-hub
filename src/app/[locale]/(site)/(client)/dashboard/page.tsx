@@ -9,7 +9,7 @@ import { planRequests, usersToRestaurants } from "~/server/db/schema";
 import { isSystemAdmin } from "~/app/actions/auth";
 import { Button } from "~/components/ui/button";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
-import { canEditDetails, toAccessLevel } from "~/lib/access";
+import { canEditDetails, isLive, toAccessLevel } from "~/lib/access";
 import { setupProgress } from "~/lib/setup-checklist";
 import { getSetupFacts } from "~/server/setup-facts";
 import { findInvitesForEmails, getVerifiedEmails } from "~/server/invites";
@@ -33,7 +33,7 @@ export default async function ClientUserDashboardPage() {
       where: eq(usersToRestaurants.userId, userId),
       with: {
         restaurant: {
-          columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true, description: true },
+          columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true, pausedAt: true, description: true },
           // Ids are enough for the category and item counts.
           with: {
             categories: {
@@ -238,10 +238,10 @@ export default async function ClientUserDashboardPage() {
                   <Link
                     href={`/${restaurant.slug}`}
                     target="_blank"
-                    aria-label={restaurant.isActive ? tHome("viewLive") : tHome("preview")}
-                    title={restaurant.isActive ? tHome("viewLive") : tHome("preview")}
+                    aria-label={isLive(restaurant) ? tHome("viewLive") : tHome("preview")}
+                    title={isLive(restaurant) ? tHome("viewLive") : tHome("preview")}
                   >
-                    {restaurant.isActive ? <ExternalLink className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {isLive(restaurant) ? <ExternalLink className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Link>
                 </Button>
               </div>

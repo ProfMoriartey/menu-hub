@@ -21,6 +21,7 @@ import {
 import type { SocialMediaLinks } from "~/lib/schemas";
 import { Link } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
+import { isLive } from "~/lib/access";
 import { PublicPageControls } from "~/components/public/PublicPageControls";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Button } from "~/components/ui/button";
@@ -283,7 +284,7 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
 
       <main className="container mx-auto px-4 py-4 sm:py-8">
         {/* Search engines read this; previews of unpublished menus get none. */}
-        {restaurantDetails.isActive && (
+        {isLive(restaurantDetails) && (
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{

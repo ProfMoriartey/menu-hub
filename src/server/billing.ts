@@ -19,6 +19,9 @@ export interface BillingPlan {
   colorsOverride: boolean | null;
   languagesOverride: number | null;
   branchesOverride: number | null;
+  // Why the menu is paused, when it is ("unpaid" or "other"), and a note.
+  pauseReason: string | null;
+  pauseNote: string | null;
 }
 
 export type MoneyByCurrency = { currency: string; total: number }[];
@@ -33,6 +36,8 @@ const PLAN_COLUMNS = {
   colorsOverride: true,
   languagesOverride: true,
   branchesOverride: true,
+  pauseReason: true,
+  pauseNote: true,
 } as const;
 
 const termsOf = (pricing: PlanPricing | null, plan: BillingPlan | null): PlanTerms | null =>
@@ -230,6 +235,8 @@ export async function getOwnerPlan(restaurantId: string) {
   return {
     pricing,
     cycle: plan?.billingCycle ?? "monthly",
+    // Shown to the owner when the menu is paused (never the admin's note).
+    pauseReason: plan?.pauseReason ?? null,
     limits,
     branchCount,
     paidUntil,

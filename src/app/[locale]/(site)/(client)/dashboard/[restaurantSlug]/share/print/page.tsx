@@ -1,5 +1,6 @@
 // app/[locale]/(client)/dashboard/[restaurantSlug]/share/print/page.tsx
 import { type Metadata } from "next";
+import { isLive } from "~/lib/access";
 import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { tableCardFor } from "~/server/share-card";
 import { TableCardSheet } from "~/components/share/TableCardSheet";
@@ -24,7 +25,7 @@ export default async function DashboardPrintCardsPage({
 
   return (
     <TableCardSheet
-      restaurant={{ ...restaurant, name }}
+      restaurant={{ ...restaurant, name, isActive: isLive(restaurant) }}
       menuUrl={menuUrl}
       permanentUrl={permanentUrl}
       backHref={`/dashboard/${restaurant.slug}/share`}

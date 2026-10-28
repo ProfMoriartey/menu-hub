@@ -119,12 +119,21 @@ export async function resolvePlanRequest(
 
 /**
  * Owners and admins: put the menu live or take it offline. Going live
- * waits for an admin to approve a restaurant's sign-up.
+ * waits for an admin to approve a restaurant's sign-up, and isn't possible
+ * while an admin has paused the menu (taking it offline always is).
  */
 export async function setRestaurantLive(restaurantId: string, live: boolean): Promise<ActionResult> {
   return runAction("saveRestaurantFailed", async () => {
     await checkOwnerAuthorization(restaurantId);
-    if (live === true && !(await isApprovedToPublish(restaurantId))) throw new ActionError("awaitingApproval");
+    if (live === true) {
+      if (!(await isApprovedToPublish(restaurantId))) throw new ActionError("awaitingApproval");
+      // An admin's pause outranks everyone's switch.
+      const row = await db.query.restaurants.findFirst({
+        where: eq(restaurants.id, restaurantId),
+        columns: { pausedAt: true },
+      });
+      if (row?.pausedAt) throw new ActionError("menuPaused");
+    }
     await db
       .update(restaurants)
       .set({ isActive: live === true, updatedAt: new Date() })

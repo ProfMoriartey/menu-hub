@@ -113,6 +113,13 @@
       "when": 1793172473158,
       "tag": "0016_add_plan_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1793182675638,
+      "tag": "0017_add_menu_pause",
+      "breakpoints": true
     }
   ]
 }

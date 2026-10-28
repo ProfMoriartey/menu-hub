@@ -4,12 +4,12 @@ import { ChevronRight, ExternalLink, Eye } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
-import { canEditDetails, type RestaurantRole } from "~/lib/access";
+import { canEditDetails, isLive, type RestaurantRole } from "~/lib/access";
 import { cn } from "~/lib/utils";
 import type { Restaurant } from "~/types/restaurant";
 
 interface DashboardRestaurantHeaderProps {
-  restaurant: Pick<Restaurant, "name" | "slug" | "logoUrl" | "isActive">;
+  restaurant: Pick<Restaurant, "name" | "slug" | "logoUrl" | "isActive" | "pausedAt">;
   role: RestaurantRole;
   activeTab: "menu" | "details" | "share" | "team" | "colors" | "plan";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
@@ -108,8 +108,8 @@ export async function DashboardRestaurantHeader({
         {/* Not live yet: the same page opens as a preview only they can see. */}
         <Button variant="outline" asChild>
           <Link href={`/${restaurant.slug}`} target="_blank">
-            {restaurant.isActive ? t("viewLive") : t("preview")}{" "}
-            {restaurant.isActive ? (
+            {isLive(restaurant) ? t("viewLive") : t("preview")}{" "}
+            {isLive(restaurant) ? (
               <ExternalLink className="h-4 w-4" />
             ) : (
               <Eye className="h-4 w-4" />

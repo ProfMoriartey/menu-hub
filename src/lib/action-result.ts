@@ -87,6 +87,7 @@ export const ACTION_ERROR_CODES = [
   "requestNotFound",
   "awaitingApproval",
   "restaurantLimit",
+  "menuPaused",
   // Uploads
   "signInToUpload",
   "adminOnlyNewLogo",

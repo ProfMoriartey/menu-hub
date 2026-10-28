@@ -9,6 +9,7 @@ import { getRestaurantRole } from "~/app/actions/auth";
 import { PreviewBanner } from "~/components/public/PreviewBanner";
 import { brandCss } from "~/lib/brand-color";
 import { colorThemeCss } from "~/lib/color-theme";
+import { isLive } from "~/lib/access";
 
 interface DynamicPublicLayoutProps {
   children: React.ReactNode;
@@ -20,7 +21,7 @@ export async function generateMetadata({
   params,
 }: Pick<DynamicPublicLayoutProps, "params">): Promise<Metadata> {
   const restaurant = await getRestaurantBySlug((await params).restaurantSlug);
-  return restaurant && !restaurant.isActive
+  return restaurant && !isLive(restaurant)
     ? { robots: { index: false, follow: false } }
     : {};
 }
@@ -96,17 +97,18 @@ export default async function DynamicPublicLayout({
     </NextIntlClientProvider>
   );
 
-  // 3. Live: everyone sees it. (Only inactive menus check who is asking, so
-  // the public pages guests visit don't depend on sign-in at all.)
-  if (restaurant.isActive) {
+  // 3. Live: everyone sees it. (Only menus that aren't check who is asking,
+  // so the public pages guests visit don't depend on sign-in at all.)
+  if (isLive(restaurant)) {
     return withMessages(children);
   }
 
-  // 4. Not live yet: owners, editors and admins get a preview.
+  // 4. Not live yet, or paused by an admin: owners, editors and admins get
+  // a preview.
   if (await getRestaurantRole(restaurant.id)) {
     return withMessages(
       <>
-        <PreviewBanner restaurantSlug={restaurant.slug} />
+        <PreviewBanner restaurantSlug={restaurant.slug} paused={Boolean(restaurant.pausedAt)} />
         {children}
       </>,
     );

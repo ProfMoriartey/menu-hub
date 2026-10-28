@@ -491,6 +491,17 @@ created have none and can publish), and asking for another plan or yearly
 billing (a "change" request; approving it switches the plan). The setup
 checklist's last step points there. Migration 0016 adds the requests table.
 
+**Pausing a menu (admin only):** the admin Plan tab's "Pause menu" card
+(`actions/billing.setMenuPaused`) sets `restaurants.pausedAt` and a reason
+("unpaid" or "other", shown to the owner) and note (admins only) on
+`restaurant_billing`. A paused menu isn't live whatever `isActive` says
+(`lib/access isLive`, `server/public-menu liveRestaurant()` in queries):
+not shown to guests or search engines, not on the Menus page, search or
+sitemap; the team previews it with a "Paused by Menupedia" banner. Owners
+see the reason on their Plan tab and can take the menu offline but not
+put it live (`menuPaused`) until an admin resumes it. Admin restaurant
+cards show a "Paused" badge. Migration 0017.
+
 **Billing (admin only):** payments are collected by hand (bank transfer,
 cash) for now, so the site only records them.
 - *Plan tab* (`/admin/restaurants/<slug>/plan`): only the plan agreed with
@@ -662,8 +673,8 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
   (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
   colour themes; 0009: design names; 0010: city, venue types, country codes;
   0011: branches; 0012: billing; 0013: plan start date; 0014–0015: plan
-  tiers and limits; 0016: plan requests). Dev has up to 0015 (2026-10-28);
-  0016 needs `pnpm db:migrate`.
+  tiers and limits; 0016: plan requests; 0017: menu pause). Dev has up to
+  0016 (2026-10-28); 0017 needs `pnpm db:migrate`.
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**
