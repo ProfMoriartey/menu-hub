@@ -32,6 +32,9 @@ export const ACTION_ERROR_CODES = [
   "addBranchFailed",
   "saveBranchFailed",
   "deleteBranchFailed",
+  "saveBillingFailed",
+  "requestFailed",
+  "createOwnRestaurantFailed",
   // Access
   "signInAgain",
   "noAccess",
@@ -78,6 +81,13 @@ export const ACTION_ERROR_CODES = [
   "branchNotFound",
   "branchNameRequired",
   "lastBranch",
+  "branchLimit",
+  "tooManyLanguages",
+  // Sign-ups and requests
+  "requestNotFound",
+  "awaitingApproval",
+  "restaurantLimit",
+  "menuPaused",
   // Uploads
   "signInToUpload",
   "adminOnlyNewLogo",

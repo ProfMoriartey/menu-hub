@@ -6,6 +6,7 @@ import { and, asc, eq, exists, ne, or, sql, type AnyColumn, type SQL } from "dri
 import { db } from "~/server/db";
 import { branches, menuItems, restaurants } from "~/server/db/schema";
 import { localizeItem } from "~/server/localize-menu";
+import { liveRestaurant } from "~/server/public-menu";
 import { formatPrice } from "~/lib/format-price";
 import { menuLanguagesOf } from "~/lib/menu-languages";
 import { MIN_DISH_QUERY } from "~/lib/menus-directory";
@@ -73,6 +74,7 @@ export async function searchDishes(
       restaurantId: menuItems.restaurantId,
       currency: restaurants.currency,
       multilingualEnabled: restaurants.multilingualEnabled,
+      maxExtraLanguages: restaurants.maxExtraLanguages,
       mainLanguage: restaurants.mainLanguage,
       extraLanguages: restaurants.extraLanguages,
     })
@@ -80,7 +82,7 @@ export async function searchDishes(
     .innerJoin(restaurants, eq(restaurants.id, menuItems.restaurantId))
     .where(
       and(
-        eq(restaurants.isActive, true),
+        liveRestaurant(),
         // Any of its branches there.
         country
           ? exists(

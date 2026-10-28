@@ -19,6 +19,7 @@ import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { MenuDemo } from "~/components/features/MenuDemo";
 import { MenuCard } from "~/components/menus/MenuCard";
+import { PricingSection } from "~/components/plans/PricingSection";
 import { DoodleReveal } from "~/components/shared/Reveal";
 import CoffeeDoodle from "~/components/svg/CoffeeDoodle";
 import GroovySittingDoodle from "~/components/svg/GroovySittingDoodle";
@@ -92,7 +93,7 @@ export default async function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
               <Button size="lg" className="rounded-full px-6" asChild>
-                <a href="#contact">{t("hero.ctaContact")}</a>
+                <Link href="/start">{t("hero.ctaStart")}</Link>
               </Button>
               <Button size="lg" variant="outline" className="rounded-full px-6" asChild>
                 <Link href="/menus">{t("hero.ctaMenus")}</Link>
@@ -207,6 +208,8 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      <PricingSection className="container mx-auto px-4 py-16 lg:py-20" />
 
       {/* Get in touch */}
       <section

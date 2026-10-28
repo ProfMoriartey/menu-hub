@@ -3,9 +3,10 @@ import { getTranslations } from "next-intl/server";
 import { EyeOff } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 
-// Shown above a menu that isn't live yet, to the people allowed to preview it,
-// so nobody mistakes the preview for the public page.
-export async function PreviewBanner({ restaurantSlug }: { restaurantSlug: string }) {
+// Shown above a menu that isn't live yet (or is paused by an admin), to the
+// people allowed to preview it, so nobody mistakes the preview for the
+// public page.
+export async function PreviewBanner({ restaurantSlug, paused }: { restaurantSlug: string; paused: boolean }) {
   const t = await getTranslations("MenuPreview");
 
   return (
@@ -19,10 +20,10 @@ export async function PreviewBanner({ restaurantSlug }: { restaurantSlug: string
       <span className="inline-flex items-center gap-2">
         <EyeOff className="h-4 w-4 shrink-0" aria-hidden />
         <strong className="font-semibold">{t("label")}</strong>
-        <span>{t("text")}</span>
+        <span>{paused ? t("pausedText") : t("text")}</span>
       </span>
       <Link
-        href={`/dashboard/${restaurantSlug}/menu`}
+        href={paused ? `/dashboard/${restaurantSlug}/plan` : `/dashboard/${restaurantSlug}/menu`}
         className="font-medium underline underline-offset-2 hover:no-underline"
       >
         {t("backToEditing")}

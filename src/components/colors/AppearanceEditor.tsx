@@ -16,13 +16,11 @@ import {
 import { useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { ToggleRow } from "~/components/forms/fields";
 import {
   MenuColorPreview,
   type PreviewMenu,
 } from "~/components/colors/MenuColorPreview";
 import {
-  setBrandColorEnabled,
   updateColorTheme,
   updateMenuDesign,
 } from "~/app/actions/restaurant-settings";
@@ -163,9 +161,9 @@ function DesignSketch({ design }: { design: MenuDesign }) {
 
 interface AppearanceEditorProps {
   restaurantId: string;
-  // Only admins see the custom-colours switch; owners get the colours once
-  // it's on. The design is every owner's choice.
   isAdmin: boolean;
+  // Whether the plan includes custom colours (admins change it on the
+  // Details tab's Features card). The design is every owner's choice.
   colorsEnabled: boolean;
   design: MenuDesign;
   // What the colours start from (saved theme, or built from the old brand colour).
@@ -175,8 +173,8 @@ interface AppearanceEditorProps {
 }
 
 /**
- * The Appearance page: the menu's design and, when an admin has enabled
- * them, its colours, next to a live preview of the restaurant's own menu.
+ * The Appearance page: the menu's design and, when the plan includes them,
+ * its colours, next to a live preview of the restaurant's own menu.
  * Hovering a part of the preview highlights the colour behind it; clicking
  * jumps to that colour.
  */
@@ -193,7 +191,6 @@ export function AppearanceEditor({
   const tDesign = useTranslations("MenuDesign");
   const tUnsaved = useTranslations("UnsavedChanges");
   const router = useRouter();
-  const [isToggling, startToggle] = useTransition();
   const [isSaving, startSave] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -254,15 +251,6 @@ export function AppearanceEditor({
     : undefined;
   const warnings = colorsEnabled ? contrastWarnings(palette) : [];
 
-  const toggle = (next: boolean) => {
-    setError(null);
-    startToggle(async () => {
-      const result = await setBrandColorEnabled(restaurantId, next);
-      if (!result.ok) setError(result.error);
-      router.refresh();
-    });
-  };
-
   // Design and colours are saved separately: an owner without custom colours
   // can still change the design.
   const save = (colors: ColorTheme | null | "keep") => {
@@ -287,183 +275,218 @@ export function AppearanceEditor({
 
   return (
     <div className="space-y-6">
-      <section
-        aria-labelledby="design-title"
-        className="bg-card border-border space-y-4 rounded-xl border p-5 shadow-sm sm:p-6"
-      >
-        <div>
-          <h2
-            id="design-title"
-            className="flex items-center gap-2 text-base font-semibold"
+      {/* Choices on one side, the live preview on the other (stacked on
+          phones), the preview staying in view while scrolling. */}
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="min-w-0 space-y-6">
+          <section
+            aria-labelledby="design-title"
+            className="bg-card border-border space-y-4 rounded-xl border p-5 shadow-sm sm:p-6"
           >
-            <LayoutTemplate className="h-4 w-4" aria-hidden />{" "}
-            {tDesign("title")}
-          </h2>
-          <p className="text-muted-foreground mt-0.5 text-sm">
-            {tDesign("intro")}
-          </p>
-        </div>
-        <div
-          role="radiogroup"
-          aria-labelledby="design-title"
-          className="grid gap-3 sm:grid-cols-3"
-        >
-          {MENU_DESIGNS.map((option) => {
-            const on = design === option;
-            return (
-              <button
-                key={option}
-                type="button"
-                role="radio"
-                aria-checked={on}
-                onClick={() => {
-                  setSaved(false);
-                  setDesign(option);
-                }}
-                className={cn(
-                  "flex flex-col gap-3 rounded-lg border p-3 text-start transition-colors",
-                  "focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
-                  on
-                    ? "border-primary bg-primary/5 ring-primary/30 ring-2"
-                    : "border-border hover:bg-accent/40",
-                )}
+            <div>
+              <h2
+                id="design-title"
+                className="flex items-center gap-2 text-base font-semibold"
               >
-                <div className="bg-background border-border w-full rounded-md border p-2">
-                  <DesignSketch design={option} />
-                </div>
-                <div>
-                  <p className="flex items-center gap-1.5 text-sm font-medium">
-                    {on && (
-                      <Check className="text-primary h-4 w-4" aria-hidden />
-                    )}
-                    {tDesign(`${option}.label`)}
-                  </p>
-                  <p className="text-muted-foreground text-xs">
-                    {tDesign(`${option}.hint`)}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="bg-card border-border space-y-4 rounded-xl border p-5 shadow-sm sm:p-6">
-        <div>
-          <h2 className="flex items-center gap-2 text-base font-semibold">
-            <Palette className="h-4 w-4" aria-hidden /> {t("title")}
-          </h2>
-          <p className="text-muted-foreground mt-0.5 text-sm">{t("intro")}</p>
-        </div>
-        {isAdmin && (
-          <ToggleRow
-            id="custom-colors-enabled"
-            title={t("enableTitle")}
-            description={t("enableText")}
-            checked={colorsEnabled}
-            onCheckedChange={(next) => !isToggling && toggle(next)}
-          />
-        )}
-        {!colorsEnabled && !isAdmin && (
-          <p className="text-muted-foreground text-sm">{t("notEnabled")}</p>
-        )}
-
-        {colorsEnabled && (
-          <>
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium">{t("presetsLabel")}</h3>
-              <div className="flex flex-wrap gap-2">
-                {PRESETS.map((preset) => (
+                <LayoutTemplate className="h-4 w-4" aria-hidden />{" "}
+                {tDesign("title")}
+              </h2>
+              <p className="text-muted-foreground mt-0.5 text-sm">
+                {tDesign("intro")}
+              </p>
+            </div>
+            <div
+              role="radiogroup"
+              aria-labelledby="design-title"
+              className="grid gap-3 sm:grid-cols-3"
+            >
+              {MENU_DESIGNS.map((option) => {
+                const on = design === option;
+                return (
                   <button
-                    key={preset.id}
+                    key={option}
                     type="button"
+                    role="radio"
+                    aria-checked={on}
                     onClick={() => {
                       setSaved(false);
-                      setTheme(copy(preset.theme));
+                      setDesign(option);
                     }}
-                    className="border-border hover:bg-accent bg-card inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm"
-                  >
-                    <span
-                      className="flex -space-x-1 rtl:space-x-reverse"
-                      aria-hidden
-                    >
-                      {(
-                        [
-                          "background",
-                          "primary",
-                          "secondary",
-                          "accent",
-                        ] as const
-                      ).map((role) => (
-                        <span
-                          key={role}
-                          className="ring-card h-4 w-4 rounded-full ring-2"
-                          style={{ background: preset.theme[mode][role] }}
-                        />
-                      ))}
-                    </span>
-                    {t(`presets.${preset.id}`)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div
-                role="tablist"
-                aria-label={t("modeLabel")}
-                className="bg-muted inline-flex rounded-lg p-1"
-              >
-                {(["light", "dark"] as const).map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    role="tab"
-                    aria-selected={mode === m}
-                    onClick={() => setMode(m)}
                     className={cn(
-                      "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-                      mode === m
-                        ? "bg-card text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground",
+                      "flex flex-col gap-3 rounded-lg border p-3 text-start transition-colors",
+                      "focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
+                      on
+                        ? "border-primary bg-primary/5 ring-primary/30 ring-2"
+                        : "border-border hover:bg-accent/40",
                     )}
                   >
-                    {m === "light" ? (
-                      <Sun className="h-4 w-4" aria-hidden />
-                    ) : (
-                      <Moon className="h-4 w-4" aria-hidden />
-                    )}
-                    {t(m)}
+                    <div className="bg-background border-border w-full rounded-md border p-2">
+                      <DesignSketch design={option} />
+                    </div>
+                    <div>
+                      <p className="flex items-center gap-1.5 text-sm font-medium">
+                        {on && (
+                          <Check className="text-primary h-4 w-4" aria-hidden />
+                        )}
+                        {tDesign(`${option}.label`)}
+                      </p>
+                      <p className="text-muted-foreground text-xs">
+                        {tDesign(`${option}.hint`)}
+                      </p>
+                    </div>
                   </button>
-                ))}
-              </div>
-              {mode === "dark" && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSaved(false);
-                    setTheme((current) => ({
-                      ...current,
-                      dark: darkFromLight(current.light),
-                    }));
-                  }}
-                >
-                  <Wand2 className="h-4 w-4" /> {t("generateDark")}
-                </Button>
-              )}
+                );
+              })}
             </div>
-          </>
-        )}
-      </section>
+          </section>
 
-      <div
-        className={cn(
-          "grid items-start gap-6",
-          colorsEnabled && "lg:grid-cols-[minmax(0,1fr)_360px]",
-        )}
-      >
-        <section aria-labelledby="preview-title" className="space-y-2">
+          <section className="bg-card border-border space-y-4 rounded-xl border p-5 shadow-sm sm:p-6">
+            <div>
+              <h2 className="flex items-center gap-2 text-base font-semibold">
+                <Palette className="h-4 w-4" aria-hidden /> {t("title")}
+              </h2>
+              <p className="text-muted-foreground mt-0.5 text-sm">
+                {t("intro")}
+              </p>
+            </div>
+            {!colorsEnabled && (
+              <p className="text-muted-foreground text-sm">
+                {isAdmin ? t("notInPlanAdmin") : t("notInPlan")}
+              </p>
+            )}
+
+            {colorsEnabled && (
+              <>
+                <div className="space-y-2">
+                  <h3 className="text-sm font-medium">{t("presetsLabel")}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {PRESETS.map((preset) => (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        onClick={() => {
+                          setSaved(false);
+                          setTheme(copy(preset.theme));
+                        }}
+                        className="border-border hover:bg-accent bg-card inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm"
+                      >
+                        <span
+                          className="flex -space-x-1 rtl:space-x-reverse"
+                          aria-hidden
+                        >
+                          {(
+                            [
+                              "background",
+                              "primary",
+                              "secondary",
+                              "accent",
+                            ] as const
+                          ).map((role) => (
+                            <span
+                              key={role}
+                              className="ring-card h-4 w-4 rounded-full ring-2"
+                              style={{ background: preset.theme[mode][role] }}
+                            />
+                          ))}
+                        </span>
+                        {t(`presets.${preset.id}`)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div
+                    role="tablist"
+                    aria-label={t("modeLabel")}
+                    className="bg-muted inline-flex rounded-lg p-1"
+                  >
+                    {(["light", "dark"] as const).map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        role="tab"
+                        aria-selected={mode === m}
+                        onClick={() => setMode(m)}
+                        className={cn(
+                          "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                          mode === m
+                            ? "bg-card text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground",
+                        )}
+                      >
+                        {m === "light" ? (
+                          <Sun className="h-4 w-4" aria-hidden />
+                        ) : (
+                          <Moon className="h-4 w-4" aria-hidden />
+                        )}
+                        {t(m)}
+                      </button>
+                    ))}
+                  </div>
+                  {mode === "dark" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSaved(false);
+                        setTheme((current) => ({
+                          ...current,
+                          dark: darkFromLight(current.light),
+                        }));
+                      }}
+                    >
+                      <Wand2 className="h-4 w-4" /> {t("generateDark")}
+                    </Button>
+                  )}
+                </div>
+              </>
+            )}
+          </section>
+
+          {colorsEnabled && (
+            <section
+              aria-labelledby="colors-title"
+              className="bg-card border-border space-y-2 rounded-xl border p-5 shadow-sm sm:p-6"
+            >
+              <h3 id="colors-title" className="text-sm font-medium">
+                {t("colorsLabel", { mode: t(mode) })}
+              </h3>
+              {COLOR_ROLES.map((role) => (
+                <ColorControl
+                  key={`${mode}-${role}`}
+                  role={role}
+                  value={palette[role]}
+                  active={hovered.includes(role) || selected === role}
+                  onChange={(value) => setColor(role, value)}
+                />
+              ))}
+              {warnings.length > 0 && (
+                <ul className="space-y-1 pt-1" aria-live="polite">
+                  {warnings.map(({ warning, roles }) => (
+                    <li key={warning}>
+                      <button
+                        type="button"
+                        onClick={() => select(roles[0]!)}
+                        className="text-attention inline-flex items-start gap-1.5 text-start text-xs hover:underline"
+                      >
+                        <TriangleAlert
+                          className="mt-0.5 h-3.5 w-3.5 shrink-0"
+                          aria-hidden
+                        />
+                        {t(`warnings.${warning}`)}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          )}
+        </div>
+        <section
+          aria-labelledby="preview-title"
+          className="space-y-2 lg:sticky lg:top-20"
+        >
           <h3 id="preview-title" className="text-sm font-medium">
             {t("previewLabel")}
           </h3>
@@ -502,45 +525,6 @@ export function AppearanceEditor({
             <MenuColorPreview menu={menu} design={design} />
           </div>
         </section>
-
-        {colorsEnabled && (
-          <section
-            aria-labelledby="colors-title"
-            className="space-y-2 lg:sticky lg:top-20"
-          >
-            <h3 id="colors-title" className="text-sm font-medium">
-              {t("colorsLabel", { mode: t(mode) })}
-            </h3>
-            {COLOR_ROLES.map((role) => (
-              <ColorControl
-                key={`${mode}-${role}`}
-                role={role}
-                value={palette[role]}
-                active={hovered.includes(role) || selected === role}
-                onChange={(value) => setColor(role, value)}
-              />
-            ))}
-            {warnings.length > 0 && (
-              <ul className="space-y-1 pt-1" aria-live="polite">
-                {warnings.map(({ warning, roles }) => (
-                  <li key={warning}>
-                    <button
-                      type="button"
-                      onClick={() => select(roles[0]!)}
-                      className="text-attention inline-flex items-start gap-1.5 text-start text-xs hover:underline"
-                    >
-                      <TriangleAlert
-                        className="mt-0.5 h-3.5 w-3.5 shrink-0"
-                        aria-hidden
-                      />
-                      {t(`warnings.${warning}`)}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        )}
       </div>
 
       <div className="bg-card border-border sticky bottom-0 z-10 -mx-4 flex flex-wrap items-center gap-3 border-t px-4 py-3 sm:mx-0 sm:rounded-xl sm:border">

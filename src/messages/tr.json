@@ -16,10 +16,11 @@
     "language": "Dil",
     "mainNav": "Ana menü",
     "signIn": "Giriş yap",
-    "getInTouch": "Bize ulaşın",
     "dashboard": "Panel",
     "openMenu": "Menüyü aç",
-    "closeMenu": "Menüyü kapat"
+    "closeMenu": "Menüyü kapat",
+    "pricing": "Fiyatlar",
+    "getStarted": "Başlayın"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Lezzetli menümüzü inceleyin",
@@ -52,8 +53,6 @@
     },
   "Dashboard": {
     "title": "Atanmış Menüleriniz",
-    "emptyTitle": "Atanmış Menü Yok",
-    "emptyMessage": "Henüz size atanmış herhangi bir menü görünmüyor. Lütfen yönetici ile iletişime geçin.",
     "accessLevelLabel": "Erişim Seviyesi",
     "manageMenuButton": "Menüyü Yönet",
     "accessLevels": {
@@ -192,7 +191,8 @@
     "preview": "Menüyü önizle",
     "shareTab": "Paylaş",
     "teamTab": "Ekip",
-    "colorsTab": "Görünüm"
+    "colorsTab": "Görünüm",
+    "planTab": "Plan"
   },
   "LanguageSwitcher": {
     "label": "Dil"
@@ -211,7 +211,13 @@
     "adminText": "Tüm restoranları yönetim panelinden yönetebilirsiniz.",
     "adminLink": "Yönetim panelini aç",
     "preview": "Menüyü önizle (henüz yayında değil)",
-    "share": "Paylaş: QR kod ve bağlantı"
+    "share": "Paylaş: QR kod ve bağlantı",
+    "addRestaurant": "Başka bir restoran ekle",
+    "createTitle": "Restoranınızın menüsünü oluşturun",
+    "createText": "Bir plan seçin, yemeklerinizi ekleyin ve QR kodunuzu paylaşın. Ödemede anlaştıktan sonra menünüz yayına girer.",
+    "createButton": "Restoranınızı oluşturun",
+    "joinTeamHint": "Bir restoranın ekibine mi katılıyorsunuz? Sahibinden sizi davet etmesini isteyin.",
+    "awaitingApproval": "Onay bekliyor"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "Menü adresiniz, görünürlük, tema ve arama ayarlarınız bir yönetici tarafından yönetilir.",
@@ -310,7 +316,16 @@
     "deleteBranchFailed": "Şube silinemedi. Lütfen tekrar deneyin.",
     "branchNotFound": "Bu şube artık yok. Sayfayı yenileyin.",
     "branchNameRequired": "Misafirler şubelerinizi ayırt edebilsin diye şubeye bir ad verin.",
-    "lastBranch": "Bir restoranın en az bir şubesi olmalıdır."
+    "lastBranch": "Bir restoranın en az bir şubesi olmalıdır.",
+    "saveBillingFailed": "Ödeme bilgileri kaydedilemedi. Lütfen tekrar deneyin.",
+    "branchLimit": "Planınız en fazla {count} şube içeriyor. Daha fazlası için bizimle iletişime geçin.",
+    "tooManyLanguages": "Planınız en fazla {count} ek dil içeriyor.",
+    "requestFailed": "İstek gönderilemedi. Lütfen tekrar deneyin.",
+    "createOwnRestaurantFailed": "Restoranınız oluşturulamadı. Lütfen tekrar deneyin.",
+    "requestNotFound": "Bu istek artık yok ya da zaten sonuçlandırıldı.",
+    "awaitingApproval": "Kaydınız onaylandığında menünüz yayına girebilir.",
+    "restaurantLimit": "İlk restoranınız onay bekliyor. Onaylandıktan sonra başka bir restoran ekleyebilirsiniz.",
+    "menuPaused": "Menünüz Menupedia tarafından durduruldu. Yeniden açmak için lütfen bizimle iletişime geçin."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -318,7 +333,8 @@
   "MenuPreview": {
     "label": "Önizleme",
     "text": "Bu menü henüz herkese açık değil. Yalnızca bu restoranı yönetenler görebilir.",
-    "backToEditing": "Düzenlemeye dön"
+    "backToEditing": "Düzenlemeye dön",
+    "pausedText": "Menupedia tarafından durduruldu: misafirler bu menüyü göremez. Bu önizlemeyi yalnızca ekibiniz görür."
   },
   "Share": {
     "liveStatus": "Menünüz yayında. Kodu okutan veya bağlantıyı açan misafirler menüyü hemen görür.",
@@ -389,7 +405,6 @@
   "Setup": {
     "title": "Menünüzü hazırlayın",
     "subtitle": "Misafirlerinizin okutabileceği bir menüye birkaç adım kaldı.",
-    "readyToGoLive": "Her şey hazır. Bir yönetici menünüzü yakında yayına alacak.",
     "progress": "{total} adımdan {done} tanesi tamam",
     "show": "Göster",
     "hide": "Gizle",
@@ -420,14 +435,18 @@
     },
     "live": {
       "title": "Yayına alın",
-      "text": "Menünüz hazır olduğunda bir yönetici yayına alır. Bu arada önizleyebilirsiniz.",
-      "action": "Önizle"
+      "action": "Önizle",
+      "ownerText": "Planınız onaylandığında menünüzü Plan sekmesinden yayına alın.",
+      "ownerAction": "Yayına al",
+      "editorText": "Menüyü restoranın sahibi yayına alır. Bu arada önizleyebilirsiniz."
     },
     "scan": {
       "title": "İlk okutmayı alın",
       "text": "Masalar için QR kodunuzu basın. Bu adım ilk okutmada kendiliğinden tamamlanır.",
       "action": "QR kodu al"
-    }
+    },
+    "readyToPublish": "Her şey hazır. Menünüzü Plan sekmesinden yayına alın.",
+    "readyEditor": "Her şey hazır. Restoranın sahibi menüyü yayına alabilir."
   },
   "PublicMenu": {
     "categoriesNav": "Menü kategorileri",
@@ -520,9 +539,6 @@
   "MenuLanguages": {
     "title": "Menü dilleri",
     "intro": "Menüyü birden fazla dilde sunun. Misafirler çevrilmişse kendi dillerinde, değilse ana dilde görür.",
-    "enableTitle": "Birden fazla dilde menü",
-    "enableText": "Bu restoranın sahiplerinin dil seçmesine ve ekibinin menüyü çevirmesine izin verir. Kapatmak çevirileri gizler ama silmez.",
-    "notEnabled": "Bu restoran için birden fazla dilde menü açık değil. Açtırmak için bir yöneticiyle iletişime geçin.",
     "mainLabel": "Ana dil",
     "mainHint": "Menünün şu an yazıldığı dil. Her ürünün en az bu dilde olması gerekir.",
     "mainPlaceholder": "Ana dili seçin",
@@ -533,7 +549,11 @@
     "saving": "Kaydediliyor…",
     "saved": "Kaydedildi",
     "chooseMainFirst": "Önce ana dili seçin.",
-    "notTranslated": "Çevrilmedi: {languages}"
+    "notTranslated": "Çevrilmedi: {languages}",
+    "notInPlan": "Birden çok dilde menü Pro ve Business planlarına dahildir. Eklemek için bizimle iletişime geçin.",
+    "notInPlanAdmin": "Bu restoranın planı menü dillerini içermiyor. Planını değiştirin ya da Features kartından açın.",
+    "limitHint": "Planınız en fazla {count} ek dil içeriyor.",
+    "overLimit": "Menünüzde yalnızca ilk {count} ek dil gösteriliyor; planınız bu kadarını içeriyor. Diğerleri, planınız izin verdiğinde kullanılmak üzere saklanıyor."
   },
   "OpeningHours": {
     "title": "Çalışma saatleri",
@@ -557,9 +577,6 @@
   "ColorTheme": {
     "title": "Menü renkleri",
     "intro": "Misafirlerin menünüzde, hakkında ve ürün sayfalarında gördüğü renkleri açık ve koyu mod için seçin.",
-    "enableTitle": "Özel renkler",
-    "enableText": "Bu restoranın sahiplerinin renkleri tasarlamasına izin verir. Kapatmak varsayılan renklere döner ama tasarımlarını saklar.",
-    "notEnabled": "Bu restoran için özel renkler açık değil, bu yüzden varsayılan renkler kullanılıyor. Açtırmak için bir yöneticiyle iletişime geçin.",
     "presetsLabel": "Bir paletle başlayın",
     "presets": {
       "default": "Varsayılan",
@@ -620,7 +637,9 @@
     "sampleOrder": "Sipariş",
     "sampleCategory": "Başlangıçlar",
     "sampleDish": "Örnek ürün",
-    "sampleDishDescription": "Ürünün kısa bir açıklaması."
+    "sampleDishDescription": "Ürünün kısa bir açıklaması.",
+    "notInPlan": "Özel renkler Pro ve Business planlarına dahildir, bu yüzden menünüz varsayılan renkleri kullanıyor. Eklemek için bizimle iletişime geçin.",
+    "notInPlanAdmin": "Bu restoranın planı özel renkleri içermiyor. Planını değiştirin ya da Features kartından açın."
   },
   "MenuDesign": {
     "title": "Menü tasarımı",
@@ -862,12 +881,12 @@
       "eyebrow": "Restoranlar, kafeler ve daha fazlası için dijital menüler",
       "title": "Menünüz her telefonda, her dilde",
       "intro": "Misafirler QR kodu okutur ve menünüz fotoğraflar, fiyatlar ve çalışma saatleriyle hemen açılır. Değişiklikleri kendiniz yaparsınız, saniyeler içinde yayında olur.",
-      "ctaContact": "Bize ulaşın",
       "ctaMenus": "Menülere göz atın",
       "point1": "Uygulama gerekmez",
       "point2": "5 dil",
       "point3": "Saniyeler içinde yayında",
-      "demoCaption": "Çalışan bir demo menü. Bir yemeğe dokunun."
+      "demoCaption": "Çalışan bir demo menü. Bir yemeğe dokunun.",
+      "ctaStart": "Menünüzü oluşturun"
     },
     "steps": {
       "title": "Nasıl çalışır",
@@ -915,7 +934,8 @@
     "email": "E-posta gönderin",
     "signIn": "Giriş yap",
     "dashboard": "Panel",
-    "rights": "© {year} Menupedia. Tüm hakları saklıdır."
+    "rights": "© {year} Menupedia. Tüm hakları saklıdır.",
+    "kvkk": "KVKK Aydınlatma Metni"
   },
   "Branches": {
     "title": "Şubeler",
@@ -959,6 +979,116 @@
     "saving": "Kaydediliyor…",
     "unsaved": "Kaydedilmemiş değişiklikler",
     "discard": "Vazgeç",
-    "saved": "Kaydedildi"
+    "saved": "Kaydedildi",
+    "limitNote": "Planınız {max} şube içeriyor; {used} tanesi kullanılıyor.",
+    "hiddenBadge": "Gizli: plan sınırının üstünde",
+    "limitReached": "Planınız en fazla {count} şube içeriyor. Daha fazlası için bizimle iletişime geçin.",
+    "limitReachedAdmin": "Bu plan en fazla {count} şubeye izin veriyor. Planı değiştirin ya da Features kartından sınırı yükseltin."
+  },
+  "Plans": {
+    "pricingTitle": "Basit planlar",
+    "pricingIntro": "Her planda fotoğraflı menünüzün tamamı, QR kod ve yazdırılabilir masa kartları var. İşletmenize uyanı seçin.",
+    "pricingNote": "Fiyatlar ABD doları cinsindendir. Havale ya da nakit ödeyebilirsiniz: kayıt olduğunuzda birlikte kararlaştırırız.",
+    "cycleLabel": "Ödeme dönemi",
+    "monthly": "Aylık",
+    "yearly": "Yıllık",
+    "yearlySave": "{count} ay bedava",
+    "perMonth": "{price} / ay",
+    "perYear": "{price} / yıl",
+    "perMonthShort": "/ ay",
+    "perYearShort": "/ yıl",
+    "popular": "En çok tercih edilen",
+    "choose": "{plan} ile başla",
+    "tagline": {
+      "standard": "Tek bir kafe ya da restoran için.",
+      "pro": "Kendi renkleriniz, daha fazla dil, birkaç şube.",
+      "business": "Zincirler için, tüm dillerle."
+    },
+    "everything": "Menü, fotoğraflar, QR kod ve masa kartları",
+    "oneBranch": "1 şube",
+    "branchesIncluded": "{count} şube dahil",
+    "extraBranches": "Her ek şube {price}, en fazla {max}",
+    "extraBranchesNoLimit": "Her ek şube {price}",
+    "defaultColors": "Varsayılan renkler",
+    "customColors": "Kendi renkleriniz",
+    "oneLanguage": "Tek dilde menü",
+    "extraLanguages": "En fazla {count} ek dilde menü",
+    "allLanguages": "Tüm dillerde menü"
+  },
+  "Start": {
+    "metaTitle": "Menünüzü oluşturun | Menupedia",
+    "title": "Restoranınızın menüsünü oluşturun",
+    "intro": "Bir plan seçin, işletmenizi tanıtın ve hazırlamaya başlayın. Ödemede anlaştıktan sonra menünüz yayına girer.",
+    "planHeading": "1. Planınız",
+    "cycleLabel": "Ödeme dönemi",
+    "detailsHeading": "2. Restoranınız",
+    "paymentHeading": "3. Ödeme",
+    "name": "Restoran adı",
+    "namePlaceholder": "örn. Lokanta",
+    "slug": "Menü adresi",
+    "type": "İşletme türü",
+    "typeNone": "Seçin",
+    "currency": "Menüdeki fiyatların para birimi",
+    "city": "Şehir",
+    "cityPlaceholder": "örn. İstanbul",
+    "country": "Ülke",
+    "phone": "Telefon ya da WhatsApp",
+    "phoneHint": "Ödemede anlaşmak için sizi arar ya da yazarız.",
+    "paymentMethod": "Nasıl ödemek istersiniz?",
+    "methods": {
+      "bank_transfer": "Havale / EFT",
+      "cash": "Nakit",
+      "card": "Kart",
+      "other": "Diğer"
+    },
+    "note": "Bilmemiz gereken bir şey var mı?",
+    "notePlaceholder": "Size ulaşmak için en uygun zaman, sorularınız…",
+    "afterNote": "Ödemede anlaşmak için bir iş günü içinde sizinle iletişime geçeriz. Bu arada menünüzü hazırlayın: kaydınız onaylandığında yayına girer.",
+    "submit": "Restoranımı oluştur",
+    "submitting": "Oluşturuluyor…",
+    "nameRequired": "Restoranın adını girin.",
+    "countryRequired": "Ülkeyi seçin.",
+    "phoneRequired": "Size ulaşabileceğimiz bir telefon numarası girin.",
+    "waitingTitle": "{name} onay bekliyor",
+    "waitingText": "Ödemede anlaşmak için sizinle iletişime geçeceğiz. Bu arada menünüzü hazırlayabilirsiniz. Onaylandıktan sonra başka bir restoran ekleyebilirsiniz.",
+    "toDashboard": "Menünüze gidin",
+    "slugPreviewHint": "Addan oluşturulur. Bu adres alınmışsa sonuna bir sayı ekleriz."
+  },
+  "OwnerPlan": {
+    "planName": "{plan} planı",
+    "noPlan": "Henüz plan yok",
+    "statusWaiting": "Onay bekliyor. Ödemede anlaşmak için sizinle iletişime geçeceğiz.",
+    "statusNotBilled": "Ödenecek bir tutar yok.",
+    "statusFree": "Ücretsiz: ödenecek bir tutar yok.",
+    "statusOverdue": "Ödeme gecikti: {amount}. Lütfen bizimle iletişime geçin.",
+    "statusPaid": "{date} tarihine kadar ödendi. Sonraki ödeme {next}.",
+    "statusFirstPayment": "İlk ödeme {date}.",
+    "branchesUsed": "Şubeler",
+    "countNoLimit": "{used}, sınırsız",
+    "countOf": "{max} şubeden {used}",
+    "languages": "Diller",
+    "changeTitle": "Planınızı değiştirin",
+    "changeText": "Başka bir plan ya da yıllık ödeme isteyin. Fiyatı onaylamak için sizinle iletişime geçeriz.",
+    "requestOpen": "{plan} planını, {cycle} ödemeyle istediniz. Yakında sizinle iletişime geçeceğiz.",
+    "withdraw": "İsteği geri çek",
+    "current": "planınız",
+    "cycleLabel": "Ödeme dönemi",
+    "notePlaceholder": "Eklemek istedikleriniz (isteğe bağlı)",
+    "sendRequest": "İsteği gönder",
+    "saving": "Kaydediliyor…",
+    "liveTitle": "Menünüz yayında",
+    "offlineTitle": "Menünüz yayında değil",
+    "liveText": "QR kodunuzu okutan ya da bağlantınızı açan misafirler menünüzü görür. Yayından kaldırırsanız Menüler sayfasına yönlendirilirler.",
+    "offlineText": "Yalnızca ekibiniz önizleyebilir. Hazır olduğunda yayına alın.",
+    "waitingApproval": "Kaydınızı onayladıktan sonra menünüz yayına girebilir. Bu arada hazırlamaya devam edin.",
+    "goLive": "Menümü yayına al",
+    "takeOffline": "Yayından kaldır",
+    "contactTitle": "Sorular ya da ödeme",
+    "contactText": "Planınız ya da bir ödeme hakkında bizimle iletişime geçin.",
+    "whatsappMessage": "Merhaba, {name} planı hakkında bir sorum var.",
+    "email": "E-posta",
+    "pausedTitle": "Menünüz durduruldu",
+    "pausedUnpaid": "Bir ödeme geciktiği için Menupedia menünüzü durdurdu. Yeniden açılana kadar misafirler göremez. Ödemeyi halletmek için lütfen bizimle iletişime geçin.",
+    "pausedOther": "Menupedia menünüzü durdurdu. Yeniden açılana kadar misafirler göremez. Lütfen bizimle iletişime geçin."
   }
 }

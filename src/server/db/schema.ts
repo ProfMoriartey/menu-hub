@@ -11,6 +11,8 @@ import {
   date,
   primaryKey,
   uniqueIndex,
+  index,
+  numeric,
   text, // IMPORTANT: Add 'text' import for longer string fields like description
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
@@ -50,6 +52,10 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   slug: varchar("slug", { length: 256 }).notNull().unique(),
   foodType: varchar("food_type", { length: 256 }),
   isActive: boolean("is_active").default(true).notNull(),
+  // Paused by a system admin (e.g. unpaid): not shown to guests whatever
+  // isActive says, and owners can't put it live. Null = not paused. Why is
+  // on restaurantBilling (admins and the owner only).
+  pausedAt: timestamp("paused_at"),
   isDisplayed: boolean("is_displayed").default(false).notNull(),
   logoUrl: varchar("logo_url", { length: 256 }),
 
@@ -82,6 +88,13 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   // colour used before colour themes existed: still applied while no theme
   // is saved, and the starting primary colour of the editor.
   brandColorEnabled: boolean("brand_color_enabled").default(false).notNull(),
+  // What the restaurant's plan allows (lib/plans entitlements), kept here
+  // so public pages read it with the rest; saved by server/plans whenever
+  // the plan or an admin override changes. Null = no limit. Custom colours
+  // are `brandColorEnabled`, menu languages `multilingualEnabled` (true
+  // when any extra language is allowed).
+  maxExtraLanguages: integer("max_extra_languages").default(0),
+  maxBranches: integer("max_branches").default(1),
   brandColor: varchar("brand_color", { length: 7 }),
   colorTheme: jsonb("color_theme").$type<ColorTheme>(),
 
@@ -326,3 +339,106 @@ export const qrScanDays = pgTable(
   },
   (t) => [primaryKey({ columns: [t.restaurantId, t.day] })],
 );
+
+// Billing, recorded by hand by a system admin: the plan agreed with each
+// restaurant and the payments received (bank transfer, cash…). Kept out of
+// the restaurants table so it's never part of the public pages' data.
+export const restaurantBilling = pgTable("menu-hub_restaurant_billing", {
+  restaurantId: uuid("restaurant_id")
+    .primaryKey()
+    .references(() => restaurants.id, { onDelete: "cascade" }),
+  // lib/plans TIERS. Null = not billed.
+  tier: varchar("tier", { length: 16 }),
+  // "monthly" or "yearly" (10 months' price for 12).
+  billingCycle: varchar("billing_cycle", { length: 8 }).notNull().default("monthly"),
+  // A special price a month, in `currency`. Null = the tier's (US dollars).
+  monthlyPrice: numeric("monthly_price", { precision: 12, scale: 2 }),
+  currency: varchar("currency", { length: 3 }).notNull().default("USD"),
+  // An admin's changes to the tier's features for this restaurant (a
+  // special deal). Null = as the tier.
+  // Why the menu is paused (restaurants.pausedAt): "unpaid" or "other",
+  // shown to the owner, and a note only admins see.
+  pauseReason: varchar("pause_reason", { length: 16 }),
+  pauseNote: text("pause_note"),
+  colorsOverride: boolean("colors_override"),
+  languagesOverride: integer("languages_override"),
+  branchesOverride: integer("branches_override"),
+  // The first day billed: unpaid days count from here. Null = not set.
+  startsOn: date("starts_on", { mode: "string" }),
+  notes: text("notes"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// One row per payment received. Each pays for a period (coversFrom to
+// coversUntil, both included); a restaurant is paid up to the latest
+// coversUntil. Rows outlive a deleted restaurant, for the books: the
+// restaurant id is cleared and its name kept.
+export const payments = pgTable(
+  "menu-hub_payments",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    restaurantId: uuid("restaurant_id").references(() => restaurants.id, {
+      onDelete: "set null",
+    }),
+    restaurantName: varchar("restaurant_name", { length: 256 }).notNull(),
+    paidOn: date("paid_on", { mode: "string" }).notNull(),
+    amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
+    currency: varchar("currency", { length: 3 }).notNull(),
+    coversFrom: date("covers_from", { mode: "string" }).notNull(),
+    coversUntil: date("covers_until", { mode: "string" }).notNull(),
+    // lib/billing PAYMENT_METHODS.
+    method: varchar("method", { length: 32 }).notNull(),
+    note: text("note"),
+    // The admin who recorded it (Clerk user id).
+    recordedBy: text("recorded_by"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [index("payments_restaurant_idx").on(t.restaurantId)],
+);
+
+export const paymentsRelations = relations(payments, ({ one }) => ({
+  restaurant: one(restaurants, {
+    fields: [payments.restaurantId],
+    references: [restaurants.id],
+  }),
+}));
+
+// What owners ask an admin for: a new restaurant to be approved (a
+// sign-up, with the plan chosen and how they'd like to pay) or a change of
+// plan. Open until an admin approves or dismisses it; open ones are the
+// admin's notifications. A restaurant with an open sign-up can't go live.
+export const planRequests = pgTable(
+  "menu-hub_plan_requests",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    restaurantId: uuid("restaurant_id")
+      .notNull()
+      .references(() => restaurants.id, { onDelete: "cascade" }),
+    // "signup" or "change".
+    kind: varchar("kind", { length: 16 }).notNull(),
+    // lib/plans TIERS and BILLING_CYCLES: what they asked for.
+    tier: varchar("tier", { length: 16 }).notNull(),
+    billingCycle: varchar("billing_cycle", { length: 8 }).notNull(),
+    // lib/billing PAYMENT_METHODS: how they'd like to pay.
+    paymentMethod: varchar("payment_method", { length: 32 }),
+    contactPhone: varchar("contact_phone", { length: 50 }),
+    note: text("note"),
+    requestedBy: text("requested_by").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    // "approved" or "dismissed", once an admin has dealt with it.
+    resolution: varchar("resolution", { length: 16 }),
+    resolvedAt: timestamp("resolved_at"),
+  },
+  (t) => [index("plan_requests_restaurant_idx").on(t.restaurantId)],
+);
+
+export const planRequestsRelations = relations(planRequests, ({ one }) => ({
+  restaurant: one(restaurants, {
+    fields: [planRequests.restaurantId],
+    references: [restaurants.id],
+  }),
+  requester: one(users, {
+    fields: [planRequests.requestedBy],
+    references: [users.id],
+  }),
+}));

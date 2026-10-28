@@ -1,5 +1,6 @@
 // app/admin/restaurants/[restaurantSlug]/share/print/page.tsx
 import { eq } from "drizzle-orm";
+import { isLive } from "~/lib/access";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
@@ -27,7 +28,7 @@ export default async function AdminPrintCardsPage({
 
   return (
     <TableCardSheet
-      restaurant={{ ...restaurant, name }}
+      restaurant={{ ...restaurant, name, isActive: isLive(restaurant) }}
       menuUrl={menuUrl}
       permanentUrl={permanentUrl}
       backHref={`/admin/restaurants/${restaurant.slug}/share`}

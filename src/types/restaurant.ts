@@ -12,6 +12,8 @@ export interface Restaurant {
   foodType: string | null;
   isActive: boolean;
   isDisplayed: boolean;
+  // Paused by an admin: hidden from guests whatever isActive says.
+  pausedAt?: Date | string | null;
   logoUrl: string | null;
 
   currency: string; 

@@ -2,6 +2,7 @@
 import { headers } from "next/headers";
 import { env } from "~/env";
 import { getPublicBranches } from "~/server/public-menu";
+import { visibleBranches } from "~/server/branches";
 
 /**
  * The site's public address for links that leave the app, such as QR codes:
@@ -51,6 +52,7 @@ export interface ShareTarget {
 export async function getShareTargets(restaurant: {
   id: string;
   slug: string;
+  maxBranches: number | null;
 }): Promise<ShareTarget[]> {
   const all: ShareTarget = {
     branchId: null,
@@ -58,7 +60,7 @@ export async function getShareTargets(restaurant: {
     label: null,
     ...(await getShareLinks(restaurant)),
   };
-  const branches = await getPublicBranches(restaurant.id);
+  const branches = visibleBranches(await getPublicBranches(restaurant.id), restaurant.maxBranches);
   if (branches.length < 2) return [all];
   return [
     all,

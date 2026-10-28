@@ -29,6 +29,7 @@ export function Navbar() {
   const links = [
     { name: t("restaurants"), href: "/menus" },
     { name: t("themes"), href: "/features" },
+    { name: t("pricing"), href: "/#pricing" },
     { name: t("aboutUs"), href: "/about" },
   ];
   const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
@@ -90,13 +91,14 @@ export function Navbar() {
           </div>
 
           <SignedOut>
-            <SignInButton mode="modal">
+            <SignInButton mode="modal" forceRedirectUrl="/dashboard" signUpForceRedirectUrl="/dashboard">
               <Button variant="ghost" className="hidden md:inline-flex">
                 {t("signIn")}
               </Button>
             </SignInButton>
             <Button asChild className="ms-1 rounded-full">
-              <Link href={CONTACT_HREF}>{t("getInTouch")}</Link>
+              {/* Sign up first, then the dashboard (to create the restaurant). */}
+              <Link href="/sign-in?redirect_url=%2Fdashboard">{t("getStarted")}</Link>
             </Button>
           </SignedOut>
           <SignedIn>
@@ -162,7 +164,7 @@ export function Navbar() {
               </div>
               <div className="flex-1" />
               <SignedOut>
-                <SignInButton mode="modal">
+                <SignInButton mode="modal" forceRedirectUrl="/dashboard" signUpForceRedirectUrl="/dashboard">
                   <Button variant="outline" onClick={() => setOpen(false)}>
                     {t("signIn")}
                   </Button>

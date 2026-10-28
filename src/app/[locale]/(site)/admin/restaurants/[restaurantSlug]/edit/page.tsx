@@ -11,6 +11,9 @@ import { countryOptions } from "~/lib/countries";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
 import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
 import { BranchesSettings } from "~/components/branches/BranchesSettings";
+import { FeatureOverridesCard } from "~/components/admin/billing/FeatureOverridesCard";
+import { getRestaurantPlan } from "~/server/billing";
+import { overridesOf } from "~/server/plans";
 import type { Restaurant } from "~/types/restaurant";
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas";
 
@@ -35,14 +38,23 @@ export default async function EditRestaurantPage({
     deliveryApps: row.deliveryApps as DeliveryAppLinks,
   };
 
+  const { plan } = await getRestaurantPlan(row.id);
+
   return (
     <div className="space-y-8">
       <RestaurantAdminHeader restaurant={restaurant} activeTab="details" />
       <AdminRestaurantForm restaurant={restaurant} action={updateRestaurant} />
       {/* Saved on their own, outside the form's save bar. */}
+      <FeatureOverridesCard
+        restaurantId={row.id}
+        tier={plan?.tier ?? null}
+        overrides={overridesOf(plan)}
+        planHref={`/admin/restaurants/${row.slug}/plan`}
+      />
       <BranchesSettings
         restaurantId={row.id}
         branches={await getBranchesForEdit(row.id)}
+        maxBranches={row.maxBranches}
         isAdmin
         countries={countryOptions(await getLocale())}
       />
@@ -50,6 +62,7 @@ export default async function EditRestaurantPage({
         restaurantId={row.id}
         isAdmin
         enabled={row.multilingualEnabled}
+        maxExtraLanguages={row.maxExtraLanguages}
         mainLanguage={row.mainLanguage}
         extraLanguages={row.extraLanguages}
         description={row.description}

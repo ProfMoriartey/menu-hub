@@ -195,6 +195,8 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 |---|---|
 | `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
 | `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card. Public pages per branch (see Branch pages); the Menus page uses every branch. Restaurant-level reads that need one location use the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
+| `menu-hub_restaurant_billing` | Admin-only, one row per billed restaurant: `planName` (null = not billed), `monthlyPrice` (numeric; 0 = free), `currency`, `startsOn` (first billed day), `notes`. Kept out of `restaurants` so it never reaches the cached public data |
+| `menu-hub_payments` | Payments recorded by hand: `paidOn`, `amount`, `currency`, `coversFrom`–`coversUntil` (inclusive), `method`, `note`, `recordedBy`. Paid-until = latest `coversUntil`. `restaurantId` is set null if the restaurant is deleted (`restaurantName` keeps the name for the books) |
 | `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
 | `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
 | `menu-hub_users` | Clerk user id + email (synced by the webhook) |
@@ -217,7 +219,9 @@ the Menus page: every restaurant query reads `city`.** `0011` adds
 `branches` and copies each restaurant's address, city, country, phone, map
 link, delivery apps, time zone and hours into a first branch (slug `main`).
 **0011 must run before deploying: location is only read from branches
-now.** The restaurant's old copies of those columns are left in the
+now.** `0012` adds the billing tables (`restaurant_billing`, `payments`) and
+`0013` the plan's `starts_on`; only the admin Plan tab and Payments page
+need them (dev has both, 2026-10-28). The restaurant's old copies of those columns are left in the
 database as a backup (no longer in `schema.ts`); a later hand-written
 migration drops them once branches are confirmed. The
 development database has 0001–0004 applied (checked 2026-10-23); **0005 was
@@ -445,6 +449,91 @@ show "2 branches · Istanbul, Ankara" and "Open now at 1 branch". Country
 and city options count a chain once per place; the local count and the
 home page's "menus near you" use any branch in the country.
 
+**Plans:** `lib/plans` defines the tiers (prices in US dollars):
+Standard $25 (1 branch, default colours, one language), Pro $45 (3
+branches included, $15 per extra up to 5, custom colours, up to 2 extra
+languages), Business $120 (10 included, $15 per extra, no limit, every
+language). Yearly = 10 months' price for 12. An admin picks the tier,
+cycle and an optional special price (any currency) on the restaurant's
+Plan tab, and can override any feature on the Details tab's Features card
+(colours on/off, extra languages, branch limit: "From plan" or a value).
+`server/plans.syncEntitlements` saves the result on the restaurant
+(`brandColorEnabled`, `multilingualEnabled`, `maxExtraLanguages`,
+`maxBranches`; null = no limit) after either changes, so public code reads
+it with the restaurant. A restaurant without a plan gets Standard's.
+Beyond a limit, things are hidden, not deleted: `menuLanguagesOf` keeps
+the first N extra languages, `visibleBranches` the first N branches (public
+pages, Menus page, sitemap, Share), and the editors say so; adding a branch
+or a language over the limit is refused (`branchLimit`,
+`tooManyLanguages`). The old admin on/off switches for colours and
+languages are gone. Pending payments use the plan's price for the
+restaurant's branches (up to its limit) and cycle. Migrations 0014 (tiers,
+overrides, limits; old plan names become tiers, colours/languages an admin
+had switched on and branches beyond one become overrides) and 0015 (drops
+`plan_name`).
+
+**Sign-up and publishing:** the home and Features pages show the plans
+(`components/plans/PricingSection`, `#pricing`; navbar "Pricing" and "Get
+started"). `/start?plan=&cycle=` signs people up (Clerk `SignIn withSignUp`)
+and creates their restaurant (`actions/onboarding.createOwnRestaurant`):
+name, menu address, type, menu currency, city, country, phone, plan, cycle,
+how they'd like to pay and a note. It's created unpublished, with them as
+owner, its first branch, the plan's features and a "signup" row in
+`menu-hub_plan_requests`. One waiting sign-up per account (then
+`restaurantLimit`); another once approved. Admins see open requests at
+`/admin/requests` (count on the admin menu) with phone/WhatsApp, and
+approve (billing starts today unless "billed from" is set) or dismiss.
+Owners have a **Plan** tab (`dashboard/<slug>/plan`): their plan and price,
+status (waiting / paid until / next due / overdue), what's included and
+used, "Put my menu live" / "Take it offline" (`setRestaurantLive`, refused
+with `awaitingApproval` until a sign-up is approved; restaurants an admin
+created have none and can publish), and asking for another plan or yearly
+billing (a "change" request; approving it switches the plan). The setup
+checklist's last step points there. Migration 0016 adds the requests table.
+
+**Pausing a menu (admin only):** the admin Plan tab's "Pause menu" card
+(`actions/billing.setMenuPaused`) sets `restaurants.pausedAt` and a reason
+("unpaid" or "other", shown to the owner) and note (admins only) on
+`restaurant_billing`. A paused menu isn't live whatever `isActive` says
+(`lib/access isLive`, `server/public-menu liveRestaurant()` in queries):
+not shown to guests or search engines, not on the Menus page, search or
+sitemap; the team previews it with a "Paused by Menupedia" banner. Owners
+see the reason on their Plan tab and can take the menu offline but not
+put it live (`menuPaused`) until an admin resumes it. Admin restaurant
+cards show a "Paused" badge. Migration 0017.
+
+**KVKK notice:** `/kvkk` (footer link, sitemap) shows the privacy notice
+from `content/kvkk.ts`: Turkish (binding) to Turkish visitors, English to
+everyone else. It names the data controller from `DATA_CONTROLLER` in
+`lib/site-contact` (still to be filled in: legal name and address) and
+the services used (Clerk, UploadThing, hosting and database). Keep it in
+step with what the app collects; have it reviewed by a lawyer.
+
+**Billing (admin only):** payments are collected by hand (bank transfer,
+cash) for now, so the site only records them.
+- *Plan tab* (`/admin/restaurants/<slug>/plan`): only the plan agreed with
+  the restaurant (name, monthly price, currency, "billed from" date,
+  notes), and a link to its payments.
+- *Payments* (`/admin/payments`, in the admin menu): all the money work.
+  Tiles: received this month and this year, owed now (and by how many
+  restaurants), due in the next 7 days, expected each month. One list
+  (`components/admin/billing/PaymentsWorkspace`) of every payment received
+  ("Paid") and every month not paid yet ("Overdue", "Due today/in N days";
+  worked out, not stored), filtered by status (All / Pending / Overdue /
+  Paid), restaurant and period, sortable by status, restaurant, date and
+  amount; filters are kept in the address (`?status=&restaurant=&period=
+  &sort=&desc=1`, `lib/payment-filters`). "+ Add payment" and each pending
+  month's "Mark paid" open the payment form in a dialog; paid rows can be
+  deleted. Received by month for the last 12 months below.
+- Rules in `lib/billing`: dates in Europe/Istanbul. A restaurant's pending
+  months (`pendingDues`) run month by month from the day after its latest
+  paid day (or from "billed from"), up to those due within 7 days; a plan
+  never paid and without a start date is due today. A new payment's period
+  starts there too, so late payments leave no gap. Reads in
+  `server/billing`, actions in `actions/billing`. A payment provider
+  (iyzico or PayTR once there is a business) can later insert `payments`
+  rows itself.
+
 **Opening hours:** per branch, `components/restaurant-settings/OpeningHoursSettings`
 inside each branch of the Branches card (`actions/branches.updateBranchHours`). Up to 3 ranges a day; a close time before
 the open time runs past midnight; open == close means 24 hours. The menu
@@ -590,7 +679,9 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 - `pnpm db:migrate` in production for migrations 0002–0010, before deploying
   (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
   colour themes; 0009: design names; 0010: city, venue types, country codes;
-  0011: branches). Dev also needs 0011.
+  0011: branches; 0012: billing; 0013: plan start date; 0014–0015: plan
+  tiers and limits; 0016: plan requests; 0017: menu pause). Dev has up to
+  0017 (2026-10-28).
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**

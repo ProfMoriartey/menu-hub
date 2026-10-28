@@ -57,7 +57,8 @@ export function SetupChecklist({ restaurant, facts, canEditDetails, firstCategor
     description: canEditDetails ? { href: `${base}/edit#basics` } : null,
     categories: { href: `${base}/menu` },
     items: { href: firstCategorySlug ? `${base}/menu/${firstCategorySlug}` : `${base}/menu` },
-    live: { href: `/${restaurant.slug}`, newTab: true },
+    // Owners put the menu live from the Plan tab; editors can preview it.
+    live: canEditDetails ? { href: `${base}/plan#live` } : { href: `/${restaurant.slug}`, newTab: true },
     scan: { href: `${base}/share` },
   };
 
@@ -78,7 +79,11 @@ export function SetupChecklist({ restaurant, facts, canEditDetails, firstCategor
             {t("title")}
           </h2>
           <p className="text-muted-foreground text-sm">
-            {progress.readyToGoLive ? t("readyToGoLive") : t("subtitle")}
+            {progress.readyToGoLive
+              ? canEditDetails
+                ? t("readyToPublish")
+                : t("readyEditor")
+              : t("subtitle")}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -134,14 +139,18 @@ export function SetupChecklist({ restaurant, facts, canEditDetails, firstCategor
                   </p>
                   {!done && (
                     <p className="text-muted-foreground text-sm">
-                      {ownerOnly ? t("ownerDoesThis") : t(`${step}.text`)}
+                      {ownerOnly
+                        ? t("ownerDoesThis")
+                        : step === "live"
+                          ? t(canEditDetails ? "live.ownerText" : "live.editorText")
+                          : t(`${step}.text`)}
                     </p>
                   )}
                 </div>
                 {!done && action && !ownerOnly && (
                   <Button variant="outline" size="sm" asChild className="shrink-0">
                     <Link href={action.href} target={action.newTab ? "_blank" : undefined}>
-                      {t(`${step}.action`)}
+                      {step === "live" && canEditDetails ? t("live.ownerAction") : t(`${step}.action`)}
                       <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" />
                     </Link>
                   </Button>

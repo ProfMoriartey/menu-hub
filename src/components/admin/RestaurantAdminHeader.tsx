@@ -14,7 +14,7 @@ type HeaderRestaurant = Pick<
 
 interface RestaurantAdminHeaderProps {
   restaurant: HeaderRestaurant;
-  activeTab: "details" | "menu" | "share" | "colors" | "people";
+  activeTab: "details" | "menu" | "share" | "colors" | "people" | "plan";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
   trail?: { label: string; href?: string }[];
 }
@@ -49,6 +49,11 @@ export function RestaurantAdminHeader({
       id: "people",
       label: "People",
       href: `/admin/restaurants/${restaurant.slug}/people`,
+    },
+    {
+      id: "plan",
+      label: "Plan",
+      href: `/admin/restaurants/${restaurant.slug}/plan`,
     },
   ] as const;
 
@@ -120,7 +125,7 @@ export function RestaurantAdminHeader({
 
       <nav
         aria-label="Restaurant sections"
-        className="border-border flex gap-1 border-b"
+        className="border-border scrollbar-hide flex gap-1 overflow-x-auto border-b"
       >
         {tabs.map((tab) => (
           <Link
@@ -128,7 +133,7 @@ export function RestaurantAdminHeader({
             href={tab.href}
             aria-current={activeTab === tab.id ? "page" : undefined}
             className={cn(
-              "-mb-px border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
+              "-mb-px shrink-0 border-b-2 px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors",
               activeTab === tab.id
                 ? "border-primary text-foreground"
                 : "text-muted-foreground hover:text-foreground border-transparent",

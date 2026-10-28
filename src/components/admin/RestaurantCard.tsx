@@ -1,7 +1,7 @@
 // src/components/admin/RestaurantCard.tsx
 "use client";
 
-import { ExternalLink, Eye, MapPin, Pencil, Rocket, Star, UtensilsCrossed } from "lucide-react";
+import { ExternalLink, Eye, MapPin, PauseCircle, Pencil, Rocket, Star, UtensilsCrossed } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
@@ -18,10 +18,16 @@ import type { SetupProgress } from "~/lib/setup-checklist";
 export function StatusBadges({
   restaurant,
 }: {
-  restaurant: Pick<Restaurant, "isActive" | "isDisplayed">;
+  restaurant: Pick<Restaurant, "isActive" | "isDisplayed" | "pausedAt">;
 }) {
   return (
     <>
+      {restaurant.pausedAt && (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-2 py-0.5 text-xs font-medium text-red-700 dark:text-red-400">
+          <PauseCircle className="h-3 w-3" aria-hidden />
+          Paused
+        </span>
+      )}
       <span
         className={cn(
           "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium",

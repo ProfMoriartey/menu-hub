@@ -3,7 +3,7 @@
 
 import { and, asc, eq, ne } from "drizzle-orm";
 import { db } from "~/server/db";
-import { branches } from "~/server/db/schema";
+import { branches, restaurants } from "~/server/db/schema";
 import { checkOwnerAuthorization } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import { isCountryCode } from "~/lib/countries";
@@ -16,7 +16,8 @@ import { runAction } from "~/server/run-action";
 /*
  * A restaurant's branches (server/branches). Owners and admins add, edit,
  * reorder and remove them; the country stays admin-only, as it was on the
- * restaurant. A restaurant always keeps at least one branch.
+ * restaurant. A restaurant always keeps at least one branch, and has at
+ * most as many as its plan allows (beyond that, they're hidden).
  */
 
 // The branch and the caller's role for its restaurant, or an error.
@@ -65,7 +66,16 @@ export async function addBranch(
     const trimmed = typeof name === "string" ? name.trim().slice(0, 128) : "";
     if (!trimmed) throw new ActionError("branchNameRequired");
 
-    const existing = await restaurantBranches(restaurantId);
+    const [existing, restaurant] = await Promise.all([
+      restaurantBranches(restaurantId),
+      db.query.restaurants.findFirst({
+        where: eq(restaurants.id, restaurantId),
+        columns: { maxBranches: true },
+      }),
+    ]);
+    // The plan's limit (lib/plans); an admin can raise it for a deal.
+    const limit = restaurant?.maxBranches ?? null;
+    if (limit !== null && existing.length >= limit) throw new ActionError("branchLimit", { count: limit });
     const main = existing[0];
     const [created] = await db
       .insert(branches)

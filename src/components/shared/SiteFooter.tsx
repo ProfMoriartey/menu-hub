@@ -77,7 +77,7 @@ export function SiteFooter() {
           </li>
           <li>
             <SignedOut>
-              <SignInButton mode="modal">
+              <SignInButton mode="modal" forceRedirectUrl="/dashboard" signUpForceRedirectUrl="/dashboard">
                 <button type="button" className={linkClass}>
                   {t("signIn")}
                 </button>
@@ -94,9 +94,12 @@ export function SiteFooter() {
 
       <div className="border-border border-t">
         <div className="container mx-auto flex flex-col-reverse items-center justify-between gap-4 px-4 py-5 sm:flex-row">
-          <p className="text-muted-foreground text-xs">
-            {t("rights", { year: new Date().getFullYear() })}
-          </p>
+          <div className="text-muted-foreground flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs">
+            <p>{t("rights", { year: new Date().getFullYear() })}</p>
+            <Link href="/kvkk" className="hover:text-foreground underline-offset-2 hover:underline">
+              {t("kvkk")}
+            </Link>
+          </div>
           <LanguageSwitcher />
         </div>
       </div>

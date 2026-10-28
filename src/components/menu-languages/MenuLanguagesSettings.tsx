@@ -14,11 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Field, ToggleRow } from "~/components/forms/fields";
-import {
-  setMultilingualEnabled,
-  updateMenuLanguages,
-} from "~/app/actions/menu-languages";
+import { Field } from "~/components/forms/fields";
+import { updateMenuLanguages } from "~/app/actions/menu-languages";
 import {
   LANGUAGE_NAMES,
   MENU_LANGUAGES,
@@ -30,9 +27,11 @@ import { cn } from "~/lib/utils";
 
 interface MenuLanguagesSettingsProps {
   restaurantId: string;
-  // Only admins see the on/off switch; owners see the languages once it's on.
   isAdmin: boolean;
+  // Whether the plan includes menu languages, and how many extra ones
+  // (null = all); both come from the plan (lib/plans).
   enabled: boolean;
+  maxExtraLanguages: number | null;
   mainLanguage: string | null;
   extraLanguages: string[];
   description: string | null;
@@ -41,13 +40,14 @@ interface MenuLanguagesSettingsProps {
 
 /**
  * Menus in several languages for one restaurant. Shared by the admin edit
- * page and the owner's Details tab; the server actions check who may change
- * what (admins switch it on, owners and admins pick languages).
+ * page and the owner's Details tab; owners and admins pick the languages,
+ * as many as the plan allows (admins change that on the Features card).
  */
 export function MenuLanguagesSettings({
   restaurantId,
   isAdmin,
   enabled,
+  maxExtraLanguages,
   mainLanguage,
   extraLanguages,
   description,
@@ -55,7 +55,6 @@ export function MenuLanguagesSettings({
 }: MenuLanguagesSettingsProps) {
   const t = useTranslations("MenuLanguages");
   const router = useRouter();
-  const [isToggling, startToggle] = useTransition();
   const [isSaving, startSave] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -73,15 +72,6 @@ export function MenuLanguagesSettings({
   };
   const [values, setValues] = useState(initial);
   const isDirty = JSON.stringify(values) !== JSON.stringify(initial);
-
-  const toggle = (next: boolean) => {
-    setError(null);
-    startToggle(async () => {
-      const result = await setMultilingualEnabled(restaurantId, next);
-      if (!result.ok) setError(result.error);
-      router.refresh();
-    });
-  };
 
   const toggleExtra = (lang: MenuLanguage) => {
     setSaved(false);
@@ -116,6 +106,9 @@ export function MenuLanguagesSettings({
 
   const extraChoices = MENU_LANGUAGES.filter((lang) => lang !== values.main);
   const activeExtra = values.extra.filter((lang) => lang !== values.main);
+  const atLimit = maxExtraLanguages !== null && activeExtra.length >= maxExtraLanguages;
+  // Chosen before the plan changed: kept, but only the first ones show.
+  const overLimit = maxExtraLanguages !== null && activeExtra.length > maxExtraLanguages;
 
   return (
     <section
@@ -132,20 +125,10 @@ export function MenuLanguagesSettings({
         <p className="text-muted-foreground mt-0.5 text-sm">{t("intro")}</p>
       </div>
 
-      {isAdmin && (
-        <ToggleRow
-          id="multilingual-enabled"
-          title={t("enableTitle")}
-          description={t("enableText")}
-          checked={enabled}
-          onCheckedChange={(next) => !isToggling && toggle(next)}
-        />
-      )}
-
       {!enabled ? (
-        !isAdmin && (
-          <p className="text-muted-foreground text-sm">{t("notEnabled")}</p>
-        )
+        <p className="text-muted-foreground text-sm">
+          {isAdmin ? t("notInPlanAdmin") : t("notInPlan")}
+        </p>
       ) : (
         <div className="space-y-5">
           <Field
@@ -177,7 +160,15 @@ export function MenuLanguagesSettings({
           {values.main && (
             <fieldset className="space-y-2">
               <legend className="text-sm font-medium">{t("extraLabel")}</legend>
-              <p className="text-muted-foreground text-sm">{t("extraHint")}</p>
+              <p className="text-muted-foreground text-sm">
+                {t("extraHint")}
+                {maxExtraLanguages !== null && ` ${t("limitHint", { count: maxExtraLanguages })}`}
+              </p>
+              {overLimit && (
+                <p className="text-attention text-sm">
+                  {t("overLimit", { count: maxExtraLanguages })}
+                </p>
+              )}
               <div className="flex flex-wrap gap-2">
                 {extraChoices.map((lang) => {
                   const on = values.extra.includes(lang);
@@ -187,13 +178,15 @@ export function MenuLanguagesSettings({
                       type="button"
                       lang={lang}
                       aria-pressed={on}
+                      // At the plan's limit, a chosen one has to go first.
+                      disabled={!on && atLimit}
                       onClick={() => toggleExtra(lang)}
                       className={cn(
                         "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-colors",
                         "focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
                         on
                           ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border hover:bg-accent",
+                          : "border-border hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50",
                       )}
                     >
                       {on && <Check className="h-3.5 w-3.5" aria-hidden />}

@@ -1,0 +1,1 @@
+ALTER TABLE "menu-hub_restaurant_billing" ADD COLUMN "starts_on" date;

@@ -4,7 +4,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { restaurants } from "~/server/db/schema";
-import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
+import { checkOwnerAuthorization } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import { parseColorTheme } from "~/lib/color-theme";
 import { isMenuDesign } from "~/lib/menu-design";
@@ -12,28 +12,13 @@ import { runAction } from "~/server/run-action";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
 
 /*
- * Brand colour and menu design. Owners and admins change them; the brand
- * colour is a feature a system admin turns on per restaurant. (Opening
+ * Brand colour and menu design. Owners and admins change them; custom
+ * colours come with the restaurant's plan (lib/plans). (Opening
  * hours are per branch: actions/branches.)
  */
 
-/** Admin only. Off goes back to the theme's colour but keeps the choice. */
-export async function setBrandColorEnabled(
-  restaurantId: string,
-  enabled: boolean,
-): Promise<ActionResult> {
-  return runAction("saveColorFailed", async () => {
-    if (!(await isSystemAdmin())) throw new ActionError("adminOnly");
-    await db
-      .update(restaurants)
-      .set({ brandColorEnabled: enabled === true, updatedAt: new Date() })
-      .where(eq(restaurants.id, restaurantId));
-    revalidatePublicRestaurant(restaurantId);
-  });
-}
-
 /**
- * Owners and admins, once an admin has enabled custom colours: the light
+ * Owners and admins, when the plan includes custom colours: the light
  * and dark palettes. `null` goes back to the site's default colours.
  */
 export async function updateColorTheme(
