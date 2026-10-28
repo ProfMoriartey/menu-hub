@@ -24,6 +24,8 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
     "/about",
     // Signing up and creating a restaurant.
     "/start",
+    // The KVKK privacy notice.
+    "/kvkk",
     // Add other base paths that should always show the navbar, e.g., "/contact"
   ];
 

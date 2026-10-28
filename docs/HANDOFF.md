@@ -502,6 +502,13 @@ see the reason on their Plan tab and can take the menu offline but not
 put it live (`menuPaused`) until an admin resumes it. Admin restaurant
 cards show a "Paused" badge. Migration 0017.
 
+**KVKK notice:** `/kvkk` (footer link, sitemap) shows the privacy notice
+from `content/kvkk.ts`: Turkish (binding) to Turkish visitors, English to
+everyone else. It names the data controller from `DATA_CONTROLLER` in
+`lib/site-contact` (still to be filled in: legal name and address) and
+the services used (Clerk, UploadThing, hosting and database). Keep it in
+step with what the app collects; have it reviewed by a lawyer.
+
 **Billing (admin only):** payments are collected by hand (bank transfer,
 cash) for now, so the site only records them.
 - *Plan tab* (`/admin/restaurants/<slug>/plan`): only the plan agreed with
@@ -674,7 +681,7 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
   colour themes; 0009: design names; 0010: city, venue types, country codes;
   0011: branches; 0012: billing; 0013: plan start date; 0014–0015: plan
   tiers and limits; 0016: plan requests; 0017: menu pause). Dev has up to
-  0016 (2026-10-28); 0017 needs `pnpm db:migrate`.
+  0017 (2026-10-28).
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**

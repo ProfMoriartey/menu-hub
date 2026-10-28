@@ -91,7 +91,7 @@ export function Navbar() {
           </div>
 
           <SignedOut>
-            <SignInButton mode="modal" signUpFallbackRedirectUrl="/dashboard">
+            <SignInButton mode="modal" forceRedirectUrl="/dashboard" signUpForceRedirectUrl="/dashboard">
               <Button variant="ghost" className="hidden md:inline-flex">
                 {t("signIn")}
               </Button>
@@ -164,7 +164,7 @@ export function Navbar() {
               </div>
               <div className="flex-1" />
               <SignedOut>
-                <SignInButton mode="modal" signUpFallbackRedirectUrl="/dashboard">
+                <SignInButton mode="modal" forceRedirectUrl="/dashboard" signUpForceRedirectUrl="/dashboard">
                   <Button variant="outline" onClick={() => setOpen(false)}>
                     {t("signIn")}
                   </Button>

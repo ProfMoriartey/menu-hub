@@ -46,6 +46,8 @@ export const RESERVED_SLUGS = [
   "sign-up",
   // Signing up and creating a restaurant.
   "start",
+  // The KVKK privacy notice.
+  "kvkk",
   "themes",
 ];
 

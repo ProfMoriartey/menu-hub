@@ -934,7 +934,8 @@
     "email": "راسلنا بالبريد",
     "signIn": "تسجيل الدخول",
     "dashboard": "لوحة التحكم",
-    "rights": "© {year} Menupedia. جميع الحقوق محفوظة."
+    "rights": "© {year} Menupedia. جميع الحقوق محفوظة.",
+    "kvkk": "إشعار الخصوصية (KVKK)"
   },
   "Branches": {
     "title": "الفروع",

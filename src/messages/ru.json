@@ -934,7 +934,8 @@
     "email": "Написать нам",
     "signIn": "Войти",
     "dashboard": "Панель",
-    "rights": "© {year} Menupedia. Все права защищены."
+    "rights": "© {year} Menupedia. Все права защищены.",
+    "kvkk": "Уведомление о конфиденциальности (KVKK)"
   },
   "Branches": {
     "title": "Филиалы",

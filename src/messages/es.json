@@ -934,7 +934,8 @@
     "email": "Escríbenos",
     "signIn": "Iniciar sesión",
     "dashboard": "Panel",
-    "rights": "© {year} Menupedia. Todos los derechos reservados."
+    "rights": "© {year} Menupedia. Todos los derechos reservados.",
+    "kvkk": "Aviso de privacidad (KVKK)"
   },
   "Branches": {
     "title": "Sucursales",
