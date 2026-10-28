@@ -1,0 +1,1 @@
+ALTER TABLE "menu-hub_restaurant_billing" DROP COLUMN "plan_name";

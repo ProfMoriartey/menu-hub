@@ -20,12 +20,17 @@ export default async function RestaurantPlanPage({
   });
   if (!restaurant) notFound();
 
-  const plan = await getRestaurantPlan(restaurant.id);
+  const { plan, branchCount } = await getRestaurantPlan(restaurant.id);
 
   return (
     <div className="space-y-8">
       <RestaurantAdminHeader restaurant={restaurant} activeTab="plan" />
-      <RestaurantPlanPanel restaurantId={restaurant.id} plan={plan} />
+      <RestaurantPlanPanel
+        restaurantId={restaurant.id}
+        plan={plan}
+        branchCount={branchCount}
+        detailsHref={`/admin/restaurants/${restaurant.slug}/edit`}
+      />
     </div>
   );
 }

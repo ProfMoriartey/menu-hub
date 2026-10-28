@@ -4,11 +4,7 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { categories, restaurants } from "~/server/db/schema";
-import {
-  checkAuthorization,
-  checkOwnerAuthorization,
-  isSystemAdmin,
-} from "~/app/actions/auth";
+import { checkAuthorization, checkOwnerAuthorization } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import {
   cleanTranslations,
@@ -25,30 +21,15 @@ import {
 } from "~/server/public-menu";
 
 /*
- * Who does what: a system admin turns menus in several languages on or off
- * per restaurant; owners and admins choose the languages and translate the
- * description; anyone on the team (editors too) translates the menu itself
+ * Who does what: the restaurant's plan (lib/plans) decides whether its menu
+ * can be in several languages and how many; owners and admins choose the
+ * languages and translate the description; anyone on the team (editors too) translates the menu itself
  * (category names here, items in actions/menu-item.ts).
  */
 
 // Column lengths: categories.name is 256; descriptions are text, kept sane.
 const MAX_CATEGORY_NAME = 256;
 const MAX_DESCRIPTION = 2000;
-
-/** Admin only. Off hides translations everywhere but keeps them. */
-export async function setMultilingualEnabled(
-  restaurantId: string,
-  enabled: boolean,
-): Promise<ActionResult> {
-  return runAction("saveLanguagesFailed", async () => {
-    if (!(await isSystemAdmin())) throw new ActionError("adminOnly");
-    await db
-      .update(restaurants)
-      .set({ multilingualEnabled: enabled === true, updatedAt: new Date() })
-      .where(eq(restaurants.id, restaurantId));
-    revalidatePublicRestaurant(restaurantId);
-  });
-}
 
 /**
  * Owners and admins: the menu's main language (the one its existing texts
@@ -66,7 +47,7 @@ export async function updateMenuLanguages(
     await checkOwnerAuthorization(restaurantId);
     const row = await db.query.restaurants.findFirst({
       where: eq(restaurants.id, restaurantId),
-      columns: { multilingualEnabled: true, translations: true },
+      columns: { multilingualEnabled: true, maxExtraLanguages: true, translations: true },
     });
     if (!row) throw new ActionError("restaurantNotFound");
     if (!row.multilingualEnabled) throw new ActionError("multilingualOff");
@@ -81,6 +62,9 @@ export async function updateMenuLanguages(
       throw new ActionError("invalidLanguages");
     }
     const extra = [...new Set(input.extraLanguages)].filter((l) => l !== main);
+    if (row.maxExtraLanguages !== null && extra.length > row.maxExtraLanguages) {
+      throw new ActionError("tooManyLanguages", { count: row.maxExtraLanguages });
+    }
 
     const descriptions = cleanTranslations(
       input.descriptions,

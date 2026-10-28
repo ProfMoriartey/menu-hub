@@ -16,16 +16,11 @@ import {
 import { useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { ToggleRow } from "~/components/forms/fields";
 import {
   MenuColorPreview,
   type PreviewMenu,
 } from "~/components/colors/MenuColorPreview";
-import {
-  setBrandColorEnabled,
-  updateColorTheme,
-  updateMenuDesign,
-} from "~/app/actions/restaurant-settings";
+import { updateColorTheme, updateMenuDesign } from "~/app/actions/restaurant-settings";
 import { MENU_DESIGNS, type MenuDesign } from "~/lib/menu-design";
 import { isBrandColor } from "~/lib/brand-color";
 import {
@@ -163,9 +158,9 @@ function DesignSketch({ design }: { design: MenuDesign }) {
 
 interface AppearanceEditorProps {
   restaurantId: string;
-  // Only admins see the custom-colours switch; owners get the colours once
-  // it's on. The design is every owner's choice.
   isAdmin: boolean;
+  // Whether the plan includes custom colours (admins change it on the
+  // Details tab's Features card). The design is every owner's choice.
   colorsEnabled: boolean;
   design: MenuDesign;
   // What the colours start from (saved theme, or built from the old brand colour).
@@ -175,8 +170,8 @@ interface AppearanceEditorProps {
 }
 
 /**
- * The Appearance page: the menu's design and, when an admin has enabled
- * them, its colours, next to a live preview of the restaurant's own menu.
+ * The Appearance page: the menu's design and, when the plan includes them,
+ * its colours, next to a live preview of the restaurant's own menu.
  * Hovering a part of the preview highlights the colour behind it; clicking
  * jumps to that colour.
  */
@@ -193,7 +188,6 @@ export function AppearanceEditor({
   const tDesign = useTranslations("MenuDesign");
   const tUnsaved = useTranslations("UnsavedChanges");
   const router = useRouter();
-  const [isToggling, startToggle] = useTransition();
   const [isSaving, startSave] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -253,15 +247,6 @@ export function AppearanceEditor({
       ) as CSSProperties)
     : undefined;
   const warnings = colorsEnabled ? contrastWarnings(palette) : [];
-
-  const toggle = (next: boolean) => {
-    setError(null);
-    startToggle(async () => {
-      const result = await setBrandColorEnabled(restaurantId, next);
-      if (!result.ok) setError(result.error);
-      router.refresh();
-    });
-  };
 
   // Design and colours are saved separately: an owner without custom colours
   // can still change the design.
@@ -355,17 +340,10 @@ export function AppearanceEditor({
           </h2>
           <p className="text-muted-foreground mt-0.5 text-sm">{t("intro")}</p>
         </div>
-        {isAdmin && (
-          <ToggleRow
-            id="custom-colors-enabled"
-            title={t("enableTitle")}
-            description={t("enableText")}
-            checked={colorsEnabled}
-            onCheckedChange={(next) => !isToggling && toggle(next)}
-          />
-        )}
-        {!colorsEnabled && !isAdmin && (
-          <p className="text-muted-foreground text-sm">{t("notEnabled")}</p>
+        {!colorsEnabled && (
+          <p className="text-muted-foreground text-sm">
+            {isAdmin ? t("notInPlanAdmin") : t("notInPlan")}
+          </p>
         )}
 
         {colorsEnabled && (

@@ -103,3 +103,11 @@ export async function getBranchesForEdit(restaurantId: string): Promise<BranchDe
   });
   return rows.map((row) => ({ ...row, deliveryApps: row.deliveryApps as DeliveryAppLinks | null }));
 }
+
+/**
+ * The branches guests see: the first `maxBranches` (the restaurant's plan
+ * limit, null = all). Those beyond it are kept for when the plan allows
+ * them again.
+ */
+export const visibleBranches = <T>(all: T[], maxBranches: number | null) =>
+  maxBranches === null ? all : all.slice(0, Math.max(1, maxBranches));

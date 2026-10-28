@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "~/i18n/navigation";
 import { getPublicBranches, getRestaurantBySlug } from "~/server/public-menu";
-import { EMPTY_LOCATION, type BranchLocation } from "~/server/branches";
+import { EMPTY_LOCATION, visibleBranches, type BranchLocation } from "~/server/branches";
 import { describeOpenStatus } from "~/components/public/OpeningHours";
 import { countryName } from "~/lib/countries";
 import type { BranchChoice } from "~/components/public/BranchPicker";
@@ -36,7 +36,8 @@ export const branchLabel = (branch: Pick<PublicBranch, "name" | "city">, fallbac
 export async function findBranchPage(restaurantSlug: string, branchSlug: string | null) {
   const restaurant = await getRestaurantBySlug(restaurantSlug);
   if (!restaurant) return { kind: "missing" as const };
-  const branches = await getPublicBranches(restaurant.id);
+  // Branches beyond the plan's limit don't have pages.
+  const branches = visibleBranches(await getPublicBranches(restaurant.id), restaurant.maxBranches);
   const isMulti = branches.length > 1;
 
   const branch = branchSlug

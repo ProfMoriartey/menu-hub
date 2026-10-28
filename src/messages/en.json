@@ -311,7 +311,9 @@
     "branchNotFound": "This branch no longer exists. Reload the page.",
     "branchNameRequired": "Give the branch a name, so guests can tell your branches apart.",
     "lastBranch": "A restaurant needs at least one branch.",
-    "saveBillingFailed": "Couldn't save the billing details. Please try again."
+    "saveBillingFailed": "Couldn't save the billing details. Please try again.",
+    "branchLimit": "{count, plural, one {Your plan includes # branch.} other {Your plan includes up to # branches.}} Contact us to add more.",
+    "tooManyLanguages": "{count, plural, one {Your plan includes # extra language.} other {Your plan includes up to # extra languages.}}"
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -521,9 +523,6 @@
   "MenuLanguages": {
     "title": "Menu languages",
     "intro": "Offer the menu in more than one language. Guests see it in their language when it's translated, and in the main language otherwise.",
-    "enableTitle": "Menus in several languages",
-    "enableText": "Lets this restaurant's owners choose languages and its team translate the menu. Turning it off hides translations but keeps them.",
-    "notEnabled": "Menus in several languages aren't enabled for this restaurant. Contact an administrator to turn them on.",
     "mainLabel": "Main language",
     "mainHint": "The language the menu is written in now. Every dish needs at least this.",
     "mainPlaceholder": "Choose the main language",
@@ -534,7 +533,11 @@
     "saving": "Saving…",
     "saved": "Saved",
     "chooseMainFirst": "Choose the main language first.",
-    "notTranslated": "Not translated: {languages}"
+    "notTranslated": "Not translated: {languages}",
+    "notInPlan": "Menus in several languages come with the Pro and Business plans. Contact us to add them.",
+    "notInPlanAdmin": "This restaurant's plan doesn't include menu languages. Change its plan, or turn them on in the Features card.",
+    "limitHint": "{count, plural, one {Your plan includes # extra language.} other {Your plan includes up to # extra languages.}}",
+    "overLimit": "{count, plural, one {Only the first extra language shows on your menu, as your plan includes #.} other {Only the first # extra languages show on your menu, as your plan includes #.}} The others are kept for when it allows them."
   },
   "OpeningHours": {
     "title": "Opening hours",
@@ -558,9 +561,6 @@
   "ColorTheme": {
     "title": "Menu colours",
     "intro": "Choose the colours guests see on your menu, about and dish pages, in light and dark mode.",
-    "enableTitle": "Custom colours",
-    "enableText": "Lets this restaurant's owners design its colours. Turning it off goes back to the default colours but keeps their design.",
-    "notEnabled": "Custom colours aren't enabled for this restaurant, so the default colours are used. Contact an administrator to turn them on.",
     "presetsLabel": "Start from a palette",
     "presets": {
       "default": "Default",
@@ -621,7 +621,9 @@
     "sampleOrder": "Order",
     "sampleCategory": "Starters",
     "sampleDish": "Sample dish",
-    "sampleDishDescription": "A short description of the dish."
+    "sampleDishDescription": "A short description of the dish.",
+    "notInPlan": "Custom colours come with the Pro and Business plans, so your menu uses the default colours. Contact us to add them.",
+    "notInPlanAdmin": "This restaurant's plan doesn't include custom colours. Change its plan, or turn them on in the Features card."
   },
   "MenuDesign": {
     "title": "Menu design",
@@ -960,6 +962,10 @@
     "saving": "Saving…",
     "unsaved": "Unsaved changes",
     "discard": "Discard",
-    "saved": "Saved"
+    "saved": "Saved",
+    "limitNote": "{used} of {max} branches on your plan.",
+    "hiddenBadge": "Hidden: over the plan's limit",
+    "limitReached": "{count, plural, one {Your plan includes # branch.} other {Your plan includes up to # branches.}} Contact us to add more.",
+    "limitReachedAdmin": "{count, plural, one {This plan allows # branch.} other {This plan allows up to # branches.}} Change the plan, or raise the limit on the Features card."
   }
 }

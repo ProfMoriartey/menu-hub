@@ -92,6 +92,20 @@
       "when": 1793112582024,
       "tag": "0013_add_plan_start",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793168463990,
+      "tag": "0014_add_plan_tiers",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1793168492562,
+      "tag": "0015_drop_plan_name",
+      "breakpoints": true
     }
   ]
 }

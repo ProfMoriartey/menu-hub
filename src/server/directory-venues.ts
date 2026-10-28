@@ -1,6 +1,7 @@
 // src/server/directory-venues.ts
 import { getLocale, getTranslations } from "next-intl/server";
 import { getMenusDirectory } from "~/server/public-menu";
+import { visibleBranches } from "~/server/branches";
 import { getVisitorCountry } from "~/server/visitor-country";
 import { describeOpenStatus } from "~/components/public/OpeningHours";
 import { countryName, isCountryCode } from "~/lib/countries";
@@ -46,7 +47,8 @@ export async function getDirectoryVenues(): Promise<{
         type: isVenueType(row.typeOfEstablishment) ? row.typeOfEstablishment : null,
         typeLabel: venueTypeLabel(row.typeOfEstablishment, tVenue),
         cuisine: textOrNull(row.foodType),
-        branches: row.branches.map((branch) => {
+        // Branches beyond the plan's limit aren't shown.
+        branches: visibleBranches(row.branches, row.maxBranches).map((branch) => {
           const open =
             branch.openingHours && branch.timeZone
               ? describeOpenStatus(branch.openingHours, branch.timeZone, now, tMenu, locale)
@@ -62,7 +64,7 @@ export async function getDirectoryVenues(): Promise<{
             },
           };
         }),
-        branchCount: row.branches.length,
+        branchCount: visibleBranches(row.branches, row.maxBranches).length,
         featured: row.isDisplayed,
         photos: row.photos,
         dishCount: row.dishCount,

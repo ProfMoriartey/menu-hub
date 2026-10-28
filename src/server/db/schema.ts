@@ -84,6 +84,13 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   // colour used before colour themes existed: still applied while no theme
   // is saved, and the starting primary colour of the editor.
   brandColorEnabled: boolean("brand_color_enabled").default(false).notNull(),
+  // What the restaurant's plan allows (lib/plans entitlements), kept here
+  // so public pages read it with the rest; saved by server/plans whenever
+  // the plan or an admin override changes. Null = no limit. Custom colours
+  // are `brandColorEnabled`, menu languages `multilingualEnabled` (true
+  // when any extra language is allowed).
+  maxExtraLanguages: integer("max_extra_languages").default(0),
+  maxBranches: integer("max_branches").default(1),
   brandColor: varchar("brand_color", { length: 7 }),
   colorTheme: jsonb("color_theme").$type<ColorTheme>(),
 
@@ -336,10 +343,18 @@ export const restaurantBilling = pgTable("menu-hub_restaurant_billing", {
   restaurantId: uuid("restaurant_id")
     .primaryKey()
     .references(() => restaurants.id, { onDelete: "cascade" }),
-  // What was agreed, e.g. "Standard". Null = not billed.
-  planName: varchar("plan_name", { length: 64 }),
+  // lib/plans TIERS. Null = not billed.
+  tier: varchar("tier", { length: 16 }),
+  // "monthly" or "yearly" (10 months' price for 12).
+  billingCycle: varchar("billing_cycle", { length: 8 }).notNull().default("monthly"),
+  // A special price a month, in `currency`. Null = the tier's (US dollars).
   monthlyPrice: numeric("monthly_price", { precision: 12, scale: 2 }),
-  currency: varchar("currency", { length: 3 }).notNull().default("TRY"),
+  currency: varchar("currency", { length: 3 }).notNull().default("USD"),
+  // An admin's changes to the tier's features for this restaurant (a
+  // special deal). Null = as the tier.
+  colorsOverride: boolean("colors_override"),
+  languagesOverride: integer("languages_override"),
+  branchesOverride: integer("branches_override"),
   // The first day billed: unpaid days count from here. Null = not set.
   startsOn: date("starts_on", { mode: "string" }),
   notes: text("notes"),

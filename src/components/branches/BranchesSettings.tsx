@@ -60,6 +60,8 @@ const NOT_SET = "none";
 interface BranchesSettingsProps {
   restaurantId: string;
   branches: BranchDetails[];
+  // The plan's limit (null = none). Branches beyond it stay, hidden.
+  maxBranches: number | null;
   // Only admins change a branch's country.
   isAdmin: boolean;
   // Named on the server, in the page's language.
@@ -74,9 +76,11 @@ interface BranchesSettingsProps {
 export function BranchesSettings({
   restaurantId,
   branches,
+  maxBranches,
   isAdmin,
   countries,
 }: BranchesSettingsProps) {
+  const atLimit = maxBranches !== null && branches.length >= maxBranches;
   const t = useTranslations("Branches");
   const router = useRouter();
   // An only branch is open; with several, people pick one.
@@ -108,6 +112,11 @@ export function BranchesSettings({
           <Store className="h-4 w-4" aria-hidden /> {t("title")}
         </h2>
         <p className="text-muted-foreground mt-0.5 text-sm">{t("intro")}</p>
+        {maxBranches !== null && maxBranches > 1 && (
+          <p className="text-muted-foreground mt-1 text-sm">
+            {t("limitNote", { used: Math.min(branches.length, maxBranches), max: maxBranches })}
+          </p>
+        )}
       </header>
 
       <ul className="divide-border divide-y">
@@ -117,6 +126,7 @@ export function BranchesSettings({
               branch={branch}
               isMain={index === 0}
               isOnly={branches.length === 1}
+              isHidden={maxBranches !== null && index >= maxBranches}
               isOpen={openId === branch.id}
               onToggle={() => setOpenId(openId === branch.id ? null : branch.id)}
               onMoveUp={index > 0 ? () => move(index, -1) : undefined}
@@ -135,13 +145,21 @@ export function BranchesSettings({
         </p>
       )}
 
-      <AddBranch
-        restaurantId={restaurantId}
-        onAdded={(id) => {
-          setOpenId(id);
-          router.refresh();
-        }}
-      />
+      {atLimit ? (
+        <p className="border-border text-muted-foreground border-t px-5 py-4 text-sm sm:px-6">
+          {isAdmin
+            ? t("limitReachedAdmin", { count: maxBranches })
+            : t("limitReached", { count: maxBranches })}
+        </p>
+      ) : (
+        <AddBranch
+          restaurantId={restaurantId}
+          onAdded={(id) => {
+            setOpenId(id);
+            router.refresh();
+          }}
+        />
+      )}
     </section>
   );
 }
@@ -150,6 +168,7 @@ function BranchItem({
   branch,
   isMain,
   isOnly,
+  isHidden,
   isOpen,
   onToggle,
   onMoveUp,
@@ -161,6 +180,8 @@ function BranchItem({
   branch: BranchDetails;
   isMain: boolean;
   isOnly: boolean;
+  // Beyond the plan's limit: kept, but guests don't see it.
+  isHidden: boolean;
   isOpen: boolean;
   onToggle: () => void;
   onMoveUp?: () => void;
@@ -192,6 +213,11 @@ function BranchItem({
               {isMain && !isOnly && (
                 <span className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs font-medium">
                   {t("mainBadge")}
+                </span>
+              )}
+              {isHidden && (
+                <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-medium">
+                  {t("hiddenBadge")}
                 </span>
               )}
             </span>

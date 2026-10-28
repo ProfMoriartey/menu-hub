@@ -1,28 +1,47 @@
 // src/server/billing.ts
 // Reads for the admin Plan tab and Payments page (lib/billing has the
 // rules). Admin pages only: nothing here is cached or shown publicly.
-import { desc, eq, max } from "drizzle-orm";
+import { count, desc, eq, max } from "drizzle-orm";
 import { db } from "~/server/db";
-import { payments, restaurantBilling } from "~/server/db/schema";
-import { addMonths, billingToday, pendingDues } from "~/lib/billing";
+import { branches, payments, restaurantBilling } from "~/server/db/schema";
+import { addMonths, billingToday, pendingDues, type PlanTerms } from "~/lib/billing";
+import { TIER_FEATURES, planPricing, type Entitlements, type PlanPricing } from "~/lib/plans";
+import { limitsOf } from "~/server/plans";
 
+/** A restaurant's plan as saved, with any feature overrides. */
 export interface BillingPlan {
-  planName: string | null;
+  tier: string | null;
+  billingCycle: string;
   monthlyPrice: string | null;
   currency: string;
   startsOn: string | null;
   notes: string | null;
+  colorsOverride: boolean | null;
+  languagesOverride: number | null;
+  branchesOverride: number | null;
 }
 
 export type MoneyByCurrency = { currency: string; total: number }[];
 
 const PLAN_COLUMNS = {
-  planName: true,
+  tier: true,
+  billingCycle: true,
   monthlyPrice: true,
   currency: true,
   startsOn: true,
   notes: true,
+  colorsOverride: true,
+  languagesOverride: true,
+  branchesOverride: true,
 } as const;
+
+const termsOf = (pricing: PlanPricing | null, plan: BillingPlan | null): PlanTerms | null =>
+  pricing && {
+    periodPrice: pricing.period,
+    periodMonths: pricing.periodMonths,
+    currency: pricing.currency,
+    startsOn: plan?.startsOn ?? null,
+  };
 
 // Totals per currency (amounts in different currencies never add up).
 function byCurrency(rows: { currency: string; amount: string | number }[]): MoneyByCurrency {
@@ -31,14 +50,23 @@ function byCurrency(rows: { currency: string; amount: string | number }[]): Mone
   return [...totals].map(([currency, total]) => ({ currency, total: Math.round(total * 100) / 100 }));
 }
 
-/** The plan agreed with one restaurant, for its Plan tab. */
-export async function getRestaurantPlan(restaurantId: string): Promise<BillingPlan | null> {
-  return (
-    (await db.query.restaurantBilling.findFirst({
+/**
+ * One restaurant's plan, how many branches it has and what it may use, for
+ * its Plan tab and the admin features card.
+ */
+export async function getRestaurantPlan(restaurantId: string): Promise<{
+  plan: BillingPlan | null;
+  branchCount: number;
+  limits: Entitlements;
+}> {
+  const [plan, [branchRow]] = await Promise.all([
+    db.query.restaurantBilling.findFirst({
       where: eq(restaurantBilling.restaurantId, restaurantId),
       columns: PLAN_COLUMNS,
-    })) ?? null
-  );
+    }),
+    db.select({ n: count() }).from(branches).where(eq(branches.restaurantId, restaurantId)),
+  ]);
+  return { plan: plan ?? null, branchCount: branchRow?.n ?? 0, limits: limitsOf(plan) };
 }
 
 /** A restaurant as the Payments page's form and filters know it. */
@@ -46,7 +74,10 @@ export interface BillingRestaurant {
   id: string;
   name: string;
   slug: string;
-  plan: BillingPlan | null;
+  // "Pro", or null when not billed.
+  tierLabel: string | null;
+  // What a billing period costs; null when not billed.
+  terms: PlanTerms | null;
   paidUntil: string | null;
 }
 
@@ -81,7 +112,7 @@ export async function getPaymentsPage() {
   const monthStart = `${today.slice(0, 7)}-01`;
   const yearStart = `${today.slice(0, 4)}-01-01`;
 
-  const [list, plans, paidUntilRows, received] = await Promise.all([
+  const [list, plans, paidUntilRows, received, branchCounts] = await Promise.all([
     db.query.restaurants.findMany({
       columns: { id: true, name: true, slug: true },
       orderBy: (r, { asc }) => [asc(r.name)],
@@ -95,28 +126,26 @@ export async function getPaymentsPage() {
       orderBy: [desc(payments.paidOn), desc(payments.createdAt)],
       with: { restaurant: { columns: { slug: true } } },
     }),
+    db.select({ restaurantId: branches.restaurantId, n: count() }).from(branches).groupBy(branches.restaurantId),
   ]);
 
   const planBy = new Map(plans.map((p) => [p.restaurantId, p]));
   const paidUntilBy = new Map(paidUntilRows.map((r) => [r.restaurantId, r.paidUntil]));
+  const branchesBy = new Map(branchCounts.map((r) => [r.restaurantId, r.n]));
 
   const restaurants: BillingRestaurant[] = list.map((r) => {
-    const row = planBy.get(r.id);
-    const plan: BillingPlan | null = row
-      ? {
-          planName: row.planName,
-          monthlyPrice: row.monthlyPrice,
-          currency: row.currency,
-          startsOn: row.startsOn,
-          notes: row.notes,
-        }
-      : null;
-    const paidUntil = paidUntilBy.get(r.id) ?? null;
-    return { ...r, plan, paidUntil };
+    const plan = planBy.get(r.id) ?? null;
+    const pricing = planPricing(plan, limitsOf(plan), branchesBy.get(r.id) ?? 1);
+    return {
+      ...r,
+      tierLabel: pricing ? TIER_FEATURES[pricing.tier].label : null,
+      terms: termsOf(pricing, plan),
+      paidUntil: paidUntilBy.get(r.id) ?? null,
+    };
   });
 
   const pending: PaymentEntry[] = restaurants.flatMap((r) =>
-    pendingDues(r.plan, r.paidUntil, today).map((due) => ({
+    pendingDues(r.terms, r.paidUntil, today).map((due) => ({
       kind: due.days < 0 ? ("overdue" as const) : ("due" as const),
       id: `${r.id}:${due.from}`,
       restaurantId: r.id,
@@ -157,9 +186,10 @@ export async function getPaymentsPage() {
   // Due today counts as owed; later this week as coming up.
   const owed = pending.filter((e) => e.kind !== "paid" && e.days <= 0);
   const upcoming = pending.filter((e) => e.kind !== "paid" && e.days > 0);
+  // A yearly plan counts as its year's price spread over 12 months.
   const monthly = restaurants.flatMap((r) =>
-    r.plan?.planName && r.plan.monthlyPrice && Number(r.plan.monthlyPrice) > 0
-      ? [{ currency: r.plan.currency, amount: r.plan.monthlyPrice }]
+    r.terms && r.terms.periodPrice > 0
+      ? [{ currency: r.terms.currency, amount: r.terms.periodPrice / r.terms.periodMonths }]
       : [],
   );
 

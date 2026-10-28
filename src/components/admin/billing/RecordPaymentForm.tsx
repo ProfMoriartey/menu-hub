@@ -25,7 +25,7 @@ import {
 } from "~/lib/billing";
 import type { BillingRestaurant } from "~/server/billing";
 
-type PaymentTarget = Pick<BillingRestaurant, "id" | "name" | "plan" | "paidUntil">;
+type PaymentTarget = Pick<BillingRestaurant, "id" | "name" | "tierLabel" | "terms" | "paidUntil">;
 
 /** Filled in already, e.g. by a pending month's "Mark paid". */
 export interface PaymentPrefill {
@@ -42,32 +42,41 @@ interface RecordPaymentFormProps {
 
 /**
  * Records a payment received from any restaurant. Choosing one fills in
- * its price, currency and where the period starts (right after what it
- * has paid for); everything stays editable.
+ * its billing period (a month or a year), price, currency and where the
+ * period starts (right after what it has paid for); all stays editable.
  */
 export function RecordPaymentForm({ restaurants, prefill, today, onSaved }: RecordPaymentFormProps) {
   const router = useRouter();
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
 
+  const targetOf = (id: string) => restaurants.find((x) => x.id === id);
+  // A month's share of the period price (a yearly plan's is 10/12 of a month).
+  const amountFor = (r: PaymentTarget | undefined, months: number) =>
+    r?.terms && r.terms.periodPrice > 0
+      ? String(Math.round((r.terms.periodPrice / r.terms.periodMonths) * months * 100) / 100)
+      : "";
   const defaultsFor = (id: string, paidOn: string, months: number) => {
-    const r = restaurants.find((x) => x.id === id);
-    const price = r?.plan?.monthlyPrice ? Number(r.plan.monthlyPrice) : null;
+    const r = targetOf(id);
     return {
-      coversFrom: r ? nextPeriodStart(r.plan, r.paidUntil, paidOn) : paidOn,
-      amount: price ? String(Math.round(price * months * 100) / 100) : "",
-      currency: r?.plan?.currency ?? "TRY",
+      coversFrom: r ? nextPeriodStart(r.terms?.startsOn ?? null, r.paidUntil, paidOn) : paidOn,
+      amount: amountFor(r, months),
+      currency: r?.terms?.currency ?? "USD",
     };
   };
 
-  const blank = (restaurantId: string) => ({
-    restaurantId,
-    paidOn: today,
-    months: 1,
-    method: "bank_transfer",
-    note: "",
-    ...defaultsFor(restaurantId, today, 1),
-  });
+  // A yearly plan's payment pays for 12 months.
+  const blank = (restaurantId: string) => {
+    const months = targetOf(restaurantId)?.terms?.periodMonths ?? 1;
+    return {
+      restaurantId,
+      paidOn: today,
+      months,
+      method: "bank_transfer",
+      note: "",
+      ...defaultsFor(restaurantId, today, months),
+    };
+  };
   const known = prefill && restaurants.some((r) => r.id === prefill.restaurantId);
   const [values, setValues] = useState(() => {
     const start = blank(known ? prefill.restaurantId : "");
@@ -82,6 +91,7 @@ export function RecordPaymentForm({ restaurants, prefill, today, onSaved }: Reco
   const set = (patch: Partial<typeof values>) => {
     setValues((v) => {
       const next = { ...v, ...patch };
+      if (patch.restaurantId !== undefined) next.months = targetOf(patch.restaurantId)?.terms?.periodMonths ?? 1;
       const changed = patch.restaurantId !== undefined || patch.paidOn !== undefined || patch.months !== undefined;
       if (changed && isDay(next.paidOn)) {
         const d = defaultsFor(next.restaurantId, next.paidOn, next.months || 1);
@@ -125,7 +135,7 @@ export function RecordPaymentForm({ restaurants, prefill, today, onSaved }: Reco
             {restaurants.map((r) => (
               <SelectItem key={r.id} value={r.id}>
                 {r.name}
-                {r.plan?.planName ? ` · ${r.plan.planName}` : ""}
+                {r.tierLabel ? ` · ${r.tierLabel}` : ""}
               </SelectItem>
             ))}
           </SelectContent>
@@ -167,7 +177,7 @@ export function RecordPaymentForm({ restaurants, prefill, today, onSaved }: Reco
             }}
           />
         </Field>
-        <Field label="Amount" htmlFor="pay-amount" hint={restaurant?.plan?.monthlyPrice ? "Plan price × months." : undefined}>
+        <Field label="Amount" htmlFor="pay-amount" hint={restaurant?.terms ? "From the plan's price." : undefined}>
           <Input
             id="pay-amount"
             inputMode="decimal"

@@ -8,7 +8,7 @@ import { getShareTargets } from "~/server/public-origin";
  * restaurant's when there's no such branch.
  */
 export async function tableCardFor(
-  restaurant: { id: string; slug: string; name: string },
+  restaurant: { id: string; slug: string; name: string; maxBranches: number | null },
   branchId: string | string[] | undefined,
 ) {
   const [targets, t] = await Promise.all([

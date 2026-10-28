@@ -45,13 +45,16 @@ export interface MenuLanguages {
 
 /**
  * The restaurant's menu languages, or null when translations shouldn't be
- * used: an admin hasn't turned the feature on, or no main language is set.
- * Turning it off hides translations everywhere without deleting them.
+ * used: its plan doesn't include them (lib/plans), or no main language is
+ * set. Languages its plan no longer covers are hidden, not deleted.
  */
 export function menuLanguagesOf(restaurant: {
   multilingualEnabled: boolean;
   mainLanguage: string | null;
   extraLanguages: string[] | null;
+  // The plan's limit on extra languages (null = none); those beyond it
+  // are kept but not shown.
+  maxExtraLanguages: number | null;
 }): MenuLanguages | null {
   if (
     !restaurant.multilingualEnabled ||
@@ -62,7 +65,8 @@ export function menuLanguagesOf(restaurant: {
   const extra = (restaurant.extraLanguages ?? []).filter(
     (lang): lang is MenuLanguage => isMenuLanguage(lang) && lang !== main,
   );
-  return { main, extra: [...new Set(extra)] };
+  const limit = restaurant.maxExtraLanguages ?? Infinity;
+  return { main, extra: [...new Set(extra)].slice(0, limit) };
 }
 
 /** Every language the menu is published in, main first. */

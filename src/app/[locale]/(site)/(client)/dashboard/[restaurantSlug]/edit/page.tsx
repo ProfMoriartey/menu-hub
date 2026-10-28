@@ -56,6 +56,7 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
         <BranchesSettings
           restaurantId={row.id}
           branches={await getBranchesForEdit(row.id)}
+          maxBranches={row.maxBranches}
           isAdmin={role === "admin"}
           countries={countryOptions(await getLocale())}
         />
@@ -63,6 +64,7 @@ export default async function RestaurantEditPage({ params }: EditPageProps) {
           restaurantId={row.id}
           isAdmin={role === "admin"}
           enabled={row.multilingualEnabled}
+          maxExtraLanguages={row.maxExtraLanguages}
           mainLanguage={row.mainLanguage}
           extraLanguages={row.extraLanguages}
           description={row.description}

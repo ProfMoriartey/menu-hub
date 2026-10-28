@@ -7,6 +7,7 @@ import { branches, menuItems, restaurants } from "~/server/db/schema";
 import { routing } from "~/i18n/routing";
 import { allMenuLanguages, menuLanguagesOf } from "~/lib/menu-languages";
 import { getPublicOrigin } from "~/server/public-origin";
+import { visibleBranches } from "~/server/branches";
 
 // Built when requested, never at build time: a build-time sitemap would stay
 // frozen until the next deploy, and the build would need the database. The
@@ -31,6 +32,8 @@ const getLivePaths = unstable_cache(
         id: restaurants.id,
         slug: restaurants.slug,
         multilingualEnabled: restaurants.multilingualEnabled,
+        maxExtraLanguages: restaurants.maxExtraLanguages,
+        maxBranches: restaurants.maxBranches,
         mainLanguage: restaurants.mainLanguage,
         extraLanguages: restaurants.extraLanguages,
       })
@@ -40,7 +43,8 @@ const getLivePaths = unstable_cache(
       .select({ restaurantId: branches.restaurantId, slug: branches.slug })
       .from(branches)
       .innerJoin(restaurants, eq(branches.restaurantId, restaurants.id))
-      .where(eq(restaurants.isActive, true));
+      .where(eq(restaurants.isActive, true))
+      .orderBy(branches.restaurantId, branches.order, branches.createdAt);
     const items = await db
       .select({ restaurantId: menuItems.restaurantId, item: menuItems.slug })
       .from(menuItems)
@@ -68,24 +72,27 @@ const getLivePaths = unstable_cache(
         ];
       }),
     );
-    // Branches have pages of their own once a restaurant has several.
-    const branchCount = new Map<string, number>();
-    for (const { restaurantId } of branchRows) {
-      branchCount.set(restaurantId, (branchCount.get(restaurantId) ?? 0) + 1);
+    // Branches have pages of their own once a restaurant has several, up
+    // to its plan's limit.
+    const limitBy = new Map(live.map((r) => [r.id, r.maxBranches]));
+    const slugsBy = new Map<string, string[]>();
+    for (const { restaurantId, slug } of branchRows) {
+      slugsBy.set(restaurantId, [...(slugsBy.get(restaurantId) ?? []), slug]);
     }
     return [
       ...[...byId.values()].flatMap(({ slug, languages }) => [
         { path: `/${slug}`, languages },
         { path: `/${slug}/about`, languages },
       ]),
-      ...branchRows.flatMap(({ restaurantId, slug }) => {
+      ...[...slugsBy].flatMap(([restaurantId, slugs]) => {
         const restaurant = byId.get(restaurantId);
-        if (!restaurant || (branchCount.get(restaurantId) ?? 0) < 2) return [];
+        const shown = visibleBranches(slugs, limitBy.get(restaurantId) ?? null);
+        if (!restaurant || shown.length < 2) return [];
         const { languages } = restaurant;
-        return [
+        return shown.flatMap((slug) => [
           { path: `/${restaurant.slug}/${slug}`, languages },
           { path: `/${restaurant.slug}/${slug}/about`, languages },
-        ];
+        ]);
       }),
       ...items.flatMap(({ restaurantId, item }) => {
         const restaurant = byId.get(restaurantId);

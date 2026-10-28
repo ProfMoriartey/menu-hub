@@ -449,6 +449,29 @@ show "2 branches · Istanbul, Ankara" and "Open now at 1 branch". Country
 and city options count a chain once per place; the local count and the
 home page's "menus near you" use any branch in the country.
 
+**Plans:** `lib/plans` defines the tiers (prices in US dollars):
+Standard $25 (1 branch, default colours, one language), Pro $45 (3
+branches included, $15 per extra up to 5, custom colours, up to 2 extra
+languages), Business $120 (10 included, $15 per extra, no limit, every
+language). Yearly = 10 months' price for 12. An admin picks the tier,
+cycle and an optional special price (any currency) on the restaurant's
+Plan tab, and can override any feature on the Details tab's Features card
+(colours on/off, extra languages, branch limit: "From plan" or a value).
+`server/plans.syncEntitlements` saves the result on the restaurant
+(`brandColorEnabled`, `multilingualEnabled`, `maxExtraLanguages`,
+`maxBranches`; null = no limit) after either changes, so public code reads
+it with the restaurant. A restaurant without a plan gets Standard's.
+Beyond a limit, things are hidden, not deleted: `menuLanguagesOf` keeps
+the first N extra languages, `visibleBranches` the first N branches (public
+pages, Menus page, sitemap, Share), and the editors say so; adding a branch
+or a language over the limit is refused (`branchLimit`,
+`tooManyLanguages`). The old admin on/off switches for colours and
+languages are gone. Pending payments use the plan's price for the
+restaurant's branches (up to its limit) and cycle. Migrations 0014 (tiers,
+overrides, limits; old plan names become tiers, colours/languages an admin
+had switched on and branches beyond one become overrides) and 0015 (drops
+`plan_name`).
+
 **Billing (admin only):** payments are collected by hand (bank transfer,
 cash) for now, so the site only records them.
 - *Plan tab* (`/admin/restaurants/<slug>/plan`): only the plan agreed with
@@ -619,8 +642,9 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 - `pnpm db:migrate` in production for migrations 0002–0010, before deploying
   (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
   colour themes; 0009: design names; 0010: city, venue types, country codes;
-  0011: branches; 0012: billing; 0013: plan start date). Dev has all of
-  them (2026-10-28).
+  0011: branches; 0012: billing; 0013: plan start date; 0014–0015: plan
+  tiers and limits). Dev has up to 0013 (2026-10-28); 0014–0015 need
+  `pnpm db:migrate`.
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**

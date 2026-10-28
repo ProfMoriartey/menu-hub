@@ -145,6 +145,8 @@ export const getMenusDirectory = cache(
           foodType: true,
           isDisplayed: true,
           multilingualEnabled: true,
+          maxExtraLanguages: true,
+          maxBranches: true,
           mainLanguage: true,
           extraLanguages: true,
         },

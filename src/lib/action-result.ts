@@ -79,6 +79,8 @@ export const ACTION_ERROR_CODES = [
   "branchNotFound",
   "branchNameRequired",
   "lastBranch",
+  "branchLimit",
+  "tooManyLanguages",
   // Uploads
   "signInToUpload",
   "adminOnlyNewLogo",

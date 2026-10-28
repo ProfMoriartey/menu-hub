@@ -311,7 +311,9 @@
     "branchNotFound": "Esta sucursal ya no existe. Recarga la página.",
     "branchNameRequired": "Ponle un nombre a la sucursal, para que los clientes distingan tus sucursales.",
     "lastBranch": "Un restaurante necesita al menos una sucursal.",
-    "saveBillingFailed": "No se pudieron guardar los datos de facturación. Inténtalo de nuevo."
+    "saveBillingFailed": "No se pudieron guardar los datos de facturación. Inténtalo de nuevo.",
+    "branchLimit": "{count, plural, one {Tu plan incluye # sucursal.} other {Tu plan incluye hasta # sucursales.}} Escríbenos para añadir más.",
+    "tooManyLanguages": "{count, plural, one {Tu plan incluye # idioma extra.} other {Tu plan incluye hasta # idiomas extra.}}"
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
@@ -521,9 +523,6 @@
   "MenuLanguages": {
     "title": "Idiomas del menú",
     "intro": "Ofrece el menú en más de un idioma. Los clientes lo ven en su idioma cuando está traducido y, si no, en el idioma principal.",
-    "enableTitle": "Menús en varios idiomas",
-    "enableText": "Permite a los propietarios de este restaurante elegir idiomas y a su equipo traducir el menú. Desactivarlo oculta las traducciones, pero las conserva.",
-    "notEnabled": "Los menús en varios idiomas no están activados para este restaurante. Contacta con un administrador para activarlos.",
     "mainLabel": "Idioma principal",
     "mainHint": "El idioma en el que está escrito el menú ahora. Cada plato necesita al menos este.",
     "mainPlaceholder": "Elige el idioma principal",
@@ -534,7 +533,11 @@
     "saving": "Guardando…",
     "saved": "Guardado",
     "chooseMainFirst": "Primero elige el idioma principal.",
-    "notTranslated": "Sin traducir: {languages}"
+    "notTranslated": "Sin traducir: {languages}",
+    "notInPlan": "Las cartas en varios idiomas vienen con los planes Pro y Business. Escríbenos para añadirlas.",
+    "notInPlanAdmin": "El plan de este restaurante no incluye idiomas de carta. Cambia su plan o actívalos en la tarjeta Features.",
+    "limitHint": "{count, plural, one {Tu plan incluye # idioma extra.} other {Tu plan incluye hasta # idiomas extra.}}",
+    "overLimit": "{count, plural, one {Tu carta solo muestra el primer idioma extra, el que incluye tu plan.} other {Tu carta solo muestra los # primeros idiomas extra, los que incluye tu plan.}} Los demás se guardan para cuando tu plan los permita."
   },
   "OpeningHours": {
     "title": "Horario",
@@ -558,9 +561,6 @@
   "ColorTheme": {
     "title": "Colores del menú",
     "intro": "Elige los colores que ven los clientes en tu menú, tu página de información y las páginas de platos, en modo claro y oscuro.",
-    "enableTitle": "Colores propios",
-    "enableText": "Permite a los propietarios de este restaurante diseñar sus colores. Desactivarlo vuelve a los colores predeterminados, pero conserva su diseño.",
-    "notEnabled": "Los colores propios no están activados para este restaurante, así que se usan los colores predeterminados. Contacta con un administrador para activarlos.",
     "presetsLabel": "Empieza con una paleta",
     "presets": {
       "default": "Predeterminada",
@@ -621,7 +621,9 @@
     "sampleOrder": "Pedir",
     "sampleCategory": "Entrantes",
     "sampleDish": "Plato de ejemplo",
-    "sampleDishDescription": "Una breve descripción del plato."
+    "sampleDishDescription": "Una breve descripción del plato.",
+    "notInPlan": "Los colores personalizados vienen con los planes Pro y Business, así que tu carta usa los colores predeterminados. Escríbenos para añadirlos.",
+    "notInPlanAdmin": "El plan de este restaurante no incluye colores personalizados. Cambia su plan o actívalos en la tarjeta Features."
   },
   "MenuDesign": {
     "title": "Diseño del menú",
@@ -960,6 +962,10 @@
     "saving": "Guardando…",
     "unsaved": "Cambios sin guardar",
     "discard": "Descartar",
-    "saved": "Guardado"
+    "saved": "Guardado",
+    "limitNote": "{used} de {max} sucursales de tu plan.",
+    "hiddenBadge": "Oculta: supera el límite del plan",
+    "limitReached": "{count, plural, one {Tu plan incluye # sucursal.} other {Tu plan incluye hasta # sucursales.}} Escríbenos para añadir más.",
+    "limitReachedAdmin": "{count, plural, one {Este plan permite # sucursal.} other {Este plan permite hasta # sucursales.}} Cambia el plan o sube el límite en la tarjeta Features."
   }
 }

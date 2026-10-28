@@ -58,9 +58,14 @@ export const coversUntil = (from: string, months: number) => addDays(addMonths(f
 export const daysBetween = (from: string, to: string) =>
   Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000);
 
+/**
+ * What a billed restaurant pays: a price each period (a month, or a year)
+ * in a currency, from a start date. Null when it isn't billed.
+ */
 export interface PlanTerms {
-  planName: string | null;
-  monthlyPrice: string | null;
+  periodPrice: number;
+  periodMonths: number;
+  currency: string;
   startsOn: string | null;
 }
 
@@ -68,22 +73,22 @@ export interface PlanTerms {
  * The last day covered: the latest paid day, or the day before the plan
  * starts when nothing was paid yet (null when neither is known).
  */
-export const coveredUntil = (plan: PlanTerms | null, paidUntil: string | null) =>
-  paidUntil ?? (plan?.startsOn ? addDays(plan.startsOn, -1) : null);
+export const coveredUntil = (startsOn: string | null, paidUntil: string | null) =>
+  paidUntil ?? (startsOn ? addDays(startsOn, -1) : null);
 
 /**
  * Where a new payment's period starts: the day after the covered period
  * ends, so periods follow each other with no gap (a late payment still pays
  * for the days since), or the payment day when nothing is known.
  */
-export const nextPeriodStart = (plan: PlanTerms | null, paidUntil: string | null, paidOn: string) => {
-  const covered = coveredUntil(plan, paidUntil);
+export const nextPeriodStart = (startsOn: string | null, paidUntil: string | null, paidOn: string) => {
+  const covered = coveredUntil(startsOn, paidUntil);
   return covered ? addDays(covered, 1) : paidOn;
 };
 
-/** A month a restaurant should pay for and hasn't (worked out, not stored). */
+/** A period a restaurant should pay for and hasn't (worked out, not stored). */
 export interface PendingDue {
-  // The first day of the month paid for, which is also the day it's due.
+  // The first day of the period, which is also the day it's due.
   from: string;
   until: string;
   amount: number;
@@ -96,30 +101,24 @@ export interface PendingDue {
 const MAX_PENDING = 36;
 
 /**
- * The months a billed restaurant hasn't paid for: each from the end of what
- * it has paid (or its "billed from" date), up to those due within
- * DUE_SOON_DAYS. A plan never paid and without a start date is due today.
- * None for unbilled or free plans.
+ * The periods (months, or years) a billed restaurant hasn't paid for: each
+ * from the end of what it has paid (or its "billed from" date), up to those
+ * due within DUE_SOON_DAYS. A plan never paid and without a start date is
+ * due today. None when it isn't billed or costs nothing.
  */
-export function pendingDues(
-  plan: (PlanTerms & { currency: string }) | null,
-  paidUntil: string | null,
-  today: string,
-): PendingDue[] {
-  if (!plan?.planName || !plan.monthlyPrice) return [];
-  const amount = Number(plan.monthlyPrice);
-  if (!(amount > 0)) return [];
-  const start = nextPeriodStart(plan, paidUntil, today);
+export function pendingDues(terms: PlanTerms | null, paidUntil: string | null, today: string): PendingDue[] {
+  if (!terms || !(terms.periodPrice > 0)) return [];
+  const start = nextPeriodStart(terms.startsOn, paidUntil, today);
   const horizon = addDays(today, DUE_SOON_DAYS);
   const dues: PendingDue[] = [];
   for (let n = 0; n < MAX_PENDING; n++) {
-    const from = addMonths(start, n);
+    const from = addMonths(start, n * terms.periodMonths);
     if (from > horizon) break;
     dues.push({
       from,
-      until: addDays(addMonths(start, n + 1), -1),
-      amount,
-      currency: plan.currency,
+      until: addDays(addMonths(start, (n + 1) * terms.periodMonths), -1),
+      amount: terms.periodPrice,
+      currency: terms.currency,
       days: daysBetween(today, from),
     });
   }

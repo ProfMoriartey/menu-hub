@@ -311,7 +311,9 @@
     "branchNotFound": "Bu şube artık yok. Sayfayı yenileyin.",
     "branchNameRequired": "Misafirler şubelerinizi ayırt edebilsin diye şubeye bir ad verin.",
     "lastBranch": "Bir restoranın en az bir şubesi olmalıdır.",
-    "saveBillingFailed": "Ödeme bilgileri kaydedilemedi. Lütfen tekrar deneyin."
+    "saveBillingFailed": "Ödeme bilgileri kaydedilemedi. Lütfen tekrar deneyin.",
+    "branchLimit": "Planınız en fazla {count} şube içeriyor. Daha fazlası için bizimle iletişime geçin.",
+    "tooManyLanguages": "Planınız en fazla {count} ek dil içeriyor."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -521,9 +523,6 @@
   "MenuLanguages": {
     "title": "Menü dilleri",
     "intro": "Menüyü birden fazla dilde sunun. Misafirler çevrilmişse kendi dillerinde, değilse ana dilde görür.",
-    "enableTitle": "Birden fazla dilde menü",
-    "enableText": "Bu restoranın sahiplerinin dil seçmesine ve ekibinin menüyü çevirmesine izin verir. Kapatmak çevirileri gizler ama silmez.",
-    "notEnabled": "Bu restoran için birden fazla dilde menü açık değil. Açtırmak için bir yöneticiyle iletişime geçin.",
     "mainLabel": "Ana dil",
     "mainHint": "Menünün şu an yazıldığı dil. Her ürünün en az bu dilde olması gerekir.",
     "mainPlaceholder": "Ana dili seçin",
@@ -534,7 +533,11 @@
     "saving": "Kaydediliyor…",
     "saved": "Kaydedildi",
     "chooseMainFirst": "Önce ana dili seçin.",
-    "notTranslated": "Çevrilmedi: {languages}"
+    "notTranslated": "Çevrilmedi: {languages}",
+    "notInPlan": "Birden çok dilde menü Pro ve Business planlarına dahildir. Eklemek için bizimle iletişime geçin.",
+    "notInPlanAdmin": "Bu restoranın planı menü dillerini içermiyor. Planını değiştirin ya da Features kartından açın.",
+    "limitHint": "Planınız en fazla {count} ek dil içeriyor.",
+    "overLimit": "Menünüzde yalnızca ilk {count} ek dil gösteriliyor; planınız bu kadarını içeriyor. Diğerleri, planınız izin verdiğinde kullanılmak üzere saklanıyor."
   },
   "OpeningHours": {
     "title": "Çalışma saatleri",
@@ -558,9 +561,6 @@
   "ColorTheme": {
     "title": "Menü renkleri",
     "intro": "Misafirlerin menünüzde, hakkında ve ürün sayfalarında gördüğü renkleri açık ve koyu mod için seçin.",
-    "enableTitle": "Özel renkler",
-    "enableText": "Bu restoranın sahiplerinin renkleri tasarlamasına izin verir. Kapatmak varsayılan renklere döner ama tasarımlarını saklar.",
-    "notEnabled": "Bu restoran için özel renkler açık değil, bu yüzden varsayılan renkler kullanılıyor. Açtırmak için bir yöneticiyle iletişime geçin.",
     "presetsLabel": "Bir paletle başlayın",
     "presets": {
       "default": "Varsayılan",
@@ -621,7 +621,9 @@
     "sampleOrder": "Sipariş",
     "sampleCategory": "Başlangıçlar",
     "sampleDish": "Örnek ürün",
-    "sampleDishDescription": "Ürünün kısa bir açıklaması."
+    "sampleDishDescription": "Ürünün kısa bir açıklaması.",
+    "notInPlan": "Özel renkler Pro ve Business planlarına dahildir, bu yüzden menünüz varsayılan renkleri kullanıyor. Eklemek için bizimle iletişime geçin.",
+    "notInPlanAdmin": "Bu restoranın planı özel renkleri içermiyor. Planını değiştirin ya da Features kartından açın."
   },
   "MenuDesign": {
     "title": "Menü tasarımı",
@@ -960,6 +962,10 @@
     "saving": "Kaydediliyor…",
     "unsaved": "Kaydedilmemiş değişiklikler",
     "discard": "Vazgeç",
-    "saved": "Kaydedildi"
+    "saved": "Kaydedildi",
+    "limitNote": "Planınız {max} şube içeriyor; {used} tanesi kullanılıyor.",
+    "hiddenBadge": "Gizli: plan sınırının üstünde",
+    "limitReached": "Planınız en fazla {count} şube içeriyor. Daha fazlası için bizimle iletişime geçin.",
+    "limitReachedAdmin": "Bu plan en fazla {count} şubeye izin veriyor. Planı değiştirin ya da Features kartından sınırı yükseltin."
   }
 }

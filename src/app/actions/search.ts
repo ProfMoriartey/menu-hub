@@ -73,6 +73,7 @@ export async function searchDishes(
       restaurantId: menuItems.restaurantId,
       currency: restaurants.currency,
       multilingualEnabled: restaurants.multilingualEnabled,
+      maxExtraLanguages: restaurants.maxExtraLanguages,
       mainLanguage: restaurants.mainLanguage,
       extraLanguages: restaurants.extraLanguages,
     })

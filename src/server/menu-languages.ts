@@ -12,6 +12,7 @@ export async function getMenuLanguages(
     where: eq(restaurants.id, restaurantId),
     columns: {
       multilingualEnabled: true,
+      maxExtraLanguages: true,
       mainLanguage: true,
       extraLanguages: true,
     },
