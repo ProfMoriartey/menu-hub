@@ -4,7 +4,7 @@
 import { count, desc, eq, max } from "drizzle-orm";
 import { db } from "~/server/db";
 import { branches, payments, restaurantBilling } from "~/server/db/schema";
-import { addMonths, billingToday, pendingDues, type PlanTerms } from "~/lib/billing";
+import { addMonths, billingToday, nextPeriodStart, pendingDues, type PlanTerms } from "~/lib/billing";
 import { TIER_FEATURES, planPricing, type Entitlements, type PlanPricing } from "~/lib/plans";
 import { limitsOf } from "~/server/plans";
 
@@ -206,5 +206,36 @@ export async function getPaymentsPage() {
       expectedMonthly: byCurrency(monthly),
       byMonth,
     },
+  };
+}
+
+/**
+ * A restaurant's plan as its owner sees it: what it's on and pays (no
+ * admin notes), what's included and used, and when the next payment is
+ * due (or how late it is).
+ */
+export async function getOwnerPlan(restaurantId: string) {
+  const today = billingToday();
+  const [{ plan, branchCount, limits }, [latest]] = await Promise.all([
+    getRestaurantPlan(restaurantId),
+    db
+      .select({ paidUntil: max(payments.coversUntil) })
+      .from(payments)
+      .where(eq(payments.restaurantId, restaurantId)),
+  ]);
+  const pricing = planPricing(plan, limits, branchCount);
+  const paidUntil = latest?.paidUntil ?? null;
+  // Owed now: every period due today or earlier.
+  const owed = pendingDues(termsOf(pricing, plan), paidUntil, today).filter((d) => d.days <= 0);
+  return {
+    pricing,
+    cycle: plan?.billingCycle ?? "monthly",
+    limits,
+    branchCount,
+    paidUntil,
+    // The first day not paid for, whenever it is.
+    nextDueOn: pricing && pricing.period > 0 ? nextPeriodStart(plan?.startsOn ?? null, paidUntil, today) : null,
+    owed: owed.length ? { amount: owed.reduce((sum, d) => sum + d.amount, 0), currency: owed[0]!.currency } : null,
+    today,
   };
 }

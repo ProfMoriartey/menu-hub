@@ -44,6 +44,8 @@ export const RESERVED_SLUGS = [
   "restaurants",
   "sign-in",
   "sign-up",
+  // Signing up and creating a restaurant.
+  "start",
   "themes",
 ];
 

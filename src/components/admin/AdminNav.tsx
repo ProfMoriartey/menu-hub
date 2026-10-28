@@ -8,9 +8,11 @@ const NAV_ITEMS = [
   { name: "Restaurants", href: "/admin/restaurants" },
   { name: "Users", href: "/admin/users" },
   { name: "Payments", href: "/admin/payments" },
+  { name: "Requests", href: "/admin/requests" },
 ];
 
-export function AdminNav() {
+// `requestCount`: owners' requests waiting for an admin, shown on Requests.
+export function AdminNav({ requestCount }: { requestCount: number }) {
   const pathname = usePathname();
 
   return (
@@ -31,6 +33,11 @@ export function AdminNav() {
                 )}
               >
                 {item.name}
+                {item.href === "/admin/requests" && requestCount > 0 && (
+                  <span className="bg-primary text-primary-foreground ms-1.5 rounded-full px-1.5 py-0.5 text-xs font-semibold tabular-nums">
+                    {requestCount}
+                  </span>
+                )}
               </Link>
             </li>
           );

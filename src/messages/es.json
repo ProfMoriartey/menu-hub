@@ -16,10 +16,11 @@
     "language": "Idioma",
     "mainNav": "Principal",
     "signIn": "Iniciar sesión",
-    "getInTouch": "Contáctanos",
     "dashboard": "Panel",
     "openMenu": "Abrir menú",
-    "closeMenu": "Cerrar menú"
+    "closeMenu": "Cerrar menú",
+    "pricing": "Precios",
+    "getStarted": "Empezar"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Explora nuestro delicioso menú",
@@ -52,8 +53,6 @@
     },
   "Dashboard": {
     "title": "Sus Menús Asignados",
-    "emptyTitle": "No hay menús asignados",
-    "emptyMessage": "Parece que aún no se le han asignado menús. Por favor, póngase en contacto con el administrador.",
     "accessLevelLabel": "Nivel de Acceso",
     "manageMenuButton": "Administrar Menú",
     "accessLevels": {
@@ -192,7 +191,8 @@
     "preview": "Vista previa del menú",
     "shareTab": "Compartir",
     "teamTab": "Equipo",
-    "colorsTab": "Apariencia"
+    "colorsTab": "Apariencia",
+    "planTab": "Plan"
   },
   "LanguageSwitcher": {
     "label": "Idioma"
@@ -211,7 +211,13 @@
     "adminText": "Puedes gestionar todos los restaurantes desde el panel de administración.",
     "adminLink": "Abrir el panel de administración",
     "preview": "Vista previa del menú (aún no publicado)",
-    "share": "Compartir: código QR y enlace"
+    "share": "Compartir: código QR y enlace",
+    "addRestaurant": "Añadir otro restaurante",
+    "createTitle": "Crea la carta de tu restaurante",
+    "createText": "Elige un plan, añade tus platos y comparte tu código QR. Tu carta se publica cuando hayamos acordado el pago.",
+    "createButton": "Crea tu restaurante",
+    "joinTeamHint": "¿Vas a unirte al equipo de un restaurante? Pide a su dueño que te invite.",
+    "awaitingApproval": "Pendiente de aprobación"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "La dirección de tu menú, la visibilidad, el tema y los ajustes de búsqueda los gestiona un administrador.",
@@ -313,7 +319,12 @@
     "lastBranch": "Un restaurante necesita al menos una sucursal.",
     "saveBillingFailed": "No se pudieron guardar los datos de facturación. Inténtalo de nuevo.",
     "branchLimit": "{count, plural, one {Tu plan incluye # sucursal.} other {Tu plan incluye hasta # sucursales.}} Escríbenos para añadir más.",
-    "tooManyLanguages": "{count, plural, one {Tu plan incluye # idioma extra.} other {Tu plan incluye hasta # idiomas extra.}}"
+    "tooManyLanguages": "{count, plural, one {Tu plan incluye # idioma extra.} other {Tu plan incluye hasta # idiomas extra.}}",
+    "requestFailed": "No se pudo enviar la solicitud. Inténtalo de nuevo.",
+    "createOwnRestaurantFailed": "No se pudo crear tu restaurante. Inténtalo de nuevo.",
+    "requestNotFound": "Esta solicitud ya no existe o ya se resolvió.",
+    "awaitingApproval": "Tu carta podrá publicarse cuando se apruebe tu registro.",
+    "restaurantLimit": "Tu primer restaurante está pendiente de aprobación. Podrás añadir otro cuando se apruebe."
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
@@ -392,7 +403,6 @@
   "Setup": {
     "title": "Prepara tu menú",
     "subtitle": "Unos pocos pasos para tener un menú que tus clientes puedan escanear.",
-    "readyToGoLive": "Todo está listo. Un administrador publicará tu menú pronto.",
     "progress": "{done} de {total} hechos",
     "show": "Mostrar",
     "hide": "Ocultar",
@@ -423,14 +433,18 @@
     },
     "live": {
       "title": "Publícalo",
-      "text": "Un administrador publica tu menú cuando está listo. Mientras tanto, puedes ver la vista previa.",
-      "action": "Vista previa"
+      "action": "Vista previa",
+      "ownerText": "Publica tu carta desde la pestaña Plan cuando se apruebe tu plan.",
+      "ownerAction": "Publicar",
+      "editorText": "El dueño del restaurante publica la carta. Mientras tanto, puedes previsualizarla."
     },
     "scan": {
       "title": "Consigue tu primer escaneo",
       "text": "Imprime tu código QR para las mesas. Este paso se marca solo con el primer escaneo.",
       "action": "Obtener código QR"
-    }
+    },
+    "readyToPublish": "Todo listo. Publica tu carta desde la pestaña Plan.",
+    "readyEditor": "Todo listo. El dueño del restaurante puede publicar la carta."
   },
   "PublicMenu": {
     "categoriesNav": "Categorías del menú",
@@ -865,12 +879,12 @@
       "eyebrow": "Menús digitales para restaurantes, cafés y más",
       "title": "Tu menú en cada móvil, en cada idioma",
       "intro": "Tus clientes escanean un código QR y tu menú se abre al instante, con fotos, precios y horario. Lo cambias tú mismo y está publicado en segundos.",
-      "ctaContact": "Contáctanos",
       "ctaMenus": "Ver menús",
       "point1": "Sin instalar apps",
       "point2": "5 idiomas",
       "point3": "Publicado en segundos",
-      "demoCaption": "Un menú de demostración que funciona. Toca un plato."
+      "demoCaption": "Un menú de demostración que funciona. Toca un plato.",
+      "ctaStart": "Crea tu carta"
     },
     "steps": {
       "title": "Cómo funciona",
@@ -967,5 +981,111 @@
     "hiddenBadge": "Oculta: supera el límite del plan",
     "limitReached": "{count, plural, one {Tu plan incluye # sucursal.} other {Tu plan incluye hasta # sucursales.}} Escríbenos para añadir más.",
     "limitReachedAdmin": "{count, plural, one {Este plan permite # sucursal.} other {Este plan permite hasta # sucursales.}} Cambia el plan o sube el límite en la tarjeta Features."
+  },
+  "Plans": {
+    "pricingTitle": "Planes sencillos",
+    "pricingIntro": "Todos los planes incluyen tu carta completa con fotos, un código QR y tarjetas de mesa para imprimir. Elige el que encaje con tu local.",
+    "pricingNote": "Precios en dólares estadounidenses. Paga por transferencia o en efectivo: lo acordamos cuando te registres.",
+    "cycleLabel": "Facturación",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "yearlySave": "{count, plural, one {# mes gratis} other {# meses gratis}}",
+    "perMonth": "{price} / mes",
+    "perYear": "{price} / año",
+    "perMonthShort": "/ mes",
+    "perYearShort": "/ año",
+    "popular": "El más elegido",
+    "choose": "Empezar con {plan}",
+    "tagline": {
+      "standard": "Para un solo café o restaurante.",
+      "pro": "Tus propios colores, más idiomas, varias sucursales.",
+      "business": "Para cadenas, con todos los idiomas."
+    },
+    "everything": "Carta, fotos, código QR y tarjetas de mesa",
+    "oneBranch": "1 sucursal",
+    "branchesIncluded": "{count} sucursales incluidas",
+    "extraBranches": "{price} por sucursal extra, hasta {max}",
+    "extraBranchesNoLimit": "{price} por sucursal extra",
+    "defaultColors": "Colores predeterminados",
+    "customColors": "Tus propios colores",
+    "oneLanguage": "Carta en un idioma",
+    "extraLanguages": "{count, plural, one {Carta en # idioma extra} other {Carta en hasta # idiomas extra}}",
+    "allLanguages": "Carta en todos los idiomas"
+  },
+  "Start": {
+    "metaTitle": "Crea tu carta | Menupedia",
+    "title": "Crea la carta de tu restaurante",
+    "intro": "Elige un plan, cuéntanos sobre tu local y empieza a crearla. Tu carta se publica cuando hayamos acordado el pago.",
+    "planHeading": "1. Tu plan",
+    "cycleLabel": "Facturación",
+    "detailsHeading": "2. Tu restaurante",
+    "paymentHeading": "3. Pago",
+    "name": "Nombre del restaurante",
+    "namePlaceholder": "p. ej., Lokanta",
+    "slug": "Dirección de la carta",
+    "slugHint": "Letras minúsculas, números y guiones. Los clientes abren tu carta en esta dirección.",
+    "type": "Tipo de local",
+    "typeNone": "Elige",
+    "currency": "Moneda de los precios",
+    "city": "Ciudad",
+    "cityPlaceholder": "p. ej., Bogotá",
+    "country": "País",
+    "phone": "Teléfono o WhatsApp",
+    "phoneHint": "Te llamaremos o escribiremos para acordar el pago.",
+    "paymentMethod": "¿Cómo prefieres pagar?",
+    "methods": {
+      "bank_transfer": "Transferencia",
+      "cash": "Efectivo",
+      "card": "Tarjeta",
+      "other": "Otro"
+    },
+    "note": "¿Algo que debamos saber?",
+    "notePlaceholder": "El mejor momento para contactarte, preguntas…",
+    "afterNote": "Te contactaremos en un día hábil para acordar el pago. Mientras tanto, crea tu carta: se publica cuando se apruebe tu registro.",
+    "submit": "Crear mi restaurante",
+    "submitting": "Creando…",
+    "nameRequired": "Escribe el nombre del restaurante.",
+    "slugInvalid": "Usa letras minúsculas, números y guiones.",
+    "countryRequired": "Elige el país.",
+    "phoneRequired": "Escribe un teléfono en el que podamos contactarte.",
+    "signInTitle": "Primero, crea tu cuenta",
+    "signInText": "Regístrate o inicia sesión y luego crea tu restaurante en el siguiente paso.",
+    "waitingTitle": "{name} está pendiente de aprobación",
+    "waitingText": "Te contactaremos para acordar el pago. Mientras tanto puedes crear tu carta. Cuando se apruebe, podrás añadir otro restaurante.",
+    "toDashboard": "Ir a tu carta"
+  },
+  "OwnerPlan": {
+    "planName": "Plan {plan}",
+    "noPlan": "Aún sin plan",
+    "statusWaiting": "Pendiente de aprobación. Te contactaremos para acordar el pago.",
+    "statusNotBilled": "No hay pagos pendientes.",
+    "statusFree": "Gratis: no hay pagos pendientes.",
+    "statusOverdue": "Pago atrasado: {amount}. Por favor, contáctanos.",
+    "statusPaid": "Pagado hasta el {date}. Próximo pago el {next}.",
+    "statusFirstPayment": "Primer pago el {date}.",
+    "branchesUsed": "Sucursales",
+    "countNoLimit": "{used}, sin límite",
+    "countOf": "{used} de {max}",
+    "languages": "Idiomas",
+    "changeTitle": "Cambia tu plan",
+    "changeText": "Pide otro plan o facturación anual. Te contactaremos para confirmar el precio.",
+    "requestOpen": "Pediste el plan {plan}, con facturación {cycle}. Te contactaremos pronto.",
+    "withdraw": "Retirar la solicitud",
+    "current": "tu plan",
+    "cycleLabel": "Facturación",
+    "notePlaceholder": "Algo que añadir (opcional)",
+    "sendRequest": "Enviar la solicitud",
+    "saving": "Guardando…",
+    "liveTitle": "Tu carta está publicada",
+    "offlineTitle": "Tu carta no está publicada",
+    "liveText": "La ven los clientes que escanean tu código QR o abren tu enlace. Si la despublicas, los llevamos a la página de Cartas.",
+    "offlineText": "Solo tu equipo puede verla. Publícala cuando esté lista.",
+    "waitingApproval": "Tu carta podrá publicarse cuando aprobemos tu registro. Mientras tanto, sigue creándola.",
+    "goLive": "Publicar mi carta",
+    "takeOffline": "Despublicarla",
+    "contactTitle": "Preguntas o pagos",
+    "contactText": "Escríbenos sobre tu plan o un pago.",
+    "whatsappMessage": "Hola, tengo una pregunta sobre el plan de {name}.",
+    "email": "Correo"
   }
 }

@@ -16,10 +16,11 @@
     "language": "Language",
     "mainNav": "Main",
     "signIn": "Sign in",
-    "getInTouch": "Get in touch",
     "dashboard": "Dashboard",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "pricing": "Pricing",
+    "getStarted": "Get started"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Browse our delicious menu",
@@ -52,8 +53,6 @@
   },
   "Dashboard": {
     "title": "Your Assigned Menus",
-    "emptyTitle": "No Menus Assigned",
-    "emptyMessage": "It looks like you haven't been assigned any menus yet. Please contact the administrator.",
     "accessLevelLabel": "Access Level",
     "manageMenuButton": "Manage Menu",
     "accessLevels": {
@@ -192,7 +191,8 @@
     "preview": "Preview menu",
     "shareTab": "Share",
     "teamTab": "Team",
-    "colorsTab": "Appearance"
+    "colorsTab": "Appearance",
+    "planTab": "Plan"
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -211,7 +211,13 @@
     "adminText": "You can manage every restaurant from the admin panel.",
     "adminLink": "Open admin panel",
     "preview": "Preview menu (not live yet)",
-    "share": "Share: QR code and link"
+    "share": "Share: QR code and link",
+    "addRestaurant": "Add another restaurant",
+    "createTitle": "Create your restaurant's menu",
+    "createText": "Pick a plan, add your dishes and share your QR code. Your menu goes live once we've agreed on payment.",
+    "createButton": "Create your restaurant",
+    "joinTeamHint": "Joining a restaurant's team instead? Ask its owner to invite you.",
+    "awaitingApproval": "Waiting for approval"
   },
   "RestaurantDetails": {
     "adminOnlyNote": "Your menu address, visibility, theme and search settings are managed by an administrator.",
@@ -313,7 +319,12 @@
     "lastBranch": "A restaurant needs at least one branch.",
     "saveBillingFailed": "Couldn't save the billing details. Please try again.",
     "branchLimit": "{count, plural, one {Your plan includes # branch.} other {Your plan includes up to # branches.}} Contact us to add more.",
-    "tooManyLanguages": "{count, plural, one {Your plan includes # extra language.} other {Your plan includes up to # extra languages.}}"
+    "tooManyLanguages": "{count, plural, one {Your plan includes # extra language.} other {Your plan includes up to # extra languages.}}",
+    "requestFailed": "Couldn't send the request. Please try again.",
+    "createOwnRestaurantFailed": "Couldn't create your restaurant. Please try again.",
+    "requestNotFound": "This request no longer exists or was already dealt with.",
+    "awaitingApproval": "Your menu can go live once your sign-up is approved.",
+    "restaurantLimit": "Your first restaurant is waiting for approval. You can add another once it's approved."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -392,7 +403,6 @@
   "Setup": {
     "title": "Get your menu ready",
     "subtitle": "A few steps to a menu your guests can scan.",
-    "readyToGoLive": "Everything's in place. An administrator will publish your menu soon.",
     "progress": "{done} of {total} done",
     "show": "Show",
     "hide": "Hide",
@@ -423,14 +433,18 @@
     },
     "live": {
       "title": "Go live",
-      "text": "An administrator publishes your menu once it's ready. Preview it in the meantime.",
-      "action": "Preview"
+      "action": "Preview",
+      "ownerText": "Put your menu live from the Plan tab, once your plan is approved.",
+      "ownerAction": "Go live",
+      "editorText": "The restaurant's owner puts the menu live. Preview it in the meantime."
     },
     "scan": {
       "title": "Get your first scan",
       "text": "Print your QR code for the tables. This step ticks itself off at the first scan.",
       "action": "Get QR code"
-    }
+    },
+    "readyToPublish": "Everything's in place. Put your menu live from the Plan tab.",
+    "readyEditor": "Everything's in place. The restaurant's owner can put the menu live."
   },
   "PublicMenu": {
     "categoriesNav": "Menu categories",
@@ -865,12 +879,12 @@
       "eyebrow": "Digital menus for restaurants, cafés and more",
       "title": "Your menu on every phone, in every language",
       "intro": "Guests scan a QR code and your menu opens instantly, with photos, prices and opening hours. You change it yourself, and it's live in seconds.",
-      "ctaContact": "Get in touch",
       "ctaMenus": "Browse menus",
       "point1": "No app to install",
       "point2": "5 languages",
       "point3": "Live in seconds",
-      "demoCaption": "A working demo menu. Tap a dish."
+      "demoCaption": "A working demo menu. Tap a dish.",
+      "ctaStart": "Create your menu"
     },
     "steps": {
       "title": "How it works",
@@ -967,5 +981,111 @@
     "hiddenBadge": "Hidden: over the plan's limit",
     "limitReached": "{count, plural, one {Your plan includes # branch.} other {Your plan includes up to # branches.}} Contact us to add more.",
     "limitReachedAdmin": "{count, plural, one {This plan allows # branch.} other {This plan allows up to # branches.}} Change the plan, or raise the limit on the Features card."
+  },
+  "Plans": {
+    "pricingTitle": "Simple plans",
+    "pricingIntro": "Every plan has your full menu with photos, a QR code and printable table cards. Pick what fits your place.",
+    "pricingNote": "Prices in US dollars. Pay by bank transfer or cash: we'll agree on it when you sign up.",
+    "cycleLabel": "Billing",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "yearlySave": "{count} months free",
+    "perMonth": "{price} / month",
+    "perYear": "{price} / year",
+    "perMonthShort": "/ month",
+    "perYearShort": "/ year",
+    "popular": "Most popular",
+    "choose": "Start with {plan}",
+    "tagline": {
+      "standard": "For a single café or restaurant.",
+      "pro": "Your own colours, more languages, a few branches.",
+      "business": "For chains, with every language."
+    },
+    "everything": "Menu, photos, QR code and table cards",
+    "oneBranch": "1 branch",
+    "branchesIncluded": "{count} branches included",
+    "extraBranches": "{price} per extra branch, up to {max}",
+    "extraBranchesNoLimit": "{price} per extra branch",
+    "defaultColors": "Default colours",
+    "customColors": "Your own colours",
+    "oneLanguage": "Menu in one language",
+    "extraLanguages": "{count, plural, one {Menu in # extra language} other {Menu in up to # extra languages}}",
+    "allLanguages": "Menu in every language"
+  },
+  "Start": {
+    "metaTitle": "Create your menu | Menupedia",
+    "title": "Create your restaurant's menu",
+    "intro": "Pick a plan, tell us about your place and start building. Your menu goes live once we've agreed on payment.",
+    "planHeading": "1. Your plan",
+    "cycleLabel": "Billing",
+    "detailsHeading": "2. Your restaurant",
+    "paymentHeading": "3. Payment",
+    "name": "Restaurant name",
+    "namePlaceholder": "e.g. Lokanta",
+    "slug": "Menu address",
+    "slugHint": "Lowercase letters, numbers and hyphens. Guests open your menu at this address.",
+    "type": "Type of place",
+    "typeNone": "Choose",
+    "currency": "Prices on the menu in",
+    "city": "City",
+    "cityPlaceholder": "e.g. Istanbul",
+    "country": "Country",
+    "phone": "Phone or WhatsApp",
+    "phoneHint": "We'll call or message you to agree on payment.",
+    "paymentMethod": "How would you like to pay?",
+    "methods": {
+      "bank_transfer": "Bank transfer",
+      "cash": "Cash",
+      "card": "Card",
+      "other": "Other"
+    },
+    "note": "Anything we should know?",
+    "notePlaceholder": "The best time to reach you, questions…",
+    "afterNote": "We'll get in touch within a working day to agree on payment. Meanwhile, build your menu: it goes live once your sign-up is approved.",
+    "submit": "Create my restaurant",
+    "submitting": "Creating…",
+    "nameRequired": "Enter the restaurant's name.",
+    "slugInvalid": "Use lowercase letters, numbers and hyphens.",
+    "countryRequired": "Choose the country.",
+    "phoneRequired": "Enter a phone number we can reach you on.",
+    "signInTitle": "First, create your account",
+    "signInText": "Sign up or sign in, then set up your restaurant on the next step.",
+    "waitingTitle": "{name} is waiting for approval",
+    "waitingText": "We'll get in touch to agree on payment. Meanwhile you can build your menu. Once it's approved, you can add another restaurant.",
+    "toDashboard": "Go to your menu"
+  },
+  "OwnerPlan": {
+    "planName": "{plan} plan",
+    "noPlan": "No plan yet",
+    "statusWaiting": "Waiting for approval. We'll get in touch to agree on payment.",
+    "statusNotBilled": "No payments are due.",
+    "statusFree": "Free: no payments are due.",
+    "statusOverdue": "Payment overdue: {amount}. Please get in touch.",
+    "statusPaid": "Paid until {date}. Next payment due {next}.",
+    "statusFirstPayment": "First payment due {date}.",
+    "branchesUsed": "Branches",
+    "countNoLimit": "{used}, no limit",
+    "countOf": "{used} of {max}",
+    "languages": "Languages",
+    "changeTitle": "Change your plan",
+    "changeText": "Ask for another plan or yearly billing. We'll get in touch to confirm the price.",
+    "requestOpen": "You asked for the {plan} plan, billed {cycle}. We'll get in touch soon.",
+    "withdraw": "Withdraw the request",
+    "current": "your plan",
+    "cycleLabel": "Billing",
+    "notePlaceholder": "Anything to add (optional)",
+    "sendRequest": "Send the request",
+    "saving": "Saving…",
+    "liveTitle": "Your menu is live",
+    "offlineTitle": "Your menu isn't live",
+    "liveText": "Guests who scan your QR code or open your link see it. Taking it offline sends them to the Menus page.",
+    "offlineText": "Only your team can preview it. Put it live when it's ready.",
+    "waitingApproval": "Your menu can go live once we've approved your sign-up. Keep building it in the meantime.",
+    "goLive": "Put my menu live",
+    "takeOffline": "Take it offline",
+    "contactTitle": "Questions or payment",
+    "contactText": "Get in touch about your plan or a payment.",
+    "whatsappMessage": "Hello, I have a question about the plan for {name}.",
+    "email": "Email"
   }
 }

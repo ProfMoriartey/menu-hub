@@ -11,7 +11,7 @@ import type { Restaurant } from "~/types/restaurant";
 interface DashboardRestaurantHeaderProps {
   restaurant: Pick<Restaurant, "name" | "slug" | "logoUrl" | "isActive">;
   role: RestaurantRole;
-  activeTab: "menu" | "details" | "share" | "team" | "colors";
+  activeTab: "menu" | "details" | "share" | "team" | "colors" | "plan";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
   trail?: { label: string; href?: string }[];
 }
@@ -38,6 +38,8 @@ export async function DashboardRestaurantHeader({
           { id: "details", label: t("detailsTab"), href: `${base}/edit` },
           // The colours page explains itself when an admin hasn't enabled it.
           { id: "colors", label: t("colorsTab"), href: `${base}/colors` },
+          // The plan, going live and asking for another plan.
+          { id: "plan", label: t("planTab"), href: `${base}/plan` },
         ]
       : []),
   ];

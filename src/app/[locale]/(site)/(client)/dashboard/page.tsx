@@ -1,11 +1,11 @@
 // app/[locale]/(client)/dashboard/page.tsx
 import { auth } from "@clerk/nextjs/server";
 import { getTranslations, getLocale } from "next-intl/server";
-import { eq } from "drizzle-orm";
-import { ExternalLink, Eye, Pencil, QrCode, ShieldCheck, Store, UserPlus, UtensilsCrossed } from "lucide-react";
+import { and, eq, isNull } from "drizzle-orm";
+import { Clock, ExternalLink, Eye, Pencil, Plus, QrCode, ShieldCheck, Store, UserPlus, UtensilsCrossed } from "lucide-react";
 import { Link, redirect } from "~/i18n/navigation";
 import { db } from "~/server/db";
-import { usersToRestaurants } from "~/server/db/schema";
+import { planRequests, usersToRestaurants } from "~/server/db/schema";
 import { isSystemAdmin } from "~/app/actions/auth";
 import { Button } from "~/components/ui/button";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
@@ -24,7 +24,7 @@ export default async function ClientUserDashboardPage() {
     return redirect({ href: "/sign-in", locale: await getLocale() });
   }
 
-  const [t, tHome, tSetup, tInvite, assignments, isAdmin, invitations] = await Promise.all([
+  const [t, tHome, tSetup, tInvite, assignments, isAdmin, invitations, waitingSignups] = await Promise.all([
     getTranslations("Dashboard"),
     getTranslations("DashboardHome"),
     getTranslations("Setup"),
@@ -53,7 +53,17 @@ export default async function ClientUserDashboardPage() {
         console.error("Failed to load invitations:", error);
         return [];
       }),
+    // Their restaurants still waiting for an admin to approve the sign-up.
+    db.query.planRequests.findMany({
+      where: and(
+        eq(planRequests.requestedBy, userId),
+        eq(planRequests.kind, "signup"),
+        isNull(planRequests.resolution),
+      ),
+      columns: { restaurantId: true },
+    }),
   ]);
+  const waiting = new Set(waitingSignups.map((r) => r.restaurantId));
 
   const restaurants = assignments
     .map(({ restaurant, accessLevel }) => ({
@@ -72,9 +82,19 @@ export default async function ClientUserDashboardPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 sm:px-6">
-      <div>
-        <h1 className="text-foreground text-3xl font-bold tracking-tight">{tHome("title")}</h1>
-        <p className="text-muted-foreground mt-1">{tHome("subtitle")}</p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-foreground text-3xl font-bold tracking-tight">{tHome("title")}</h1>
+          <p className="text-muted-foreground mt-1">{tHome("subtitle")}</p>
+        </div>
+        {/* Another restaurant once the first sign-up is approved. */}
+        {restaurants.length > 0 && waiting.size === 0 && (
+          <Button variant="outline" asChild>
+            <Link href="/start">
+              <Plus className="h-4 w-4" /> {tHome("addRestaurant")}
+            </Link>
+          </Button>
+        )}
       </div>
 
       {isAdmin && (
@@ -116,9 +136,13 @@ export default async function ClientUserDashboardPage() {
 
       {restaurants.length === 0 && openInvitations.length > 0 ? null : restaurants.length === 0 ? (
         <div className="border-border flex flex-col items-center rounded-xl border border-dashed px-6 py-16 text-center">
-          <Store className="text-muted-foreground mb-4 h-10 w-10" aria-hidden />
-          <h2 className="text-lg font-semibold">{t("emptyTitle")}</h2>
-          <p className="text-muted-foreground mt-1 max-w-sm text-sm">{t("emptyMessage")}</p>
+          <Store className="text-primary mb-4 h-10 w-10" aria-hidden />
+          <h2 className="text-lg font-semibold">{tHome("createTitle")}</h2>
+          <p className="text-muted-foreground mt-1 max-w-md text-sm">{tHome("createText")}</p>
+          <Button className="mt-6 rounded-full px-6" asChild>
+            <Link href="/start">{tHome("createButton")}</Link>
+          </Button>
+          <p className="text-muted-foreground mt-4 max-w-sm text-xs">{tHome("joinTeamHint")}</p>
         </div>
       ) : (
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -146,6 +170,11 @@ export default async function ClientUserDashboardPage() {
                   <span className="bg-primary/10 text-primary inline-block rounded-full px-2 py-0.5 text-xs font-medium">
                     {t(`accessLevels.${restaurant.accessLevel}`)}
                   </span>
+                  {waiting.has(restaurant.id) && (
+                    <span className="ms-1.5 inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+                      <Clock className="h-3 w-3" aria-hidden /> {tHome("awaitingApproval")}
+                    </span>
+                  )}
                   <p className="text-muted-foreground text-xs">
                     {t(`accessLevelHints.${restaurant.accessLevel}`)}
                   </p>

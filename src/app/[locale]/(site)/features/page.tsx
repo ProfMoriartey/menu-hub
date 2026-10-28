@@ -23,6 +23,7 @@ import { Button } from "~/components/ui/button";
 import { MenuDemo } from "~/components/features/MenuDemo";
 import { getDemoMenus } from "~/server/demo-menu";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
+import { PricingSection } from "~/components/plans/PricingSection";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("featuresPage");
@@ -145,6 +146,8 @@ export default async function FeaturesPage() {
           </section>
         ))}
       </div>
+
+      <PricingSection className="container mx-auto px-4 pb-24" />
 
       <section
         id="contact"

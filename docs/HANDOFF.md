@@ -472,6 +472,25 @@ overrides, limits; old plan names become tiers, colours/languages an admin
 had switched on and branches beyond one become overrides) and 0015 (drops
 `plan_name`).
 
+**Sign-up and publishing:** the home and Features pages show the plans
+(`components/plans/PricingSection`, `#pricing`; navbar "Pricing" and "Get
+started"). `/start?plan=&cycle=` signs people up (Clerk `SignIn withSignUp`)
+and creates their restaurant (`actions/onboarding.createOwnRestaurant`):
+name, menu address, type, menu currency, city, country, phone, plan, cycle,
+how they'd like to pay and a note. It's created unpublished, with them as
+owner, its first branch, the plan's features and a "signup" row in
+`menu-hub_plan_requests`. One waiting sign-up per account (then
+`restaurantLimit`); another once approved. Admins see open requests at
+`/admin/requests` (count on the admin menu) with phone/WhatsApp, and
+approve (billing starts today unless "billed from" is set) or dismiss.
+Owners have a **Plan** tab (`dashboard/<slug>/plan`): their plan and price,
+status (waiting / paid until / next due / overdue), what's included and
+used, "Put my menu live" / "Take it offline" (`setRestaurantLive`, refused
+with `awaitingApproval` until a sign-up is approved; restaurants an admin
+created have none and can publish), and asking for another plan or yearly
+billing (a "change" request; approving it switches the plan). The setup
+checklist's last step points there. Migration 0016 adds the requests table.
+
 **Billing (admin only):** payments are collected by hand (bank transfer,
 cash) for now, so the site only records them.
 - *Plan tab* (`/admin/restaurants/<slug>/plan`): only the plan agreed with
@@ -643,8 +662,8 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
   (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
   colour themes; 0009: design names; 0010: city, venue types, country codes;
   0011: branches; 0012: billing; 0013: plan start date; 0014–0015: plan
-  tiers and limits). Dev has up to 0013 (2026-10-28); 0014–0015 need
-  `pnpm db:migrate`.
+  tiers and limits; 0016: plan requests). Dev has up to 0015 (2026-10-28);
+  0016 needs `pnpm db:migrate`.
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**

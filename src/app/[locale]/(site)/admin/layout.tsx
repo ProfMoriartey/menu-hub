@@ -5,6 +5,7 @@ import { UserButton } from "@clerk/nextjs"; // ClerkProvider removed, UserButton
 import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle"; // Assuming this is correct
 import { AdminNav } from "~/components/admin/AdminNav";
+import { countOpenRequests } from "~/server/plan-requests";
 
 // Ensure ClerkProvider is in the root app/layout.tsx, not here.
 
@@ -47,7 +48,7 @@ export default async function AdminDashboardLayout({
           <h2 className="text-primary text-lg font-extrabold tracking-tight">
             Admin
           </h2>
-          <AdminNav />
+          <AdminNav requestCount={await countOpenRequests()} />
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle />

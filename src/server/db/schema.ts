@@ -394,3 +394,43 @@ export const paymentsRelations = relations(payments, ({ one }) => ({
     references: [restaurants.id],
   }),
 }));
+
+// What owners ask an admin for: a new restaurant to be approved (a
+// sign-up, with the plan chosen and how they'd like to pay) or a change of
+// plan. Open until an admin approves or dismisses it; open ones are the
+// admin's notifications. A restaurant with an open sign-up can't go live.
+export const planRequests = pgTable(
+  "menu-hub_plan_requests",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    restaurantId: uuid("restaurant_id")
+      .notNull()
+      .references(() => restaurants.id, { onDelete: "cascade" }),
+    // "signup" or "change".
+    kind: varchar("kind", { length: 16 }).notNull(),
+    // lib/plans TIERS and BILLING_CYCLES: what they asked for.
+    tier: varchar("tier", { length: 16 }).notNull(),
+    billingCycle: varchar("billing_cycle", { length: 8 }).notNull(),
+    // lib/billing PAYMENT_METHODS: how they'd like to pay.
+    paymentMethod: varchar("payment_method", { length: 32 }),
+    contactPhone: varchar("contact_phone", { length: 50 }),
+    note: text("note"),
+    requestedBy: text("requested_by").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    // "approved" or "dismissed", once an admin has dealt with it.
+    resolution: varchar("resolution", { length: 16 }),
+    resolvedAt: timestamp("resolved_at"),
+  },
+  (t) => [index("plan_requests_restaurant_idx").on(t.restaurantId)],
+);
+
+export const planRequestsRelations = relations(planRequests, ({ one }) => ({
+  restaurant: one(restaurants, {
+    fields: [planRequests.restaurantId],
+    references: [restaurants.id],
+  }),
+  requester: one(users, {
+    fields: [planRequests.requestedBy],
+    references: [users.id],
+  }),
+}));

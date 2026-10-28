@@ -29,6 +29,7 @@ export function Navbar() {
   const links = [
     { name: t("restaurants"), href: "/menus" },
     { name: t("themes"), href: "/features" },
+    { name: t("pricing"), href: "/#pricing" },
     { name: t("aboutUs"), href: "/about" },
   ];
   const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
@@ -96,7 +97,7 @@ export function Navbar() {
               </Button>
             </SignInButton>
             <Button asChild className="ms-1 rounded-full">
-              <Link href={CONTACT_HREF}>{t("getInTouch")}</Link>
+              <Link href="/start">{t("getStarted")}</Link>
             </Button>
           </SignedOut>
           <SignedIn>
