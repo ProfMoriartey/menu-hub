@@ -1,13 +1,4 @@
 {
-  "messages": {
-    "title": "Ваши Сообщения",
-    "empty": "Сообщений пока нет. Начните разговор!",
-    "noChatSelected": "Выберите чат для просмотра сообщений.",
-    "chatInputPlaceholder": "Введите ваше сообщение...",
-    "sendButton": "Отправить",
-    "messageSent": "Сообщение отправлено!",
-    "errorSendingMessage": "Не удалось отправить сообщение."
-  },
   "navbar": {
     "home": "Главная",
     "restaurants": "Меню",

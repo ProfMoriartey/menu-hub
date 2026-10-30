@@ -41,13 +41,6 @@ export async function generateMetadata({
       locale: ogLocale,
       type: "website",
     },
-    // twitter: {
-    //   card: "summary_large_image",
-    //   title: "Menupedia",
-    //   description: "The Smart Way to Share Menus",
-    //   creator: "@yourtwitterhandle",
-    //   images: [`${APP_BASE_URL}/menupedia1.png`],
-    // },
   };
 }
 
