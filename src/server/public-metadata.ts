@@ -1,7 +1,7 @@
 // src/server/public-metadata.ts
 import type { Metadata } from "next";
 import { routing } from "~/i18n/routing";
-import { getPublicOrigin } from "~/server/public-origin";
+import { cachedPageOrigin } from "~/server/public-origin";
 
 /**
  * Title, description, link-preview card and language links for a public
@@ -35,7 +35,7 @@ export async function publicPageMetadata({
   siteName: string;
   menuLanguages?: string[] | null;
 }): Promise<Metadata> {
-  const origin = await getPublicOrigin();
+  const origin = cachedPageOrigin();
   const url = `${origin}/${locale}${path}`;
   const offered: readonly string[] = menuLanguages?.length
     ? menuLanguages

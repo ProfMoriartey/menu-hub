@@ -11,7 +11,6 @@ import {
   useState,
 } from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ExternalLink, X } from "lucide-react";
@@ -45,8 +44,9 @@ export function DishSheetProvider({
   restaurantSlug: string;
   children: React.ReactNode;
 }) {
-  const searchParams = useSearchParams();
-  const openSlug = searchParams.get(PARAM);
+  // Read from the address after the page loads, not with useSearchParams:
+  // that would keep the menu out of the cached page every guest is sent.
+  const [openSlug, setOpenSlug] = useState<string | null>(null);
   // Whether the open dish added a history entry, so closing can go back.
   const pushed = useRef(false);
 
@@ -59,6 +59,16 @@ export function DishSheetProvider({
   }, [categories, openSlug]);
 
   useEffect(() => {
+    // A shared link opens with the dish showing; back and forward move
+    // between dishes and the menu.
+    const sync = () =>
+      setOpenSlug(new URL(window.location.href).searchParams.get(PARAM));
+    sync();
+    window.addEventListener("popstate", sync);
+    return () => window.removeEventListener("popstate", sync);
+  }, []);
+
+  useEffect(() => {
     if (!openSlug) pushed.current = false;
   }, [openSlug]);
 
@@ -69,6 +79,7 @@ export function DishSheetProvider({
     // Next.js keeps its router in step with the native history API.
     window.history.pushState(null, "", url);
     pushed.current = true;
+    setOpenSlug(item.slug);
   }, []);
 
   const close = useCallback(() => {
@@ -81,6 +92,7 @@ export function DishSheetProvider({
     const url = new URL(window.location.href);
     url.searchParams.delete(PARAM);
     window.history.replaceState(null, "", url);
+    setOpenSlug(null);
   }, []);
 
   const context = useMemo(() => ({ open }), [open]);

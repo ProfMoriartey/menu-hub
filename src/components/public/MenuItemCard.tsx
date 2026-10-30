@@ -130,13 +130,16 @@ export function ClassicDish({ item, restaurantSlug, priority }: DishProps) {
         </div>
         {item.imageUrl && (
           <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg sm:h-28 sm:w-28">
+            {/* A fixed size, not `fill`: the browser gets two choices (1x,
+                2x) instead of every width up to 3840px, which made the
+                srcset most of a long menu's HTML. */}
             <Image
               src={item.imageUrl}
               alt=""
-              fill
-              sizes="112px"
+              width={112}
+              height={112}
               priority={priority}
-              className="object-cover transition-transform duration-200 group-hover:scale-105"
+              className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
             />
           </div>
         )}

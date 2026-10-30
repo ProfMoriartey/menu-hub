@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getMenusDirectory } from "~/server/public-menu";
 import { visibleBranches } from "~/server/branches";
 import { getVisitorCountry } from "~/server/visitor-country";
-import { describeOpenStatus } from "~/components/public/OpeningHours";
+import { describeOpenStatus } from "~/lib/opening-hours";
 import { countryName, isCountryCode } from "~/lib/countries";
 import { allMenuLanguages, menuLanguagesOf } from "~/lib/menu-languages";
 import { isVenueType, venueTypeLabel } from "~/lib/venue-types";

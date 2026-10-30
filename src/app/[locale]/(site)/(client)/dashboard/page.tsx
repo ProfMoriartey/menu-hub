@@ -236,7 +236,7 @@ export default async function ClientUserDashboardPage() {
                 {/* Not live yet: the same page opens as a preview only they can see. */}
                 <Button variant="ghost" size="icon" asChild>
                   <Link
-                    href={`/${restaurant.slug}`}
+                    href={`/${restaurant.slug}/preview`}
                     target="_blank"
                     aria-label={isLive(restaurant) ? tHome("viewLive") : tHome("preview")}
                     title={isLive(restaurant) ? tHome("viewLive") : tHome("preview")}
