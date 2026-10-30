@@ -32,6 +32,10 @@ const DISHES: Record<MenuDesign, { Dish: typeof ClassicDish; list: string }> = {
   },
 };
 
+// Dishes at the top of the first category, on screen when the menu opens on
+// a phone. Their photos are fetched first; the rest load as guests scroll.
+const PRIORITY_PHOTOS = 4;
+
 /**
  * The whole menu on one page, a section per category, with a sticky bar of
  * categories that follows the scroll and jumps to a section when tapped.
@@ -44,7 +48,7 @@ export function MenuLayout({
   menuData: PublicMenuData;
   design: MenuDesign;
 }) {
-  const { activeSlug, scrollToCategory } = useCategoryScrollSpy(
+  const { activeSlug, scrollToCategory, endRef } = useCategoryScrollSpy(
     menuData.categories,
   );
   const { Dish, list } = DISHES[design];
@@ -58,7 +62,7 @@ export function MenuLayout({
         onSelect={scrollToCategory}
       />
 
-      {menuData.categories.map((category) => (
+      {menuData.categories.map((category, categoryIndex) => (
         <section
           key={category.id}
           id={categorySectionId(category.slug)}
@@ -84,14 +88,19 @@ export function MenuLayout({
             </ul>
           ) : (
             <div className={cn(list)}>
-              {category.menuItems.map((item) => (
+              {category.menuItems.map((item, itemIndex) => (
                 <Dish
                   key={item.id}
                   item={item}
                   restaurantSlug={menuData.restaurant.slug}
+                  priority={categoryIndex === 0 && itemIndex < PRIORITY_PHOTOS}
                 />
               ))}
             </div>
+          )}
+          {/* The end of the menu, for the category bar (useCategoryScrollSpy). */}
+          {categoryIndex === menuData.categories.length - 1 && (
+            <div ref={endRef} aria-hidden />
           )}
         </section>
       ))}

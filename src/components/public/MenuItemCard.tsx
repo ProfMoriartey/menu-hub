@@ -20,6 +20,8 @@ import type { PublicMenuItem } from "~/components/public/menu-types";
 interface DishProps {
   item: PublicMenuItem;
   restaurantSlug: string;
+  // The first dishes on screen: their photos load before the rest.
+  priority?: boolean;
 }
 
 /**
@@ -32,7 +34,10 @@ function DishLink({
   restaurantSlug,
   className,
   children,
-}: DishProps & { className?: string; children: React.ReactNode }) {
+}: Omit<DishProps, "priority"> & {
+  className?: string;
+  children: React.ReactNode;
+}) {
   const sheet = useDishSheet();
   return (
     <Link
@@ -97,7 +102,7 @@ const Price = ({
 );
 
 /** Classic: a card with the text first and the photo beside it. */
-export function ClassicDish({ item, restaurantSlug }: DishProps) {
+export function ClassicDish({ item, restaurantSlug, priority }: DishProps) {
   return (
     <DishLink
       item={item}
@@ -130,6 +135,7 @@ export function ClassicDish({ item, restaurantSlug }: DishProps) {
               alt=""
               fill
               sizes="112px"
+              priority={priority}
               className="object-cover transition-transform duration-200 group-hover:scale-105"
             />
           </div>
@@ -140,7 +146,7 @@ export function ClassicDish({ item, restaurantSlug }: DishProps) {
 }
 
 /** Photo grid: a square photo on top, name and price under it. */
-export function PhotoDish({ item, restaurantSlug }: DishProps) {
+export function PhotoDish({ item, restaurantSlug, priority }: DishProps) {
   return (
     <DishLink
       item={item}
@@ -155,6 +161,7 @@ export function PhotoDish({ item, restaurantSlug }: DishProps) {
               alt=""
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+              priority={priority}
               className="object-cover transition-transform duration-200 group-hover:scale-105"
             />
           ) : (

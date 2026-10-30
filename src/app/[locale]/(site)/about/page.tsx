@@ -1,6 +1,6 @@
 // app/[locale]/(site)/about/page.tsx
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   Clock,
   Heart,
@@ -17,8 +17,11 @@ import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import SittingDoodle from "~/components/svg/SittingDoodle";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("aboutPage");
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "aboutPage" });
   return { title: t("metaTitle"), description: t("metaDescription") };
 }
 
@@ -41,7 +44,8 @@ const VALUES: { id: string; icon: LucideIcon }[] = [
  * of features is on /features (with the demo); this page tells the story,
  * and getting started and teamwork live here as the "How it works" steps.
  */
-export default async function AboutPage() {
+export default async function AboutPage({ params }: Props) {
+  setRequestLocale((await params).locale);
   const t = await getTranslations("aboutPage");
 
   return (

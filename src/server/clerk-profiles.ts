@@ -1,4 +1,5 @@
 // src/server/clerk-profiles.ts
+import { unstable_rethrow } from "next/navigation";
 import { clerkClient } from "@clerk/nextjs/server";
 
 // Profile details that only Clerk knows; our users table keeps id and email.
@@ -40,6 +41,8 @@ export async function getClerkProfiles(userIds: string[]): Promise<Map<string, C
       }
     }
   } catch (error) {
+    // Next.js signals (such as "this page is dynamic") must pass through.
+    unstable_rethrow(error);
     console.error("Failed to load Clerk profiles:", error);
   }
 
