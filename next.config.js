@@ -29,6 +29,11 @@ const nextConfig = {
     ];
   },
   images: {
+    // Smaller files than WebP alone, for guests on mobile data.
+    formats: ["image/avif", "image/webp"],
+    // Uploaded photos never change (a new photo gets a new URL), so the
+    // resized copies can be kept for a month (Next.js re-checks every 60s by default).
+    minimumCacheTTL: 2592000,
     remotePatterns: [
       // UploadThing: legacy file URLs and current per-app URLs
       { protocol: "https", hostname: "utfs.io" },

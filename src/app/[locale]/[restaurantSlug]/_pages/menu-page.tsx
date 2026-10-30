@@ -38,7 +38,7 @@ import {
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { OpeningStatus } from "~/components/public/OpeningHours";
 import type { Metadata } from "next";
-import { getPublicOrigin } from "~/server/public-origin";
+import { cachedPageOrigin } from "~/server/public-origin";
 import {
   clip,
   publicPageMetadata,
@@ -109,7 +109,7 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
   };
 
   const locale = await getLocale();
-  const origin = await getPublicOrigin();
+  const origin = cachedPageOrigin();
   const menu = await getPublicMenu(restaurantDetails.id);
   const choices = isMulti
     ? await branchChoices(restaurantDetails.slug, branches, branch, "")

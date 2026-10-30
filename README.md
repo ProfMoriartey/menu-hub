@@ -1,5 +1,3 @@
-Dont forget to Submit https://www.menu-pedia.com/sitemap.xml in Google Search Console.
-
 # Menu-Hub (Menupedia)
 
 A modern, full-stack web application for restaurant menu management and discovery. Menu-Hub connects food lovers with local restaurants through an intuitive platform that allows restaurant owners to manage their menus digitally while providing customers with a seamless dining discovery experience.
@@ -11,7 +9,7 @@ A modern, full-stack web application for restaurant menu management and discover
 - **Admin Dashboard**: Complete restaurant management system with authentication
 - **Menu Management**: Add, edit, and organize menu items with categories
 - **Image Upload**: Upload and manage restaurant logos and menu item images
-- **Theme Customization**: Choose from multiple display themes for your menu
+- **Appearance**: Pick a menu design and brand colours for your menu
 - **Restaurant Profile**: Manage restaurant details, contact information, and descriptions
 - **Dietary Labels**: Add dietary information (vegetarian, vegan, gluten-free, etc.)
 
@@ -19,11 +17,7 @@ A modern, full-stack web application for restaurant menu management and discover
 
 - **Restaurant Discovery**: Browse and search through featured restaurants
 - **Menu Exploration**: View detailed menus with images, descriptions, and pricing
-- **Multiple Theme Layouts**: Experience menus in different visual styles:
-  - Classic Layout
-  - Accordion Card Layout
-  - Sidebar List Layout
-  - Category Cards Image Dominant Layout
+- **Menu Designs**: Every menu is shown in one of three designs: Classic, Photo grid or Compact
 - **Responsive Design**: Optimized for both mobile and desktop devices
 - **Internationalization**: Multi-language support (English, Arabic, Spanish, Russian, Turkish)
 
@@ -43,7 +37,6 @@ A modern, full-stack web application for restaurant menu management and discover
 - **React 19**: Latest React with concurrent features
 - **TypeScript**: Type-safe development
 - **Tailwind CSS 4**: Utility-first CSS framework
-- **Framer Motion**: Smooth animations and transitions
 - **Lucide React**: Beautiful icons
 - **Radix UI**: Accessible UI components
 
@@ -94,22 +87,25 @@ A modern, full-stack web application for restaurant menu management and discover
    ```
 
 3. **Environment Setup**
-   Create a `.env.local` file with the following variables:
+   Copy `.env.example` to `.env` and fill it in (`src/env.js` validates it):
 
    ```env
    # Database
    DATABASE_URL="postgresql://username:password@localhost:5432/menu-hub"
 
+   # Public address of the site, used in QR codes and shared links
+   NEXT_PUBLIC_APP_URL="https://your-domain.com"
+
    # Authentication (Clerk)
    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
    CLERK_SECRET_KEY=your_clerk_secret_key
-
-   # Admin Access
-   ADMIN_USER_ID=your_admin_user_id
+   CLERK_WEBHOOK_SECRET=your_clerk_webhook_signing_secret
 
    # File Upload (UploadThing)
-   UPLOADTHING_SECRET=your_uploadthing_secret
-   UPLOADTHING_APP_ID=your_uploadthing_app_id
+   UPLOADTHING_TOKEN=your_uploadthing_token
+
+   # Optional: visitor country for the Menus page when the host doesn't report one
+   # VISITOR_COUNTRY_FALLBACK="TR"
    ```
 
 4. **Database Setup**
@@ -139,34 +135,37 @@ A modern, full-stack web application for restaurant menu management and discover
 ```
 menu-hub/
 ├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── [locale]/          # Internationalized routes
-│   │   │   ├── admin/         # Admin dashboard
-│   │   │   ├── restaurants/   # Restaurant listing
-│   │   │   └── [restaurantSlug]/ # Individual restaurant pages
-│   │   ├── actions/           # Server actions
-│   │   └── api/              # API routes
-│   ├── components/            # React components
-│   │   ├── admin/            # Admin-specific components
-│   │   ├── home/             # Homepage components
-│   │   ├── public/           # Public-facing components
-│   │   ├── themes/           # Menu theme components
-│   │   └── ui/               # Reusable UI components
-│   ├── server/               # Server-side code
-│   │   └── db/              # Database schema and configuration
-│   ├── messages/             # Internationalization files
-│   └── types/               # TypeScript type definitions
-├── drizzle/                 # Database migrations
-├── public/                  # Static assets
+│   ├── app/                      # Next.js App Router
+│   │   ├── [locale]/
+│   │   │   ├── (site)/           # Marketing pages, Menus directory, sign-in
+│   │   │   │   ├── (client)/dashboard/  # Owner dashboard
+│   │   │   │   └── admin/        # Admin area
+│   │   │   └── [restaurantSlug]/ # Public menus (and branches)
+│   │   ├── actions/              # Server actions
+│   │   ├── api/                  # UploadThing and Clerk webhook
+│   │   └── r/[restaurantId]/     # Permanent QR-code links
+│   ├── components/               # React components, grouped by feature
+│   │   ├── public/               # Public menu
+│   │   ├── menu-editor/          # Owner menu editor
+│   │   ├── admin/                # Admin area
+│   │   └── ui/                   # Reusable UI components
+│   ├── lib/                      # Shared helpers
+│   ├── server/                   # Server-only code
+│   │   └── db/                   # Schema and migrations
+│   ├── messages/                 # Translations
+│   └── types/                    # TypeScript type definitions
+├── scripts/                      # Upload cleanup and i18n tools
+├── public/                       # Static assets
 └── package.json
 ```
 
-## 🎨 Available Menu Themes
+## 🎨 Menu Designs
 
-1. **Classic Layout**: Traditional menu layout with clean typography
-2. **Accordion Card Layout**: Collapsible categories with card-based design
-3. **Sidebar List Layout**: Sidebar navigation with detailed item lists
-4. **Category Cards Image Dominant**: Image-focused category cards
+Every design is the same single scrolling page, made for phones first (see `src/lib/menu-design.ts`); they differ in how each dish is shown:
+
+1. **Classic**: A list of dishes with small photos
+2. **Photo grid**: Dishes as photo cards
+3. **Compact**: Dense rows for long menus
 
 ## 🌐 Internationalization
 
@@ -201,6 +200,11 @@ pnpm lint:fix         # Fix ESLint issues
 pnpm format:write     # Format code with Prettier
 pnpm format:check     # Check code formatting
 pnpm typecheck        # Run TypeScript type checking
+pnpm check            # Lint and type-check
+
+# Maintenance
+pnpm i18n:check       # Check translation keys and formatting
+pnpm uploads:cleanup  # Remove uploaded files nothing uses
 ```
 
 ## 🚀 Deployment
@@ -228,10 +232,6 @@ The application can be deployed to any platform that supports Next.js:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## 👨‍💻 Author
 
 **Ahmed Alhusaini**
@@ -241,7 +241,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Built with [T3 Stack](https://create.t3.gg/)
 - UI components from [Radix UI](https://www.radix-ui.com/)
 - Icons from [Lucide](https://lucide.dev/)
-- Animations powered by [Framer Motion](https://www.framer.com/motion/)
 
 ---
 

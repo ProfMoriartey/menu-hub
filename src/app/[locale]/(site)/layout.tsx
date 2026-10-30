@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { NextIntlClientProvider } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
 
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
@@ -13,11 +14,14 @@ import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
  * sign-in in the browser (Clerk), the site navbar, upload setup and the full
  * set of translations. Route groups don't change URLs.
  */
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  setRequestLocale((await params).locale);
   return (
     <ClerkProvider>
       <NextIntlClientProvider>

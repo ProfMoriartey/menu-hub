@@ -13,6 +13,8 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { cn } from "~/lib/utils";
+import { OpenStatusText } from "~/components/public/OpeningHours";
+import type { OpeningHours } from "~/lib/opening-hours";
 
 /** One branch in the picker (server/public-branch builds these). */
 export interface BranchChoice {
@@ -21,7 +23,9 @@ export interface BranchChoice {
   label: string;
   // Address or city, and country.
   place: string;
-  open: { isOpen: boolean; label: string } | null;
+  // Open now or not is worked out in the browser (OpenStatusText).
+  hours: OpeningHours | null;
+  timeZone: string | null;
   current: boolean;
 }
 
@@ -79,18 +83,7 @@ export function BranchPicker({ restaurantName, branches, allHref, onAll, classNa
                   {branch.place && (
                     <span className="text-muted-foreground block text-sm">{branch.place}</span>
                   )}
-                  {branch.open && (
-                    <span
-                      className={cn(
-                        "mt-0.5 block text-xs font-medium",
-                        branch.open.isOpen
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : "text-muted-foreground",
-                      )}
-                    >
-                      {branch.open.label}
-                    </span>
-                  )}
+                  <OpenStatusText hours={branch.hours} timeZone={branch.timeZone} className="mt-0.5 text-xs" />
                 </span>
                 {branch.current && <Check className="text-primary mt-0.5 h-4 w-4 shrink-0" aria-hidden />}
               </Link>

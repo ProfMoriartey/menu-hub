@@ -1,6 +1,6 @@
 // app/[locale]/(site)/kvkk/page.tsx
 import type { Metadata } from "next";
-import { getLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { Link } from "~/i18n/navigation";
 import { NOTICE_UPDATED, kvkkNotice } from "~/content/kvkk";
 import { CONTACT_EMAIL, DATA_CONTROLLER } from "~/lib/site-contact";
@@ -9,14 +9,17 @@ import { CONTACT_EMAIL, DATA_CONTROLLER } from "~/lib/site-contact";
 const noticeFor = (locale: string) =>
   kvkkNotice(locale === "tr" ? "tr" : "en", DATA_CONTROLLER, CONTACT_EMAIL);
 
-export async function generateMetadata(): Promise<Metadata> {
-  const notice = noticeFor(await getLocale());
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const notice = noticeFor((await params).locale);
   return { title: `${notice.title} | Menupedia`, description: notice.intro };
 }
 
 /** The KVKK privacy notice (content/kvkk), linked from the footer. */
-export default async function KvkkPage() {
-  const locale = await getLocale();
+export default async function KvkkPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const notice = noticeFor(locale);
   const updated = new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
     new Date(`${NOTICE_UPDATED}T00:00:00Z`),

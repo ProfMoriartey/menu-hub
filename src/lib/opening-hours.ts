@@ -179,3 +179,47 @@ export function zonedDay(date: Date, timeZone: string | null): string {
     day: "2-digit",
   }).format(date);
 }
+
+/** The PublicMenu messages describeOpenStatus needs, from either side. */
+type OpenStatusT = (
+  key:
+    | "openUntil"
+    | "opensToday"
+    | "opensTomorrow"
+    | "opensOn"
+    | "openNow"
+    | "closedNow",
+  values?: Record<string, string>,
+) => string;
+
+/**
+ * Whether the place is open at `now` in its time zone, with the words for
+ * it: "Open now" and "until 23:00", or "Closed" and "opens tomorrow at 09:00".
+ */
+export function describeOpenStatus(
+  hours: OpeningHours,
+  timeZone: string,
+  now: Date,
+  t: OpenStatusT,
+  locale: string,
+) {
+  const status = openStatus(hours, timeZone, now);
+
+  let detail: string | null = null;
+  if (status.open) {
+    detail = t("openUntil", { time: formatTime(status.closesAt, locale) });
+  } else if (status.opensAt) {
+    const time = formatTime(status.opensAt, locale);
+    detail =
+      status.inDays === 0
+        ? t("opensToday", { time })
+        : status.inDays === 1
+          ? t("opensTomorrow", { time })
+          : t("opensOn", { day: dayName(status.opensDay, locale), time });
+  }
+  return {
+    isOpen: status.open,
+    label: status.open ? t("openNow") : t("closedNow"),
+    detail,
+  };
+}

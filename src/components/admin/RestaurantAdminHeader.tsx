@@ -109,7 +109,7 @@ export function RestaurantAdminHeader({
         </div>
         {/* Inactive restaurants open as a preview only people with access see. */}
         <Button variant="outline" asChild>
-          <Link href={`/${restaurant.slug}`} target="_blank">
+          <Link href={`/${restaurant.slug}/preview`} target="_blank">
             {restaurant.isActive ? (
               <>
                 View live menu <ExternalLink className="h-4 w-4" />

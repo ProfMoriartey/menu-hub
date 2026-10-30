@@ -1,6 +1,6 @@
 // src/server/public-menu.ts
 import { cache } from "react";
-import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { and, asc, count, eq, isNotNull, isNull, lte, ne, sql } from "drizzle-orm";
 import { db } from "~/server/db";
 import { branches, categories, menuItems, restaurants } from "~/server/db/schema";
@@ -204,15 +204,17 @@ export const getMenusDirectory = cache(
   ),
 );
 
-// Public pages, the dashboard and the admin panel all show this data, so
-// every page under the locale segment is re-rendered too.
-const revalidateLocalePages = () => revalidatePath("/[locale]", "layout");
+/*
+ * The cached public pages carry the tags of the reads above, so clearing a
+ * tag re-renders just the pages built from it: one restaurant's menu, not
+ * every menu on the site. The dashboard and admin pages aren't cached; any
+ * revalidation in a server action also refreshes the page the user is on.
+ */
 
 /** After a change to a restaurant's categories or items. */
 export function revalidatePublicMenu(restaurantId: string) {
   revalidateTag(menuTag(restaurantId));
   revalidateTag(DIRECTORY_TAG);
-  revalidateLocalePages();
 }
 
 /**
@@ -223,5 +225,4 @@ export function revalidatePublicRestaurant(restaurantId?: string) {
   revalidateTag(RESTAURANTS_TAG);
   revalidateTag(DIRECTORY_TAG);
   if (restaurantId) revalidateTag(menuTag(restaurantId));
-  revalidateLocalePages();
 }

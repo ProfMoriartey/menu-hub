@@ -4,7 +4,6 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "~/i18n/navigation";
 import { getPublicBranches, getRestaurantBySlug } from "~/server/public-menu";
 import { EMPTY_LOCATION, visibleBranches, type BranchLocation } from "~/server/branches";
-import { describeOpenStatus } from "~/components/public/OpeningHours";
 import { countryName } from "~/lib/countries";
 import type { BranchChoice } from "~/components/public/BranchPicker";
 
@@ -59,7 +58,7 @@ export async function findBranchPage(restaurantSlug: string, branchSlug: string 
   };
 }
 
-/** The branch picker's list, with whether each branch is open now. */
+/** The branch picker's list, with each branch's hours (open now is the browser's call). */
 export async function branchChoices(
   restaurantSlug: string,
   branches: PublicBranch[],
@@ -67,26 +66,17 @@ export async function branchChoices(
   subpage: BranchSubpage,
 ): Promise<BranchChoice[]> {
   const [t, locale] = await Promise.all([getTranslations("PublicMenu"), getLocale()]);
-  const now = new Date();
-  return branches.map((branch) => {
-    const open =
-      branch.openingHours && branch.timeZone
-        ? describeOpenStatus(branch.openingHours, branch.timeZone, now, t, locale)
-        : null;
-    return {
-      id: branch.id,
-      href: `/${restaurantSlug}/${branch.slug}${subpage}`,
-      label: branchLabel(branch, t("mainBranch")),
-      place: [branch.address ?? branch.city, countryName(branch.country, locale)]
-        .filter(Boolean)
-        .join(" · "),
-      open: open && {
-        isOpen: open.isOpen,
-        label: [open.label, open.detail].filter(Boolean).join(" · "),
-      },
-      current: branch.id === current?.id,
-    };
-  });
+  return branches.map((branch) => ({
+    id: branch.id,
+    href: `/${restaurantSlug}/${branch.slug}${subpage}`,
+    label: branchLabel(branch, t("mainBranch")),
+    place: [branch.address ?? branch.city, countryName(branch.country, locale)]
+      .filter(Boolean)
+      .join(" · "),
+    hours: branch.openingHours,
+    timeZone: branch.timeZone,
+    current: branch.id === current?.id,
+  }));
 }
 
 /** findBranchPage for a page: a 404 or a redirect when it isn't one. */

@@ -18,6 +18,17 @@ export async function getPublicOrigin(): Promise<string> {
   return `${protocol}://${host}`;
 }
 
+/**
+ * The site's address on the public restaurant pages, which are cached and
+ * sent to every guest, so they can't look at the request: NEXT_PUBLIC_APP_URL,
+ * else this Vercel deployment's address, else localhost.
+ */
+export function cachedPageOrigin(): string {
+  if (env.NEXT_PUBLIC_APP_URL) return env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "");
+  if (env.VERCEL_URL) return `https://${env.VERCEL_URL}`;
+  return "http://localhost:3000";
+}
+
 /** The links a restaurant, or one of its branches, is shared with. */
 export async function getShareLinks(
   restaurant: { id: string; slug: string },

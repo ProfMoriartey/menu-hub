@@ -1,6 +1,7 @@
 // src/app/actions/auth.ts
 "use server";
 
+import { cache } from "react";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "~/server/db";
 import { usersToRestaurants } from "~/server/db/schema";
@@ -28,11 +29,8 @@ export async function isSystemAdmin(): Promise<boolean> {
   return isAdmin;
 }
 
-/**
- * The current user's role for a restaurant: "admin" for system admins,
- * otherwise their assigned access level, or null when they have no access.
- */
-export async function getRestaurantRole(restaurantId: string): Promise<RestaurantRole | null> {
+// Once per request: the dashboard layout and the page under it both ask.
+const roleFor = cache(async (restaurantId: string): Promise<RestaurantRole | null> => {
   const { userId } = await auth();
   if (!userId) return null;
 
@@ -47,6 +45,14 @@ export async function getRestaurantRole(restaurantId: string): Promise<Restauran
   });
 
   return link ? toAccessLevel(link.accessLevel) : null;
+});
+
+/**
+ * The current user's role for a restaurant: "admin" for system admins,
+ * otherwise their assigned access level, or null when they have no access.
+ */
+export async function getRestaurantRole(restaurantId: string): Promise<RestaurantRole | null> {
+  return roleFor(restaurantId);
 }
 
 /**

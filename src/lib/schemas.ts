@@ -81,7 +81,7 @@ export const restaurantSchema = z.object({
 export type RestaurantFormData = z.infer<typeof restaurantSchema>;
 
 // Branch pages will live at /[restaurantSlug]/[branchSlug], next to these.
-export const RESERVED_BRANCH_SLUGS = ["about", "item"];
+export const RESERVED_BRANCH_SLUGS = ["about", "item", "preview"];
 
 // A branch's own details (server/branches). The country is an ISO code
 // (lib/countries); owners can't change it.
