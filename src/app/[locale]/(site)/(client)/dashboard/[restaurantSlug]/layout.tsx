@@ -4,10 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "~/i18n/navigation";
 import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { db } from "~/server/db";
-import * as schema from "~/server/db/schema";
-import { eq } from "drizzle-orm";
 import { getRestaurantRole } from "~/app/actions/auth";
+import { findDashboardRestaurant } from "~/server/dashboard-restaurant";
 
 interface DynamicLayoutProps {
   children: React.ReactNode;
@@ -30,10 +28,8 @@ export default async function RestaurantDashboardLayout({
     return redirect({ href: "/sign-in", locale: await getLocale() });
   }
 
-  const restaurant = await db.query.restaurants.findFirst({
-    where: eq(schema.restaurants.slug, restaurantSlug),
-    columns: { id: true },
-  });
+  // The page asks for the same row; this lookup is shared with it.
+  const restaurant = await findDashboardRestaurant(restaurantSlug);
 
   if (!restaurant) {
     return notFound();

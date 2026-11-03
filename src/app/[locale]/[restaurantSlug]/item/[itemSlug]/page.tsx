@@ -3,7 +3,7 @@ import { db } from "~/server/db";
 import { menuItems } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import {
   clip,
@@ -37,18 +37,22 @@ function localized(
 
 interface PageProps {
   params: Promise<{
+    locale: string;
     restaurantSlug: string;
     itemSlug: string;
   }>;
-  searchParams?: Promise<
-    Readonly<Record<string, string | string[] | undefined>>
-  >;
+}
+
+// Rendered on first visit and cached, like the menu itself.
+export function generateStaticParams() {
+  return [];
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { restaurantSlug, itemSlug } = await params;
+  const { locale: pageLocale, restaurantSlug, itemSlug } = await params;
+  setRequestLocale(pageLocale);
   const restaurant = await getRestaurantBySlug(restaurantSlug);
   if (!restaurant) return {};
   const row = await getPublicMenuItem(restaurant.id, itemSlug);
@@ -81,7 +85,8 @@ export async function generateMetadata({
 }
 
 export default async function MenuItemDetailPage({ params }: PageProps) {
-  const { restaurantSlug, itemSlug } = await params;
+  const { locale: pageLocale, restaurantSlug, itemSlug } = await params;
+  setRequestLocale(pageLocale);
 
   const restaurant = await getRestaurantBySlug(restaurantSlug);
   if (!restaurant) notFound();

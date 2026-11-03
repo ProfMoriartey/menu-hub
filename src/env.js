@@ -12,6 +12,9 @@ export const env = createEnv({
     // The country (ISO code, e.g. "TR") the Menus page assumes when the host
     // doesn't report the visitor's country, as in local development.
     VISITOR_COUNTRY_FALLBACK: z.string().length(2).optional(),
+    // Set by Vercel: this deployment's address (no protocol). The cached
+    // public menus fall back to it when NEXT_PUBLIC_APP_URL is unset.
+    VERCEL_URL: z.string().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -38,6 +41,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
     VISITOR_COUNTRY_FALLBACK: process.env.VISITOR_COUNTRY_FALLBACK,
+    VERCEL_URL: process.env.VERCEL_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   /**

@@ -4,6 +4,7 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider, themeInitScript } from "~/context/ThemeContext";
 import { hasLocale } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "~/i18n/routing";
 
@@ -41,13 +42,6 @@ export async function generateMetadata({
       locale: ogLocale,
       type: "website",
     },
-    // twitter: {
-    //   card: "summary_large_image",
-    //   title: "Menupedia",
-    //   description: "The Smart Way to Share Menus",
-    //   creator: "@yourtwitterhandle",
-    //   images: [`${APP_BASE_URL}/menupedia1.png`],
-    // },
   };
 }
 
@@ -55,6 +49,12 @@ const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist-sans",
 });
+
+// One build per language, so pages that don't depend on the visitor (About,
+// Features, KVKK) are rendered once and served from the cache.
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export default async function LocaleLayout({
   children,
@@ -67,6 +67,7 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+  setRequestLocale(locale);
   // Only what every page needs. Sign-in (Clerk), the site navbar, upload
   // setup and the full set of translations live in (site)/layout.tsx, so
   // public menu pages, the ones guests open from a QR code, don't load them.

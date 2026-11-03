@@ -1,13 +1,4 @@
 {
-  "messages": {
-    "title": "Tus Mensajes",
-    "empty": "Aún no hay mensajes. ¡Inicia una conversación!",
-    "noChatSelected": "Selecciona un chat para ver los mensajes.",
-    "chatInputPlaceholder": "Escribe tu mensaje...",
-    "sendButton": "Enviar",
-    "messageSent": "¡Mensaje enviado!",
-    "errorSendingMessage": "No se pudo enviar el mensaje."
-  },
   "navbar": {
     "home": "Inicio",
     "restaurants": "Menús",

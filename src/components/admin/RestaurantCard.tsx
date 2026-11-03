@@ -148,7 +148,7 @@ export function RestaurantCard({
           {/* Inactive restaurants open as a preview only people with access see. */}
           <Button variant="ghost" size="icon" asChild>
             <Link
-              href={`/${restaurant.slug}`}
+              href={`/${restaurant.slug}/preview`}
               target="_blank"
               aria-label={
                 restaurant.isActive

@@ -20,6 +20,8 @@ import type { PublicMenuItem } from "~/components/public/menu-types";
 interface DishProps {
   item: PublicMenuItem;
   restaurantSlug: string;
+  // The first dishes on screen: their photos load before the rest.
+  priority?: boolean;
 }
 
 /**
@@ -32,7 +34,10 @@ function DishLink({
   restaurantSlug,
   className,
   children,
-}: DishProps & { className?: string; children: React.ReactNode }) {
+}: Omit<DishProps, "priority"> & {
+  className?: string;
+  children: React.ReactNode;
+}) {
   const sheet = useDishSheet();
   return (
     <Link
@@ -97,7 +102,7 @@ const Price = ({
 );
 
 /** Classic: a card with the text first and the photo beside it. */
-export function ClassicDish({ item, restaurantSlug }: DishProps) {
+export function ClassicDish({ item, restaurantSlug, priority }: DishProps) {
   return (
     <DishLink
       item={item}
@@ -125,12 +130,16 @@ export function ClassicDish({ item, restaurantSlug }: DishProps) {
         </div>
         {item.imageUrl && (
           <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg sm:h-28 sm:w-28">
+            {/* A fixed size, not `fill`: the browser gets two choices (1x,
+                2x) instead of every width up to 3840px, which made the
+                srcset most of a long menu's HTML. */}
             <Image
               src={item.imageUrl}
               alt=""
-              fill
-              sizes="112px"
-              className="object-cover transition-transform duration-200 group-hover:scale-105"
+              width={112}
+              height={112}
+              priority={priority}
+              className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
             />
           </div>
         )}
@@ -140,7 +149,7 @@ export function ClassicDish({ item, restaurantSlug }: DishProps) {
 }
 
 /** Photo grid: a square photo on top, name and price under it. */
-export function PhotoDish({ item, restaurantSlug }: DishProps) {
+export function PhotoDish({ item, restaurantSlug, priority }: DishProps) {
   return (
     <DishLink
       item={item}
@@ -155,6 +164,7 @@ export function PhotoDish({ item, restaurantSlug }: DishProps) {
               alt=""
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+              priority={priority}
               className="object-cover transition-transform duration-200 group-hover:scale-105"
             />
           ) : (

@@ -1,13 +1,4 @@
 {
-  "messages": {
-    "title": "رسائلك",
-    "empty": "لا توجد رسائل بعد. ابدأ محادثة!",
-    "noChatSelected": "اختر محادثة لعرض الرسائل.",
-    "chatInputPlaceholder": "اكتب رسالتك...",
-    "sendButton": "إرسال",
-    "messageSent": "تم إرسال الرسالة!",
-    "errorSendingMessage": "فشل في إرسال الرسالة."
-  },
   "navbar": {
     "home": "الرئيسية",
     "restaurants": "القوائم",

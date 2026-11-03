@@ -1,13 +1,4 @@
 {
-  "messages": {
-    "title": "Mesajlarınız",
-    "empty": "Henüz mesaj yok. Bir konuşma başlatın!",
-    "noChatSelected": "Mesajları görüntülemek için bir sohbet seçin.",
-    "chatInputPlaceholder": "Mesajınızı yazın...",
-    "sendButton": "Gönder",
-    "messageSent": "Mesaj gönderildi!",
-    "errorSendingMessage": "Mesaj gönderilemedi."
-  },
   "navbar": {
     "home": "Ana Sayfa",
     "restaurants": "Menüler",

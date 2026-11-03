@@ -22,7 +22,7 @@ import { venueTypeLabel } from "~/lib/venue-types"
 
 import type { SocialMediaLinks, DeliveryAppLinks } from "~/lib/schemas"
 import { DeliveryOptionsDialog } from "~/components/public/DeliveryOptionsDialog"
-import { OpeningHoursTable, OpeningStatus } from "~/components/public/OpeningHours"
+import { OpeningHoursTable, OpeningStatus, OpenStatusText } from "~/components/public/OpeningHours"
 import { PublicPageControls } from "~/components/public/PublicPageControls"
 
 interface AboutPageProps {
@@ -282,16 +282,7 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
                         {choice.label}
                       </Link>
                       {choice.place && <p className="text-muted-foreground">{choice.place}</p>}
-                      {choice.open && (
-                        <p
-                          className={cn(
-                            "mt-1 text-sm font-medium",
-                            choice.open.isOpen ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground",
-                          )}
-                        >
-                          {choice.open.label}
-                        </p>
-                      )}
+                      <OpenStatusText hours={choice.hours} timeZone={choice.timeZone} className="mt-1 text-sm" />
                       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                         {b.phoneNumber && (
                           <a href={`tel:${b.phoneNumber}`} className="text-primary inline-flex items-center gap-1.5 font-medium hover:underline">

@@ -16,16 +16,23 @@ const ACTIVE_THRESHOLD_PX = 120;
  * Tracks which category section is on screen, and scrolls to one on request.
  * While a requested scroll is running the highlight stays on the requested
  * category, so it doesn't flicker through every section passed on the way.
+ *
+ * Sections are only measured when one crosses the line under the sticky bar
+ * (or the end of the menu comes into view), not on every scroll frame, so
+ * scrolling stays smooth on slower phones.
  */
 export function useCategoryScrollSpy(categories: Pick<Category, "slug">[]) {
   const [activeSlug, setActiveSlug] = useState(categories[0]?.slug ?? null);
   const lockUntilIdle = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Placed after the last section; see MenuLayout.
+  const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let frame = 0;
+    let atEnd = false;
 
     const update = () => {
-      frame = 0;
+      // A requested scroll is still moving: keep its category.
+      if (lockUntilIdle.current) return;
       let current = categories[0]?.slug ?? null;
       for (const { slug } of categories) {
         const section = document.getElementById(categorySectionId(slug));
@@ -36,34 +43,43 @@ export function useCategoryScrollSpy(categories: Pick<Category, "slug">[]) {
           current = slug;
         }
       }
-      // A short last section may never reach the top; at the very bottom of
-      // the page it is the one being read.
-      const atBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 2;
-      if (atBottom && categories.length)
+      // A short last section may never reach the top; once the end of the
+      // menu is on screen it is the one being read.
+      if (atEnd && categories.length)
         current = categories[categories.length - 1]!.slug;
       setActiveSlug(current);
     };
 
+    // The viewport minus the strip above the line: a section enters or
+    // leaves it as its top crosses ACTIVE_THRESHOLD_PX.
+    const sections = new IntersectionObserver(update, {
+      rootMargin: `-${ACTIVE_THRESHOLD_PX}px 0px 0px 0px`,
+    });
+    for (const { slug } of categories) {
+      const section = document.getElementById(categorySectionId(slug));
+      if (section) sections.observe(section);
+    }
+    const end = new IntersectionObserver(([entry]) => {
+      atEnd = entry?.isIntersecting ?? false;
+      update();
+    });
+    if (endRef.current) end.observe(endRef.current);
+
+    // Only keeps the lock while a requested scroll is moving; cheap.
     const onScroll = () => {
-      if (lockUntilIdle.current) {
-        // A requested scroll is still moving: wait until it stops.
-        clearTimeout(lockUntilIdle.current);
-        lockUntilIdle.current = setTimeout(
-          () => (lockUntilIdle.current = null),
-          150,
-        );
-        return;
-      }
-      if (!frame) frame = requestAnimationFrame(update);
+      if (!lockUntilIdle.current) return;
+      clearTimeout(lockUntilIdle.current);
+      lockUntilIdle.current = setTimeout(
+        () => (lockUntilIdle.current = null),
+        150,
+      );
     };
 
-    update();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
+      sections.disconnect();
+      end.disconnect();
       window.removeEventListener("scroll", onScroll);
-      if (frame) cancelAnimationFrame(frame);
     };
   }, [categories]);
 
@@ -85,7 +101,7 @@ export function useCategoryScrollSpy(categories: Pick<Category, "slug">[]) {
     });
   }, []);
 
-  return { activeSlug, scrollToCategory };
+  return { activeSlug, scrollToCategory, endRef };
 }
 
 /**

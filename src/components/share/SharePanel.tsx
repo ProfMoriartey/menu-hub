@@ -106,7 +106,7 @@ export function SharePanel({ restaurant, targets, detailsHref, printHref }: Shar
           <EyeOff className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden />
           <span>
             {t("notLiveStatus")}{" "}
-            <Link href={`/${restaurant.slug}`} target="_blank" className="font-medium underline underline-offset-2">
+            <Link href={`/${restaurant.slug}/preview`} target="_blank" className="font-medium underline underline-offset-2">
               {t("previewLink")}
             </Link>
           </span>

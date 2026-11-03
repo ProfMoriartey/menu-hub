@@ -107,7 +107,7 @@ export async function DashboardRestaurantHeader({
         </div>
         {/* Not live yet: the same page opens as a preview only they can see. */}
         <Button variant="outline" asChild>
-          <Link href={`/${restaurant.slug}`} target="_blank">
+          <Link href={`/${restaurant.slug}/preview`} target="_blank">
             {isLive(restaurant) ? t("viewLive") : t("preview")}{" "}
             {isLive(restaurant) ? (
               <ExternalLink className="h-4 w-4" />

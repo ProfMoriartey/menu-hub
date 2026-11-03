@@ -1,11 +1,14 @@
 // src/components/public/OpeningHours.tsx
-import { getLocale, getTranslations } from "next-intl/server";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "~/lib/utils";
 import {
   WEEK_DAYS,
   dayName,
+  describeOpenStatus,
   formatTime,
-  openStatus,
   zonedTime,
   type OpeningHours,
 } from "~/lib/opening-hours";
@@ -15,56 +18,36 @@ interface Props {
   timeZone: string | null;
 }
 
-type PublicMenuT = Awaited<ReturnType<typeof getTranslations<"PublicMenu">>>;
-
 /**
- * Whether the place is open at `now` in its time zone, with the words for
- * it: "Open now" and "until 23:00", or "Closed" and "opens tomorrow at 09:00".
+ * The time now, in the browser. Null until the page has loaded: public pages
+ * are cached and shared by every guest, so the server can't know it. Moves
+ * on every minute, so "Open now" turns to "Closed" on a page left open.
  */
-export function describeOpenStatus(
-  hours: OpeningHours,
-  timeZone: string,
-  now: Date,
-  t: PublicMenuT,
-  locale: string,
-) {
-  const status = openStatus(hours, timeZone, now);
-
-  let detail: string | null = null;
-  if (status.open) {
-    detail = t("openUntil", { time: formatTime(status.closesAt, locale) });
-  } else if (status.opensAt) {
-    const time = formatTime(status.opensAt, locale);
-    detail =
-      status.inDays === 0
-        ? t("opensToday", { time })
-        : status.inDays === 1
-          ? t("opensTomorrow", { time })
-          : t("opensOn", { day: dayName(status.opensDay, locale), time });
-  }
-  return {
-    isOpen: status.open,
-    label: status.open ? t("openNow") : t("closedNow"),
-    detail,
-  };
+export function useNow(): Date | null {
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+    const timer = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+  return now;
 }
 
 /**
- * "Open now · until 23:00" or "Closed · opens tomorrow at 09:00", at the
- * time of the request in the restaurant's time zone. Nothing without hours.
+ * "Open now · until 23:00" or "Closed · opens tomorrow at 09:00", now in the
+ * restaurant's time zone. Nothing without hours.
  */
-export async function OpeningStatus({
+export function OpeningStatus({
   hours,
   timeZone,
   className,
   size = "md",
 }: Props & { className?: string; size?: "sm" | "md" }) {
+  const t = useTranslations("PublicMenu");
+  const locale = useLocale();
+  const now = useNow();
   if (!hours || !timeZone) return null;
-  const [t, locale] = await Promise.all([
-    getTranslations("PublicMenu"),
-    getLocale(),
-  ]);
-  const status = describeOpenStatus(hours, timeZone, new Date(), t, locale);
+  const status = now && describeOpenStatus(hours, timeZone, now, t, locale);
 
   return (
     <p
@@ -73,35 +56,70 @@ export async function OpeningStatus({
         size === "sm"
           ? "gap-1.5 px-2 py-0.5 text-xs"
           : "gap-2 px-3 py-1 text-sm",
-        status.isOpen
+        status?.isOpen
           ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
           : "bg-muted text-muted-foreground",
+        // Holds its place until the time is known, so nothing moves.
+        !status && "invisible",
         className,
       )}
+      aria-hidden={!status}
     >
       <span
         className={cn(
           "h-2 w-2 rounded-full",
-          status.isOpen ? "bg-emerald-500" : "bg-muted-foreground/60",
+          status?.isOpen ? "bg-emerald-500" : "bg-muted-foreground/60",
         )}
         aria-hidden
       />
-      <span>
-        {status.label}
-        {status.detail && <span className="font-normal"> · {status.detail}</span>}
-      </span>
+      {status ? (
+        <span>
+          {status.label}
+          {status.detail && (
+            <span className="font-normal"> · {status.detail}</span>
+          )}
+        </span>
+      ) : (
+        <span>&nbsp;</span>
+      )}
     </p>
   );
 }
 
-/** The week's hours, today highlighted, for the about page. */
-export async function OpeningHoursTable({ hours, timeZone }: Props) {
+/** "Open now · until 23:00" as a line of text, for lists of branches. */
+export function OpenStatusText({
+  hours,
+  timeZone,
+  className,
+}: Props & { className?: string }) {
+  const t = useTranslations("PublicMenu");
+  const locale = useLocale();
+  const now = useNow();
+  if (!now || !hours || !timeZone) return null;
+  const status = describeOpenStatus(hours, timeZone, now, t, locale);
+
+  return (
+    <span
+      className={cn(
+        "block font-medium",
+        status.isOpen
+          ? "text-emerald-600 dark:text-emerald-400"
+          : "text-muted-foreground",
+        className,
+      )}
+    >
+      {[status.label, status.detail].filter(Boolean).join(" · ")}
+    </span>
+  );
+}
+
+/** The week's hours, today highlighted (once known), for the about page. */
+export function OpeningHoursTable({ hours, timeZone }: Props) {
+  const t = useTranslations("PublicMenu");
+  const locale = useLocale();
+  const now = useNow();
   if (!hours || !timeZone) return null;
-  const [t, locale] = await Promise.all([
-    getTranslations("PublicMenu"),
-    getLocale(),
-  ]);
-  const today = zonedTime(new Date(), timeZone).day;
+  const today = now && zonedTime(now, timeZone).day;
 
   return (
     <table className="w-full text-start">

@@ -1,6 +1,6 @@
 // app/[locale]/(site)/features/page.tsx
 import type { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import {
   BarChart3,
   ChefHat,
@@ -25,8 +25,11 @@ import { getDemoMenus } from "~/server/demo-menu";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
 import { PricingSection } from "~/components/plans/PricingSection";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("featuresPage");
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "featuresPage" });
   return { title: t("metaTitle"), description: t("metaDescription") };
 }
 
@@ -74,7 +77,8 @@ const GROUPS: { id: string; features: { id: string; icon: LucideIcon }[] }[] = [
  * Was /themes, which showed the old menu designs; /themes redirects here.
  * Getting started and teamwork are told on the About page ("How it works").
  */
-export default async function FeaturesPage() {
+export default async function FeaturesPage({ params }: Props) {
+  setRequestLocale((await params).locale);
   const [t, locale] = await Promise.all([
     getTranslations("featuresPage"),
     getLocale(),
