@@ -480,7 +480,8 @@
     "branchPickerIntro": "Меню одинаковое во всех филиалах. Выберите филиал, чтобы увидеть его адрес, часы работы и контакты.",
     "allBranches": "Все филиалы",
     "mainBranch": "Главный филиал",
-    "branchTitle": "{name} – {branch}"
+    "branchTitle": "{name} – {branch}",
+    "madeWith": "Меню создано в <brand>Menupedia</brand>"
   },
   "Team": {
     "inviteTitle": "Пригласить редактора",

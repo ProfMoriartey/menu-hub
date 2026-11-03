@@ -8,6 +8,7 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { getRestaurantBySlug } from "~/server/public-menu";
 import { getRestaurantRole } from "~/app/actions/auth";
 import { PreviewBanner } from "~/components/public/PreviewBanner";
+import { MenuByMenupedia } from "~/components/public/MenuByMenupedia";
 import { brandCss } from "~/lib/brand-color";
 import { colorThemeCss } from "~/lib/color-theme";
 import { isLive } from "~/lib/access";
@@ -92,20 +93,28 @@ export default async function DynamicPublicLayout({
         ? brandCss(restaurant.brandColor)
         : null;
 
-  const withMessages = async (content: React.ReactNode) => (
-    <NextIntlClientProvider messages={await clientMessages()}>
-      {brand ? (
-        // Its own background and text, so the page behind the menu matches.
-        <div className="brand-scope bg-background text-foreground min-h-screen">
-          {/* Built from validated #rrggbb values only (lib/color-theme). */}
-          <style dangerouslySetInnerHTML={{ __html: brand }} />
-          {content}
-        </div>
-      ) : (
-        content
-      )}
-    </NextIntlClientProvider>
-  );
+  const withMessages = async (content: React.ReactNode) => {
+    const page = (
+      <>
+        {content}
+        <MenuByMenupedia />
+      </>
+    );
+    return (
+      <NextIntlClientProvider messages={await clientMessages()}>
+        {brand ? (
+          // Its own background and text, so the page behind the menu matches.
+          <div className="brand-scope bg-background text-foreground min-h-screen">
+            {/* Built from validated #rrggbb values only (lib/color-theme). */}
+            <style dangerouslySetInnerHTML={{ __html: brand }} />
+            {page}
+          </div>
+        ) : (
+          page
+        )}
+      </NextIntlClientProvider>
+    );
+  };
 
   // 3. Live: everyone sees it. (Only previews check who is asking, so the
   // pages guests visit don't depend on sign-in and can be cached.)

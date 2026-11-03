@@ -480,7 +480,8 @@
     "branchPickerIntro": "Menü tüm şubelerde aynıdır. Adresini, saatlerini ve iletişim bilgilerini görmek için birini seçin.",
     "allBranches": "Tüm şubeler",
     "mainBranch": "Ana şube",
-    "branchTitle": "{name} – {branch}"
+    "branchTitle": "{name} – {branch}",
+    "madeWith": "Bu menü <brand>Menupedia</brand> ile hazırlandı"
   },
   "Team": {
     "inviteTitle": "Editör davet edin",

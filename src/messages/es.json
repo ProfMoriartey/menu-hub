@@ -480,7 +480,8 @@
     "branchPickerIntro": "La carta es la misma en todas las sucursales. Elige una para ver su dirección, horario y contacto.",
     "allBranches": "Todas las sucursales",
     "mainBranch": "Sucursal principal",
-    "branchTitle": "{name} – {branch}"
+    "branchTitle": "{name} – {branch}",
+    "madeWith": "Menú hecho con <brand>Menupedia</brand>"
   },
   "Team": {
     "inviteTitle": "Invitar a un editor",

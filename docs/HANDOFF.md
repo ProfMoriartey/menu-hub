@@ -650,7 +650,10 @@ about, features, KVKK) get canonical and hreflang links from
 (`server/site-structured-data.ts`) with the brand's other spellings
 (Menu-pedia, menu-pedia.com) and a `SITE_PROFILES` list to fill with social
 profiles. `app/llms.txt` is a summary for AI assistants, built from the
-features messages, `lib/plans` and `lib/site-contact`. The middleware lets
+features messages, `lib/plans` and `lib/site-contact`. Every public
+restaurant page ends with a small "Menu by Menupedia" link to the home page
+(`components/public/MenuByMenupedia`, added once in `[restaurantSlug]/layout.tsx`;
+text `PublicMenu.madeWith`). The middleware lets
 sitemap.xml, robots.txt and llms.txt through without a language prefix.
 Missing restaurants/items answer a real 404, and
 inactive ones a 307: there must be **no `loading.tsx` above

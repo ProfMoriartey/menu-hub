@@ -41,7 +41,7 @@ export function GET() {
 
 > ${SITE_NAME} (${SITE_ALTERNATE_NAMES.join(", ")}) is a digital menu service for restaurants, cafés, bakeries and other food businesses. Each restaurant gets a QR menu that guests open on their phone, in their own language, and that the restaurant updates itself in seconds.
 
-${SITE_NAME} is software as a service (SaaS): a restaurant signs up, picks a plan and runs its menu from its own dashboard, with no app for guests to install. It is run from Türkiye. The site and menus are available in ${languages}.
+${SITE_NAME} is software as a service (SaaS): a restaurant signs up, picks a plan and runs its menu from its own dashboard, with no app for guests to install. It works for restaurants in any country. The site and menus are available in ${languages}.
 
 ## Features
 

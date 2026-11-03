@@ -480,7 +480,8 @@
     "branchPickerIntro": "The menu is the same at every branch. Pick one to see its address, hours and contact details.",
     "allBranches": "All branches",
     "mainBranch": "Main branch",
-    "branchTitle": "{name} – {branch}"
+    "branchTitle": "{name} – {branch}",
+    "madeWith": "Menu by <brand>Menupedia</brand>"
   },
   "Team": {
     "inviteTitle": "Invite an editor",
