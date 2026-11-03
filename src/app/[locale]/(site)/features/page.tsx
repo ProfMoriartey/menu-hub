@@ -24,13 +24,18 @@ import { MenuDemo } from "~/components/features/MenuDemo";
 import { getDemoMenus } from "~/server/demo-menu";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
 import { PricingSection } from "~/components/plans/PricingSection";
+import { sitePageAlternates } from "~/server/public-metadata";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "featuresPage" });
-  return { title: t("metaTitle"), description: t("metaDescription") };
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: sitePageAlternates(locale, "/features"),
+  };
 }
 
 // Each group's features, in the order they appear. Texts are in the

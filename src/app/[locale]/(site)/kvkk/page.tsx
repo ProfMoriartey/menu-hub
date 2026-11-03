@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Link } from "~/i18n/navigation";
 import { NOTICE_UPDATED, kvkkNotice } from "~/content/kvkk";
 import { CONTACT_EMAIL, DATA_CONTROLLER } from "~/lib/site-contact";
+import { sitePageAlternates } from "~/server/public-metadata";
 
 // Turkish visitors read the binding Turkish text; everyone else the English.
 const noticeFor = (locale: string) =>
@@ -12,8 +13,13 @@ const noticeFor = (locale: string) =>
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const notice = noticeFor((await params).locale);
-  return { title: `${notice.title} | Menupedia`, description: notice.intro };
+  const { locale } = await params;
+  const notice = noticeFor(locale);
+  return {
+    title: `${notice.title} | Menupedia`,
+    description: notice.intro,
+    alternates: sitePageAlternates(locale, "/kvkk"),
+  };
 }
 
 /** The KVKK privacy notice (content/kvkk), linked from the footer. */

@@ -71,6 +71,21 @@ export async function publicPageMetadata({
 }
 
 /**
+ * Canonical and language links for one of Menupedia's own pages (home,
+ * menus, about …), which exist in every site language. `path` has no locale
+ * ("" for home). Without them, search engines see five copies of each page
+ * and may pick the wrong one, or none, to show.
+ */
+export function sitePageAlternates(locale: string, path: string): Metadata["alternates"] {
+  const origin = cachedPageOrigin();
+  const languages: Record<string, string> = Object.fromEntries(
+    routing.locales.map((l) => [l, `${origin}/${l}${path}`]),
+  );
+  languages["x-default"] = `${origin}${path || "/"}`;
+  return { canonical: `${origin}/${locale}${path}`, languages };
+}
+
+/**
  * The restaurant's preview image: the share image set in the admin form
  * (meant for big cards), else the logo (a small square card), else none.
  */

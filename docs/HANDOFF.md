@@ -644,8 +644,15 @@ JSON-LD with sections, items, diets and prices
 them; `jsonLd()` escapes `<`). `app/sitemap.ts` lists every live page in each of
 its languages (`force-dynamic`, data cached an hour; at build time it would
 freeze and need the database); `app/robots.ts` keeps crawlers out of admin,
-dashboard, sign-in, `/api/` and `/r/`. The middleware lets both through
-without a language prefix. Missing restaurants/items answer a real 404, and
+dashboard, sign-in, `/api/` and `/r/`. The marketing pages (home, menus,
+about, features, KVKK) get canonical and hreflang links from
+`sitePageAlternates`; the home page carries WebSite and Organization JSON-LD
+(`server/site-structured-data.ts`) with the brand's other spellings
+(Menu-pedia, menu-pedia.com) and a `SITE_PROFILES` list to fill with social
+profiles. `app/llms.txt` is a summary for AI assistants, built from the
+features messages, `lib/plans` and `lib/site-contact`. The middleware lets
+sitemap.xml, robots.txt and llms.txt through without a language prefix.
+Missing restaurants/items answer a real 404, and
 inactive ones a 307: there must be **no `loading.tsx` above
 `[restaurantSlug]`**, or responses start streaming as 200 first.
 

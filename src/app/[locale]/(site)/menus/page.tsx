@@ -1,14 +1,21 @@
 // app/[locale]/(site)/menus/page.tsx
 import type { Metadata } from "next";
 import { connection } from "next/server";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getDirectoryVenues } from "~/server/directory-venues";
+import { sitePageAlternates } from "~/server/public-metadata";
 import { MenusDirectory, type DirectoryFilters } from "~/components/menus/MenusDirectory";
 import type { DirectoryScope } from "~/lib/menus-directory";
 
+// The canonical link leaves out the search and filters (?q=, ?city= …), so
+// every filtered view counts as this one page rather than a near-copy.
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("MenusPage");
-  return { title: t("metaTitle"), description: t("metaDescription") };
+  const [t, locale] = await Promise.all([getTranslations("MenusPage"), getLocale()]);
+  return {
+    title: `${t("metaTitle")} | Menupedia`,
+    description: t("metaDescription"),
+    alternates: sitePageAlternates(locale, "/menus"),
+  };
 }
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
