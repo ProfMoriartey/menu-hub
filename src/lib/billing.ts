@@ -23,6 +23,14 @@ export const isPaymentMethod = (value: unknown): value is PaymentMethod =>
 export const methodLabel = (value: string) =>
   PAYMENT_METHODS.find((m) => m.value === value)?.label ?? value;
 
+/**
+ * Who took a payment (schema.ts payments.provider). "manual" is an admin
+ * recording one by hand; an online provider added later gets its own id
+ * here and records payments through server/payments applyPayment.
+ */
+export const PAYMENT_PROVIDERS = [{ value: "manual", label: "Recorded by hand" }] as const;
+export type PaymentProvider = (typeof PAYMENT_PROVIDERS)[number]["value"];
+
 // "Due soon" this many days before the paid period ends.
 export const DUE_SOON_DAYS = 7;
 

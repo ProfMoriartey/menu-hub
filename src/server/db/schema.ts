@@ -376,6 +376,33 @@ export const restaurantBilling = pgTable("menu-hub_restaurant_billing", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Who a restaurant's invoices are made out to (lib/billing-details), filled
+// in by its owner on the Plan tab. Kept apart from the card side of paying:
+// a payment provider takes cards on its own page, and these details go to
+// it (and to e-invoicing) as they are.
+export const billingDetails = pgTable("menu-hub_billing_details", {
+  restaurantId: uuid("restaurant_id")
+    .primaryKey()
+    .references(() => restaurants.id, { onDelete: "cascade" }),
+  // "company" or "individual".
+  kind: varchar("kind", { length: 16 }).notNull(),
+  // The company's registered name, or the person's full name.
+  legalName: varchar("legal_name", { length: 256 }).notNull(),
+  // Turkey: VKN (10 digits) for a company, TCKN (11) for a person, with
+  // the tax office; elsewhere the local tax id, if any.
+  taxNumber: varchar("tax_number", { length: 32 }),
+  taxOffice: varchar("tax_office", { length: 128 }),
+  address: text("address").notNull(),
+  city: varchar("city", { length: 128 }).notNull(),
+  postalCode: varchar("postal_code", { length: 16 }),
+  // lib/countries code.
+  country: varchar("country", { length: 2 }).notNull(),
+  invoiceEmail: varchar("invoice_email", { length: 256 }).notNull(),
+  phone: varchar("phone", { length: 50 }),
+  updatedBy: text("updated_by"),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // One row per payment received. Each pays for a period (coversFrom to
 // coversUntil, both included); a restaurant is paid up to the latest
 // coversUntil. Rows outlive a deleted restaurant, for the books: the
@@ -395,12 +422,20 @@ export const payments = pgTable(
     coversUntil: date("covers_until", { mode: "string" }).notNull(),
     // lib/billing PAYMENT_METHODS.
     method: varchar("method", { length: 32 }).notNull(),
+    // lib/billing PAYMENT_PROVIDERS: who took the payment ("manual" =
+    // recorded by an admin), and that provider's id for it, so a payment
+    // reported twice (a webhook retried) is saved once.
+    provider: varchar("provider", { length: 32 }).notNull().default("manual"),
+    providerPaymentId: varchar("provider_payment_id", { length: 128 }),
     note: text("note"),
-    // The admin who recorded it (Clerk user id).
+    // The admin who recorded it (Clerk user id); null for a provider's.
     recordedBy: text("recorded_by"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (t) => [index("payments_restaurant_idx").on(t.restaurantId)],
+  (t) => [
+    index("payments_restaurant_idx").on(t.restaurantId),
+    uniqueIndex("payments_provider_payment_idx").on(t.provider, t.providerPaymentId),
+  ],
 );
 
 export const paymentsRelations = relations(payments, ({ one }) => ({

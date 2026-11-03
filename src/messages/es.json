@@ -1091,5 +1091,40 @@
     "statusOfflineUnpaid": "Tu periodo gratis ha terminado y se deben {amount}. Tu menú no está publicado hasta que registremos tu pago.",
     "expiredTitle": "Tu menú no está publicado",
     "expiredText": "Tus meses gratis (o el tiempo pagado) han terminado, así que los clientes no pueden ver tu menú. Ponte en contacto para pagar: cuando lo registremos, podrás volver a publicarlo."
+  },
+  "BillingDetails": {
+    "title": "Datos de facturación",
+    "intro": "A nombre de quién se emiten tus facturas. Complétalos ahora para que pagar sea rápido cuando terminen tus meses gratis.",
+    "kind": "Facturar a",
+    "kinds": {
+      "company": "Una empresa",
+      "individual": "Una persona"
+    },
+    "companyName": "Razón social",
+    "fullName": "Nombre completo",
+    "country": "País",
+    "choose": "Elegir",
+    "vkn": "Número fiscal (VKN)",
+    "tckn": "Número de identidad (TCKN)",
+    "taxNumber": "Número fiscal",
+    "taxNumberHint": "Si tu país lo usa en las facturas.",
+    "taxOffice": "Oficina tributaria",
+    "address": "Dirección",
+    "city": "Ciudad",
+    "postalCode": "Código postal",
+    "invoiceEmail": "Correo para facturas",
+    "invoiceEmailHint": "Aquí enviamos las facturas y los recibos de pago.",
+    "phone": "Teléfono",
+    "noCard": "Aquí nunca te pedimos la tarjeta. Cuando haya pago en línea, la introducirás en la página segura de nuestro proveedor de pagos.",
+    "save": "Guardar datos de facturación",
+    "saving": "Guardando…",
+    "saved": "Guardado",
+    "errors": {
+      "required": "Completa este campo.",
+      "vkn": "El VKN tiene 10 dígitos.",
+      "tckn": "El TCKN tiene 11 dígitos.",
+      "tooLong": "Es demasiado largo.",
+      "email": "Introduce un correo electrónico válido."
+    }
   }
 }

@@ -1091,5 +1091,40 @@
     "statusOfflineUnpaid": "Ücretsiz süreniz doldu ve {amount} ödenmesi gerekiyor. Ödemenizi kaydedene kadar menünüz yayında değil.",
     "expiredTitle": "Menünüz yayında değil",
     "expiredText": "Ücretsiz aylarınız (ya da ödediğiniz süre) doldu, bu yüzden misafirler menünüzü göremiyor. Ödeme için bizimle iletişime geçin: ödemeyi kaydettiğimizde menünüzü yeniden yayına alabilirsiniz."
+  },
+  "BillingDetails": {
+    "title": "Fatura bilgileri",
+    "intro": "Faturalarınızın kime kesileceği. Ücretsiz aylarınız bittiğinde ödeme hızlı olsun diye şimdi doldurun.",
+    "kind": "Fatura",
+    "kinds": {
+      "company": "Şirket adına",
+      "individual": "Şahıs adına"
+    },
+    "companyName": "Şirket unvanı",
+    "fullName": "Ad soyad",
+    "country": "Ülke",
+    "choose": "Seçin",
+    "vkn": "Vergi kimlik numarası (VKN)",
+    "tckn": "T.C. kimlik numarası",
+    "taxNumber": "Vergi numarası",
+    "taxNumberHint": "Ülkenizde faturalarda kullanılıyorsa.",
+    "taxOffice": "Vergi dairesi",
+    "address": "Adres",
+    "city": "Şehir",
+    "postalCode": "Posta kodu",
+    "invoiceEmail": "Fatura e-postası",
+    "invoiceEmailHint": "Faturalar ve ödeme makbuzları bu adrese gönderilir.",
+    "phone": "Telefon",
+    "noCard": "Burada asla kart bilgisi istemiyoruz. Online ödeme geldiğinde kartınızı ödeme sağlayıcımızın güvenli sayfasında gireceksiniz.",
+    "save": "Fatura bilgilerini kaydet",
+    "saving": "Kaydediliyor…",
+    "saved": "Kaydedildi",
+    "errors": {
+      "required": "Bu alanı doldurun.",
+      "vkn": "VKN 10 haneli olmalı.",
+      "tckn": "T.C. kimlik numarası 11 haneli olmalı.",
+      "tooLong": "Bu çok uzun.",
+      "email": "Geçerli bir e-posta adresi girin."
+    }
   }
 }

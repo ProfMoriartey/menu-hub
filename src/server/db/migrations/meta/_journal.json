@@ -127,6 +127,13 @@
       "when": 1793695886998,
       "tag": "0018_free_months",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1793700692383,
+      "tag": "0019_payment_providers",
+      "breakpoints": true
     }
   ]
 }

@@ -1091,5 +1091,40 @@
     "statusOfflineUnpaid": "Your free time is over and {amount} is due. Your menu is offline until we've recorded your payment.",
     "expiredTitle": "Your menu is offline",
     "expiredText": "Your free months (or the time paid for) are over, so guests can't see your menu. Get in touch to pay: once we've recorded it, you can put it live again."
+  },
+  "BillingDetails": {
+    "title": "Billing details",
+    "intro": "Who your invoices are made out to. Fill these in now so paying is quick once your free months end.",
+    "kind": "Invoice to",
+    "kinds": {
+      "company": "A company",
+      "individual": "A person"
+    },
+    "companyName": "Company name",
+    "fullName": "Full name",
+    "country": "Country",
+    "choose": "Choose",
+    "vkn": "Tax number (VKN)",
+    "tckn": "ID number (TCKN)",
+    "taxNumber": "Tax number",
+    "taxNumberHint": "If your country uses one on invoices.",
+    "taxOffice": "Tax office",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal code",
+    "invoiceEmail": "Email for invoices",
+    "invoiceEmailHint": "Invoices and payment receipts go here.",
+    "phone": "Phone",
+    "noCard": "We never ask for your card here. When online payment is available, you'll enter your card on the secure page of our payment provider.",
+    "save": "Save billing details",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "errors": {
+      "required": "Fill this in.",
+      "vkn": "A VKN has 10 digits.",
+      "tckn": "A TCKN has 11 digits.",
+      "tooLong": "This is too long.",
+      "email": "Enter a valid email address."
+    }
   }
 }

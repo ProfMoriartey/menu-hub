@@ -7,6 +7,9 @@ import { Button } from "~/components/ui/button";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { PlanFeatureList } from "~/components/plans/PlanFeatures";
 import { GoLiveCard, PlanChangeForm } from "~/components/plans/OwnerPlanControls";
+import { BillingDetailsForm } from "~/components/plans/BillingDetailsForm";
+import { getBillingDetails } from "~/server/billing-details";
+import { countryOptions } from "~/lib/countries";
 import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { getOwnerPlan } from "~/server/billing";
 import { getOpenRequestsFor, isApprovedToPublish } from "~/server/plan-requests";
@@ -32,12 +35,13 @@ export default async function OwnerPlanPage({ params }: { params: Promise<{ rest
     return redirect({ href: `/dashboard/${restaurant.slug}/menu`, locale });
   }
 
-  const [t, tPlans, plan, approved, requests] = await Promise.all([
+  const [t, tPlans, plan, approved, requests, details] = await Promise.all([
     getTranslations("OwnerPlan"),
     getTranslations("Plans"),
     getOwnerPlan(restaurant.id),
     isApprovedToPublish(restaurant.id),
     getOpenRequestsFor(restaurant.id),
+    getBillingDetails(restaurant.id),
   ]);
   const { pricing, limits, branchCount, paidUntil, nextDueOn, owed, today, startsOn } = plan;
   // The free months (or paid days) are over: offline until a payment.
@@ -110,6 +114,23 @@ export default async function OwnerPlanPage({ params }: { params: Promise<{ rest
             current={tier}
             currentCycle={plan.cycle}
             openRequest={change}
+          />
+          <BillingDetailsForm
+            restaurantId={restaurant.id}
+            countries={countryOptions(locale)}
+            // Saved details, or a start from the main branch's location.
+            initial={{
+              kind: details?.kind === "individual" ? "individual" : "company",
+              legalName: details?.legalName ?? "",
+              taxNumber: details?.taxNumber ?? "",
+              taxOffice: details?.taxOffice ?? "",
+              address: details?.address ?? "",
+              city: details?.city ?? restaurant.city ?? "",
+              postalCode: details?.postalCode ?? "",
+              country: details?.country ?? restaurant.country ?? "",
+              invoiceEmail: details?.invoiceEmail ?? "",
+              phone: details?.phone ?? restaurant.phoneNumber ?? "",
+            }}
           />
         </div>
         <div className="space-y-6">
