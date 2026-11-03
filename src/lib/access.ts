@@ -1,4 +1,5 @@
 // src/lib/access.ts
+import { billingToday } from "~/lib/billing";
 
 // What an assigned user may do in their dashboard:
 // - owner: restaurant details and the menu
@@ -25,8 +26,16 @@ export const canEditDetails = (role: RestaurantRole | null) =>
   role === "admin" || role === "owner";
 
 /**
- * Whether guests see the menu: put live (isActive) and not paused by an
- * admin (pausedAt). Cached rows may hold the date as a string.
+ * Whether guests see the menu: put live (isActive), not paused by an admin
+ * (pausedAt) and not past what's paid for or free (liveUntil). Cached rows
+ * may hold the date as a string.
  */
-export const isLive = (restaurant: { isActive: boolean; pausedAt?: Date | string | null }) =>
-  restaurant.isActive && !restaurant.pausedAt;
+export const isLive = (restaurant: {
+  isActive: boolean;
+  pausedAt?: Date | string | null;
+  liveUntil?: string | null;
+}) => restaurant.isActive && !restaurant.pausedAt && !isPastLiveUntil(restaurant.liveUntil);
+
+/** Whether the free or paid days have run out (lib/billing's today). */
+export const isPastLiveUntil = (liveUntil: string | null | undefined) =>
+  Boolean(liveUntil && liveUntil < billingToday());

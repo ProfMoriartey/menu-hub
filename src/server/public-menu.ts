@@ -1,10 +1,11 @@
 // src/server/public-menu.ts
 import { cache } from "react";
 import { revalidateTag, unstable_cache } from "next/cache";
-import { and, asc, count, eq, isNotNull, isNull, lte, ne, sql } from "drizzle-orm";
+import { and, asc, count, eq, gte, isNotNull, isNull, lte, ne, or, sql } from "drizzle-orm";
 import { db } from "~/server/db";
 import { branches, categories, menuItems, restaurants } from "~/server/db/schema";
 import { LOCATION_COLUMNS, MAIN_BRANCH, withMainBranch } from "~/server/branches";
+import { billingToday } from "~/lib/billing";
 
 /*
  * Reads for the public restaurant pages (menu, about, item), cached across
@@ -42,7 +43,12 @@ const ITEM_COLUMNS = {
 } as const;
 
 /** For queries: restaurants guests see (lib/access isLive). */
-export const liveRestaurant = () => and(eq(restaurants.isActive, true), isNull(restaurants.pausedAt));
+export const liveRestaurant = () =>
+  and(
+    eq(restaurants.isActive, true),
+    isNull(restaurants.pausedAt),
+    or(isNull(restaurants.liveUntil), gte(restaurants.liveUntil, billingToday())),
+  );
 
 /**
  * Restaurant row by slug, with its main branch's location and without

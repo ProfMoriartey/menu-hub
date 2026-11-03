@@ -8,8 +8,9 @@ import { db } from "~/server/db";
 import { planRequests, restaurantBilling, restaurants } from "~/server/db/schema";
 import { checkOwnerAuthorization, isSystemAdmin } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
+import { isPastLiveUntil } from "~/lib/access";
 import { billingToday } from "~/lib/billing";
-import { TIERS } from "~/lib/plans";
+import { isOfferedTier } from "~/lib/plans";
 import { isUuid } from "~/lib/slug";
 import { isApprovedToPublish } from "~/server/plan-requests";
 import { syncEntitlements } from "~/server/plans";
@@ -24,7 +25,7 @@ import { runAction } from "~/server/run-action";
  */
 
 const changeSchema = z.object({
-  tier: z.enum(TIERS),
+  tier: z.string().refine(isOfferedTier),
   billingCycle: z.enum(["monthly", "yearly"]),
   note: z.string().trim().max(1000),
 });
@@ -119,8 +120,9 @@ export async function resolvePlanRequest(
 
 /**
  * Owners and admins: put the menu live or take it offline. Going live
- * waits for an admin to approve a restaurant's sign-up, and isn't possible
- * while an admin has paused the menu (taking it offline always is).
+ * isn't possible after an admin dismissed the sign-up, while an admin has
+ * paused the menu, or once the free or paid days have run out (taking it
+ * offline always is).
  */
 export async function setRestaurantLive(restaurantId: string, live: boolean): Promise<ActionResult> {
   return runAction("saveRestaurantFailed", async () => {
@@ -130,9 +132,10 @@ export async function setRestaurantLive(restaurantId: string, live: boolean): Pr
       // An admin's pause outranks everyone's switch.
       const row = await db.query.restaurants.findFirst({
         where: eq(restaurants.id, restaurantId),
-        columns: { pausedAt: true },
+        columns: { pausedAt: true, liveUntil: true },
       });
       if (row?.pausedAt) throw new ActionError("menuPaused");
+      if (isPastLiveUntil(row?.liveUntil)) throw new ActionError("paymentNeeded");
     }
     await db
       .update(restaurants)

@@ -1,7 +1,7 @@
 // app/[locale]/(client)/dashboard/page.tsx
 import { auth } from "@clerk/nextjs/server";
 import { getTranslations, getLocale } from "next-intl/server";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Clock, ExternalLink, Eye, Pencil, Plus, QrCode, ShieldCheck, Store, UserPlus, UtensilsCrossed } from "lucide-react";
 import { Link, redirect } from "~/i18n/navigation";
 import { db } from "~/server/db";
@@ -24,7 +24,7 @@ export default async function ClientUserDashboardPage() {
     return redirect({ href: "/sign-in", locale: await getLocale() });
   }
 
-  const [t, tHome, tSetup, tInvite, assignments, isAdmin, invitations, waitingSignups] = await Promise.all([
+  const [t, tHome, tSetup, tInvite, assignments, isAdmin, invitations, signups] = await Promise.all([
     getTranslations("Dashboard"),
     getTranslations("DashboardHome"),
     getTranslations("Setup"),
@@ -33,7 +33,16 @@ export default async function ClientUserDashboardPage() {
       where: eq(usersToRestaurants.userId, userId),
       with: {
         restaurant: {
-          columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true, pausedAt: true, description: true },
+          columns: {
+            id: true,
+            name: true,
+            slug: true,
+            logoUrl: true,
+            isActive: true,
+            pausedAt: true,
+            liveUntil: true,
+            description: true,
+          },
           // Ids are enough for the category and item counts.
           with: {
             categories: {
@@ -53,17 +62,14 @@ export default async function ClientUserDashboardPage() {
         console.error("Failed to load invitations:", error);
         return [];
       }),
-    // Their restaurants still waiting for an admin to approve the sign-up.
+    // Their sign-ups: one per account (actions/onboarding), and any still
+    // waiting for an admin.
     db.query.planRequests.findMany({
-      where: and(
-        eq(planRequests.requestedBy, userId),
-        eq(planRequests.kind, "signup"),
-        isNull(planRequests.resolution),
-      ),
-      columns: { restaurantId: true },
+      where: and(eq(planRequests.requestedBy, userId), eq(planRequests.kind, "signup")),
+      columns: { restaurantId: true, resolution: true },
     }),
   ]);
-  const waiting = new Set(waitingSignups.map((r) => r.restaurantId));
+  const waiting = new Set(signups.filter((r) => !r.resolution).map((r) => r.restaurantId));
 
   const restaurants = assignments
     .map(({ restaurant, accessLevel }) => ({
@@ -87,8 +93,8 @@ export default async function ClientUserDashboardPage() {
           <h1 className="text-foreground text-3xl font-bold tracking-tight">{tHome("title")}</h1>
           <p className="text-muted-foreground mt-1">{tHome("subtitle")}</p>
         </div>
-        {/* Another restaurant once the first sign-up is approved. */}
-        {restaurants.length > 0 && waiting.size === 0 && (
+        {/* One sign-up per account; more restaurants go through us. */}
+        {restaurants.length > 0 && signups.length === 0 && (
           <Button variant="outline" asChild>
             <Link href="/start">
               <Plus className="h-4 w-4" /> {tHome("addRestaurant")}

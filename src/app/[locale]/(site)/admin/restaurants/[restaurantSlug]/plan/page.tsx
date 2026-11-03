@@ -17,7 +17,16 @@ export default async function RestaurantPlanPage({
 
   const restaurant = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
-    columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true, isDisplayed: true, pausedAt: true },
+    columns: {
+      id: true,
+      name: true,
+      slug: true,
+      logoUrl: true,
+      isActive: true,
+      isDisplayed: true,
+      pausedAt: true,
+      liveUntil: true,
+    },
   });
   if (!restaurant) notFound();
 

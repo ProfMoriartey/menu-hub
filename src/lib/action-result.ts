@@ -86,6 +86,7 @@ export const ACTION_ERROR_CODES = [
   // Sign-ups and requests
   "requestNotFound",
   "awaitingApproval",
+  "paymentNeeded",
   "restaurantLimit",
   "menuPaused",
   // Uploads

@@ -19,7 +19,7 @@ import { Field } from "~/components/forms/fields";
 import { PlanFeatureList, usePlanMoney } from "~/components/plans/PlanFeatures";
 import { createOwnRestaurant } from "~/app/actions/onboarding";
 import { PAYMENT_METHODS } from "~/lib/billing";
-import { MONTHS_PAID_PER_YEAR, TIERS, TIER_FEATURES, periodPrice, type Tier } from "~/lib/plans";
+import { FREE_MONTHS, MONTHS_PAID_PER_YEAR, OFFERED_TIERS, TIER_FEATURES, periodPrice, type Tier } from "~/lib/plans";
 import { slugify } from "~/lib/slug";
 import { VENUE_TYPES } from "~/lib/venue-types";
 import type { CountryOption } from "~/lib/countries";
@@ -42,8 +42,8 @@ interface StartFormProps {
 /**
  * Sign-up's form: the plan, the restaurant (name, with a preview of the
  * menu address made from it, type, prices' currency, city, country,
- * phone) and how they'd like to pay. Creates the restaurant and opens its
- * menu editor.
+ * phone) and how they'd like to pay once the free months are over.
+ * Creates the restaurant and opens its menu editor.
  */
 export function StartForm({ initialTier, initialCycle, countries, defaultCountry, addressPrefix }: StartFormProps) {
   const t = useTranslations("Start");
@@ -126,7 +126,7 @@ export function StartForm({ initialTier, initialCycle, countries, defaultCountry
           </div>
         </div>
         <div role="radiogroup" aria-label={t("planHeading")} className="grid gap-3 md:grid-cols-3">
-          {TIERS.map((tier) => {
+          {OFFERED_TIERS.map((tier) => {
             const f = TIER_FEATURES[tier];
             const selected = values.tier === tier;
             return (
@@ -147,6 +147,9 @@ export function StartForm({ initialTier, initialCycle, countries, defaultCountry
                   {values.billingCycle === "yearly"
                     ? tPlans("perYear", { price: money(periodPrice(f.price, "yearly")) })
                     : tPlans("perMonth", { price: money(f.price) })}
+                </span>
+                <span className="text-primary mt-1 block text-sm font-semibold">
+                  {tPlans("freeMonths", { count: FREE_MONTHS })}
                 </span>
                 <PlanFeatureList tier={tier} className="mt-4 space-y-1.5 text-sm" />
               </button>
@@ -298,7 +301,7 @@ export function StartForm({ initialTier, initialCycle, countries, defaultCountry
             maxLength={1000}
           />
         </Field>
-        <p className="text-muted-foreground text-sm">{t("afterNote")}</p>
+        <p className="text-muted-foreground text-sm">{t("afterNote", { count: FREE_MONTHS })}</p>
       </section>
 
       <div className="flex flex-wrap items-center gap-4">

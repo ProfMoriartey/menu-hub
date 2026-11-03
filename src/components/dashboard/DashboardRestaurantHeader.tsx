@@ -4,14 +4,15 @@ import { ChevronRight, ExternalLink, Eye } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
+import { ExperimentalBadge } from "~/components/dashboard/ExperimentalNote";
 import { canEditDetails, isLive, type RestaurantRole } from "~/lib/access";
 import { cn } from "~/lib/utils";
 import type { Restaurant } from "~/types/restaurant";
 
 interface DashboardRestaurantHeaderProps {
-  restaurant: Pick<Restaurant, "name" | "slug" | "logoUrl" | "isActive" | "pausedAt">;
+  restaurant: Pick<Restaurant, "name" | "slug" | "logoUrl" | "isActive" | "pausedAt" | "liveUntil">;
   role: RestaurantRole;
-  activeTab: "menu" | "details" | "share" | "team" | "colors" | "plan";
+  activeTab: "menu" | "details" | "branches" | "share" | "team" | "colors" | "plan";
   // Extra breadcrumb steps after the restaurant, e.g. a category.
   trail?: { label: string; href?: string }[];
 }
@@ -26,7 +27,7 @@ export async function DashboardRestaurantHeader({
   const tRoles = await getTranslations("Dashboard.accessLevels");
 
   const base = `/dashboard/${restaurant.slug}`;
-  const tabs = [
+  const tabs: { id: string; label: string; href: string; experimental?: boolean }[] = [
     { id: "menu", label: t("menuTab"), href: `${base}/menu` },
     // Everyone with access shares the menu, editors included.
     { id: "share", label: t("shareTab"), href: `${base}/share` },
@@ -36,8 +37,10 @@ export async function DashboardRestaurantHeader({
     ...(canEditDetails(role)
       ? [
           { id: "details", label: t("detailsTab"), href: `${base}/edit` },
+          // Experimental: every plan has these for now (lib/plans).
+          { id: "branches", label: t("branchesTab"), href: `${base}/branches`, experimental: true },
           // The colours page explains itself when an admin hasn't enabled it.
-          { id: "colors", label: t("colorsTab"), href: `${base}/colors` },
+          { id: "colors", label: t("colorsTab"), href: `${base}/colors`, experimental: true },
           // The plan, going live and asking for another plan.
           { id: "plan", label: t("planTab"), href: `${base}/plan` },
         ]
@@ -118,9 +121,10 @@ export async function DashboardRestaurantHeader({
         </Button>
       </div>
 
+      {/* Scrolls sideways on small screens rather than wrapping. */}
       <nav
         aria-label={t("menuTab")}
-        className="border-border flex gap-1 border-b"
+        className="border-border flex gap-1 overflow-x-auto border-b"
       >
         {tabs.map((tab) => (
           <Link
@@ -128,13 +132,14 @@ export async function DashboardRestaurantHeader({
             href={tab.href}
             aria-current={activeTab === tab.id ? "page" : undefined}
             className={cn(
-              "-mb-px border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
+              "-mb-px shrink-0 border-b-2 px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors",
               activeTab === tab.id
                 ? "border-primary text-foreground"
                 : "text-muted-foreground hover:text-foreground border-transparent",
             )}
           >
             {tab.label}
+            {tab.experimental && <ExperimentalBadge label={t("experimental")} />}
           </Link>
         ))}
       </nav>

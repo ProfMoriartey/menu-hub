@@ -183,7 +183,10 @@
     "shareTab": "Paylaş",
     "teamTab": "Ekip",
     "colorsTab": "Görünüm",
-    "planTab": "Plan"
+    "planTab": "Plan",
+    "branchesTab": "Şubeler ve diller",
+    "experimental": "Deneysel",
+    "experimentalNote": "Bu bölüm deneysel: şimdilik her plan kullanabilir. Değişebilir ve ileride yalnızca bazı planlarda yer alabilir."
   },
   "LanguageSwitcher": {
     "label": "Dil"
@@ -205,7 +208,7 @@
     "share": "Paylaş: QR kod ve bağlantı",
     "addRestaurant": "Başka bir restoran ekle",
     "createTitle": "Restoranınızın menüsünü oluşturun",
-    "createText": "Bir plan seçin, yemeklerinizi ekleyin ve QR kodunuzu paylaşın. Ödemede anlaştıktan sonra menünüz yayına girer.",
+    "createText": "Yemeklerinizi ekleyin, menünüzü yayına alın ve QR kodunuzu paylaşın. İlk aylar ücretsiz.",
     "createButton": "Restoranınızı oluşturun",
     "joinTeamHint": "Bir restoranın ekibine mi katılıyorsunuz? Sahibinden sizi davet etmesini isteyin.",
     "awaitingApproval": "Onay bekliyor"
@@ -315,8 +318,9 @@
     "createOwnRestaurantFailed": "Restoranınız oluşturulamadı. Lütfen tekrar deneyin.",
     "requestNotFound": "Bu istek artık yok ya da zaten sonuçlandırıldı.",
     "awaitingApproval": "Kaydınız onaylandığında menünüz yayına girebilir.",
-    "restaurantLimit": "İlk restoranınız onay bekliyor. Onaylandıktan sonra başka bir restoran ekleyebilirsiniz.",
-    "menuPaused": "Menünüz Menupedia tarafından durduruldu. Yeniden açmak için lütfen bizimle iletişime geçin."
+    "restaurantLimit": "Zaten bir restoran oluşturdunuz. Başka bir restoran eklemek için bizimle iletişime geçin.",
+    "menuPaused": "Menünüz Menupedia tarafından durduruldu. Yeniden açmak için lütfen bizimle iletişime geçin.",
+    "paymentNeeded": "Ücretsiz aylarınız (ya da ödediğiniz süre) doldu. Ödemenizi kaydettiğimizde menünüz yeniden yayına girebilir."
   },
   "UnsavedChanges": {
     "confirmLeave": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istiyor musunuz?"
@@ -427,7 +431,7 @@
     "live": {
       "title": "Yayına alın",
       "action": "Önizle",
-      "ownerText": "Planınız onaylandığında menünüzü Plan sekmesinden yayına alın.",
+      "ownerText": "Menünüz hazır olduğunda Plan sekmesinden yayına alın.",
       "ownerAction": "Yayına al",
       "editorText": "Menüyü restoranın sahibi yayına alır. Bu arada önizleyebilirsiniz."
     },
@@ -541,7 +545,7 @@
     "saved": "Kaydedildi",
     "chooseMainFirst": "Önce ana dili seçin.",
     "notTranslated": "Çevrilmedi: {languages}",
-    "notInPlan": "Birden çok dilde menü Pro ve Business planlarına dahildir. Eklemek için bizimle iletişime geçin.",
+    "notInPlan": "Birden çok dilde menü planınıza dahil değil. Eklemek için bizimle iletişime geçin.",
     "notInPlanAdmin": "Bu restoranın planı menü dillerini içermiyor. Planını değiştirin ya da Features kartından açın.",
     "limitHint": "Planınız en fazla {count} ek dil içeriyor.",
     "overLimit": "Menünüzde yalnızca ilk {count} ek dil gösteriliyor; planınız bu kadarını içeriyor. Diğerleri, planınız izin verdiğinde kullanılmak üzere saklanıyor."
@@ -629,7 +633,7 @@
     "sampleCategory": "Başlangıçlar",
     "sampleDish": "Örnek ürün",
     "sampleDishDescription": "Ürünün kısa bir açıklaması.",
-    "notInPlan": "Özel renkler Pro ve Business planlarına dahildir, bu yüzden menünüz varsayılan renkleri kullanıyor. Eklemek için bizimle iletişime geçin.",
+    "notInPlan": "Özel renkler planınıza dahil değil, bu yüzden menünüz varsayılan renkleri kullanıyor. Eklemek için bizimle iletişime geçin.",
     "notInPlanAdmin": "Bu restoranın planı özel renkleri içermiyor. Planını değiştirin ya da Features kartından açın."
   },
   "MenuDesign": {
@@ -978,8 +982,8 @@
   },
   "Plans": {
     "pricingTitle": "Basit planlar",
-    "pricingIntro": "Her planda fotoğraflı menünüzün tamamı, QR kod ve yazdırılabilir masa kartları var. İşletmenize uyanı seçin.",
-    "pricingNote": "Fiyatlar ABD doları cinsindendir. Havale ya da nakit ödeyebilirsiniz: kayıt olduğunuzda birlikte kararlaştırırız.",
+    "pricingIntro": "Her şeyi içeren tek plan: fotoğraflı menünüzün tamamı, QR kod, masa kartları, şubeler, diller ve kendi renkleriniz. İlk {count} ay ücretsiz.",
+    "pricingNote": "Fiyatlar ABD doları. Başlamak için ödeme yok: ücretsiz aylardan sonra banka havalesi ya da nakit ile ödeyin.",
     "cycleLabel": "Ödeme dönemi",
     "monthly": "Aylık",
     "yearly": "Yıllık",
@@ -991,7 +995,7 @@
     "popular": "En çok tercih edilen",
     "choose": "{plan} ile başla",
     "tagline": {
-      "standard": "Tek bir kafe ya da restoran için.",
+      "standard": "Bir kafe ya da restoranın ihtiyacı olan her şey.",
       "pro": "Kendi renkleriniz, daha fazla dil, birkaç şube.",
       "business": "Zincirler için, tüm dillerle."
     },
@@ -1004,16 +1008,18 @@
     "customColors": "Kendi renkleriniz",
     "oneLanguage": "Tek dilde menü",
     "extraLanguages": "En fazla {count} ek dilde menü",
-    "allLanguages": "Tüm dillerde menü"
+    "allLanguages": "Tüm dillerde menü",
+    "freeMonths": "{count, plural, one {İlk ay ücretsiz} other {İlk # ay ücretsiz}}",
+    "branchesNoLimit": "İstediğiniz kadar şube"
   },
   "Start": {
     "metaTitle": "Menünüzü oluşturun | Menupedia",
     "title": "Restoranınızın menüsünü oluşturun",
-    "intro": "Bir plan seçin, işletmenizi tanıtın ve hazırlamaya başlayın. Ödemede anlaştıktan sonra menünüz yayına girer.",
+    "intro": "İşletmenizi tanıtın ve hazırlamaya başlayın. Menünüz hazır olur olmaz yayına alın: ilk aylar ücretsiz.",
     "planHeading": "1. Planınız",
     "cycleLabel": "Ödeme dönemi",
     "detailsHeading": "2. Restoranınız",
-    "paymentHeading": "3. Ödeme",
+    "paymentHeading": "3. Ücretsiz aylardan sonra",
     "name": "Restoran adı",
     "namePlaceholder": "örn. Lokanta",
     "slug": "Menü adresi",
@@ -1024,8 +1030,8 @@
     "cityPlaceholder": "örn. İstanbul",
     "country": "Ülke",
     "phone": "Telefon ya da WhatsApp",
-    "phoneHint": "Ödemede anlaşmak için sizi arar ya da yazarız.",
-    "paymentMethod": "Nasıl ödemek istersiniz?",
+    "phoneHint": "Ücretsiz aylarınız bitmeden sizi arar ya da mesaj atarız.",
+    "paymentMethod": "O zaman nasıl ödemek istersiniz?",
     "methods": {
       "bank_transfer": "Havale / EFT",
       "cash": "Nakit",
@@ -1034,16 +1040,16 @@
     },
     "note": "Bilmemiz gereken bir şey var mı?",
     "notePlaceholder": "Size ulaşmak için en uygun zaman, sorularınız…",
-    "afterNote": "Ödemede anlaşmak için bir iş günü içinde sizinle iletişime geçeriz. Bu arada menünüzü hazırlayın: kaydınız onaylandığında yayına girer.",
+    "afterNote": "Şimdi ödeme yok. Menünüzü hazırlayın ve istediğiniz zaman yayına alın: ilk {count} ay ücretsiz. Bitmeden önce ödeme için sizinle iletişime geçeriz. Ödeme yapılmazsa menü yayından kalkar.",
     "submit": "Restoranımı oluştur",
     "submitting": "Oluşturuluyor…",
     "nameRequired": "Restoranın adını girin.",
     "countryRequired": "Ülkeyi seçin.",
     "phoneRequired": "Size ulaşabileceğimiz bir telefon numarası girin.",
-    "waitingTitle": "{name} onay bekliyor",
-    "waitingText": "Ödemede anlaşmak için sizinle iletişime geçeceğiz. Bu arada menünüzü hazırlayabilirsiniz. Onaylandıktan sonra başka bir restoran ekleyebilirsiniz.",
     "toDashboard": "Menünüze gidin",
-    "slugPreviewHint": "Addan oluşturulur. Bu adres alınmışsa sonuna bir sayı ekleriz."
+    "slugPreviewHint": "Addan oluşturulur. Bu adres alınmışsa sonuna bir sayı ekleriz.",
+    "alreadyTitle": "{name} zaten oluşturuldu",
+    "alreadyText": "Her hesap kendi başına bir restoran oluşturabilir. Başka bir restoran eklemek için bizimle iletişime geçin."
   },
   "OwnerPlan": {
     "planName": "{plan} planı",
@@ -1080,6 +1086,10 @@
     "email": "E-posta",
     "pausedTitle": "Menünüz durduruldu",
     "pausedUnpaid": "Bir ödeme geciktiği için Menupedia menünüzü durdurdu. Yeniden açılana kadar misafirler göremez. Ödemeyi halletmek için lütfen bizimle iletişime geçin.",
-    "pausedOther": "Menupedia menünüzü durdurdu. Yeniden açılana kadar misafirler göremez. Lütfen bizimle iletişime geçin."
+    "pausedOther": "Menupedia menünüzü durdurdu. Yeniden açılana kadar misafirler göremez. Lütfen bizimle iletişime geçin.",
+    "statusFreeUntil": "{date} tarihine kadar ücretsiz ({days, plural, one {# gün} other {# gün}} kaldı). İlk ödemeniz bundan sonra.",
+    "statusOfflineUnpaid": "Ücretsiz süreniz doldu ve {amount} ödenmesi gerekiyor. Ödemenizi kaydedene kadar menünüz yayında değil.",
+    "expiredTitle": "Menünüz yayında değil",
+    "expiredText": "Ücretsiz aylarınız (ya da ödediğiniz süre) doldu, bu yüzden misafirler menünüzü göremiyor. Ödeme için bizimle iletişime geçin: ödemeyi kaydettiğimizde menünüzü yeniden yayına alabilirsiniz."
   }
 }

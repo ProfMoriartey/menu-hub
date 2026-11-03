@@ -15,6 +15,8 @@ export interface BillingPlan {
   monthlyPrice: string | null;
   currency: string;
   startsOn: string | null;
+  // The menu goes offline when what's paid runs out.
+  offlineWhenUnpaid: boolean;
   notes: string | null;
   colorsOverride: boolean | null;
   languagesOverride: number | null;
@@ -32,6 +34,7 @@ const PLAN_COLUMNS = {
   monthlyPrice: true,
   currency: true,
   startsOn: true,
+  offlineWhenUnpaid: true,
   notes: true,
   colorsOverride: true,
   languagesOverride: true,
@@ -237,6 +240,8 @@ export async function getOwnerPlan(restaurantId: string) {
     cycle: plan?.billingCycle ?? "monthly",
     // Shown to the owner when the menu is paused (never the admin's note).
     pauseReason: plan?.pauseReason ?? null,
+    // The first day billed: the days before it are free.
+    startsOn: plan?.startsOn ?? null,
     limits,
     branchCount,
     paidUntil,

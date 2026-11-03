@@ -183,7 +183,10 @@
     "shareTab": "Compartir",
     "teamTab": "Equipo",
     "colorsTab": "Apariencia",
-    "planTab": "Plan"
+    "planTab": "Plan",
+    "branchesTab": "Sucursales e idiomas",
+    "experimental": "Experimental",
+    "experimentalNote": "Esta sección es experimental: por ahora todos los planes pueden usarla. Puede cambiar y, más adelante, incluirse solo en algunos planes."
   },
   "LanguageSwitcher": {
     "label": "Idioma"
@@ -205,7 +208,7 @@
     "share": "Compartir: código QR y enlace",
     "addRestaurant": "Añadir otro restaurante",
     "createTitle": "Crea la carta de tu restaurante",
-    "createText": "Elige un plan, añade tus platos y comparte tu código QR. Tu carta se publica cuando hayamos acordado el pago.",
+    "createText": "Añade tus platos, publica tu menú y comparte tu código QR. Los primeros meses son gratis.",
     "createButton": "Crea tu restaurante",
     "joinTeamHint": "¿Vas a unirte al equipo de un restaurante? Pide a su dueño que te invite.",
     "awaitingApproval": "Pendiente de aprobación"
@@ -315,8 +318,9 @@
     "createOwnRestaurantFailed": "No se pudo crear tu restaurante. Inténtalo de nuevo.",
     "requestNotFound": "Esta solicitud ya no existe o ya se resolvió.",
     "awaitingApproval": "Tu carta podrá publicarse cuando se apruebe tu registro.",
-    "restaurantLimit": "Tu primer restaurante está pendiente de aprobación. Podrás añadir otro cuando se apruebe.",
-    "menuPaused": "Menupedia ha pausado tu carta. Contáctanos para reanudarla."
+    "restaurantLimit": "Ya has creado un restaurante. Para añadir otro, ponte en contacto con nosotros.",
+    "menuPaused": "Menupedia ha pausado tu carta. Contáctanos para reanudarla.",
+    "paymentNeeded": "Tus meses gratis (o el tiempo pagado) han terminado. Tu menú podrá volver a publicarse cuando registremos tu pago."
   },
   "UnsavedChanges": {
     "confirmLeave": "Tienes cambios sin guardar. ¿Quieres salir sin guardarlos?"
@@ -427,7 +431,7 @@
     "live": {
       "title": "Publícalo",
       "action": "Vista previa",
-      "ownerText": "Publica tu carta desde la pestaña Plan cuando se apruebe tu plan.",
+      "ownerText": "Publica tu menú desde la pestaña Plan cuando esté listo.",
       "ownerAction": "Publicar",
       "editorText": "El dueño del restaurante publica la carta. Mientras tanto, puedes previsualizarla."
     },
@@ -541,7 +545,7 @@
     "saved": "Guardado",
     "chooseMainFirst": "Primero elige el idioma principal.",
     "notTranslated": "Sin traducir: {languages}",
-    "notInPlan": "Las cartas en varios idiomas vienen con los planes Pro y Business. Escríbenos para añadirlas.",
+    "notInPlan": "Las cartas en varios idiomas no están incluidas en tu plan. Escríbenos para añadirlas.",
     "notInPlanAdmin": "El plan de este restaurante no incluye idiomas de carta. Cambia su plan o actívalos en la tarjeta Features.",
     "limitHint": "{count, plural, one {Tu plan incluye # idioma extra.} other {Tu plan incluye hasta # idiomas extra.}}",
     "overLimit": "{count, plural, one {Tu carta solo muestra el primer idioma extra, el que incluye tu plan.} other {Tu carta solo muestra los # primeros idiomas extra, los que incluye tu plan.}} Los demás se guardan para cuando tu plan los permita."
@@ -629,7 +633,7 @@
     "sampleCategory": "Entrantes",
     "sampleDish": "Plato de ejemplo",
     "sampleDishDescription": "Una breve descripción del plato.",
-    "notInPlan": "Los colores personalizados vienen con los planes Pro y Business, así que tu carta usa los colores predeterminados. Escríbenos para añadirlos.",
+    "notInPlan": "Los colores personalizados no están incluidos en tu plan, así que tu carta usa los colores predeterminados. Escríbenos para añadirlos.",
     "notInPlanAdmin": "El plan de este restaurante no incluye colores personalizados. Cambia su plan o actívalos en la tarjeta Features."
   },
   "MenuDesign": {
@@ -978,8 +982,8 @@
   },
   "Plans": {
     "pricingTitle": "Planes sencillos",
-    "pricingIntro": "Todos los planes incluyen tu carta completa con fotos, un código QR y tarjetas de mesa para imprimir. Elige el que encaje con tu local.",
-    "pricingNote": "Precios en dólares estadounidenses. Paga por transferencia o en efectivo: lo acordamos cuando te registres.",
+    "pricingIntro": "Un plan con todo: tu menú completo con fotos, código QR, tarjetas de mesa, sucursales, idiomas y tus propios colores. Los primeros {count} meses son gratis.",
+    "pricingNote": "Precios en dólares estadounidenses. Nada que pagar para empezar: después de los meses gratis, paga por transferencia bancaria o en efectivo.",
     "cycleLabel": "Facturación",
     "monthly": "Mensual",
     "yearly": "Anual",
@@ -991,7 +995,7 @@
     "popular": "El más elegido",
     "choose": "Empezar con {plan}",
     "tagline": {
-      "standard": "Para un solo café o restaurante.",
+      "standard": "Todo lo que necesita una cafetería o un restaurante.",
       "pro": "Tus propios colores, más idiomas, varias sucursales.",
       "business": "Para cadenas, con todos los idiomas."
     },
@@ -1004,16 +1008,18 @@
     "customColors": "Tus propios colores",
     "oneLanguage": "Carta en un idioma",
     "extraLanguages": "{count, plural, one {Carta en # idioma extra} other {Carta en hasta # idiomas extra}}",
-    "allLanguages": "Carta en todos los idiomas"
+    "allLanguages": "Carta en todos los idiomas",
+    "freeMonths": "{count, plural, one {El primer mes gratis} other {Los primeros # meses gratis}}",
+    "branchesNoLimit": "Todas las sucursales que necesites"
   },
   "Start": {
     "metaTitle": "Crea tu carta | Menupedia",
     "title": "Crea la carta de tu restaurante",
-    "intro": "Elige un plan, cuéntanos sobre tu local y empieza a crearla. Tu carta se publica cuando hayamos acordado el pago.",
+    "intro": "Cuéntanos sobre tu local y empieza a crear. Publica tu menú en cuanto esté listo: los primeros meses son gratis.",
     "planHeading": "1. Tu plan",
     "cycleLabel": "Facturación",
     "detailsHeading": "2. Tu restaurante",
-    "paymentHeading": "3. Pago",
+    "paymentHeading": "3. Después de los meses gratis",
     "name": "Nombre del restaurante",
     "namePlaceholder": "p. ej., Lokanta",
     "slug": "Dirección de la carta",
@@ -1024,8 +1030,8 @@
     "cityPlaceholder": "p. ej., Bogotá",
     "country": "País",
     "phone": "Teléfono o WhatsApp",
-    "phoneHint": "Te llamaremos o escribiremos para acordar el pago.",
-    "paymentMethod": "¿Cómo prefieres pagar?",
+    "phoneHint": "Te llamaremos o escribiremos antes de que terminen tus meses gratis.",
+    "paymentMethod": "¿Cómo te gustaría pagar entonces?",
     "methods": {
       "bank_transfer": "Transferencia",
       "cash": "Efectivo",
@@ -1034,16 +1040,16 @@
     },
     "note": "¿Algo que debamos saber?",
     "notePlaceholder": "El mejor momento para contactarte, preguntas…",
-    "afterNote": "Te contactaremos en un día hábil para acordar el pago. Mientras tanto, crea tu carta: se publica cuando se apruebe tu registro.",
+    "afterNote": "Nada que pagar ahora. Crea tu menú y publícalo cuando quieras: los primeros {count} meses son gratis. Antes de que terminen, te contactaremos para acordar el pago. Sin pago, el menú deja de estar publicado.",
     "submit": "Crear mi restaurante",
     "submitting": "Creando…",
     "nameRequired": "Escribe el nombre del restaurante.",
     "countryRequired": "Elige el país.",
     "phoneRequired": "Escribe un teléfono en el que podamos contactarte.",
-    "waitingTitle": "{name} está pendiente de aprobación",
-    "waitingText": "Te contactaremos para acordar el pago. Mientras tanto puedes crear tu carta. Cuando se apruebe, podrás añadir otro restaurante.",
     "toDashboard": "Ir a tu carta",
-    "slugPreviewHint": "Se crea a partir del nombre. Si esa dirección ya existe, añadimos un número."
+    "slugPreviewHint": "Se crea a partir del nombre. Si esa dirección ya existe, añadimos un número.",
+    "alreadyTitle": "Ya has creado {name}",
+    "alreadyText": "Cada cuenta puede crear un restaurante por su cuenta. Para añadir otro, ponte en contacto con nosotros."
   },
   "OwnerPlan": {
     "planName": "Plan {plan}",
@@ -1080,6 +1086,10 @@
     "email": "Correo",
     "pausedTitle": "Tu carta está pausada",
     "pausedUnpaid": "Menupedia ha pausado tu carta porque hay un pago atrasado. Los clientes no la verán hasta que se reanude. Contáctanos para resolver el pago.",
-    "pausedOther": "Menupedia ha pausado tu carta. Los clientes no la verán hasta que se reanude. Por favor, contáctanos."
+    "pausedOther": "Menupedia ha pausado tu carta. Los clientes no la verán hasta que se reanude. Por favor, contáctanos.",
+    "statusFreeUntil": "Gratis hasta el {date} ({days, plural, one {queda # día} other {quedan # días}}). Tu primer pago vence después.",
+    "statusOfflineUnpaid": "Tu periodo gratis ha terminado y se deben {amount}. Tu menú no está publicado hasta que registremos tu pago.",
+    "expiredTitle": "Tu menú no está publicado",
+    "expiredText": "Tus meses gratis (o el tiempo pagado) han terminado, así que los clientes no pueden ver tu menú. Ponte en contacto para pagar: cuando lo registremos, podrás volver a publicarlo."
   }
 }

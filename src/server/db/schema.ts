@@ -56,6 +56,10 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   // isActive says, and owners can't put it live. Null = not paused. Why is
   // on restaurantBilling (admins and the owner only).
   pausedAt: timestamp("paused_at"),
+  // The last day guests may see the menu, "YYYY-MM-DD" in Istanbul (lib/
+  // billing): what's paid for, or the free months, for restaurants that
+  // go offline when unpaid. Saved by server/plans. Null = no limit.
+  liveUntil: date("live_until", { mode: "string" }),
   isDisplayed: boolean("is_displayed").default(false).notNull(),
   logoUrl: varchar("logo_url", { length: 256 }),
 
@@ -365,6 +369,9 @@ export const restaurantBilling = pgTable("menu-hub_restaurant_billing", {
   branchesOverride: integer("branches_override"),
   // The first day billed: unpaid days count from here. Null = not set.
   startsOn: date("starts_on", { mode: "string" }),
+  // The menu goes offline when what's paid runs out (the days before
+  // startsOn are free). Self sign-ups start with it on.
+  offlineWhenUnpaid: boolean("offline_when_unpaid").default(false).notNull(),
   notes: text("notes"),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

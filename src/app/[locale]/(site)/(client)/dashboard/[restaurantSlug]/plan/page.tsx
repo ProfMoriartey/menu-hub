@@ -10,8 +10,8 @@ import { GoLiveCard, PlanChangeForm } from "~/components/plans/OwnerPlanControls
 import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { getOwnerPlan } from "~/server/billing";
 import { getOpenRequestsFor, isApprovedToPublish } from "~/server/plan-requests";
-import { canEditDetails } from "~/lib/access";
-import { daysBetween, formatDay, formatMoney } from "~/lib/billing";
+import { canEditDetails, isPastLiveUntil } from "~/lib/access";
+import { addDays, daysBetween, formatDay, formatMoney } from "~/lib/billing";
 import { TIER_FEATURES, billedBranches, isTier } from "~/lib/plans";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
 
@@ -39,7 +39,9 @@ export default async function OwnerPlanPage({ params }: { params: Promise<{ rest
     isApprovedToPublish(restaurant.id),
     getOpenRequestsFor(restaurant.id),
   ]);
-  const { pricing, limits, branchCount, paidUntil, nextDueOn, owed, today } = plan;
+  const { pricing, limits, branchCount, paidUntil, nextDueOn, owed, today, startsOn } = plan;
+  // The free months (or paid days) are over: offline until a payment.
+  const expired = isPastLiveUntil(restaurant.liveUntil);
   const tier = pricing?.tier ?? null;
   const change = requests.find((r) => r.kind === "change") ?? null;
   const shownBranches = billedBranches(branchCount, limits.maxBranches);
@@ -48,6 +50,13 @@ export default async function OwnerPlanPage({ params }: { params: Promise<{ rest
   if (!approved) status = t("statusWaiting");
   else if (!pricing) status = t("statusNotBilled");
   else if (pricing.period === 0) status = t("statusFree");
+  else if (!paidUntil && startsOn && today < startsOn)
+    status = t("statusFreeUntil", {
+      date: formatDay(addDays(startsOn, -1), locale),
+      days: daysBetween(today, startsOn),
+    });
+  else if (expired && owed)
+    status = t("statusOfflineUnpaid", { amount: formatMoney(owed.amount, owed.currency, locale) });
   else if (owed) status = t("statusOverdue", { amount: formatMoney(owed.amount, owed.currency, locale) });
   else if (nextDueOn)
     status = paidUntil
@@ -73,7 +82,7 @@ export default async function OwnerPlanPage({ params }: { params: Promise<{ rest
                 </p>
               )}
             </div>
-            <p className={owed ? "font-medium text-red-700 dark:text-red-400" : "text-muted-foreground"}>{status}</p>
+            <p className={owed || expired ? "font-medium text-red-700 dark:text-red-400" : "text-muted-foreground"}>{status}</p>
             {isTier(tier) && <PlanFeatureList tier={tier} />}
             <dl className="border-border grid gap-3 border-t pt-4 text-sm sm:grid-cols-2">
               <div>
@@ -109,6 +118,7 @@ export default async function OwnerPlanPage({ params }: { params: Promise<{ rest
             isActive={restaurant.isActive}
             approved={approved}
             pausedReason={restaurant.pausedAt ? (plan.pauseReason ?? "other") : null}
+            expired={expired}
           />
           <section className="bg-card border-border space-y-3 rounded-xl border p-5 shadow-sm sm:p-6">
             <h2 className="text-base font-semibold">{t("contactTitle")}</h2>

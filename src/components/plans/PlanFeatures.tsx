@@ -20,7 +20,11 @@ export function PlanFeatureList({ tier, className }: { tier: Tier; className?: s
   const f = TIER_FEATURES[tier];
   const lines = [
     t("everything"),
-    f.maxBranches === 1 ? t("oneBranch") : t("branchesIncluded", { count: f.includedBranches }),
+    f.maxBranches === 1
+      ? t("oneBranch")
+      : f.maxBranches === null && f.extraBranchPrice === 0
+        ? t("branchesNoLimit")
+        : t("branchesIncluded", { count: f.includedBranches }),
     ...(f.extraBranchPrice > 0
       ? [
           f.maxBranches === null

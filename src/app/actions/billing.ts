@@ -44,6 +44,7 @@ const planSchema = z.object({
   monthlyPrice: z.union([z.literal(""), money]),
   currency,
   startsOn: z.union([z.literal(""), z.string().refine(isDay)]),
+  offlineWhenUnpaid: z.boolean(),
   notes: z.string().trim().max(2000),
 });
 
@@ -70,6 +71,7 @@ export async function saveBillingPlan(restaurantId: string, input: unknown): Pro
       monthlyPrice: parsed.data.monthlyPrice || null,
       currency: parsed.data.currency,
       startsOn: parsed.data.startsOn || null,
+      offlineWhenUnpaid: parsed.data.offlineWhenUnpaid,
       notes: parsed.data.notes || null,
       updatedAt: new Date(),
     };
@@ -120,7 +122,10 @@ const paymentSchema = z.object({
   note: z.string().trim().max(500),
 });
 
-/** A payment received, paying `months` months from `coversFrom`. */
+/**
+ * A payment received, paying `months` months from `coversFrom`. A menu
+ * that went offline unpaid can be live again.
+ */
 export async function recordPayment(restaurantId: string, input: unknown): Promise<ActionResult> {
   return runAction("saveBillingFailed", async () => {
     await requireAdmin();
@@ -142,6 +147,7 @@ export async function recordPayment(restaurantId: string, input: unknown): Promi
       note: note || null,
       recordedBy: userId,
     });
+    await syncEntitlements(restaurantId);
   });
 }
 
@@ -150,7 +156,11 @@ export async function deletePayment(paymentId: string): Promise<ActionResult> {
   return runAction("saveBillingFailed", async () => {
     await requireAdmin();
     if (!isUuid(paymentId)) throw new ActionError("invalidInput");
-    await db.delete(payments).where(eq(payments.id, paymentId));
+    const [deleted] = await db
+      .delete(payments)
+      .where(eq(payments.id, paymentId))
+      .returning({ restaurantId: payments.restaurantId });
+    if (deleted?.restaurantId) await syncEntitlements(deleted.restaurantId);
   });
 }
 

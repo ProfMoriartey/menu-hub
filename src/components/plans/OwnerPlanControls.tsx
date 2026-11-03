@@ -3,13 +3,13 @@
 
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { CircleAlert, Clock, Globe, EyeOff, PauseCircle } from "lucide-react";
+import { CalendarX, CircleAlert, Clock, Globe, EyeOff, PauseCircle } from "lucide-react";
 import { useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { usePlanMoney } from "~/components/plans/PlanFeatures";
 import { cancelPlanChange, requestPlanChange, setRestaurantLive } from "~/app/actions/plan-requests";
-import { MONTHS_PAID_PER_YEAR, TIERS, TIER_FEATURES, periodPrice, type Tier } from "~/lib/plans";
+import { MONTHS_PAID_PER_YEAR, OFFERED_TIERS, TIER_FEATURES, isOfferedTier, periodPrice, type Tier } from "~/lib/plans";
 import { cn } from "~/lib/utils";
 
 function ErrorLine({ error }: { error: string | null }) {
@@ -22,21 +22,25 @@ function ErrorLine({ error }: { error: string | null }) {
 }
 
 /**
- * Putting the menu live or taking it offline, once the sign-up is
- * approved. Until then, it says it's waiting. While an admin has paused
- * the menu, it says why and can only take it offline.
+ * Putting the menu live or taking it offline. While the sign-up isn't
+ * approved, it says it's waiting. While an admin has paused the menu, or
+ * once the free months or paid days are over, it says why and can only
+ * take it offline.
  */
 export function GoLiveCard({
   restaurantId,
   isActive,
   approved,
   pausedReason,
+  expired,
 }: {
   restaurantId: string;
   isActive: boolean;
   approved: boolean;
   // Set while an admin has paused the menu: "unpaid" or "other".
   pausedReason: string | null;
+  // The free months or paid days are over: offline until a payment.
+  expired: boolean;
 }) {
   const t = useTranslations("OwnerPlan");
   const router = useRouter();
@@ -61,18 +65,32 @@ export function GoLiveCard({
       <h2 id="live-title" className="flex items-center gap-2 text-base font-semibold">
         {pausedReason ? (
           <PauseCircle className="h-4 w-4 text-red-600" aria-hidden />
+        ) : expired ? (
+          <CalendarX className="h-4 w-4 text-red-600" aria-hidden />
         ) : isActive ? (
           <Globe className="h-4 w-4 text-emerald-600" aria-hidden />
         ) : (
           <EyeOff className="h-4 w-4" aria-hidden />
         )}
-        {pausedReason ? t("pausedTitle") : isActive ? t("liveTitle") : t("offlineTitle")}
+        {pausedReason ? t("pausedTitle") : expired ? t("expiredTitle") : isActive ? t("liveTitle") : t("offlineTitle")}
       </h2>
       {pausedReason ? (
         <div className="space-y-3">
           <p className="flex items-start gap-2 rounded-lg border border-red-500/40 bg-red-500/5 p-3 text-sm">
             <PauseCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden />
             {pausedReason === "unpaid" ? t("pausedUnpaid") : t("pausedOther")}
+          </p>
+          {isActive && (
+            <Button variant="outline" onClick={() => change(false)} disabled={isPending}>
+              {isPending ? t("saving") : t("takeOffline")}
+            </Button>
+          )}
+        </div>
+      ) : expired ? (
+        <div className="space-y-3">
+          <p className="flex items-start gap-2 rounded-lg border border-red-500/40 bg-red-500/5 p-3 text-sm">
+            <CalendarX className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden />
+            {t("expiredText")}
           </p>
           {isActive && (
             <Button variant="outline" onClick={() => change(false)} disabled={isPending}>
@@ -103,7 +121,9 @@ export function GoLiveCard({
 
 /**
  * Asking for another plan (or yearly billing): it reaches an admin, who
- * gets in touch about the price. An open request can be withdrawn.
+ * gets in touch about the price. An open request can be withdrawn. Only
+ * the plans on offer (lib/plans OFFERED_TIERS) are listed; with just one,
+ * it's monthly or yearly.
  */
 export function PlanChangeForm({
   restaurantId,
@@ -121,7 +141,7 @@ export function PlanChangeForm({
   const router = useRouter();
   const money = usePlanMoney();
   const [isPending, startTransition] = useTransition();
-  const [tier, setTier] = useState<Tier>(current === "business" ? "business" : current === "pro" ? "business" : "pro");
+  const [tier, setTier] = useState<Tier>(isOfferedTier(current) ? current : OFFERED_TIERS[0]!);
   const [cycle, setCycle] = useState<"monthly" | "yearly">(currentCycle === "yearly" ? "yearly" : "monthly");
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -173,7 +193,7 @@ export function PlanChangeForm({
       ) : (
         <>
           <div role="radiogroup" aria-label={t("changeTitle")} className="grid gap-2 sm:grid-cols-3">
-            {TIERS.map((id) => (
+            {OFFERED_TIERS.map((id) => (
               <button
                 key={id}
                 type="button"
