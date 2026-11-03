@@ -36,6 +36,14 @@ const DISHES: Record<MenuDesign, { Dish: typeof ClassicDish; list: string }> = {
 // a phone. Their photos are fetched first; the rest load as guests scroll.
 const PRIORITY_PHOTOS = 4;
 
+// The first dishes on screen rise in one after another; the rest at once.
+const ENTER_STEP_MS = 60;
+const ENTER_STAGGERED = 6;
+const enterDelay = (categoryIndex: number, itemIndex: number) =>
+  categoryIndex === 0 && itemIndex > 0
+    ? { animationDelay: `${Math.min(itemIndex, ENTER_STAGGERED) * ENTER_STEP_MS}ms` }
+    : undefined;
+
 /**
  * The whole menu on one page, a section per category, with a sticky bar of
  * categories that follows the scroll and jumps to a section when tapped.
@@ -78,23 +86,30 @@ export function MenuLayout({
             </span>
           </h2>
           {/* Compact rows are plain list items; cards are a grid. */}
+          {/* Each dish rises in on load and slides as it scrolls in and
+              out of view (globals.css: .dish-enter, .dish-reveal). */}
           {design === "compact" ? (
             <ul className={list}>
-              {category.menuItems.map((item) => (
-                <li key={item.id}>
-                  <Dish item={item} restaurantSlug={menuData.restaurant.slug} />
+              {category.menuItems.map((item, itemIndex) => (
+                <li key={item.id} className="dish-reveal">
+                  <div className="dish-enter" style={enterDelay(categoryIndex, itemIndex)}>
+                    <Dish item={item} restaurantSlug={menuData.restaurant.slug} />
+                  </div>
                 </li>
               ))}
             </ul>
           ) : (
             <div className={cn(list)}>
               {category.menuItems.map((item, itemIndex) => (
-                <Dish
-                  key={item.id}
-                  item={item}
-                  restaurantSlug={menuData.restaurant.slug}
-                  priority={categoryIndex === 0 && itemIndex < PRIORITY_PHOTOS}
-                />
+                <div key={item.id} className="dish-reveal">
+                  <div className="dish-enter h-full" style={enterDelay(categoryIndex, itemIndex)}>
+                    <Dish
+                      item={item}
+                      restaurantSlug={menuData.restaurant.slug}
+                      priority={categoryIndex === 0 && itemIndex < PRIORITY_PHOTOS}
+                    />
+                  </div>
+                </div>
               ))}
             </div>
           )}
