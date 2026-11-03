@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { ExternalLink, X } from "lucide-react";
+import { ExternalLink, ImageIcon, X } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { DietaryBadges } from "~/components/public/DietaryBadges";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
@@ -216,17 +216,8 @@ function DishSheetContent({
         </DialogPrimitive.Close>
 
         <div className="scrollbar-thin overflow-y-auto overscroll-contain">
-          {item.imageUrl && (
-            <div className="relative aspect-[4/3] w-full">
-              <Image
-                src={item.imageUrl}
-                alt={item.name}
-                fill
-                sizes="(min-width: 640px) 512px, 100vw"
-                className="object-cover"
-              />
-            </div>
-          )}
+          {/* Keyed by photo, so another dish starts out loading again. */}
+          {item.imageUrl && <DishPhoto key={item.imageUrl} src={item.imageUrl} alt={item.name} />}
           <div className="space-y-3 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
             <div className={item.imageUrl ? "" : "pe-10 pt-4"}>
               <p className="text-muted-foreground text-sm">
@@ -283,5 +274,31 @@ function DishSheetContent({
         </div>
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
+  );
+}
+
+/**
+ * The dish's photo, with a pulsing placeholder until it has loaded, then a
+ * short fade in. Fetched first (priority): it's what the guest opened.
+ */
+function DishPhoto({ src, alt }: { src: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className="relative aspect-[4/3] w-full overflow-hidden">
+      {!loaded && (
+        <div className="bg-foreground/[0.06] absolute inset-0 flex animate-pulse items-center justify-center" aria-hidden>
+          <ImageIcon className="text-muted-foreground/50 h-10 w-10" />
+        </div>
+      )}
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        priority
+        sizes="(min-width: 640px) 512px, 100vw"
+        onLoad={() => setLoaded(true)}
+        className={`object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
+      />
+    </div>
   );
 }

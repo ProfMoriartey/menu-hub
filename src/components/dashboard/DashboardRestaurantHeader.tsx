@@ -121,10 +121,12 @@ export async function DashboardRestaurantHeader({
         </Button>
       </div>
 
-      {/* Scrolls sideways on small screens rather than wrapping. */}
+      {/* Scrolls sideways on small screens rather than wrapping. The line
+          under the tabs is an inset shadow, not a border: tabs pulled over a
+          border would overflow it and make the bar scroll up and down too. */}
       <nav
         aria-label={t("menuTab")}
-        className="border-border flex gap-1 overflow-x-auto border-b"
+        className="scrollbar-thin flex gap-1 overflow-x-auto overflow-y-hidden shadow-[inset_0_-1px_0_var(--border)]"
       >
         {tabs.map((tab) => (
           <Link
@@ -132,7 +134,7 @@ export async function DashboardRestaurantHeader({
             href={tab.href}
             aria-current={activeTab === tab.id ? "page" : undefined}
             className={cn(
-              "-mb-px shrink-0 border-b-2 px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors",
+              "shrink-0 border-b-2 px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors",
               activeTab === tab.id
                 ? "border-primary text-foreground"
                 : "text-muted-foreground hover:text-foreground border-transparent",
