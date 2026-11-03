@@ -1,5 +1,5 @@
 // src/lib/color-theme.ts
-// A restaurant's own colours on its public pages: six colours per mode
+// A restaurant's own colours on its public pages: seven colours per mode
 // (light and dark), from which every colour token the pages use is derived.
 // Browser-safe: used by the colours editor, the layout and the actions.
 import {
@@ -13,6 +13,9 @@ import {
 export const COLOR_ROLES = [
   "background",
   "card",
+  // The menu's top section (logo, name, buttons). Themes saved before it
+  // existed get headerFor()'s.
+  "header",
   "text",
   "primary",
   "secondary",
@@ -27,9 +30,17 @@ export interface ColorTheme {
 }
 export type ThemeMode = keyof ColorTheme;
 
+/** A header colour to go with a palette: halfway from secondary to card. */
+export const headerFor = (p: Omit<Palette, "header">) => mix(p.secondary, p.card, 0.5);
+
+const withHeader = (theme: { light: Omit<Palette, "header">; dark: Omit<Palette, "header"> }): ColorTheme => ({
+  light: { ...theme.light, header: headerFor(theme.light) },
+  dark: { ...theme.dark, header: headerFor(theme.dark) },
+});
+
 // The site's own colours (globals.css, converted to sRGB): what restaurants
 // without custom colours look like.
-export const DEFAULT_THEME: ColorTheme = {
+export const DEFAULT_THEME: ColorTheme = withHeader({
   light: {
     background: "#fcf9f4",
     card: "#fcf9f4",
@@ -46,14 +57,14 @@ export const DEFAULT_THEME: ColorTheme = {
     secondary: "#433927",
     accent: "#f6b200",
   },
-};
+});
 
 // One-click starting points for owners who'd rather not pick six colours.
 export const PRESETS: { id: string; theme: ColorTheme }[] = [
   { id: "default", theme: DEFAULT_THEME },
   {
     id: "ocean",
-    theme: {
+    theme: withHeader({
       light: {
         background: "#f5f9fc",
         card: "#ffffff",
@@ -70,11 +81,11 @@ export const PRESETS: { id: string; theme: ColorTheme }[] = [
         secondary: "#1d3446",
         accent: "#2a4d66",
       },
-    },
+    }),
   },
   {
     id: "forest",
-    theme: {
+    theme: withHeader({
       light: {
         background: "#f6f8f3",
         card: "#ffffff",
@@ -91,11 +102,11 @@ export const PRESETS: { id: string; theme: ColorTheme }[] = [
         secondary: "#24341f",
         accent: "#33502b",
       },
-    },
+    }),
   },
   {
     id: "berry",
-    theme: {
+    theme: withHeader({
       light: {
         background: "#fdf6f8",
         card: "#ffffff",
@@ -112,11 +123,11 @@ export const PRESETS: { id: string; theme: ColorTheme }[] = [
         secondary: "#3a1c27",
         accent: "#55283a",
       },
-    },
+    }),
   },
   {
     id: "classic",
-    theme: {
+    theme: withHeader({
       light: {
         background: "#ffffff",
         card: "#f5f5f5",
@@ -133,26 +144,32 @@ export const PRESETS: { id: string; theme: ColorTheme }[] = [
         secondary: "#2a2a2a",
         accent: "#3d3d3d",
       },
-    },
+    }),
   },
 ];
 
-const isPalette = (value: unknown): value is Palette =>
+// Every colour but the header, which older saved themes don't have.
+const isPalette = (value: unknown): value is Omit<Palette, "header"> & { header?: unknown } =>
   !!value &&
   typeof value === "object" &&
-  COLOR_ROLES.every((role) =>
-    isBrandColor((value as Record<string, unknown>)[role]),
+  COLOR_ROLES.every(
+    (role) => role === "header" || isBrandColor((value as Record<string, unknown>)[role]),
   );
 
-/** A theme sent by a form, lower-cased; null when any colour is missing or invalid. */
+/**
+ * A theme sent by a form or saved earlier, lower-cased; null when any colour
+ * is invalid or missing (but the header, which headerFor() then fills in).
+ */
 export function parseColorTheme(raw: unknown): ColorTheme | null {
   if (!raw || typeof raw !== "object") return null;
   const { light, dark } = raw as Record<string, unknown>;
   if (!isPalette(light) || !isPalette(dark)) return null;
-  const clean = (p: Palette) =>
-    Object.fromEntries(
-      COLOR_ROLES.map((role) => [role, p[role].toLowerCase()]),
-    ) as Palette;
+  const clean = (p: Omit<Palette, "header"> & { header?: unknown }) => {
+    const palette = Object.fromEntries(
+      COLOR_ROLES.filter((role) => role !== "header").map((role) => [role, p[role].toLowerCase()]),
+    ) as Omit<Palette, "header">;
+    return { ...palette, header: isBrandColor(p.header) ? p.header.toLowerCase() : headerFor(palette) };
+  };
   return { light: clean(light), dark: clean(dark) };
 }
 
@@ -167,6 +184,7 @@ export function darkFromLight(light: Palette): Palette {
   return {
     background,
     card,
+    header: mix(light.header, "#000000", 0.8),
     text: mix(light.text, "#ffffff", 0.88),
     primary: readableOn(light.primary, card, "#ffffff"),
     secondary: mix(light.secondary, card, 0.8),
@@ -182,7 +200,8 @@ export function startingTheme(
   saved: ColorTheme | null,
   brandColor: string | null,
 ): ColorTheme {
-  if (saved) return saved;
+  const valid = saved && parseColorTheme(saved);
+  if (valid) return valid;
   if (!brandColor || !isBrandColor(brandColor)) return DEFAULT_THEME;
   const light = {
     ...DEFAULT_THEME.light,
@@ -221,6 +240,7 @@ const SITE_TOKENS: Record<ThemeMode, Record<string, string>> = {
     border: "#e1dcd1",
     input: "#e1dcd1",
     ring: "#be7721",
+    ...headerTokens(DEFAULT_THEME.light),
   },
   dark: {
     background: "#1c1608",
@@ -240,8 +260,22 @@ const SITE_TOKENS: Record<ThemeMode, Record<string, string>> = {
     border: "#433927",
     input: "#433927",
     ring: "#f6b200",
+    ...headerTokens(DEFAULT_THEME.dark),
   },
 };
+
+/**
+ * The menu header's colour (.menu-header in globals.css) with its text: the
+ * palette's text where it reads at 4.5:1, else black or white.
+ */
+function headerTokens(p: Palette): Record<string, string> {
+  const text = contrast(p.text, p.header) >= 4.5 ? p.text : bestText(p.header);
+  return {
+    "menu-header": p.header,
+    "menu-header-foreground": text,
+    "menu-header-muted": mutedText(text, p.header),
+  };
+}
 
 const samePalette = (a: Palette, b: Palette) =>
   COLOR_ROLES.every((role) => a[role] === b[role]);
@@ -254,14 +288,14 @@ const defaultModeOf = (p: Palette): ThemeMode | null =>
       ? "dark"
       : null;
 
-// Softer text (descriptions, hints): a step towards the card colour, but
-// never below 4.5:1 on the cards.
-function mutedText(p: Palette) {
+// Softer text (descriptions, hints): a step towards the surface colour,
+// but never below 4.5:1 on it.
+function mutedText(text: string, surface: string) {
   for (let amount = 0.4; amount > 0; amount -= 0.05) {
-    const candidate = mix(p.text, p.card, amount);
-    if (contrast(candidate, p.card) >= 4.5) return candidate;
+    const candidate = mix(text, surface, amount);
+    if (contrast(candidate, surface) >= 4.5) return candidate;
   }
-  return p.text;
+  return text;
 }
 
 /** Every colour token the public pages use, derived from one palette. */
@@ -283,10 +317,11 @@ export function paletteTokens(p: Palette): Record<string, string> {
     accent: p.accent,
     "accent-foreground": bestText(p.accent),
     muted: mix(p.card, p.text, 0.08),
-    "muted-foreground": mutedText(p),
+    "muted-foreground": mutedText(p.text, p.card),
     border,
     input: border,
     ring: p.primary,
+    ...headerTokens(p),
   };
 }
 

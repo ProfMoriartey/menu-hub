@@ -594,7 +594,7 @@
       },
       "card": {
         "label": "Tarjetas",
-        "hint": "Tarjetas de platos, la cabecera y la barra de categorías."
+        "hint": "Las tarjetas de platos y la barra de categorías."
       },
       "text": {
         "label": "Texto",
@@ -611,6 +611,10 @@
       "accent": {
         "label": "Acento",
         "hint": "Resaltado al señalar una categoría o un botón."
+      },
+      "header": {
+        "label": "Cabecera",
+        "hint": "La parte superior del menú, con tu logo y nombre."
       }
     },
     "warnings": {

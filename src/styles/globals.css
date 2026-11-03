@@ -82,6 +82,12 @@
 
   --attention: oklch(38.6% 0.065 65.4); /* #7B3F00 - muted terracotta brown/red */
 
+  /* The public menu's top section (.menu-header); lib/color-theme makes the
+     same three from a restaurant's own colours. */
+  --menu-header: #faead9;
+  --menu-header-foreground: #2a2315;
+  --menu-header-muted: #73695a;
+
   --secondary: oklch(90.72% 0.051 68.34); /* orange-200: #FDBA74 - for secondary elements */
   --secondary-foreground: oklch(25.99% 0.026 82.52); /* stone-700 for text on secondary */
   --muted: oklch(90.72% 0.051 68.34); /* orange-200 */
@@ -131,6 +137,10 @@
   --accent-foreground: oklch(20.31% 0.027 84.72); /* stone-800 */
 
   --attention: oklch(60% 0.1 65.4); /* #BF6D00 - brighter muted terracotta for dark theme (remains similar) */
+
+  --menu-header: #372e1e;
+  --menu-header-foreground: #e1dcd1;
+  --menu-header-muted: #9d9689;
 
   --secondary: oklch(35.03% 0.033 84.81); /* stone-600: #57534E - Darker neutral for secondary elements */
   --secondary-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
@@ -209,6 +219,15 @@
 }
 [dir="rtl"] .site-glow {
   transform: scaleX(-1);
+}
+
+/* The public menu's top section, in its own colour. Text inside switches
+   to the header's text colours, so it stays readable on any header colour. */
+.menu-header {
+  --foreground: var(--menu-header-foreground);
+  --muted-foreground: var(--menu-header-muted);
+  background-color: var(--menu-header);
+  color: var(--menu-header-foreground);
 }
 
 /* Dishes on the public menu (MenuLayout). .dish-enter rises into place

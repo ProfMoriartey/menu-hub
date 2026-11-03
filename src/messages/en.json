@@ -594,7 +594,7 @@
       },
       "card": {
         "label": "Cards",
-        "hint": "Dish cards, the header and the category bar."
+        "hint": "Dish cards and the category bar."
       },
       "text": {
         "label": "Text",
@@ -611,6 +611,10 @@
       "accent": {
         "label": "Accent",
         "hint": "Highlights when pointing at a category or button."
+      },
+      "header": {
+        "label": "Header",
+        "hint": "The top of the menu, with your logo and name."
       }
     },
     "warnings": {

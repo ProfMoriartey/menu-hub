@@ -164,7 +164,7 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
       {/* Compact on purpose, phones first: guests come from a QR code and
           are already at the restaurant, so the header is just who it is and
           the controls. The description, hours and map are on About. */}
-      <header className="bg-card border-border border-b">
+      <header className="menu-header border-border border-b">
         <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center gap-3 sm:gap-4">
             {/* The logo opens the details page too, like the Details button. */}
@@ -185,18 +185,19 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
               <h1 className="text-foreground truncate text-xl leading-tight font-bold sm:text-3xl">
                 {restaurantDetails.name}
               </h1>
-              {isMulti && (
-                <BranchPicker
-                  restaurantName={restaurantDetails.name}
-                  branches={choices}
-                  allHref={`/${restaurantDetails.slug}`}
-                  onAll={branch === null}
-                  className="mt-1"
-                />
-              )}
 
-              {/* Details and socials, as small buttons. */}
+              {/* The branch (when there are several), details and socials,
+                  as small buttons in one row. */}
               <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                {isMulti && (
+                  <BranchPicker
+                    restaurantName={restaurantDetails.name}
+                    branches={choices}
+                    allHref={`/${restaurantDetails.slug}`}
+                    onAll={branch === null}
+                    className="bg-secondary text-secondary-foreground hover:bg-secondary/80 h-7 max-w-[12rem] border-transparent px-2.5 text-xs"
+                  />
+                )}
                 <Button
                   variant="secondary"
                   size="sm"
