@@ -17,6 +17,10 @@ export const PAYMENT_METHODS = [
 ] as const;
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number]["value"];
 
+// What sign-up offers: paying by card (online, once a provider is added)
+// or in cash.
+export const SIGNUP_PAYMENT_METHODS = ["card", "cash"] as const satisfies readonly PaymentMethod[];
+
 export const isPaymentMethod = (value: unknown): value is PaymentMethod =>
   PAYMENT_METHODS.some((m) => m.value === value);
 

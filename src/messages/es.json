@@ -987,7 +987,7 @@
   "Plans": {
     "pricingTitle": "Planes sencillos",
     "pricingIntro": "Un plan con todo: tu menú completo con fotos, código QR, tarjetas de mesa, sucursales, idiomas y tus propios colores. Los primeros {count} meses son gratis.",
-    "pricingNote": "Precios en dólares estadounidenses. Nada que pagar para empezar: después de los meses gratis, paga por transferencia bancaria o en efectivo.",
+    "pricingNote": "Precios en dólares estadounidenses. Nada que pagar durante la prueba: la facturación empieza solo cuando termina, con tarjeta o en efectivo.",
     "cycleLabel": "Facturación",
     "monthly": "Mensual",
     "yearly": "Anual",
@@ -997,7 +997,6 @@
     "perMonthShort": "/ mes",
     "perYearShort": "/ año",
     "popular": "El más elegido",
-    "choose": "Empezar con {plan}",
     "tagline": {
       "standard": "Todo lo que necesita una cafetería o un restaurante.",
       "pro": "Tus propios colores, más idiomas, varias sucursales.",
@@ -1013,17 +1012,22 @@
     "oneLanguage": "Carta en un idioma",
     "extraLanguages": "{count, plural, one {Carta en # idioma extra} other {Carta en hasta # idiomas extra}}",
     "allLanguages": "Carta en todos los idiomas",
-    "freeMonths": "{count, plural, one {El primer mes gratis} other {Los primeros # meses gratis}}",
-    "branchesNoLimit": "Todas las sucursales que necesites"
+    "branchesNoLimit": "Todas las sucursales que necesites",
+    "trialBadge": "Prueba gratis",
+    "freeMonthsShort": "{count, plural, one {# mes gratis} other {# meses gratis}}",
+    "regularPrice": "Precio normal {price}",
+    "thenPerMonth": "Después, {price} al mes, cuando termine la prueba.",
+    "thenPerYear": "Después, {price} al año, cuando termine la prueba.",
+    "startTrial": "Empieza tu prueba gratis"
   },
   "Start": {
     "metaTitle": "Crea tu carta | Menupedia",
     "title": "Crea la carta de tu restaurante",
     "intro": "Cuéntanos sobre tu local y empieza a crear. Publica tu menú en cuanto esté listo: los primeros meses son gratis.",
-    "planHeading": "1. Tu plan",
+    "planHeading": "Tu plan",
     "cycleLabel": "Facturación",
-    "detailsHeading": "2. Tu restaurante",
-    "paymentHeading": "3. Después de los meses gratis",
+    "detailsHeading": "Tu restaurante",
+    "paymentHeading": "¿Cómo pagarás después de la prueba?",
     "name": "Nombre del restaurante",
     "namePlaceholder": "p. ej., Lokanta",
     "slug": "Dirección de la carta",
@@ -1035,7 +1039,6 @@
     "country": "País",
     "phone": "Teléfono o WhatsApp",
     "phoneHint": "Te llamaremos o escribiremos antes de que terminen tus meses gratis.",
-    "paymentMethod": "¿Cómo te gustaría pagar entonces?",
     "methods": {
       "bank_transfer": "Transferencia",
       "cash": "Efectivo",
@@ -1044,7 +1047,6 @@
     },
     "note": "¿Algo que debamos saber?",
     "notePlaceholder": "El mejor momento para contactarte, preguntas…",
-    "afterNote": "Nada que pagar ahora. Crea tu menú y publícalo cuando quieras: los primeros {count} meses son gratis. Antes de que terminen, te contactaremos para acordar el pago. Sin pago, el menú deja de estar publicado.",
     "submit": "Crear mi restaurante",
     "submitting": "Creando…",
     "nameRequired": "Escribe el nombre del restaurante.",
@@ -1053,7 +1055,18 @@
     "toDashboard": "Ir a tu carta",
     "slugPreviewHint": "Se crea a partir del nombre. Si esa dirección ya existe, añadimos un número.",
     "alreadyTitle": "Ya has creado {name}",
-    "alreadyText": "Cada cuenta puede crear un restaurante por su cuenta. Para añadir otro, ponte en contacto con nosotros."
+    "alreadyText": "Cada cuenta puede crear un restaurante por su cuenta. Para añadir otro, ponte en contacto con nosotros.",
+    "stepOf": "Paso {step} de {total}",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "trialExplain": "Tu prueba gratis empieza hoy. No se cobra nada durante los primeros {count} meses: los pagos empiezan solo cuando termina la prueba, y te avisaremos antes.",
+    "methodHints": {
+      "card": "Paga con tarjeta cuando termine la prueba. Antes te enviaremos una página de pago segura.",
+      "cash": "Paga en efectivo. Te contactaremos para organizarlo antes de que termine la prueba."
+    },
+    "billingIntro": "A nombre de quién se emiten tus facturas. Ahora no se cobra nada.",
+    "reuseBilling": "Usar los datos de facturación de {name}",
+    "newBilling": "Introducir nuevos datos de facturación"
   },
   "OwnerPlan": {
     "planName": "Plan {plan}",

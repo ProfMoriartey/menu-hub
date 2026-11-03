@@ -987,7 +987,7 @@
   "Plans": {
     "pricingTitle": "Basit planlar",
     "pricingIntro": "Her şeyi içeren tek plan: fotoğraflı menünüzün tamamı, QR kod, masa kartları, şubeler, diller ve kendi renkleriniz. İlk {count} ay ücretsiz.",
-    "pricingNote": "Fiyatlar ABD doları. Başlamak için ödeme yok: ücretsiz aylardan sonra banka havalesi ya da nakit ile ödeyin.",
+    "pricingNote": "Fiyatlar ABD doları. Deneme süresince ödeme yok: faturalama yalnızca süre bitince, kartla ya da nakit olarak başlar.",
     "cycleLabel": "Ödeme dönemi",
     "monthly": "Aylık",
     "yearly": "Yıllık",
@@ -997,7 +997,6 @@
     "perMonthShort": "/ ay",
     "perYearShort": "/ yıl",
     "popular": "En çok tercih edilen",
-    "choose": "{plan} ile başla",
     "tagline": {
       "standard": "Bir kafe ya da restoranın ihtiyacı olan her şey.",
       "pro": "Kendi renkleriniz, daha fazla dil, birkaç şube.",
@@ -1013,17 +1012,22 @@
     "oneLanguage": "Tek dilde menü",
     "extraLanguages": "En fazla {count} ek dilde menü",
     "allLanguages": "Tüm dillerde menü",
-    "freeMonths": "{count, plural, one {İlk ay ücretsiz} other {İlk # ay ücretsiz}}",
-    "branchesNoLimit": "İstediğiniz kadar şube"
+    "branchesNoLimit": "İstediğiniz kadar şube",
+    "trialBadge": "Ücretsiz deneme",
+    "freeMonthsShort": "{count, plural, one {# ay ücretsiz} other {# ay ücretsiz}}",
+    "regularPrice": "Normal fiyat {price}",
+    "thenPerMonth": "Deneme süresi bitince aylık {price}.",
+    "thenPerYear": "Deneme süresi bitince yıllık {price}.",
+    "startTrial": "Ücretsiz denemeyi başlat"
   },
   "Start": {
     "metaTitle": "Menünüzü oluşturun | Menupedia",
     "title": "Restoranınızın menüsünü oluşturun",
     "intro": "İşletmenizi tanıtın ve hazırlamaya başlayın. Menünüz hazır olur olmaz yayına alın: ilk aylar ücretsiz.",
-    "planHeading": "1. Planınız",
+    "planHeading": "Planınız",
     "cycleLabel": "Ödeme dönemi",
-    "detailsHeading": "2. Restoranınız",
-    "paymentHeading": "3. Ücretsiz aylardan sonra",
+    "detailsHeading": "İşletmeniz",
+    "paymentHeading": "Deneme süresinden sonra nasıl ödeyeceksiniz?",
     "name": "Restoran adı",
     "namePlaceholder": "örn. Lokanta",
     "slug": "Menü adresi",
@@ -1035,7 +1039,6 @@
     "country": "Ülke",
     "phone": "Telefon ya da WhatsApp",
     "phoneHint": "Ücretsiz aylarınız bitmeden sizi arar ya da mesaj atarız.",
-    "paymentMethod": "O zaman nasıl ödemek istersiniz?",
     "methods": {
       "bank_transfer": "Havale / EFT",
       "cash": "Nakit",
@@ -1044,7 +1047,6 @@
     },
     "note": "Bilmemiz gereken bir şey var mı?",
     "notePlaceholder": "Size ulaşmak için en uygun zaman, sorularınız…",
-    "afterNote": "Şimdi ödeme yok. Menünüzü hazırlayın ve istediğiniz zaman yayına alın: ilk {count} ay ücretsiz. Bitmeden önce ödeme için sizinle iletişime geçeriz. Ödeme yapılmazsa menü yayından kalkar.",
     "submit": "Restoranımı oluştur",
     "submitting": "Oluşturuluyor…",
     "nameRequired": "Restoranın adını girin.",
@@ -1053,7 +1055,18 @@
     "toDashboard": "Menünüze gidin",
     "slugPreviewHint": "Addan oluşturulur. Bu adres alınmışsa sonuna bir sayı ekleriz.",
     "alreadyTitle": "{name} zaten oluşturuldu",
-    "alreadyText": "Her hesap kendi başına bir restoran oluşturabilir. Başka bir restoran eklemek için bizimle iletişime geçin."
+    "alreadyText": "Her hesap kendi başına bir restoran oluşturabilir. Başka bir restoran eklemek için bizimle iletişime geçin.",
+    "stepOf": "Adım {step} / {total}",
+    "next": "İleri",
+    "back": "Geri",
+    "trialExplain": "Ücretsiz deneme süreniz bugün başlıyor. İlk {count} ay için hiçbir ücret alınmaz: ödemeler yalnızca deneme süresi bitince başlar ve bundan önce size hatırlatırız.",
+    "methodHints": {
+      "card": "Deneme süresi bitince kartla ödeyin. Öncesinde size güvenli bir ödeme sayfası göndereceğiz.",
+      "cash": "Nakit ödeyin. Deneme süresi bitmeden ayarlamak için sizinle iletişime geçeceğiz."
+    },
+    "billingIntro": "Faturalarınızın kime kesileceği. Şimdi hiçbir ücret alınmaz.",
+    "reuseBilling": "{name} için kullanılan fatura bilgilerini kullan",
+    "newBilling": "Yeni fatura bilgileri gir"
   },
   "OwnerPlan": {
     "planName": "{plan} planı",

@@ -987,7 +987,7 @@
   "Plans": {
     "pricingTitle": "Simple plans",
     "pricingIntro": "One plan with everything: your full menu with photos, a QR code, table cards, branches, languages and your own colours. The first {count} months are free.",
-    "pricingNote": "Prices in US dollars. Nothing to pay to start: after the free months, pay by bank transfer or cash.",
+    "pricingNote": "Prices in US dollars. Nothing to pay during the trial: billing starts only when it ends, by card or in cash.",
     "cycleLabel": "Billing",
     "monthly": "Monthly",
     "yearly": "Yearly",
@@ -997,7 +997,6 @@
     "perMonthShort": "/ month",
     "perYearShort": "/ year",
     "popular": "Most popular",
-    "choose": "Start with {plan}",
     "tagline": {
       "standard": "Everything a café or restaurant needs.",
       "pro": "Your own colours, more languages, a few branches.",
@@ -1013,17 +1012,22 @@
     "oneLanguage": "Menu in one language",
     "extraLanguages": "{count, plural, one {Menu in # extra language} other {Menu in up to # extra languages}}",
     "allLanguages": "Menu in every language",
-    "freeMonths": "{count, plural, one {First month free} other {First # months free}}",
-    "branchesNoLimit": "As many branches as you need"
+    "branchesNoLimit": "As many branches as you need",
+    "trialBadge": "Free trial",
+    "freeMonthsShort": "{count, plural, one {# month free} other {# months free}}",
+    "regularPrice": "Regular price {price}",
+    "thenPerMonth": "Then {price} a month, once the trial ends.",
+    "thenPerYear": "Then {price} a year, once the trial ends.",
+    "startTrial": "Start your free trial"
   },
   "Start": {
     "metaTitle": "Create your menu | Menupedia",
     "title": "Create your restaurant's menu",
     "intro": "Tell us about your place and start building. Put your menu live as soon as it's ready: the first months are free.",
-    "planHeading": "1. Your plan",
+    "planHeading": "Your plan",
     "cycleLabel": "Billing",
-    "detailsHeading": "2. Your restaurant",
-    "paymentHeading": "3. After the free months",
+    "detailsHeading": "Your restaurant",
+    "paymentHeading": "How will you pay after the trial?",
     "name": "Restaurant name",
     "namePlaceholder": "e.g. Lokanta",
     "slug": "Menu address",
@@ -1035,7 +1039,6 @@
     "country": "Country",
     "phone": "Phone or WhatsApp",
     "phoneHint": "We'll call or message you before your free months end.",
-    "paymentMethod": "How would you like to pay then?",
     "methods": {
       "bank_transfer": "Bank transfer",
       "cash": "Cash",
@@ -1044,7 +1047,6 @@
     },
     "note": "Anything we should know?",
     "notePlaceholder": "The best time to reach you, questions…",
-    "afterNote": "Nothing to pay now. Build your menu and put it live whenever you like: the first {count} months are free. Before they end, we'll get in touch to agree on payment. Without a payment, the menu goes offline.",
     "submit": "Create my restaurant",
     "submitting": "Creating…",
     "nameRequired": "Enter the restaurant's name.",
@@ -1053,7 +1055,18 @@
     "toDashboard": "Go to your menu",
     "slugPreviewHint": "Made from the name. If that address is taken, we add a number.",
     "alreadyTitle": "You've already set up {name}",
-    "alreadyText": "Each account can set up one restaurant by itself. To add another, get in touch with us."
+    "alreadyText": "Each account can set up one restaurant by itself. To add another, get in touch with us.",
+    "stepOf": "Step {step} of {total}",
+    "next": "Next",
+    "back": "Back",
+    "trialExplain": "Your free trial starts today. Nothing is charged for the first {count} months: payments start only when the trial ends, and we'll remind you before then.",
+    "methodHints": {
+      "card": "Pay by card when the trial ends. We'll send you a secure payment page before then.",
+      "cash": "Pay in cash. We'll get in touch to arrange it before the trial ends."
+    },
+    "billingIntro": "Who your invoices are made out to. Nothing is charged now.",
+    "reuseBilling": "Use the billing details of {name}",
+    "newBilling": "Enter new billing details"
   },
   "OwnerPlan": {
     "planName": "{plan} plan",

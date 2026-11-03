@@ -1,14 +1,14 @@
 // app/[locale]/(site)/start/page.tsx
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Store } from "lucide-react";
 import { Link, redirect } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
-import { StartForm } from "~/components/plans/StartForm";
+import { StartForm, type ReusableBilling } from "~/components/plans/StartForm";
 import { db } from "~/server/db";
-import { planRequests } from "~/server/db/schema";
+import { billingDetails, planRequests, usersToRestaurants } from "~/server/db/schema";
 import { getPublicOrigin } from "~/server/public-origin";
 import { getVisitorCountry } from "~/server/visitor-country";
 import { countryOptions } from "~/lib/countries";
@@ -73,7 +73,11 @@ export default async function StartPage({
     );
   }
 
-  const [origin, visitorCountry] = await Promise.all([getPublicOrigin(), getVisitorCountry()]);
+  const [origin, visitorCountry, reusable] = await Promise.all([
+    getPublicOrigin(),
+    getVisitorCountry(),
+    reusableBilling(userId),
+  ]);
   return (
     <div className="container mx-auto space-y-10 px-4 py-12">
       {header}
@@ -83,7 +87,30 @@ export default async function StartPage({
         countries={countryOptions(locale)}
         defaultCountry={visitorCountry}
         addressPrefix={`${origin.replace(/^https?:\/\//, "")}/`}
+        reusable={reusable}
       />
     </div>
   );
+}
+
+/** The person's own restaurants with billing details, to offer them again. */
+async function reusableBilling(userId: string): Promise<ReusableBilling[]> {
+  const owned = await db.query.usersToRestaurants.findMany({
+    where: and(eq(usersToRestaurants.userId, userId), eq(usersToRestaurants.accessLevel, "owner")),
+    columns: { restaurantId: true },
+    with: { restaurant: { columns: { name: true } } },
+  });
+  if (owned.length === 0) return [];
+  const details = await db.query.billingDetails.findMany({
+    where: inArray(
+      billingDetails.restaurantId,
+      owned.map((o) => o.restaurantId),
+    ),
+    columns: { restaurantId: true, legalName: true },
+  });
+  return details.map((d) => ({
+    restaurantId: d.restaurantId,
+    restaurantName: owned.find((o) => o.restaurantId === d.restaurantId)?.restaurant.name ?? "",
+    legalName: d.legalName,
+  }));
 }

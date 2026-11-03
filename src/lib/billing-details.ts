@@ -2,6 +2,7 @@
 // Who a restaurant's invoices are made out to (schema.ts billingDetails):
 // the rules the owner's form and the save action share. No card details
 // here: an online payment provider takes those on its own page.
+import { z } from "zod";
 import { isCountryCode } from "~/lib/countries";
 
 export const BILLING_KINDS = ["company", "individual"] as const;
@@ -19,6 +20,20 @@ export interface BillingDetailsInput {
   invoiceEmail: string;
   phone: string;
 }
+
+/** The shape a form sends; billingDetailsErrors() checks the values. */
+export const billingDetailsSchema = z.object({
+  kind: z.enum(BILLING_KINDS),
+  legalName: z.string(),
+  taxNumber: z.string(),
+  taxOffice: z.string(),
+  address: z.string(),
+  city: z.string(),
+  postalCode: z.string(),
+  country: z.string(),
+  invoiceEmail: z.string(),
+  phone: z.string(),
+});
 
 export type BillingDetailsField = keyof BillingDetailsInput;
 // Message keys in the BillingDetails namespace.

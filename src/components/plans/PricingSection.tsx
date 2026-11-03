@@ -5,8 +5,8 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
-import { PlanFeatureList, usePlanMoney } from "~/components/plans/PlanFeatures";
-import { FREE_MONTHS, MONTHS_PAID_PER_YEAR, OFFERED_TIERS, TIER_FEATURES, periodPrice } from "~/lib/plans";
+import { PlanFeatureList, TrialPrice } from "~/components/plans/PlanFeatures";
+import { FREE_MONTHS, MONTHS_PAID_PER_YEAR, OFFERED_TIERS, TIER_FEATURES } from "~/lib/plans";
 import { cn } from "~/lib/utils";
 
 /**
@@ -16,7 +16,6 @@ import { cn } from "~/lib/utils";
  */
 export function PricingSection({ className }: { className?: string }) {
   const t = useTranslations("Plans");
-  const money = usePlanMoney();
   const [cycle, setCycle] = useState<"monthly" | "yearly">("monthly");
 
   return (
@@ -72,23 +71,15 @@ export function PricingSection({ className }: { className?: string }) {
                 </span>
               )}
               <h3 className="text-lg font-bold">{f.label}</h3>
-              <p className="mt-2">
-                <span className="text-4xl font-extrabold tabular-nums">
-                  {money(cycle === "yearly" ? periodPrice(f.price, "yearly") : f.price)}
-                </span>
-                <span className="text-muted-foreground ms-1 text-sm">
-                  {cycle === "yearly" ? t("perYearShort") : t("perMonthShort")}
-                </span>
-              </p>
-              <p className="text-primary mt-1 text-sm font-semibold">{t("freeMonths", { count: FREE_MONTHS })}</p>
-              <p className="text-muted-foreground mt-1 text-sm">{t(`tagline.${tier}`)}</p>
+              <TrialPrice tier={tier} cycle={cycle} freeMonths={FREE_MONTHS} className="mt-3" />
+              <p className="text-muted-foreground mt-3 text-sm">{t(`tagline.${tier}`)}</p>
               <PlanFeatureList tier={tier} className="mt-5 flex-1 space-y-2 text-sm" />
               <Button
                 className="mt-6 w-full rounded-full"
                 variant={popular || OFFERED_TIERS.length === 1 ? "default" : "outline"}
                 asChild
               >
-                <Link href={`/start?plan=${tier}&cycle=${cycle}`}>{t("choose", { plan: f.label })}</Link>
+                <Link href={`/start?plan=${tier}&cycle=${cycle}`}>{t("startTrial")}</Link>
               </Button>
             </li>
           );
