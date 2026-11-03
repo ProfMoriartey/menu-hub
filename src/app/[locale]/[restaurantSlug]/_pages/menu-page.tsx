@@ -1,6 +1,7 @@
 // app/[locale]/[restaurantSlug]/_pages/menu-page.tsx
 // The menu page, for a restaurant (/lokanta) and for one of its branches
-// (/lokanta/kadikoy): the same menu, with that branch's hours and map.
+// (/lokanta/kadikoy): the same menu; the branch's hours and map are on
+// its About page.
 import { getPublicMenu } from "~/server/public-menu";
 import { branchChoices, branchLabel, findBranchPage, getBranchPage } from "~/server/public-branch";
 import { BranchPicker } from "~/components/public/BranchPicker";
@@ -26,9 +27,7 @@ import { PublicPageControls } from "~/components/public/PublicPageControls";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Button } from "~/components/ui/button";
 import {
-  ChevronRight,
   Info,
-  MapPin,
   Instagram,
   Facebook,
   Twitter,
@@ -36,7 +35,6 @@ import {
   Globe,
 } from "lucide-react";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
-import { OpeningStatus } from "~/components/public/OpeningHours";
 import type { Metadata } from "next";
 import { cachedPageOrigin } from "~/server/public-origin";
 import {
@@ -163,12 +161,12 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
 
   return (
     <div className={cn("relative min-h-screen", themeClass)}>
-      {/* Compact on purpose, phones first: guests come from a QR code to see
-          dishes, so the header leaves most of the screen to the menu. The
-          full description, hours and links are one tap away on About. */}
-      <header className="bg-card border-border border-b">
-        <div className="container mx-auto px-4 py-3 sm:py-5">
-          <div className="flex items-start gap-3 sm:gap-4">
+      {/* Compact on purpose, phones first: guests come from a QR code and
+          are already at the restaurant, so the header is just who it is and
+          the controls. The description, hours and map are on About. */}
+      <header className="menu-header border-border border-b">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             {/* The logo opens the details page too, like the Details button. */}
             <Link
               href={`${base}/about`}
@@ -177,8 +175,8 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
             >
               <RestaurantLogo
                 restaurant={restaurantDetails}
-                className="h-12 w-12 rounded-xl text-base sm:h-20 sm:w-20 sm:text-2xl"
-                imageSizes="(min-width: 640px) 80px, 48px"
+                className="h-12 w-12 rounded-xl text-base sm:h-16 sm:w-16 sm:text-xl"
+                imageSizes="(min-width: 640px) 64px, 48px"
                 priority
               />
             </Link>
@@ -187,97 +185,54 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
               <h1 className="text-foreground truncate text-xl leading-tight font-bold sm:text-3xl">
                 {restaurantDetails.name}
               </h1>
-              {isMulti && (
-                <BranchPicker
-                  restaurantName={restaurantDetails.name}
-                  branches={choices}
-                  allHref={`/${restaurantDetails.slug}`}
-                  onAll={branch === null}
-                  className="mt-1.5"
-                />
-              )}
-              <OpeningStatus
-                hours={restaurantDetails.openingHours}
-                timeZone={restaurantDetails.timeZone}
-                size="sm"
-                className="mt-1"
-              />
+
+              {/* The branch (when there are several), details and socials,
+                  as small buttons in one row. */}
+              <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                {isMulti && (
+                  <BranchPicker
+                    restaurantName={restaurantDetails.name}
+                    branches={choices}
+                    allHref={`/${restaurantDetails.slug}`}
+                    onAll={branch === null}
+                    className="bg-secondary text-secondary-foreground hover:bg-secondary/80 h-7 max-w-[12rem] border-transparent px-2.5 text-xs"
+                  />
+                )}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="h-7 rounded-full px-2.5 text-xs font-medium"
+                  asChild
+                >
+                  <Link href={`${base}/about`}>
+                    <Info className="h-3.5 w-3.5" aria-hidden />
+                    {t("restaurantDetailsButton")}
+                  </Link>
+                </Button>
+
+                {socialLinks.map(({ url, label, Icon }) => (
+                  <Button
+                    key={label}
+                    variant="secondary"
+                    size="icon"
+                    className="text-muted-foreground hover:text-foreground h-7 w-7 rounded-full"
+                    asChild
+                  >
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      title={label}
+                    >
+                      <Icon className="h-3.5 w-3.5" aria-hidden />
+                    </a>
+                  </Button>
+                ))}
+              </div>
             </div>
 
             <PublicPageControls compact className="-me-2 shrink-0" />
-          </div>
-
-          {description.text && (
-            <Link
-              href={`${base}/about`}
-              className="text-muted-foreground hover:text-foreground mt-2 flex items-center gap-1 text-sm sm:text-base"
-            >
-              <span
-                className="line-clamp-1 sm:line-clamp-2"
-                lang={description.lang}
-                dir="auto"
-              >
-                {description.text}
-              </span>
-              <ChevronRight
-                className="h-4 w-4 shrink-0 rtl:rotate-180"
-                aria-hidden
-              />
-            </Link>
-          )}
-
-          {/* Details | Map | Socials, as small buttons. */}
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <Button
-              variant="secondary"
-              size="sm"
-              className="h-8 rounded-full px-3 text-xs font-medium"
-              asChild
-            >
-              <Link href={`${base}/about`}>
-                <Info className="h-3.5 w-3.5" aria-hidden />
-                {t("restaurantDetailsButton")}
-              </Link>
-            </Button>
-
-            {restaurantDetails.mapUrl && (
-              <Button
-                variant="secondary"
-                size="icon"
-                className="h-8 w-8 rounded-full"
-                asChild
-              >
-                <a
-                  href={restaurantDetails.mapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={tMenu("mapLabel")}
-                  title={tMenu("mapLabel")}
-                >
-                  <MapPin className="h-4 w-4" aria-hidden />
-                </a>
-              </Button>
-            )}
-
-            {socialLinks.map(({ url, label, Icon }) => (
-              <Button
-                key={label}
-                variant="secondary"
-                size="icon"
-                className="text-muted-foreground hover:text-foreground h-8 w-8 rounded-full"
-                asChild
-              >
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  title={label}
-                >
-                  <Icon className="h-4 w-4" aria-hidden />
-                </a>
-              </Button>
-            ))}
           </div>
         </div>
       </header>

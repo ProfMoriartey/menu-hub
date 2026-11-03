@@ -7,6 +7,15 @@ export const TIERS = ["standard", "pro", "business"] as const;
 export type Tier = (typeof TIERS)[number];
 export const isTier = (value: unknown): value is Tier => TIERS.includes(value as Tier);
 
+// The tiers restaurants can pick for now (pricing, sign-up, plan change).
+// The others stay for restaurants already on them and for admins.
+export const OFFERED_TIERS: readonly Tier[] = ["standard"];
+export const isOfferedTier = (value: unknown): value is Tier => OFFERED_TIERS.includes(value as Tier);
+
+// A self sign-up's free months before its first payment is due. When they
+// end, the menu goes offline until a payment is recorded (server/plans).
+export const FREE_MONTHS = 6;
+
 export interface TierFeatures {
   label: string;
   // US dollars a month.
@@ -29,14 +38,16 @@ export const EXTRA_BRANCH_PRICE = 15;
 export const MONTHS_PAID_PER_YEAR = 10;
 
 export const TIER_FEATURES: Record<Tier, TierFeatures> = {
+  // Branches, languages and colours are experimental: open to Standard
+  // for now, at no extra cost.
   standard: {
     label: "Standard",
     price: 25,
     includedBranches: 1,
-    maxBranches: 1,
+    maxBranches: null,
     extraBranchPrice: 0,
-    customColors: false,
-    extraLanguages: 0,
+    customColors: true,
+    extraLanguages: null,
   },
   pro: {
     label: "Pro",

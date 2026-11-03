@@ -8,10 +8,11 @@ import { db } from "~/server/db";
 import { payments, restaurantBilling, restaurants } from "~/server/db/schema";
 import { isSystemAdmin } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
-import { BILLING_CURRENCIES, coversUntil, isDay, isPaymentMethod } from "~/lib/billing";
+import { BILLING_CURRENCIES, coversUntil, isDay, isPaymentMethod, type PaymentMethod } from "~/lib/billing";
 import { isUuid } from "~/lib/slug";
 import { runAction } from "~/server/run-action";
 import { syncEntitlements } from "~/server/plans";
+import { applyPayment } from "~/server/payments";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
 import { TIERS } from "~/lib/plans";
 import { MENU_LANGUAGES } from "~/lib/menu-languages";
@@ -44,6 +45,7 @@ const planSchema = z.object({
   monthlyPrice: z.union([z.literal(""), money]),
   currency,
   startsOn: z.union([z.literal(""), z.string().refine(isDay)]),
+  offlineWhenUnpaid: z.boolean(),
   notes: z.string().trim().max(2000),
 });
 
@@ -70,6 +72,7 @@ export async function saveBillingPlan(restaurantId: string, input: unknown): Pro
       monthlyPrice: parsed.data.monthlyPrice || null,
       currency: parsed.data.currency,
       startsOn: parsed.data.startsOn || null,
+      offlineWhenUnpaid: parsed.data.offlineWhenUnpaid,
       notes: parsed.data.notes || null,
       updatedAt: new Date(),
     };
@@ -116,29 +119,28 @@ const paymentSchema = z.object({
   currency,
   coversFrom: z.string().refine(isDay),
   months: z.number().int().min(1).max(36),
-  method: z.string().refine(isPaymentMethod),
+  method: z.custom<PaymentMethod>(isPaymentMethod),
   note: z.string().trim().max(500),
 });
 
-/** A payment received, paying `months` months from `coversFrom`. */
+/**
+ * A payment received, paying `months` months from `coversFrom`. A menu
+ * that went offline unpaid can be live again.
+ */
 export async function recordPayment(restaurantId: string, input: unknown): Promise<ActionResult> {
   return runAction("saveBillingFailed", async () => {
     await requireAdmin();
     const parsed = paymentSchema.safeParse(input);
     if (!isUuid(restaurantId) || !parsed.success) throw new ActionError("invalidInput");
-    const restaurant = await db.query.restaurants.findFirst({
-      where: eq(restaurants.id, restaurantId),
-      columns: { id: true, name: true },
-    });
-    if (!restaurant) throw new ActionError("restaurantNotFound");
 
     const { months, note, ...payment } = parsed.data;
     const { userId } = await auth();
-    await db.insert(payments).values({
+    await applyPayment({
       ...payment,
       restaurantId,
-      restaurantName: restaurant.name,
       coversUntil: coversUntil(payment.coversFrom, months),
+      provider: "manual",
+      providerPaymentId: null,
       note: note || null,
       recordedBy: userId,
     });
@@ -150,7 +152,11 @@ export async function deletePayment(paymentId: string): Promise<ActionResult> {
   return runAction("saveBillingFailed", async () => {
     await requireAdmin();
     if (!isUuid(paymentId)) throw new ActionError("invalidInput");
-    await db.delete(payments).where(eq(payments.id, paymentId));
+    const [deleted] = await db
+      .delete(payments)
+      .where(eq(payments.id, paymentId))
+      .returning({ restaurantId: payments.restaurantId });
+    if (deleted?.restaurantId) await syncEntitlements(deleted.restaurantId);
   });
 }
 

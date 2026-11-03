@@ -1,12 +1,13 @@
 // src/components/admin/RestaurantCard.tsx
 "use client";
 
-import { ExternalLink, Eye, MapPin, PauseCircle, Pencil, Rocket, Star, UtensilsCrossed } from "lucide-react";
+import { CalendarX, ExternalLink, Eye, MapPin, PauseCircle, Pencil, Rocket, Star, UtensilsCrossed } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { DeleteRestaurantDialog } from "~/components/admin/DeleteRestaurantDialog";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
+import { isPastLiveUntil } from "~/lib/access";
 import { cn } from "~/lib/utils";
 import { formatDate } from "~/lib/format";
 import { venueTypeLabel } from "~/lib/venue-types";
@@ -18,10 +19,17 @@ import type { SetupProgress } from "~/lib/setup-checklist";
 export function StatusBadges({
   restaurant,
 }: {
-  restaurant: Pick<Restaurant, "isActive" | "isDisplayed" | "pausedAt">;
+  restaurant: Pick<Restaurant, "isActive" | "isDisplayed" | "pausedAt" | "liveUntil">;
 }) {
   return (
     <>
+      {/* Free months or paid days over: offline until a payment is recorded. */}
+      {isPastLiveUntil(restaurant.liveUntil) && (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-2 py-0.5 text-xs font-medium text-red-700 dark:text-red-400">
+          <CalendarX className="h-3 w-3" aria-hidden />
+          Unpaid, offline
+        </span>
+      )}
       {restaurant.pausedAt && (
         <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-2 py-0.5 text-xs font-medium text-red-700 dark:text-red-400">
           <PauseCircle className="h-3 w-3" aria-hidden />

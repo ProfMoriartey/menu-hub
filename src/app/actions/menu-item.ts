@@ -27,6 +27,7 @@ import {
 } from "~/lib/menu-languages";
 import { getMenuLanguages } from "~/server/menu-languages";
 import { deleteUploadedFiles } from "~/server/uploads";
+import { warmImage } from "~/server/warm-images";
 
 // Slugs used by the restaurant's other menu items.
 async function takenItemSlugs(restaurantId: string, exceptId?: string) {
@@ -139,6 +140,7 @@ export async function addMenuItem(formData: FormData): Promise<ActionResult> {
       order: await nextItemOrder(validatedData.categoryId),
     });
 
+    warmImage(validatedData.imageUrl);
     revalidatePublicMenu(restaurantId);
   });
 }
@@ -239,6 +241,7 @@ export async function updateMenuItem(
     ) {
       await deleteUploadedFiles([existingItem.imageUrl]);
     }
+    if (validatedData.imageUrl !== existingItem.imageUrl) warmImage(validatedData.imageUrl);
 
     revalidatePublicMenu(restaurantId);
   });

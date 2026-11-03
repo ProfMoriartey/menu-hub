@@ -17,11 +17,23 @@ export const PAYMENT_METHODS = [
 ] as const;
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number]["value"];
 
+// What sign-up offers: paying by card (online, once a provider is added)
+// or in cash.
+export const SIGNUP_PAYMENT_METHODS = ["card", "cash"] as const satisfies readonly PaymentMethod[];
+
 export const isPaymentMethod = (value: unknown): value is PaymentMethod =>
   PAYMENT_METHODS.some((m) => m.value === value);
 
 export const methodLabel = (value: string) =>
   PAYMENT_METHODS.find((m) => m.value === value)?.label ?? value;
+
+/**
+ * Who took a payment (schema.ts payments.provider). "manual" is an admin
+ * recording one by hand; an online provider added later gets its own id
+ * here and records payments through server/payments applyPayment.
+ */
+export const PAYMENT_PROVIDERS = [{ value: "manual", label: "Recorded by hand" }] as const;
+export type PaymentProvider = (typeof PAYMENT_PROVIDERS)[number]["value"];
 
 // "Due soon" this many days before the paid period ends.
 export const DUE_SOON_DAYS = 7;

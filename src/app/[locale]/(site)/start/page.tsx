@@ -1,18 +1,18 @@
 // app/[locale]/(site)/start/page.tsx
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Clock } from "lucide-react";
+import { Store } from "lucide-react";
 import { Link, redirect } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
-import { StartForm } from "~/components/plans/StartForm";
+import { StartForm, type ReusableBilling } from "~/components/plans/StartForm";
 import { db } from "~/server/db";
-import { planRequests } from "~/server/db/schema";
+import { billingDetails, planRequests, usersToRestaurants } from "~/server/db/schema";
 import { getPublicOrigin } from "~/server/public-origin";
 import { getVisitorCountry } from "~/server/visitor-country";
 import { countryOptions } from "~/lib/countries";
-import { isTier } from "~/lib/plans";
+import { OFFERED_TIERS, isOfferedTier } from "~/lib/plans";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Start");
@@ -23,9 +23,10 @@ const one = (value: string | string[] | undefined) => (Array.isArray(value) ? va
 
 /**
  * Sign-up's second step: creating the restaurant, with a plan and how
- * they'd like to pay (?plan=pro&cycle=yearly comes from the pricing
+ * they'd like to pay (?plan=standard&cycle=yearly comes from the pricing
  * section). Signed-out visitors sign in or up first and come back here.
- * Someone whose sign-up is waiting for approval is told so instead.
+ * Someone who has already signed up a restaurant is sent to it instead:
+ * one per account.
  */
 export default async function StartPage({
   searchParams,
@@ -34,7 +35,7 @@ export default async function StartPage({
 }) {
   const params = await searchParams;
   const plan = one(params.plan);
-  const tier = isTier(plan) ? plan : "pro";
+  const tier = isOfferedTier(plan) ? plan : OFFERED_TIERS[0]!;
   const cycle = one(params.cycle) === "yearly" ? "yearly" : "monthly";
   const [t, locale, { userId }] = await Promise.all([getTranslations("Start"), getLocale(), auth()]);
   const here = `/${locale}/start?plan=${tier}&cycle=${cycle}`;
@@ -50,25 +51,21 @@ export default async function StartPage({
     </div>
   );
 
-  const waiting = await db.query.planRequests.findFirst({
-    where: and(
-      eq(planRequests.requestedBy, userId),
-      eq(planRequests.kind, "signup"),
-      isNull(planRequests.resolution),
-    ),
+  const earlier = await db.query.planRequests.findFirst({
+    where: and(eq(planRequests.requestedBy, userId), eq(planRequests.kind, "signup")),
     with: { restaurant: { columns: { name: true, slug: true } } },
   });
-  if (waiting) {
+  if (earlier) {
     return (
       <div className="container mx-auto space-y-8 px-4 py-12">
         {header}
         <div className="bg-primary/5 border-primary/20 mx-auto flex max-w-2xl items-start gap-3 rounded-2xl border p-6">
-          <Clock className="text-primary mt-0.5 h-5 w-5 shrink-0" aria-hidden />
+          <Store className="text-primary mt-0.5 h-5 w-5 shrink-0" aria-hidden />
           <div className="space-y-3">
-            <h2 className="font-semibold">{t("waitingTitle", { name: waiting.restaurant.name })}</h2>
-            <p className="text-muted-foreground text-sm">{t("waitingText")}</p>
+            <h2 className="font-semibold">{t("alreadyTitle", { name: earlier.restaurant.name })}</h2>
+            <p className="text-muted-foreground text-sm">{t("alreadyText")}</p>
             <Button asChild>
-              <Link href={`/dashboard/${waiting.restaurant.slug}/menu`}>{t("toDashboard")}</Link>
+              <Link href={`/dashboard/${earlier.restaurant.slug}/menu`}>{t("toDashboard")}</Link>
             </Button>
           </div>
         </div>
@@ -76,7 +73,11 @@ export default async function StartPage({
     );
   }
 
-  const [origin, visitorCountry] = await Promise.all([getPublicOrigin(), getVisitorCountry()]);
+  const [origin, visitorCountry, reusable] = await Promise.all([
+    getPublicOrigin(),
+    getVisitorCountry(),
+    reusableBilling(userId),
+  ]);
   return (
     <div className="container mx-auto space-y-10 px-4 py-12">
       {header}
@@ -86,7 +87,30 @@ export default async function StartPage({
         countries={countryOptions(locale)}
         defaultCountry={visitorCountry}
         addressPrefix={`${origin.replace(/^https?:\/\//, "")}/`}
+        reusable={reusable}
       />
     </div>
   );
+}
+
+/** The person's own restaurants with billing details, to offer them again. */
+async function reusableBilling(userId: string): Promise<ReusableBilling[]> {
+  const owned = await db.query.usersToRestaurants.findMany({
+    where: and(eq(usersToRestaurants.userId, userId), eq(usersToRestaurants.accessLevel, "owner")),
+    columns: { restaurantId: true },
+    with: { restaurant: { columns: { name: true } } },
+  });
+  if (owned.length === 0) return [];
+  const details = await db.query.billingDetails.findMany({
+    where: inArray(
+      billingDetails.restaurantId,
+      owned.map((o) => o.restaurantId),
+    ),
+    columns: { restaurantId: true, legalName: true },
+  });
+  return details.map((d) => ({
+    restaurantId: d.restaurantId,
+    restaurantName: owned.find((o) => o.restaurantId === d.restaurantId)?.restaurant.name ?? "",
+    legalName: d.legalName,
+  }));
 }

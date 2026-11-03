@@ -183,7 +183,10 @@
     "shareTab": "Share",
     "teamTab": "Team",
     "colorsTab": "Appearance",
-    "planTab": "Plan"
+    "planTab": "Plan",
+    "branchesTab": "Branches & languages",
+    "experimental": "Experimental",
+    "experimentalNote": "This section is experimental: every plan can use it for now. It may change, and later come with some plans only."
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -205,7 +208,7 @@
     "share": "Share: QR code and link",
     "addRestaurant": "Add another restaurant",
     "createTitle": "Create your restaurant's menu",
-    "createText": "Pick a plan, add your dishes and share your QR code. Your menu goes live once we've agreed on payment.",
+    "createText": "Add your dishes, put your menu live and share your QR code. The first months are free.",
     "createButton": "Create your restaurant",
     "joinTeamHint": "Joining a restaurant's team instead? Ask its owner to invite you.",
     "awaitingApproval": "Waiting for approval"
@@ -315,8 +318,9 @@
     "createOwnRestaurantFailed": "Couldn't create your restaurant. Please try again.",
     "requestNotFound": "This request no longer exists or was already dealt with.",
     "awaitingApproval": "Your menu can go live once your sign-up is approved.",
-    "restaurantLimit": "Your first restaurant is waiting for approval. You can add another once it's approved.",
-    "menuPaused": "Your menu is paused by Menupedia. Please get in touch to resume it."
+    "restaurantLimit": "You've already set up a restaurant. To add another, get in touch with us.",
+    "menuPaused": "Your menu is paused by Menupedia. Please get in touch to resume it.",
+    "paymentNeeded": "Your free months (or the time paid for) are over. Your menu can go live again once we've recorded your payment."
   },
   "UnsavedChanges": {
     "confirmLeave": "You have unsaved changes. Leave without saving them?"
@@ -427,7 +431,7 @@
     "live": {
       "title": "Go live",
       "action": "Preview",
-      "ownerText": "Put your menu live from the Plan tab, once your plan is approved.",
+      "ownerText": "Put your menu live from the Plan tab when it's ready.",
       "ownerAction": "Go live",
       "editorText": "The restaurant's owner puts the menu live. Preview it in the meantime."
     },
@@ -541,7 +545,7 @@
     "saved": "Saved",
     "chooseMainFirst": "Choose the main language first.",
     "notTranslated": "Not translated: {languages}",
-    "notInPlan": "Menus in several languages come with the Pro and Business plans. Contact us to add them.",
+    "notInPlan": "Menus in several languages aren't included in your plan. Contact us to add them.",
     "notInPlanAdmin": "This restaurant's plan doesn't include menu languages. Change its plan, or turn them on in the Features card.",
     "limitHint": "{count, plural, one {Your plan includes # extra language.} other {Your plan includes up to # extra languages.}}",
     "overLimit": "{count, plural, one {Only the first extra language shows on your menu, as your plan includes #.} other {Only the first # extra languages show on your menu, as your plan includes #.}} The others are kept for when it allows them."
@@ -590,7 +594,7 @@
       },
       "card": {
         "label": "Cards",
-        "hint": "Dish cards, the header and the category bar."
+        "hint": "Dish cards and the category bar."
       },
       "text": {
         "label": "Text",
@@ -607,6 +611,10 @@
       "accent": {
         "label": "Accent",
         "hint": "Highlights when pointing at a category or button."
+      },
+      "header": {
+        "label": "Header",
+        "hint": "The top of the menu, with your logo and name."
       }
     },
     "warnings": {
@@ -629,7 +637,7 @@
     "sampleCategory": "Starters",
     "sampleDish": "Sample dish",
     "sampleDishDescription": "A short description of the dish.",
-    "notInPlan": "Custom colours come with the Pro and Business plans, so your menu uses the default colours. Contact us to add them.",
+    "notInPlan": "Custom colours aren't included in your plan, so your menu uses the default colours. Contact us to add them.",
     "notInPlanAdmin": "This restaurant's plan doesn't include custom colours. Change its plan, or turn them on in the Features card."
   },
   "MenuDesign": {
@@ -978,8 +986,8 @@
   },
   "Plans": {
     "pricingTitle": "Simple plans",
-    "pricingIntro": "Every plan has your full menu with photos, a QR code and printable table cards. Pick what fits your place.",
-    "pricingNote": "Prices in US dollars. Pay by bank transfer or cash: we'll agree on it when you sign up.",
+    "pricingIntro": "One plan with everything: your full menu with photos, a QR code, table cards, branches, languages and your own colours. The first {count} months are free.",
+    "pricingNote": "Prices in US dollars. Nothing to pay during the trial: billing starts only when it ends, by card or in cash.",
     "cycleLabel": "Billing",
     "monthly": "Monthly",
     "yearly": "Yearly",
@@ -989,9 +997,8 @@
     "perMonthShort": "/ month",
     "perYearShort": "/ year",
     "popular": "Most popular",
-    "choose": "Start with {plan}",
     "tagline": {
-      "standard": "For a single café or restaurant.",
+      "standard": "Everything a café or restaurant needs.",
       "pro": "Your own colours, more languages, a few branches.",
       "business": "For chains, with every language."
     },
@@ -1004,16 +1011,23 @@
     "customColors": "Your own colours",
     "oneLanguage": "Menu in one language",
     "extraLanguages": "{count, plural, one {Menu in # extra language} other {Menu in up to # extra languages}}",
-    "allLanguages": "Menu in every language"
+    "allLanguages": "Menu in every language",
+    "branchesNoLimit": "As many branches as you need",
+    "trialBadge": "Free trial",
+    "freeMonthsShort": "{count, plural, one {# month free} other {# months free}}",
+    "regularPrice": "Regular price {price}",
+    "thenPerMonth": "Then {price} a month, once the trial ends.",
+    "thenPerYear": "Then {price} a year, once the trial ends.",
+    "startTrial": "Start your free trial"
   },
   "Start": {
     "metaTitle": "Create your menu | Menupedia",
     "title": "Create your restaurant's menu",
-    "intro": "Pick a plan, tell us about your place and start building. Your menu goes live once we've agreed on payment.",
-    "planHeading": "1. Your plan",
+    "intro": "Tell us about your place and start building. Put your menu live as soon as it's ready: the first months are free.",
+    "planHeading": "Your plan",
     "cycleLabel": "Billing",
-    "detailsHeading": "2. Your restaurant",
-    "paymentHeading": "3. Payment",
+    "detailsHeading": "Your restaurant",
+    "paymentHeading": "How will you pay after the trial?",
     "name": "Restaurant name",
     "namePlaceholder": "e.g. Lokanta",
     "slug": "Menu address",
@@ -1024,8 +1038,7 @@
     "cityPlaceholder": "e.g. Istanbul",
     "country": "Country",
     "phone": "Phone or WhatsApp",
-    "phoneHint": "We'll call or message you to agree on payment.",
-    "paymentMethod": "How would you like to pay?",
+    "phoneHint": "We'll call or message you before your free months end.",
     "methods": {
       "bank_transfer": "Bank transfer",
       "cash": "Cash",
@@ -1034,16 +1047,26 @@
     },
     "note": "Anything we should know?",
     "notePlaceholder": "The best time to reach you, questions…",
-    "afterNote": "We'll get in touch within a working day to agree on payment. Meanwhile, build your menu: it goes live once your sign-up is approved.",
     "submit": "Create my restaurant",
     "submitting": "Creating…",
     "nameRequired": "Enter the restaurant's name.",
     "countryRequired": "Choose the country.",
     "phoneRequired": "Enter a phone number we can reach you on.",
-    "waitingTitle": "{name} is waiting for approval",
-    "waitingText": "We'll get in touch to agree on payment. Meanwhile you can build your menu. Once it's approved, you can add another restaurant.",
     "toDashboard": "Go to your menu",
-    "slugPreviewHint": "Made from the name. If that address is taken, we add a number."
+    "slugPreviewHint": "Made from the name. If that address is taken, we add a number.",
+    "alreadyTitle": "You've already set up {name}",
+    "alreadyText": "Each account can set up one restaurant by itself. To add another, get in touch with us.",
+    "stepOf": "Step {step} of {total}",
+    "next": "Next",
+    "back": "Back",
+    "trialExplain": "Your free trial starts today. Nothing is charged for the first {count} months: payments start only when the trial ends, and we'll remind you before then.",
+    "methodHints": {
+      "card": "Pay by card when the trial ends. We'll send you a secure payment page before then.",
+      "cash": "Pay in cash. We'll get in touch to arrange it before the trial ends."
+    },
+    "billingIntro": "Who your invoices are made out to. Nothing is charged now.",
+    "reuseBilling": "Use the billing details of {name}",
+    "newBilling": "Enter new billing details"
   },
   "OwnerPlan": {
     "planName": "{plan} plan",
@@ -1080,6 +1103,45 @@
     "email": "Email",
     "pausedTitle": "Your menu is paused",
     "pausedUnpaid": "Menupedia has paused your menu because a payment is overdue. Guests can't see it until it's resumed. Please get in touch to sort out the payment.",
-    "pausedOther": "Menupedia has paused your menu. Guests can't see it until it's resumed. Please get in touch."
+    "pausedOther": "Menupedia has paused your menu. Guests can't see it until it's resumed. Please get in touch.",
+    "statusFreeUntil": "Free until {date} ({days, plural, one {# day} other {# days}} left). Your first payment is due after that.",
+    "statusOfflineUnpaid": "Your free time is over and {amount} is due. Your menu is offline until we've recorded your payment.",
+    "expiredTitle": "Your menu is offline",
+    "expiredText": "Your free months (or the time paid for) are over, so guests can't see your menu. Get in touch to pay: once we've recorded it, you can put it live again."
+  },
+  "BillingDetails": {
+    "title": "Billing details",
+    "intro": "Who your invoices are made out to. Fill these in now so paying is quick once your free months end.",
+    "kind": "Invoice to",
+    "kinds": {
+      "company": "A company",
+      "individual": "A person"
+    },
+    "companyName": "Company name",
+    "fullName": "Full name",
+    "country": "Country",
+    "choose": "Choose",
+    "vkn": "Tax number (VKN)",
+    "tckn": "ID number (TCKN)",
+    "taxNumber": "Tax number",
+    "taxNumberHint": "If your country uses one on invoices.",
+    "taxOffice": "Tax office",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal code",
+    "invoiceEmail": "Email for invoices",
+    "invoiceEmailHint": "Invoices and payment receipts go here.",
+    "phone": "Phone",
+    "noCard": "We never ask for your card here. When online payment is available, you'll enter your card on the secure page of our payment provider.",
+    "save": "Save billing details",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "errors": {
+      "required": "Fill this in.",
+      "vkn": "A VKN has 10 digits.",
+      "tckn": "A TCKN has 11 digits.",
+      "tooLong": "This is too long.",
+      "email": "Enter a valid email address."
+    }
   }
 }

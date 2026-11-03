@@ -14,6 +14,8 @@ export interface Restaurant {
   isDisplayed: boolean;
   // Paused by an admin: hidden from guests whatever isActive says.
   pausedAt?: Date | string | null;
+  // The last day guests may see it (free months, then what's paid for).
+  liveUntil?: string | null;
   logoUrl: string | null;
 
   currency: string; 

@@ -7,6 +7,9 @@ import { getRestaurantPlan } from "~/server/billing";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
 import { RestaurantPlanPanel } from "~/components/admin/billing/RestaurantPlanPanel";
 import { PauseMenuCard } from "~/components/admin/billing/PauseMenuCard";
+import { BillingDetailsCard } from "~/components/admin/billing/BillingDetailsCard";
+import { getBillingDetails } from "~/server/billing-details";
+import { getLocale } from "next-intl/server";
 
 export default async function RestaurantPlanPage({
   params,
@@ -17,11 +20,24 @@ export default async function RestaurantPlanPage({
 
   const restaurant = await db.query.restaurants.findFirst({
     where: eq(restaurants.slug, restaurantSlug),
-    columns: { id: true, name: true, slug: true, logoUrl: true, isActive: true, isDisplayed: true, pausedAt: true },
+    columns: {
+      id: true,
+      name: true,
+      slug: true,
+      logoUrl: true,
+      isActive: true,
+      isDisplayed: true,
+      pausedAt: true,
+      liveUntil: true,
+    },
   });
   if (!restaurant) notFound();
 
-  const { plan, branchCount } = await getRestaurantPlan(restaurant.id);
+  const [{ plan, branchCount }, details, locale] = await Promise.all([
+    getRestaurantPlan(restaurant.id),
+    getBillingDetails(restaurant.id),
+    getLocale(),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -32,6 +48,7 @@ export default async function RestaurantPlanPage({
         branchCount={branchCount}
         detailsHref={`/admin/restaurants/${restaurant.slug}/edit`}
       />
+      <BillingDetailsCard details={details} locale={locale} />
       <PauseMenuCard
         restaurantId={restaurant.id}
         pausedAt={restaurant.pausedAt}

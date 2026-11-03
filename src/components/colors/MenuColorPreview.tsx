@@ -70,43 +70,36 @@ export function MenuColorPreview({
       className="bg-background text-foreground space-y-3 p-3 sm:p-4"
     >
       <header
-        data-role="card"
-        className="bg-card border-border rounded-lg border p-3"
+        data-role="header"
+        className="menu-header border-border rounded-lg border p-3"
       >
-        <div className="flex items-start gap-3">
+        {/* As the menu's header: the name, then its small buttons. Its text
+            follows the header colour, so it belongs to the header here. */}
+        <div className="flex items-center gap-3">
           <RestaurantLogo
             restaurant={menu}
             className="h-12 w-12 rounded-xl text-base"
             imageSizes="48px"
           />
           <div className="min-w-0">
-            <p
-              data-role="text"
-              className="truncate text-lg leading-tight font-bold"
-            >
+            <p className="truncate text-lg leading-tight font-bold">
               {menu.name}
             </p>
-            <p
-              data-role="text"
-              className="text-muted-foreground line-clamp-1 text-sm"
-            >
-              {menu.description ?? t("sampleDescription")}
-            </p>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              <span
+                data-role="secondary"
+                className="bg-secondary text-secondary-foreground rounded-full px-2.5 py-1 text-xs font-medium"
+              >
+                {t("sampleDetails")}
+              </span>
+              <span
+                data-role="primary"
+                className="bg-primary text-primary-foreground rounded-full px-2.5 py-1 text-xs font-medium"
+              >
+                {t("sampleOrder")}
+              </span>
+            </div>
           </div>
-        </div>
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          <span
-            data-role="secondary"
-            className="bg-secondary text-secondary-foreground rounded-full px-3 py-1 text-xs font-medium"
-          >
-            {t("sampleDetails")}
-          </span>
-          <span
-            data-role="primary"
-            className="bg-primary text-primary-foreground rounded-full px-3 py-1 text-xs font-medium"
-          >
-            {t("sampleOrder")}
-          </span>
         </div>
       </header>
 

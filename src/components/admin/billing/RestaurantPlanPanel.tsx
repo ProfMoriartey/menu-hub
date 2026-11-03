@@ -35,7 +35,9 @@ function tierLines(tier: Tier): string[] {
   return [
     f.maxBranches === 1
       ? "1 branch"
-      : `${f.includedBranches} branches included, then $${f.extraBranchPrice} each${f.maxBranches ? ` (up to ${f.maxBranches})` : ""}`,
+      : f.extraBranchPrice === 0
+        ? "Any number of branches"
+        : `${f.includedBranches} branches included, then $${f.extraBranchPrice} each${f.maxBranches ? ` (up to ${f.maxBranches})` : ""}`,
     f.customColors ? "Custom colours" : "Default colours",
     f.extraLanguages === null
       ? "Every menu language"
@@ -72,6 +74,7 @@ export function RestaurantPlanPanel({
     monthlyPrice: plan?.monthlyPrice ?? "",
     currency: plan?.currency ?? PLAN_CURRENCY,
     startsOn: plan?.startsOn ?? "",
+    offlineWhenUnpaid: plan?.offlineWhenUnpaid ?? false,
     notes: plan?.notes ?? "",
   });
   const [error, setError] = useState<string | null>(null);
@@ -260,6 +263,24 @@ export function RestaurantPlanPanel({
                 className="sm:max-w-xs"
               />
             </Field>
+
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-0.5">
+                <label htmlFor="plan-offline" className="text-sm font-medium">
+                  Offline when unpaid
+                </label>
+                <p className="text-muted-foreground text-sm">
+                  Guests stop seeing the menu once the days before &ldquo;Billed from&rdquo; (free) and those
+                  paid for are over, until a payment is recorded. Self sign-ups start with this on; move
+                  &ldquo;Billed from&rdquo; to give more free time.
+                </p>
+              </div>
+              <Switch
+                id="plan-offline"
+                checked={values.offlineWhenUnpaid}
+                onCheckedChange={(offlineWhenUnpaid) => set({ offlineWhenUnpaid })}
+              />
+            </div>
           </>
         )}
 

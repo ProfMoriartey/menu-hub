@@ -82,6 +82,12 @@
 
   --attention: oklch(38.6% 0.065 65.4); /* #7B3F00 - muted terracotta brown/red */
 
+  /* The public menu's top section (.menu-header); lib/color-theme makes the
+     same three from a restaurant's own colours. */
+  --menu-header: #faead9;
+  --menu-header-foreground: #2a2315;
+  --menu-header-muted: #73695a;
+
   --secondary: oklch(90.72% 0.051 68.34); /* orange-200: #FDBA74 - for secondary elements */
   --secondary-foreground: oklch(25.99% 0.026 82.52); /* stone-700 for text on secondary */
   --muted: oklch(90.72% 0.051 68.34); /* orange-200 */
@@ -131,6 +137,10 @@
   --accent-foreground: oklch(20.31% 0.027 84.72); /* stone-800 */
 
   --attention: oklch(60% 0.1 65.4); /* #BF6D00 - brighter muted terracotta for dark theme (remains similar) */
+
+  --menu-header: #372e1e;
+  --menu-header-foreground: #e1dcd1;
+  --menu-header-muted: #9d9689;
 
   --secondary: oklch(35.03% 0.033 84.81); /* stone-600: #57534E - Darker neutral for secondary elements */
   --secondary-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
@@ -209,6 +219,64 @@
 }
 [dir="rtl"] .site-glow {
   transform: scaleX(-1);
+}
+
+/* The public menu's top section, in its own colour. Text inside switches
+   to the header's text colours, so it stays readable on any header colour. */
+.menu-header {
+  --foreground: var(--menu-header-foreground);
+  --muted-foreground: var(--menu-header-muted);
+  background-color: var(--menu-header);
+  color: var(--menu-header-foreground);
+}
+
+/* Dishes on the public menu (MenuLayout). .dish-enter rises into place
+   when the menu loads. .dish-reveal slides a little as a dish scrolls into
+   view (up from below when scrolling down) and out of it (up and away at
+   the top), so scrolling back up plays it in reverse. Only where browsers
+   tie animations to scrolling; never with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .dish-enter {
+    animation: dish-enter 0.5s ease-out both;
+  }
+  @supports (animation-timeline: view()) {
+    .dish-reveal {
+      /* dish-out only once leaving, so dish-in holds until then. */
+      animation:
+        dish-in linear both,
+        dish-out linear forwards;
+      animation-timeline: view(), view();
+      animation-range:
+        entry 0% entry 100%,
+        exit 0% exit 100%;
+    }
+  }
+}
+@keyframes dish-enter {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+@keyframes dish-in {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes dish-out {
+  from {
+    opacity: 1;
+    translate: 0 0;
+  }
+  to {
+    opacity: 0;
+    translate: 0 -28px;
+  }
 }
 
 @layer base {
