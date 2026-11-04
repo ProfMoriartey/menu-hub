@@ -598,6 +598,23 @@ and outline in `--doodle-ink` (default current text colour); set those on a
 parent to adapt them, as the contact band does. When a feature is added, add it to
 the Features page's `GROUPS` and messages (`featuresPage.features`).
 
+**Pricing, multilingual menu and FAQ pages** (`/pricing`,
+`/multilingual-menu`, `/faq`; texts `pricingPage`, `multilingualPage`,
+`faqPage`): pages written for searches like "QR menü fiyatları", "çok dilli
+QR menü" and common questions. Each has a question list
+(`components/shared/FaqList`, plain `<details>`) with FAQPage JSON-LD, and
+uses `components/shared/MarketingBlocks` (hero, section, closing card).
+Prices, free months and the yearly saving come from `lib/plans` through
+`server/plan-facts`, so they follow the plans. The answers describe what the
+app does today (no automatic translation, no card at sign-up, menu goes
+offline when the trial ends unpaid, languages and branches included in the
+plan, paying "by card or in cash" as in `Plans.pricingNote` and
+`SIGNUP_PAYMENT_METHODS`; bank transfer is only for payments an admin
+records): **update them when features or plans change**, e.g. if Pro and
+Business are offered again. The navbar's "Pricing" opens `/pricing`; the
+footer links all three. Runtime-built keys (`faq.items.${id}.q` …) aren't
+covered by `i18n:check`.
+
 **About page** (`/about`, server component, no animation library): the
 story, "How it works" in four steps (account and team invites, building
 the menu with the checklist and preview, design/colours/hours/languages,
@@ -644,8 +661,21 @@ JSON-LD with sections, items, diets and prices
 them; `jsonLd()` escapes `<`). `app/sitemap.ts` lists every live page in each of
 its languages (`force-dynamic`, data cached an hour; at build time it would
 freeze and need the database); `app/robots.ts` keeps crawlers out of admin,
-dashboard, sign-in, `/api/` and `/r/`. The middleware lets both through
-without a language prefix. Missing restaurants/items answer a real 404, and
+dashboard, sign-in, `/api/` and `/r/`. The marketing pages (home, menus,
+about, features, pricing, multilingual menu, FAQ, KVKK) build their metadata
+with `sitePageMetadata` (`server/public-metadata.ts`): one title and
+description for Google and for link previews (Open Graph, X), the page's own
+URL, the square logo card, canonical and hreflang links. Pages without their
+own fall back to the home page's texts (root layout). The home page carries WebSite and Organization JSON-LD
+(`server/site-structured-data.ts`) with the brand's other spellings
+(Menu-pedia, menu-pedia.com) and a `SITE_PROFILES` list to fill with social
+profiles. `app/llms.txt` is a summary for AI assistants, built from the
+features messages, `lib/plans` and `lib/site-contact`. Every public
+restaurant page ends with a small "Menu by Menupedia" link to the home page
+(`components/public/MenuByMenupedia`, added once in `[restaurantSlug]/layout.tsx`;
+text `PublicMenu.madeWith`). The middleware lets
+sitemap.xml, robots.txt and llms.txt through without a language prefix.
+Missing restaurants/items answer a real 404, and
 inactive ones a 307: there must be **no `loading.tsx` above
 `[restaurantSlug]`**, or responses start streaming as 200 first.
 

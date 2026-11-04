@@ -480,7 +480,8 @@
     "branchPickerIntro": "The menu is the same at every branch. Pick one to see its address, hours and contact details.",
     "allBranches": "All branches",
     "mainBranch": "Main branch",
-    "branchTitle": "{name} – {branch}"
+    "branchTitle": "{name} – {branch}",
+    "madeWith": "Menu by <brand>Menupedia</brand>"
   },
   "Team": {
     "inviteTitle": "Invite an editor",
@@ -934,7 +935,10 @@
     "signIn": "Sign in",
     "dashboard": "Dashboard",
     "rights": "© {year} Menupedia. All rights reserved.",
-    "kvkk": "Privacy notice (KVKK)"
+    "kvkk": "Privacy notice (KVKK)",
+    "pricing": "Pricing",
+    "multilingual": "Multilingual menus",
+    "faq": "FAQ"
   },
   "Branches": {
     "title": "Branches",
@@ -1018,7 +1022,8 @@
     "regularPrice": "Regular price {price}",
     "thenPerMonth": "Then {price} a month, once the trial ends.",
     "thenPerYear": "Then {price} a year, once the trial ends.",
-    "startTrial": "Start your free trial"
+    "startTrial": "Start your free trial",
+    "months": "{count, plural, one {# month} other {# months}}"
   },
   "Start": {
     "metaTitle": "Create your menu | Menupedia",
@@ -1142,6 +1147,305 @@
       "tckn": "A TCKN has 11 digits.",
       "tooLong": "This is too long.",
       "email": "Enter a valid email address."
+    }
+  },
+  "pricingPage": {
+    "metaTitle": "QR menu pricing: {months} free | Menupedia",
+    "metaDescription": "Menupedia is free for {months}, then {price} a month for everything: menu with photos, QR codes, table cards, 5 languages and your own design.",
+    "hero": {
+      "eyebrow": "Pricing",
+      "title": "Simple pricing for your digital menu",
+      "intro": "Start free: the first {months} cost nothing, and you don't need a card to sign up. After that, one plan with everything for {price} a month."
+    },
+    "included": {
+      "title": "Everything is in the plan",
+      "intro": "No add-ons, and no charges per scan, table or dish.",
+      "items": {
+        "menu": {
+          "title": "Your full menu",
+          "text": "Categories and dishes with prices, photos, ingredients and dietary labels."
+        },
+        "qr": {
+          "title": "QR codes and table cards",
+          "text": "Codes with your logo that keep working when your menu changes, and table cards ready to print."
+        },
+        "languages": {
+          "title": "5 languages",
+          "text": "Your menu in English, Turkish, Arabic, Spanish and Russian, for each guest in their language."
+        },
+        "look": {
+          "title": "Your design and colours",
+          "text": "Three menu designs and your own colours, for light and dark mode."
+        },
+        "branches": {
+          "title": "Branches",
+          "text": "A page for each branch, with its own address, phone and opening hours."
+        },
+        "team": {
+          "title": "Your team",
+          "text": "Invite your staff to keep the menu up to date, each with their own sign-in."
+        },
+        "google": {
+          "title": "Found on Google",
+          "text": "Pages search engines understand, with your dishes, prices and opening hours."
+        },
+        "stats": {
+          "title": "Scan statistics",
+          "text": "See how many guests opened your menu each day."
+        }
+      }
+    },
+    "trial": {
+      "title": "How the free trial works",
+      "s1": {
+        "title": "Sign up and build your menu",
+        "text": "Create your restaurant, add your dishes and check everything in a private preview. No card details needed."
+      },
+      "s2": {
+        "title": "Use it for {months}",
+        "text": "Put your menu live, print your table cards and update the menu as often as you like, all for free."
+      },
+      "s3": {
+        "title": "Decide when the trial ends",
+        "text": "We'll get in touch before your free months end. Pay by card or in cash, monthly or yearly. If you don't continue, your menu simply goes offline."
+      }
+    },
+    "faq": {
+      "title": "Questions about pricing",
+      "items": {
+        "free": {
+          "q": "Is the trial really free?",
+          "a": "Yes. Nothing is charged for the first {months}, and you don't enter card details to sign up. You only tell us how you'd like to pay later."
+        },
+        "after": {
+          "q": "What happens when the free months end?",
+          "a": "We'll call or message you before then. Once your first payment is in, your menu stays live. If you don't pay, your menu goes offline, and it comes back as soon as you do."
+        },
+        "pay": {
+          "q": "How can I pay?",
+          "a": "By card or in cash. For card payments we send you a secure payment page before the trial ends; for cash we get in touch to arrange it."
+        },
+        "yearly": {
+          "q": "Is it cheaper to pay yearly?",
+          "a": "Yes. A year costs {yearly}, which is {saving} compared with paying monthly."
+        },
+        "extras": {
+          "q": "Are there extra fees for scans, tables or dishes?",
+          "a": "No. Your price stays the same however many guests scan your menu, and however many tables and dishes you have."
+        },
+        "guests": {
+          "q": "Do guests pay anything or need an app?",
+          "a": "No. Guests scan the QR code with their phone camera and the menu opens in the browser. It's free for them, with nothing to install."
+        },
+        "chains": {
+          "q": "I run several restaurants or a chain. What does it cost?",
+          "a": "Get in touch and tell us about your places, and we'll find the right plan with you."
+        }
+      }
+    },
+    "cta": {
+      "title": "Start your free trial",
+      "text": "Set up your menu today and pay nothing for {months}.",
+      "start": "Create your menu",
+      "faq": "Read the FAQ",
+      "contact": "Ask us a question"
+    }
+  },
+  "multilingualPage": {
+    "metaTitle": "Multilingual QR menu in 5 languages | Menupedia",
+    "metaDescription": "Show guests your menu in English, Turkish, Arabic, Spanish or Russian. One QR code opens it in the language of their phone, with Arabic right to left.",
+    "hero": {
+      "eyebrow": "Multilingual menus",
+      "title": "One QR code, and every guest reads your menu in their language",
+      "intro": "Tourists, expats and visitors from abroad scan the same code and see your dishes in English, Turkish, Arabic, Spanish or Russian. No more translating at the table."
+    },
+    "steps": {
+      "title": "How it works",
+      "s1": {
+        "title": "Pick your languages",
+        "text": "Choose your menu's main language, then add any of the others: English, Turkish, Arabic, Spanish and Russian."
+      },
+      "s2": {
+        "title": "Add the translations",
+        "text": "Each dish has a tab per language for its name, description and ingredients, and categories get their own names too. The editor marks what isn't translated yet."
+      },
+      "s3": {
+        "title": "Guests scan",
+        "text": "The menu opens in the language of the guest's phone when your menu has it, otherwise in your main language. Guests can switch language at any time."
+      }
+    },
+    "demo": {
+      "title": "Try it in the demo menu",
+      "intro": "Switch the language of our demo restaurant's menu and watch every dish change, Arabic right to left included."
+    },
+    "details": {
+      "title": "Made for guests from everywhere",
+      "items": {
+        "rtl": {
+          "title": "Arabic, right to left",
+          "text": "Arabic menus read from right to left, as Arabic-speaking guests expect."
+        },
+        "prices": {
+          "title": "Prices they can read",
+          "text": "Prices appear in the format guests are used to, in your currency."
+        },
+        "search": {
+          "title": "Search in any language",
+          "text": "Guests can search for dishes in their own language or by the names on your main menu."
+        },
+        "labels": {
+          "title": "Dietary labels, translated",
+          "text": "Vegetarian, vegan, gluten-free and the other labels appear in each guest's language automatically."
+        },
+        "hours": {
+          "title": "Opening hours in their language",
+          "text": "\"Open now\" and your opening hours appear in the guest's language, worked out in your time zone."
+        },
+        "google": {
+          "title": "Found in every language",
+          "text": "Each language of your menu is its own page for search engines, so guests can find it searching in their own language."
+        }
+      }
+    },
+    "who": {
+      "title": "Who it's for",
+      "text": "Restaurants, cafés and bars in tourist areas, hotels and their restaurants, and places near airports, universities and international neighbourhoods: anywhere guests don't all speak the same language."
+    },
+    "faq": {
+      "title": "Questions about multilingual menus",
+      "items": {
+        "auto": {
+          "q": "Is the menu translated automatically?",
+          "a": "No. You add the translations yourself, or with help from a colleague or a translator, so every dish says exactly what you mean. Anything not translated yet is shown in your main language, and the editor marks what's missing."
+        },
+        "languages": {
+          "q": "Which languages can my menu be in?",
+          "a": "English, Turkish, Arabic, Spanish and Russian. Your main language can be any of them."
+        },
+        "qr": {
+          "q": "Do I need a separate QR code for each language?",
+          "a": "No. One QR code works for every language: each guest sees the menu in their own."
+        },
+        "switch": {
+          "q": "Can guests choose another language?",
+          "a": "Yes. The menu has a language switcher, so guests can change language whenever they like."
+        },
+        "price": {
+          "q": "Does it cost extra?",
+          "a": "No. Menus in several languages are included in the plan."
+        }
+      }
+    },
+    "cta": {
+      "title": "Give every guest your menu in their language",
+      "text": "Start your free trial: menus in several languages are included in the plan.",
+      "start": "Create your menu",
+      "pricing": "See pricing"
+    }
+  },
+  "faqPage": {
+    "metaTitle": "Digital menu FAQ: QR menus explained | Menupedia",
+    "metaDescription": "Answers about Menupedia's QR menus: getting started, updating your menu, languages, QR codes, branches, pricing and what guests see.",
+    "hero": {
+      "title": "Frequently asked questions",
+      "intro": "What restaurants usually ask before they start. Can't find your question? Get in touch."
+    },
+    "groups": {
+      "start": {
+        "title": "Getting started",
+        "items": {
+          "what": {
+            "q": "What is Menupedia?",
+            "a": "Menupedia is a digital menu for restaurants, cafés, bakeries and other places. Guests scan a QR code and your menu opens on their phone, in their language. You manage it yourself from your dashboard."
+          },
+          "app": {
+            "q": "Do guests need to download an app?",
+            "a": "No. Guests scan the QR code with their phone camera and the menu opens in the browser."
+          },
+          "how": {
+            "q": "How do I get started?",
+            "a": "Sign up, enter your restaurant's details and add your dishes. A checklist and a private preview help you get everything ready. Once we've confirmed your sign-up, put your menu live and print your table cards."
+          },
+          "skills": {
+            "q": "Do I need technical skills?",
+            "a": "No. If you can fill in a form on your phone or computer, you can build your menu."
+          }
+        }
+      },
+      "menu": {
+        "title": "Your menu",
+        "items": {
+          "update": {
+            "q": "Can I change prices and dishes myself?",
+            "a": "Yes, at any time. Change a price, add a dish or mark it sold out, and guests see it straight away. There's nothing to reprint."
+          },
+          "qr": {
+            "q": "Will my QR codes still work if I change my menu?",
+            "a": "Yes. Your QR code points to a permanent link that always opens your current menu, even if your menu's address changes."
+          },
+          "photos": {
+            "q": "Can I add photos of my dishes?",
+            "a": "Yes. Each dish can have a photo, and guests can tap a dish to see it larger with its details."
+          },
+          "team": {
+            "q": "Can my staff update the menu?",
+            "a": "Yes. Invite them with a link: editors look after the menu, and owners also manage the restaurant's details."
+          },
+          "branches": {
+            "q": "I have several branches. Can each have its own page?",
+            "a": "Yes. Each branch gets its own page with its address, phone, map and opening hours, and they share the same menu."
+          },
+          "design": {
+            "q": "Can the menu match my brand?",
+            "a": "Yes. Choose one of three designs, add your logo and pick your own colours for light and dark mode."
+          }
+        }
+      },
+      "guests": {
+        "title": "Your guests",
+        "items": {
+          "languages": {
+            "q": "Can guests read the menu in their language?",
+            "a": "Yes. Your menu can be in English, Turkish, Arabic, Spanish and Russian, and it opens in the language of each guest's phone."
+          },
+          "hours": {
+            "q": "Do guests see whether we're open?",
+            "a": "Yes. Add your opening hours and the menu shows \"Open now\" or when you open next."
+          },
+          "google": {
+            "q": "Will my menu show up on Google?",
+            "a": "Your menu pages are built so search engines understand your dishes, prices and opening hours, in every language your menu has. That helps guests find you when they search for your restaurant."
+          },
+          "stats": {
+            "q": "Can I see how many people look at my menu?",
+            "a": "Yes. Your dashboard shows how many guests opened your menu each day."
+          },
+          "data": {
+            "q": "Do guests have to sign up or share any details?",
+            "a": "No. Guests read your menu without signing up or entering anything."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Pricing",
+        "items": {
+          "cost": {
+            "q": "How much does Menupedia cost?",
+            "a": "The first {months} are free. After that it's {price} a month, or {yearly} a year, with everything included."
+          },
+          "pay": {
+            "q": "How do I pay?",
+            "a": "By card or in cash, monthly or yearly. Nothing is charged during the free trial."
+          }
+        }
+      }
+    },
+    "more": {
+      "title": "Still have a question?",
+      "text": "Email us or message us on WhatsApp. We're happy to help.",
+      "contact": "Get in touch",
+      "pricing": "See pricing",
+      "multilingual": "Multilingual menus"
     }
   }
 }

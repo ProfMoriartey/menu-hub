@@ -12,7 +12,7 @@ import { cn } from "~/lib/utils";
 /**
  * The plans on offer and their prices (lib/plans), monthly or yearly, each
  * with its free months and a button that starts the sign-up on that plan.
- * On the home and Features pages, at #pricing.
+ * On the home, Features and Pricing pages, at #pricing.
  */
 export function PricingSection({ className }: { className?: string }) {
   const t = useTranslations("Plans");

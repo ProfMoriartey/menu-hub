@@ -29,7 +29,7 @@ export function Navbar() {
   const links = [
     { name: t("restaurants"), href: "/menus" },
     { name: t("themes"), href: "/features" },
-    { name: t("pricing"), href: "/#pricing" },
+    { name: t("pricing"), href: "/pricing" },
     { name: t("aboutUs"), href: "/about" },
   ];
   const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`);

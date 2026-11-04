@@ -480,7 +480,8 @@
     "branchPickerIntro": "Menü tüm şubelerde aynıdır. Adresini, saatlerini ve iletişim bilgilerini görmek için birini seçin.",
     "allBranches": "Tüm şubeler",
     "mainBranch": "Ana şube",
-    "branchTitle": "{name} – {branch}"
+    "branchTitle": "{name} – {branch}",
+    "madeWith": "Bu menü <brand>Menupedia</brand> ile hazırlandı"
   },
   "Team": {
     "inviteTitle": "Editör davet edin",
@@ -934,7 +935,10 @@
     "signIn": "Giriş yap",
     "dashboard": "Panel",
     "rights": "© {year} Menupedia. Tüm hakları saklıdır.",
-    "kvkk": "KVKK Aydınlatma Metni"
+    "kvkk": "KVKK Aydınlatma Metni",
+    "pricing": "Fiyatlar",
+    "multilingual": "Çok dilli menüler",
+    "faq": "SSS"
   },
   "Branches": {
     "title": "Şubeler",
@@ -1018,7 +1022,8 @@
     "regularPrice": "Normal fiyat {price}",
     "thenPerMonth": "Deneme süresi bitince aylık {price}.",
     "thenPerYear": "Deneme süresi bitince yıllık {price}.",
-    "startTrial": "Ücretsiz denemeyi başlat"
+    "startTrial": "Ücretsiz denemeyi başlat",
+    "months": "{count} ay"
   },
   "Start": {
     "metaTitle": "Menünüzü oluşturun | Menupedia",
@@ -1142,6 +1147,305 @@
       "tckn": "T.C. kimlik numarası 11 haneli olmalı.",
       "tooLong": "Bu çok uzun.",
       "email": "Geçerli bir e-posta adresi girin."
+    }
+  },
+  "pricingPage": {
+    "metaTitle": "QR menü fiyatları: {months} ücretsiz | Menupedia",
+    "metaDescription": "Menupedia {months} boyunca ücretsiz, ardından her şey dahil aylık {price}: fotoğraflı menü, QR kodlar, masa kartları, 5 dil ve size özel tasarım.",
+    "hero": {
+      "eyebrow": "Fiyatlar",
+      "title": "Dijital menünüz için sade fiyatlar",
+      "intro": "Ücretsiz başlayın: ilk {months} hiçbir ücret ödemezsiniz ve kayıt için kart gerekmez. Sonrasında her şeyin dahil olduğu tek plan, aylık {price}."
+    },
+    "included": {
+      "title": "Her şey plana dahil",
+      "intro": "Ek paket yok; okutma, masa ya da yemek başına ücret yok.",
+      "items": {
+        "menu": {
+          "title": "Menünüzün tamamı",
+          "text": "Fiyat, fotoğraf, içindekiler ve diyet etiketleriyle kategoriler ve yemekler."
+        },
+        "qr": {
+          "title": "QR kodlar ve masa kartları",
+          "text": "Menünüz değişse de çalışmaya devam eden logolu QR kodlar ve basıma hazır masa kartları."
+        },
+        "languages": {
+          "title": "5 dil",
+          "text": "Menünüz İngilizce, Türkçe, Arapça, İspanyolca ve Rusça; her misafire kendi dilinde."
+        },
+        "look": {
+          "title": "Tasarımınız ve renkleriniz",
+          "text": "Üç menü tasarımı ve açık-koyu mod için kendi renkleriniz."
+        },
+        "branches": {
+          "title": "Şubeler",
+          "text": "Her şube için kendi adresi, telefonu ve çalışma saatleriyle ayrı bir sayfa."
+        },
+        "team": {
+          "title": "Ekibiniz",
+          "text": "Menüyü güncel tutmaları için çalışanlarınızı davet edin; her birinin kendi girişi olur."
+        },
+        "google": {
+          "title": "Google'da bulunun",
+          "text": "Yemeklerinizi, fiyatlarınızı ve çalışma saatlerinizi arama motorlarının anladığı sayfalar."
+        },
+        "stats": {
+          "title": "Okutma istatistikleri",
+          "text": "Menünüzü her gün kaç misafirin açtığını görün."
+        }
+      }
+    },
+    "trial": {
+      "title": "Ücretsiz deneme nasıl işler?",
+      "s1": {
+        "title": "Kaydolun ve menünüzü oluşturun",
+        "text": "Restoranınızı oluşturun, yemeklerinizi ekleyin ve her şeyi özel bir önizlemede kontrol edin. Kart bilgisi gerekmez."
+      },
+      "s2": {
+        "title": "{months} boyunca kullanın",
+        "text": "Menünüzü yayına alın, masa kartlarınızı basın ve menünüzü dilediğiniz kadar güncelleyin; hepsi ücretsiz."
+      },
+      "s3": {
+        "title": "Deneme bitince karar verin",
+        "text": "Ücretsiz süreniz bitmeden sizinle iletişime geçeriz. Kartla ya da nakit, aylık veya yıllık ödeyin. Devam etmezseniz menünüz yalnızca yayından kalkar."
+      }
+    },
+    "faq": {
+      "title": "Fiyatlarla ilgili sorular",
+      "items": {
+        "free": {
+          "q": "Deneme gerçekten ücretsiz mi?",
+          "a": "Evet. İlk {months} hiçbir ücret alınmaz ve kaydolurken kart bilgisi girmezsiniz. Yalnızca daha sonra nasıl ödemek istediğinizi belirtirsiniz."
+        },
+        "after": {
+          "q": "Ücretsiz süre bitince ne olur?",
+          "a": "Bitmeden önce sizi arar ya da mesaj atarız. İlk ödemeniz yapıldığında menünüz yayında kalır. Ödeme yapmazsanız menünüz yayından kalkar ve ödediğiniz anda geri gelir."
+        },
+        "pay": {
+          "q": "Nasıl ödeyebilirim?",
+          "a": "Kartla ya da nakit. Kartla ödeme için deneme bitmeden size güvenli bir ödeme sayfası göndeririz; nakit ödemeyi ayarlamak için sizinle iletişime geçeriz."
+        },
+        "yearly": {
+          "q": "Yıllık ödemek daha mı uygun?",
+          "a": "Evet. Bir yıl {yearly}; yani aylık ödemeye göre {saving}."
+        },
+        "extras": {
+          "q": "Okutma, masa ya da yemek için ek ücret var mı?",
+          "a": "Hayır. Menünüzü kaç misafir okutursa okutsun, kaç masanız ve kaç yemeğiniz olursa olsun ücretiniz aynı kalır."
+        },
+        "guests": {
+          "q": "Misafirler ücret ödüyor ya da uygulama indiriyor mu?",
+          "a": "Hayır. Misafirler QR kodu telefon kamerasıyla okutur ve menü tarayıcıda açılır. Onlar için ücretsizdir, hiçbir şey yüklemeleri gerekmez."
+        },
+        "chains": {
+          "q": "Birden fazla restoranım ya da bir zincirim var. Ücret ne olur?",
+          "a": "Bize ulaşın ve mekânlarınızı anlatın; size uygun planı birlikte belirleyelim."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ücretsiz denemenizi başlatın",
+      "text": "Menünüzü bugün oluşturun, {months} boyunca hiçbir ücret ödemeyin.",
+      "start": "Menünüzü oluşturun",
+      "faq": "SSS'yi okuyun",
+      "contact": "Bize soru sorun"
+    }
+  },
+  "multilingualPage": {
+    "metaTitle": "Çok dilli QR menü: 5 dilde dijital menü | Menupedia",
+    "metaDescription": "Menünüzü misafirlerinize İngilizce, Türkçe, Arapça, İspanyolca veya Rusça sunun. Tek QR kod menüyü telefonun dilinde açar; Arapça sağdan sola.",
+    "hero": {
+      "eyebrow": "Çok dilli menüler",
+      "title": "Tek QR kod, her misafir menünüzü kendi dilinde okur",
+      "intro": "Turistler, yabancı misafirler ve yurt dışından gelenler aynı kodu okutur ve yemeklerinizi İngilizce, Türkçe, Arapça, İspanyolca veya Rusça görür. Masada çeviri yapmaya son."
+    },
+    "steps": {
+      "title": "Nasıl çalışır?",
+      "s1": {
+        "title": "Dillerinizi seçin",
+        "text": "Menünüzün ana dilini seçin, ardından diğerlerinden istediklerinizi ekleyin: İngilizce, Türkçe, Arapça, İspanyolca ve Rusça."
+      },
+      "s2": {
+        "title": "Çevirileri ekleyin",
+        "text": "Her yemeğin adı, açıklaması ve içindekileri için her dilde ayrı bir sekme vardır; kategorilerin de kendi adları olur. Düzenleyici henüz çevrilmemiş olanları işaretler."
+      },
+      "s3": {
+        "title": "Misafirler okutur",
+        "text": "Menünüzde varsa menü, misafirin telefonunun dilinde açılır; yoksa ana dilinizde. Misafirler dili istedikleri an değiştirebilir."
+      }
+    },
+    "demo": {
+      "title": "Demo menüde deneyin",
+      "intro": "Demo restoranımızın menüsünün dilini değiştirin ve her yemeğin değiştiğini görün; sağdan sola Arapça da dahil."
+    },
+    "details": {
+      "title": "Her yerden gelen misafirler için",
+      "items": {
+        "rtl": {
+          "title": "Arapça, sağdan sola",
+          "text": "Arapça menüler, Arapça konuşan misafirlerin alıştığı gibi sağdan sola okunur."
+        },
+        "prices": {
+          "title": "Okuyabilecekleri fiyatlar",
+          "text": "Fiyatlar sizin para biriminizde, misafirlerin alışık olduğu biçimde gösterilir."
+        },
+        "search": {
+          "title": "Her dilde arama",
+          "text": "Misafirler yemekleri kendi dillerinde ya da ana menünüzdeki adlarıyla arayabilir."
+        },
+        "labels": {
+          "title": "Çevrilmiş diyet etiketleri",
+          "text": "Vejetaryen, vegan, glutensiz ve diğer etiketler her misafirin dilinde kendiliğinden görünür."
+        },
+        "hours": {
+          "title": "Kendi dillerinde çalışma saatleri",
+          "text": "\"Şu an açık\" ve çalışma saatleriniz misafirin dilinde gösterilir, sizin saat diliminize göre hesaplanır."
+        },
+        "google": {
+          "title": "Her dilde bulunun",
+          "text": "Menünüzün her dili arama motorları için ayrı bir sayfadır; misafirler kendi dillerinde arayarak menünüzü bulabilir."
+        }
+      }
+    },
+    "who": {
+      "title": "Kimler için?",
+      "text": "Turistik bölgelerdeki restoranlar, kafeler ve barlar; oteller ve otel restoranları; havalimanı, üniversite ve uluslararası semtlerdeki mekânlar: misafirlerin hepsinin aynı dili konuşmadığı her yer."
+    },
+    "faq": {
+      "title": "Çok dilli menülerle ilgili sorular",
+      "items": {
+        "auto": {
+          "q": "Menü otomatik olarak mı çevriliyor?",
+          "a": "Hayır. Çevirileri kendiniz eklersiniz ya da bir çalışma arkadaşınızdan veya çevirmenden yardım alırsınız; böylece her yemek tam olarak istediğinizi anlatır. Henüz çevrilmemiş her şey ana dilinizde gösterilir ve düzenleyici eksikleri işaretler."
+        },
+        "languages": {
+          "q": "Menüm hangi dillerde olabilir?",
+          "a": "İngilizce, Türkçe, Arapça, İspanyolca ve Rusça. Ana diliniz bunlardan herhangi biri olabilir."
+        },
+        "qr": {
+          "q": "Her dil için ayrı QR kod gerekir mi?",
+          "a": "Hayır. Tek QR kod her dilde çalışır: her misafir menüyü kendi dilinde görür."
+        },
+        "switch": {
+          "q": "Misafirler başka bir dil seçebilir mi?",
+          "a": "Evet. Menüde bir dil seçici vardır; misafirler dili istedikleri an değiştirebilir."
+        },
+        "price": {
+          "q": "Ek ücreti var mı?",
+          "a": "Hayır. Birden fazla dilde menü plana dahildir."
+        }
+      }
+    },
+    "cta": {
+      "title": "Her misafire menünüzü kendi dilinde sunun",
+      "text": "Ücretsiz denemenizi başlatın: birden fazla dilde menü plana dahildir.",
+      "start": "Menünüzü oluşturun",
+      "pricing": "Fiyatları görün"
+    }
+  },
+  "faqPage": {
+    "metaTitle": "Dijital menü SSS: QR menü hakkında sorular | Menupedia",
+    "metaDescription": "Menupedia QR menüleri hakkında yanıtlar: başlangıç, menünüzü güncelleme, diller, QR kodlar, şubeler, fiyatlar ve misafirlerin gördükleri.",
+    "hero": {
+      "title": "Sıkça sorulan sorular",
+      "intro": "Restoranların başlamadan önce en çok sordukları. Sorunuzu bulamadınız mı? Bize ulaşın."
+    },
+    "groups": {
+      "start": {
+        "title": "Başlarken",
+        "items": {
+          "what": {
+            "q": "Menupedia nedir?",
+            "a": "Menupedia; restoranlar, kafeler, fırınlar ve diğer mekânlar için dijital bir menüdür. Misafirler bir QR kodu okutur ve menünüz telefonlarında, kendi dillerinde açılır. Menünüzü panelinizden kendiniz yönetirsiniz."
+          },
+          "app": {
+            "q": "Misafirlerin uygulama indirmesi gerekir mi?",
+            "a": "Hayır. Misafirler QR kodu telefon kamerasıyla okutur ve menü tarayıcıda açılır."
+          },
+          "how": {
+            "q": "Nasıl başlarım?",
+            "a": "Kaydolun, restoranınızın bilgilerini girin ve yemeklerinizi ekleyin. Bir kontrol listesi ve özel bir önizleme her şeyi hazırlamanıza yardım eder. Kaydınızı onayladığımızda menünüzü yayına alın ve masa kartlarınızı basın."
+          },
+          "skills": {
+            "q": "Teknik bilgi gerekir mi?",
+            "a": "Hayır. Telefonunuzdan ya da bilgisayarınızdan bir form doldurabiliyorsanız menünüzü de oluşturabilirsiniz."
+          }
+        }
+      },
+      "menu": {
+        "title": "Menünüz",
+        "items": {
+          "update": {
+            "q": "Fiyatları ve yemekleri kendim değiştirebilir miyim?",
+            "a": "Evet, istediğiniz zaman. Bir fiyatı değiştirin, yemek ekleyin ya da tükendi olarak işaretleyin; misafirler hemen görür. Yeniden basılacak bir şey yok."
+          },
+          "qr": {
+            "q": "Menümü değiştirirsem QR kodlarım çalışmaya devam eder mi?",
+            "a": "Evet. QR kodunuz, menünüzün adresi değişse bile her zaman güncel menünüzü açan kalıcı bir bağlantıya yönlenir."
+          },
+          "photos": {
+            "q": "Yemeklerimin fotoğraflarını ekleyebilir miyim?",
+            "a": "Evet. Her yemeğin bir fotoğrafı olabilir; misafirler bir yemeğe dokunarak onu ayrıntılarıyla birlikte büyük görebilir."
+          },
+          "team": {
+            "q": "Çalışanlarım menüyü güncelleyebilir mi?",
+            "a": "Evet. Onları bir bağlantıyla davet edin: editörler menüyle ilgilenir, sahipler ayrıca restoranın bilgilerini yönetir."
+          },
+          "branches": {
+            "q": "Birden fazla şubem var. Her birinin kendi sayfası olabilir mi?",
+            "a": "Evet. Her şubenin adresi, telefonu, haritası ve çalışma saatleriyle kendi sayfası olur; menü hepsinde aynıdır."
+          },
+          "design": {
+            "q": "Menü markama uygun olabilir mi?",
+            "a": "Evet. Üç tasarımdan birini seçin, logonuzu ekleyin ve açık-koyu mod için kendi renklerinizi belirleyin."
+          }
+        }
+      },
+      "guests": {
+        "title": "Misafirleriniz",
+        "items": {
+          "languages": {
+            "q": "Misafirler menüyü kendi dillerinde okuyabilir mi?",
+            "a": "Evet. Menünüz İngilizce, Türkçe, Arapça, İspanyolca ve Rusça olabilir ve her misafirin telefonunun dilinde açılır."
+          },
+          "hours": {
+            "q": "Misafirler açık olup olmadığımızı görür mü?",
+            "a": "Evet. Çalışma saatlerinizi ekleyin; menü \"Şu an açık\" yazar ya da bir sonraki açılış saatinizi gösterir."
+          },
+          "google": {
+            "q": "Menüm Google'da çıkar mı?",
+            "a": "Menü sayfalarınız, arama motorlarının yemeklerinizi, fiyatlarınızı ve çalışma saatlerinizi menünüzün her dilinde anlayacağı şekilde hazırlanır. Bu, misafirlerin restoranınızı aradıklarında sizi bulmasına yardım eder."
+          },
+          "stats": {
+            "q": "Menüme kaç kişinin baktığını görebilir miyim?",
+            "a": "Evet. Paneliniz, menünüzü her gün kaç misafirin açtığını gösterir."
+          },
+          "data": {
+            "q": "Misafirlerin kaydolması ya da bilgi vermesi gerekir mi?",
+            "a": "Hayır. Misafirler menünüzü kaydolmadan ve hiçbir şey girmeden okur."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Fiyatlar",
+        "items": {
+          "cost": {
+            "q": "Menupedia ne kadar?",
+            "a": "İlk {months} ücretsizdir. Sonrasında her şey dahil aylık {price} ya da yıllık {yearly}."
+          },
+          "pay": {
+            "q": "Nasıl ödeme yaparım?",
+            "a": "Kartla ya da nakit; aylık veya yıllık. Ücretsiz deneme süresince hiçbir ücret alınmaz."
+          }
+        }
+      }
+    },
+    "more": {
+      "title": "Hâlâ sorunuz mu var?",
+      "text": "Bize e-posta gönderin ya da WhatsApp'tan yazın; yardımcı olmaktan memnuniyet duyarız.",
+      "contact": "Bize ulaşın",
+      "pricing": "Fiyatları görün",
+      "multilingual": "Çok dilli menüler"
     }
   }
 }

@@ -29,10 +29,19 @@ import { getDemoMenus } from "~/server/demo-menu";
 import { getDirectoryVenues } from "~/server/directory-venues";
 import { venueWithBranches } from "~/lib/menus-directory";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
+import { jsonLd } from "~/server/menu-structured-data";
+import { sitePageMetadata } from "~/server/public-metadata";
+import { cachedPageOrigin } from "~/server/public-origin";
+import { siteStructuredData } from "~/server/site-structured-data";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("HomePage");
-  return { title: { absolute: t("metaTitle") }, description: t("metaDescription") };
+  const [t, locale] = await Promise.all([getTranslations("HomePage"), getLocale()]);
+  return sitePageMetadata({
+    locale,
+    path: "",
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  });
 }
 
 const STEPS = ["s1", "s2", "s3"] as const;
@@ -78,6 +87,19 @@ export default async function HomePage() {
 
   return (
     <div className="text-foreground overflow-x-clip">
+      {/* Search engines read this: the site's name, its other spellings and logo. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            siteStructuredData({
+              origin: cachedPageOrigin(),
+              locale,
+              description: t("metaDescription"),
+            }),
+          ),
+        }}
+      />
       {/* Hero */}
       <section>
         <div className="container mx-auto grid items-center gap-12 px-4 pt-8 pb-16 sm:pt-12 lg:grid-cols-2 lg:pb-24">

@@ -480,7 +480,8 @@
     "branchPickerIntro": "La carta es la misma en todas las sucursales. Elige una para ver su dirección, horario y contacto.",
     "allBranches": "Todas las sucursales",
     "mainBranch": "Sucursal principal",
-    "branchTitle": "{name} – {branch}"
+    "branchTitle": "{name} – {branch}",
+    "madeWith": "Menú hecho con <brand>Menupedia</brand>"
   },
   "Team": {
     "inviteTitle": "Invitar a un editor",
@@ -934,7 +935,10 @@
     "signIn": "Iniciar sesión",
     "dashboard": "Panel",
     "rights": "© {year} Menupedia. Todos los derechos reservados.",
-    "kvkk": "Aviso de privacidad (KVKK)"
+    "kvkk": "Aviso de privacidad (KVKK)",
+    "pricing": "Precios",
+    "multilingual": "Menús multilingües",
+    "faq": "Preguntas frecuentes"
   },
   "Branches": {
     "title": "Sucursales",
@@ -1018,7 +1022,8 @@
     "regularPrice": "Precio normal {price}",
     "thenPerMonth": "Después, {price} al mes, cuando termine la prueba.",
     "thenPerYear": "Después, {price} al año, cuando termine la prueba.",
-    "startTrial": "Empieza tu prueba gratis"
+    "startTrial": "Empieza tu prueba gratis",
+    "months": "{count, plural, one {# mes} other {# meses}}"
   },
   "Start": {
     "metaTitle": "Crea tu carta | Menupedia",
@@ -1142,6 +1147,305 @@
       "tckn": "El TCKN tiene 11 dígitos.",
       "tooLong": "Es demasiado largo.",
       "email": "Introduce un correo electrónico válido."
+    }
+  },
+  "pricingPage": {
+    "metaTitle": "Precios del menú QR: {months} gratis | Menupedia",
+    "metaDescription": "Menupedia es gratis durante {months} y después cuesta {price} al mes con todo incluido: menú con fotos, códigos QR, tarjetas de mesa, 5 idiomas y tu propio diseño.",
+    "hero": {
+      "eyebrow": "Precios",
+      "title": "Precios sencillos para tu menú digital",
+      "intro": "Empieza gratis: los primeros {months} no pagas nada y no necesitas tarjeta para registrarte. Después, un solo plan con todo incluido por {price} al mes."
+    },
+    "included": {
+      "title": "Todo está incluido en el plan",
+      "intro": "Sin extras ni cargos por escaneo, mesa o plato.",
+      "items": {
+        "menu": {
+          "title": "Tu menú completo",
+          "text": "Categorías y platos con precios, fotos, ingredientes y etiquetas dietéticas."
+        },
+        "qr": {
+          "title": "Códigos QR y tarjetas de mesa",
+          "text": "Códigos con tu logo que siguen funcionando aunque cambie tu menú, y tarjetas de mesa listas para imprimir."
+        },
+        "languages": {
+          "title": "5 idiomas",
+          "text": "Tu menú en inglés, turco, árabe, español y ruso, para cada cliente en su idioma."
+        },
+        "look": {
+          "title": "Tu diseño y tus colores",
+          "text": "Tres diseños de menú y tus propios colores para el modo claro y el oscuro."
+        },
+        "branches": {
+          "title": "Sucursales",
+          "text": "Una página para cada sucursal, con su dirección, teléfono y horario."
+        },
+        "team": {
+          "title": "Tu equipo",
+          "text": "Invita a tu personal a mantener el menú al día, cada uno con su propio acceso."
+        },
+        "google": {
+          "title": "Visible en Google",
+          "text": "Páginas que los buscadores entienden, con tus platos, precios y horarios."
+        },
+        "stats": {
+          "title": "Estadísticas de escaneos",
+          "text": "Mira cuántos clientes abrieron tu menú cada día."
+        }
+      }
+    },
+    "trial": {
+      "title": "Cómo funciona la prueba gratuita",
+      "s1": {
+        "title": "Regístrate y crea tu menú",
+        "text": "Crea tu restaurante, añade tus platos y revísalo todo en una vista previa privada. Sin datos de tarjeta."
+      },
+      "s2": {
+        "title": "Úsalo durante {months}",
+        "text": "Publica tu menú, imprime tus tarjetas de mesa y actualiza el menú tantas veces como quieras, todo gratis."
+      },
+      "s3": {
+        "title": "Decide cuando termine la prueba",
+        "text": "Te contactaremos antes de que terminen tus meses gratis. Paga con tarjeta o en efectivo, al mes o al año. Si no continúas, tu menú simplemente deja de estar publicado."
+      }
+    },
+    "faq": {
+      "title": "Preguntas sobre precios",
+      "items": {
+        "free": {
+          "q": "¿La prueba es realmente gratis?",
+          "a": "Sí. No se cobra nada durante los primeros {months} y no introduces datos de tarjeta al registrarte. Solo nos dices cómo prefieres pagar más adelante."
+        },
+        "after": {
+          "q": "¿Qué pasa cuando terminan los meses gratis?",
+          "a": "Te llamamos o te escribimos antes. Con tu primer pago, tu menú sigue publicado. Si no pagas, tu menú deja de estar publicado y vuelve en cuanto pagues."
+        },
+        "pay": {
+          "q": "¿Cómo puedo pagar?",
+          "a": "Con tarjeta o en efectivo. Para pagar con tarjeta te enviamos una página de pago segura antes de que termine la prueba; para el efectivo te contactamos para organizarlo."
+        },
+        "yearly": {
+          "q": "¿Sale más barato pagar al año?",
+          "a": "Sí. Un año cuesta {yearly}, es decir, {saving} frente al pago mensual."
+        },
+        "extras": {
+          "q": "¿Hay costes extra por escaneos, mesas o platos?",
+          "a": "No. Tu precio es el mismo sin importar cuántos clientes escaneen tu menú ni cuántas mesas y platos tengas."
+        },
+        "guests": {
+          "q": "¿Los clientes pagan algo o necesitan una app?",
+          "a": "No. Los clientes escanean el código QR con la cámara del móvil y el menú se abre en el navegador. Es gratis para ellos y no tienen que instalar nada."
+        },
+        "chains": {
+          "q": "Tengo varios restaurantes o una cadena. ¿Cuánto cuesta?",
+          "a": "Escríbenos y cuéntanos sobre tus locales, y buscaremos contigo el plan adecuado."
+        }
+      }
+    },
+    "cta": {
+      "title": "Empieza tu prueba gratuita",
+      "text": "Crea tu menú hoy y no pagues nada durante {months}.",
+      "start": "Crea tu menú",
+      "faq": "Leer las preguntas frecuentes",
+      "contact": "Haznos una pregunta"
+    }
+  },
+  "multilingualPage": {
+    "metaTitle": "Menú QR multilingüe en 5 idiomas | Menupedia",
+    "metaDescription": "Muestra tu menú en inglés, turco, árabe, español o ruso. Un solo código QR lo abre en el idioma del móvil de cada cliente, con el árabe de derecha a izquierda.",
+    "hero": {
+      "eyebrow": "Menús en varios idiomas",
+      "title": "Un código QR, y cada cliente lee tu menú en su idioma",
+      "intro": "Turistas, extranjeros residentes y visitantes de otros países escanean el mismo código y ven tus platos en inglés, turco, árabe, español o ruso. Se acabó traducir en la mesa."
+    },
+    "steps": {
+      "title": "Cómo funciona",
+      "s1": {
+        "title": "Elige tus idiomas",
+        "text": "Elige el idioma principal de tu menú y añade los que quieras de los demás: inglés, turco, árabe, español y ruso."
+      },
+      "s2": {
+        "title": "Añade las traducciones",
+        "text": "Cada plato tiene una pestaña por idioma para su nombre, descripción e ingredientes, y las categorías también tienen sus propios nombres. El editor marca lo que aún no está traducido."
+      },
+      "s3": {
+        "title": "Los clientes escanean",
+        "text": "El menú se abre en el idioma del móvil del cliente si tu menú lo tiene; si no, en tu idioma principal. Los clientes pueden cambiar de idioma cuando quieran."
+      }
+    },
+    "demo": {
+      "title": "Pruébalo en el menú de demostración",
+      "intro": "Cambia el idioma del menú de nuestro restaurante de demostración y mira cómo cambia cada plato, incluido el árabe de derecha a izquierda."
+    },
+    "details": {
+      "title": "Pensado para clientes de todas partes",
+      "items": {
+        "rtl": {
+          "title": "Árabe, de derecha a izquierda",
+          "text": "Los menús en árabe se leen de derecha a izquierda, como esperan los clientes que hablan árabe."
+        },
+        "prices": {
+          "title": "Precios fáciles de leer",
+          "text": "Los precios aparecen en tu moneda, con el formato al que están acostumbrados los clientes."
+        },
+        "search": {
+          "title": "Búsqueda en cualquier idioma",
+          "text": "Los clientes pueden buscar platos en su idioma o por los nombres de tu menú principal."
+        },
+        "labels": {
+          "title": "Etiquetas dietéticas traducidas",
+          "text": "Vegetariano, vegano, sin gluten y las demás etiquetas aparecen automáticamente en el idioma de cada cliente."
+        },
+        "hours": {
+          "title": "Horarios en su idioma",
+          "text": "«Abierto ahora» y tu horario aparecen en el idioma del cliente, calculados en tu zona horaria."
+        },
+        "google": {
+          "title": "Visible en cada idioma",
+          "text": "Cada idioma de tu menú es una página propia para los buscadores, así que los clientes pueden encontrarlo buscando en su idioma."
+        }
+      }
+    },
+    "who": {
+      "title": "Para quién es",
+      "text": "Restaurantes, cafeterías y bares en zonas turísticas, hoteles y sus restaurantes, y locales cerca de aeropuertos, universidades y barrios internacionales: cualquier lugar donde no todos los clientes hablan el mismo idioma."
+    },
+    "faq": {
+      "title": "Preguntas sobre menús multilingües",
+      "items": {
+        "auto": {
+          "q": "¿El menú se traduce automáticamente?",
+          "a": "No. Añades las traducciones tú mismo, o con ayuda de un compañero o un traductor, para que cada plato diga exactamente lo que quieres. Lo que aún no está traducido se muestra en tu idioma principal, y el editor marca lo que falta."
+        },
+        "languages": {
+          "q": "¿En qué idiomas puede estar mi menú?",
+          "a": "Inglés, turco, árabe, español y ruso. Tu idioma principal puede ser cualquiera de ellos."
+        },
+        "qr": {
+          "q": "¿Necesito un código QR distinto para cada idioma?",
+          "a": "No. Un solo código QR sirve para todos los idiomas: cada cliente ve el menú en el suyo."
+        },
+        "switch": {
+          "q": "¿Pueden los clientes elegir otro idioma?",
+          "a": "Sí. El menú tiene un selector de idioma, así que los clientes pueden cambiarlo cuando quieran."
+        },
+        "price": {
+          "q": "¿Tiene un coste extra?",
+          "a": "No. Los menús en varios idiomas están incluidos en el plan."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ofrece tu menú a cada cliente en su idioma",
+      "text": "Empieza tu prueba gratuita: los menús en varios idiomas están incluidos en el plan.",
+      "start": "Crea tu menú",
+      "pricing": "Ver precios"
+    }
+  },
+  "faqPage": {
+    "metaTitle": "Preguntas frecuentes sobre menús digitales y QR | Menupedia",
+    "metaDescription": "Respuestas sobre los menús QR de Menupedia: cómo empezar, actualizar tu menú, idiomas, códigos QR, sucursales, precios y lo que ven los clientes.",
+    "hero": {
+      "title": "Preguntas frecuentes",
+      "intro": "Lo que más preguntan los restaurantes antes de empezar. ¿No encuentras tu pregunta? Escríbenos."
+    },
+    "groups": {
+      "start": {
+        "title": "Primeros pasos",
+        "items": {
+          "what": {
+            "q": "¿Qué es Menupedia?",
+            "a": "Menupedia es un menú digital para restaurantes, cafeterías, panaderías y otros locales. Los clientes escanean un código QR y tu menú se abre en su móvil, en su idioma. Tú lo gestionas desde tu panel."
+          },
+          "app": {
+            "q": "¿Los clientes tienen que descargar una app?",
+            "a": "No. Los clientes escanean el código QR con la cámara del móvil y el menú se abre en el navegador."
+          },
+          "how": {
+            "q": "¿Cómo empiezo?",
+            "a": "Regístrate, introduce los datos de tu restaurante y añade tus platos. Una lista de pasos y una vista previa privada te ayudan a dejarlo todo listo. Cuando confirmemos tu registro, publica tu menú e imprime tus tarjetas de mesa."
+          },
+          "skills": {
+            "q": "¿Necesito conocimientos técnicos?",
+            "a": "No. Si sabes rellenar un formulario en el móvil o el ordenador, puedes crear tu menú."
+          }
+        }
+      },
+      "menu": {
+        "title": "Tu menú",
+        "items": {
+          "update": {
+            "q": "¿Puedo cambiar precios y platos yo mismo?",
+            "a": "Sí, cuando quieras. Cambia un precio, añade un plato o márcalo como agotado, y los clientes lo ven al instante. No hay nada que reimprimir."
+          },
+          "qr": {
+            "q": "¿Mis códigos QR seguirán funcionando si cambio el menú?",
+            "a": "Sí. Tu código QR apunta a un enlace permanente que siempre abre tu menú actual, aunque cambie la dirección de tu menú."
+          },
+          "photos": {
+            "q": "¿Puedo añadir fotos de mis platos?",
+            "a": "Sí. Cada plato puede tener una foto, y los clientes pueden tocar un plato para verlo en grande con sus detalles."
+          },
+          "team": {
+            "q": "¿Mi personal puede actualizar el menú?",
+            "a": "Sí. Invítalos con un enlace: los editores se ocupan del menú y los propietarios también gestionan los datos del restaurante."
+          },
+          "branches": {
+            "q": "Tengo varias sucursales. ¿Puede cada una tener su página?",
+            "a": "Sí. Cada sucursal tiene su propia página con dirección, teléfono, mapa y horario, y todas comparten el mismo menú."
+          },
+          "design": {
+            "q": "¿Puede el menú ir con mi marca?",
+            "a": "Sí. Elige uno de los tres diseños, añade tu logo y escoge tus propios colores para el modo claro y el oscuro."
+          }
+        }
+      },
+      "guests": {
+        "title": "Tus clientes",
+        "items": {
+          "languages": {
+            "q": "¿Pueden los clientes leer el menú en su idioma?",
+            "a": "Sí. Tu menú puede estar en inglés, turco, árabe, español y ruso, y se abre en el idioma del móvil de cada cliente."
+          },
+          "hours": {
+            "q": "¿Ven los clientes si estamos abiertos?",
+            "a": "Sí. Añade tu horario y el menú muestra «Abierto ahora» o cuándo abres de nuevo."
+          },
+          "google": {
+            "q": "¿Aparecerá mi menú en Google?",
+            "a": "Las páginas de tu menú están hechas para que los buscadores entiendan tus platos, precios y horarios, en todos los idiomas de tu menú. Eso ayuda a que los clientes te encuentren cuando buscan tu restaurante."
+          },
+          "stats": {
+            "q": "¿Puedo ver cuánta gente mira mi menú?",
+            "a": "Sí. Tu panel muestra cuántos clientes abrieron tu menú cada día."
+          },
+          "data": {
+            "q": "¿Tienen los clientes que registrarse o dar algún dato?",
+            "a": "No. Los clientes leen tu menú sin registrarse ni introducir nada."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Precios",
+        "items": {
+          "cost": {
+            "q": "¿Cuánto cuesta Menupedia?",
+            "a": "Los primeros {months} son gratis. Después cuesta {price} al mes o {yearly} al año, con todo incluido."
+          },
+          "pay": {
+            "q": "¿Cómo pago?",
+            "a": "Con tarjeta o en efectivo, al mes o al año. No se cobra nada durante la prueba gratuita."
+          }
+        }
+      }
+    },
+    "more": {
+      "title": "¿Aún tienes preguntas?",
+      "text": "Escríbenos por correo o por WhatsApp; te ayudaremos con gusto.",
+      "contact": "Contáctanos",
+      "pricing": "Ver precios",
+      "multilingual": "Menús multilingües"
     }
   }
 }

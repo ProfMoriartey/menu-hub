@@ -16,13 +16,19 @@ import {
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import SittingDoodle from "~/components/svg/SittingDoodle";
+import { sitePageMetadata } from "~/server/public-metadata";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "aboutPage" });
-  return { title: t("metaTitle"), description: t("metaDescription") };
+  return sitePageMetadata({
+    locale,
+    path: "/about",
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  });
 }
 
 const STEPS: { id: string; icon: LucideIcon }[] = [

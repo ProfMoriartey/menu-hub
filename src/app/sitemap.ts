@@ -16,7 +16,16 @@ import { liveRestaurant } from "~/server/public-menu";
 export const dynamic = "force-dynamic";
 
 // Marketing pages, by path without the locale.
-const SITE_PAGES = ["", "/menus", "/about", "/features", "/kvkk"];
+const SITE_PAGES = [
+  "",
+  "/menus",
+  "/about",
+  "/features",
+  "/pricing",
+  "/multilingual-menu",
+  "/faq",
+  "/kvkk",
+];
 
 interface LivePath {
   path: string;

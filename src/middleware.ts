@@ -15,14 +15,16 @@ const nextIntlMiddleware = createMiddleware(routing);
 function isApiRoute(pathname: string): boolean {
   // Use .startsWith to check for /api/ and /trpc/ routes. /r/ is the
   // permanent menu link route (app/r), which has no language prefix.
-  // sitemap.xml and robots.txt (app/sitemap.ts, app/robots.ts) live at the
-  // root too: a language prefix would move them where crawlers don't look.
+  // sitemap.xml, robots.txt and llms.txt (app/sitemap.ts, app/robots.ts,
+  // app/llms.txt) live at the root too: a language prefix would move them
+  // where crawlers don't look.
   return (
     pathname.startsWith("/api") ||
     pathname.startsWith("/trpc") ||
     pathname.startsWith("/r/") ||
     pathname === "/sitemap.xml" ||
-    pathname === "/robots.txt"
+    pathname === "/robots.txt" ||
+    pathname === "/llms.txt"
   );
 }
 
