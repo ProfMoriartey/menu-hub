@@ -83,7 +83,8 @@ export const ogLocale = (locale: string) => OG_LOCALES[locale] ?? locale;
 /**
  * Everything search engines and link previews read for one of Menupedia's
  * own pages: the same title and description in Google, WhatsApp, Instagram
- * and X, the page's own address, the logo card and the language links.
+ * and X, the page's own address, the wide share image (og-image.png) and
+ * the language links.
  * `path` has no locale ("" for home).
  */
 export function sitePageMetadata({
@@ -99,10 +100,10 @@ export function sitePageMetadata({
 }): Metadata {
   const origin = cachedPageOrigin();
   const image = {
-    url: `${origin}/menupedia1.png`,
-    width: 1000,
-    height: 1000,
-    alt: "Menupedia",
+    url: `${origin}/og-image.png`,
+    width: 1200,
+    height: 630,
+    alt: "Menupedia, the smart way to share menus",
   };
   return {
     title: { absolute: title },
@@ -117,8 +118,8 @@ export function sitePageMetadata({
       locale: ogLocale(locale),
       images: [image],
     },
-    // A square logo: the small card, not the wide one.
-    twitter: { card: "summary", title, description, images: [image.url] },
+    // A wide share image: the large card.
+    twitter: { card: "summary_large_image", title, description, images: [image.url] },
   };
 }
 

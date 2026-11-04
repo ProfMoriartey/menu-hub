@@ -674,7 +674,8 @@ dashboard, sign-in, `/api/` and `/r/`. The marketing pages (home, menus,
 about, features, pricing, multilingual menu, FAQ, KVKK) build their metadata
 with `sitePageMetadata` (`server/public-metadata.ts`): one title and
 description for Google and for link previews (Open Graph, X), the page's own
-URL, the square logo card, canonical and hreflang links. Pages without their
+URL, the wide share image (`public/og-image.png`, 1200×630, X's large
+card), canonical and hreflang links. Pages without their
 own fall back to the home page's texts (root layout). The home page carries WebSite and Organization JSON-LD
 (`server/site-structured-data.ts`) with the brand's other spellings
 (Menu-pedia, menu-pedia.com) and a `SITE_PROFILES` list to fill with social

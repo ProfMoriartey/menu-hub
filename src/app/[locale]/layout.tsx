@@ -30,7 +30,13 @@ export async function generateMetadata({
     metadataBase: new URL(APP_BASE_URL), // ADDED: metadataBase property here
     title: "Menupedia",
     description: t("metaDescription"),
-    icons: [{ rel: "icon", url: "/favicon.ico" }],
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "32x32" },
+        { url: "/icon.svg", type: "image/svg+xml" },
+      ],
+      apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
+    },
     openGraph: {
       title: t("metaTitle"),
       description: t("metaDescription"),
@@ -38,10 +44,10 @@ export async function generateMetadata({
       siteName: "Menupedia",
       images: [
         {
-          url: `${APP_BASE_URL}/menupedia1.png`,
-          width: 1000,
-          height: 1000,
-          alt: "Menupedia",
+          url: `${APP_BASE_URL}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: "Menupedia, the smart way to share menus",
         },
       ],
       locale: ogLocale(locale),

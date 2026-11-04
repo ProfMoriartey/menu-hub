@@ -23,7 +23,8 @@ export function SiteFooter() {
       <div className="container mx-auto grid gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
         <div className="space-y-3">
           <Link href="/" className="inline-flex" aria-label={t("home")}>
-            <Image src="/menupedia-logo.png" alt="Menupedia" width={240} height={64} className="h-8 w-auto" />
+            <Image src="/menupedia-logo.svg" alt="Menupedia" width={469} height={100} unoptimized className="h-8 w-auto dark:hidden" />
+            <Image src="/menupedia-logo-dark.svg" alt="Menupedia" width={469} height={100} unoptimized className="hidden h-8 w-auto dark:block" />
           </Link>
           <p className="text-muted-foreground max-w-xs text-sm leading-relaxed">{t("tagline")}</p>
         </div>
