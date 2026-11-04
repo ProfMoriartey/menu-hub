@@ -51,12 +51,15 @@ ${features.join("\n")}
 
 ${plans.join("\n")}
 - The first ${FREE_MONTHS} months are free, with nothing to pay during the trial. Prices are in US dollars.
-- Current plans: ${page("#pricing")}
+- Current plans: ${page("/pricing")}
 
 ## Pages
 
 - [Home](${page("")}): what ${SITE_NAME} does, a working demo menu, pricing and contact
 - [Features](${page("/features")}): everything a menu can do, with a live demo
+- [Pricing](${page("/pricing")}): the plan, what it includes, the free trial and how to pay
+- [Multilingual menus](${page("/multilingual-menu")}): one QR code, the menu in each guest's language
+- [FAQ](${page("/faq")}): common questions from restaurants, answered
 - [About](${page("/about")}): how ${SITE_NAME} works and who it is for
 - [Menus](${page("/menus")}): restaurants and cafés with their menus on ${SITE_NAME}, with search across every dish
 - [Sign up](${page("/start")}): create a restaurant and start the free trial

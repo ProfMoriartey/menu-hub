@@ -40,6 +40,16 @@ export function SiteFooter() {
             </Link>
           </li>
           <li>
+            <Link href="/pricing" className={linkClass}>
+              {t("pricing")}
+            </Link>
+          </li>
+          <li>
+            <Link href="/multilingual-menu" className={linkClass}>
+              {t("multilingual")}
+            </Link>
+          </li>
+          <li>
             <Link href="/features#demo" className={linkClass}>
               {t("demo")}
             </Link>
@@ -50,6 +60,11 @@ export function SiteFooter() {
           <li>
             <Link href="/about" className={linkClass}>
               {t("about")}
+            </Link>
+          </li>
+          <li>
+            <Link href="/faq" className={linkClass}>
+              {t("faq")}
             </Link>
           </li>
           <li>
