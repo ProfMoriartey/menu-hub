@@ -608,7 +608,9 @@ Prices, free months and the yearly saving come from `lib/plans` through
 `server/plan-facts`, so they follow the plans. The answers describe what the
 app does today (no automatic translation, no card at sign-up, menu goes
 offline when the trial ends unpaid, languages and branches included in the
-plan): **update them when features or plans change**, e.g. if Pro and
+plan, paying "by card or in cash" as in `Plans.pricingNote` and
+`SIGNUP_PAYMENT_METHODS`; bank transfer is only for payments an admin
+records): **update them when features or plans change**, e.g. if Pro and
 Business are offered again. The navbar's "Pricing" opens `/pricing`; the
 footer links all three. Runtime-built keys (`faq.items.${id}.q` …) aren't
 covered by `i18n:check`.

@@ -1,6 +1,7 @@
 // src/app/llms.txt/route.ts
 import en from "~/messages/en.json";
 import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "~/lib/site-contact";
+import { SIGNUP_PAYMENT_METHODS } from "~/lib/billing";
 import { FREE_MONTHS, MONTHS_PAID_PER_YEAR, OFFERED_TIERS, PLAN_CURRENCY, TIER_FEATURES, periodPrice } from "~/lib/plans";
 import { routing } from "~/i18n/routing";
 import { cachedPageOrigin } from "~/server/public-origin";
@@ -32,6 +33,11 @@ export function GET() {
   const features = Object.values(en.featuresPage.features).map(
     (f) => `- **${f.title}**: ${f.text}`,
   );
+  // The ways to pay that sign-up offers, as the sign-up form names them:
+  // "by card or cash".
+  const payment = `by ${new Intl.ListFormat("en", { type: "disjunction" }).format(
+    SIGNUP_PAYMENT_METHODS.map((m) => en.Start.methods[m].toLowerCase()),
+  )}`;
   const plans = OFFERED_TIERS.map((tier) => {
     const { label, price } = TIER_FEATURES[tier];
     return `- **${label}**: ${price} ${PLAN_CURRENCY} a month, or ${periodPrice(price, "yearly")} ${PLAN_CURRENCY} a year (${12 - MONTHS_PAID_PER_YEAR} months free).`;
@@ -51,6 +57,7 @@ ${features.join("\n")}
 
 ${plans.join("\n")}
 - The first ${FREE_MONTHS} months are free, with nothing to pay during the trial. Prices are in US dollars.
+- After the trial, pay ${payment}, monthly or yearly.
 - Current plans: ${page("/pricing")}
 
 ## Pages

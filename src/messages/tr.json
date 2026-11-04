@@ -1207,7 +1207,7 @@
       },
       "s3": {
         "title": "Deneme bitince karar verin",
-        "text": "Ücretsiz süreniz bitmeden sizinle iletişime geçeriz. Kartla, havaleyle ya da nakit, aylık veya yıllık ödeyin. Devam etmezseniz menünüz yalnızca yayından kalkar."
+        "text": "Ücretsiz süreniz bitmeden sizinle iletişime geçeriz. Kartla ya da nakit, aylık veya yıllık ödeyin. Devam etmezseniz menünüz yalnızca yayından kalkar."
       }
     },
     "faq": {
@@ -1223,7 +1223,7 @@
         },
         "pay": {
           "q": "Nasıl ödeyebilirim?",
-          "a": "Kartla, havaleyle ya da nakit. Kartla ödeme için size güvenli bir ödeme sayfası göndeririz; nakit ödemeyi sizinle birlikte ayarlarız."
+          "a": "Kartla ya da nakit. Kartla ödeme için deneme bitmeden size güvenli bir ödeme sayfası göndeririz; nakit ödemeyi ayarlamak için sizinle iletişime geçeriz."
         },
         "yearly": {
           "q": "Yıllık ödemek daha mı uygun?",
@@ -1435,7 +1435,7 @@
           },
           "pay": {
             "q": "Nasıl ödeme yaparım?",
-            "a": "Kartla, havaleyle ya da nakit; aylık veya yıllık. Ücretsiz deneme süresince hiçbir ücret alınmaz."
+            "a": "Kartla ya da nakit; aylık veya yıllık. Ücretsiz deneme süresince hiçbir ücret alınmaz."
           }
         }
       }

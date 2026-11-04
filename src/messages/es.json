@@ -1207,7 +1207,7 @@
       },
       "s3": {
         "title": "Decide cuando termine la prueba",
-        "text": "Te contactaremos antes de que terminen tus meses gratis. Paga con tarjeta, transferencia o en efectivo, al mes o al año. Si no continúas, tu menú simplemente deja de estar publicado."
+        "text": "Te contactaremos antes de que terminen tus meses gratis. Paga con tarjeta o en efectivo, al mes o al año. Si no continúas, tu menú simplemente deja de estar publicado."
       }
     },
     "faq": {
@@ -1223,7 +1223,7 @@
         },
         "pay": {
           "q": "¿Cómo puedo pagar?",
-          "a": "Con tarjeta, transferencia bancaria o en efectivo. Para pagar con tarjeta te enviamos una página de pago segura; el pago en efectivo lo acordamos contigo."
+          "a": "Con tarjeta o en efectivo. Para pagar con tarjeta te enviamos una página de pago segura antes de que termine la prueba; para el efectivo te contactamos para organizarlo."
         },
         "yearly": {
           "q": "¿Sale más barato pagar al año?",
@@ -1435,7 +1435,7 @@
           },
           "pay": {
             "q": "¿Cómo pago?",
-            "a": "Con tarjeta, transferencia bancaria o en efectivo, al mes o al año. No se cobra nada durante la prueba gratuita."
+            "a": "Con tarjeta o en efectivo, al mes o al año. No se cobra nada durante la prueba gratuita."
           }
         }
       }

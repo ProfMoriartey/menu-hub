@@ -1207,7 +1207,7 @@
       },
       "s3": {
         "title": "Decide when the trial ends",
-        "text": "We'll get in touch before your free months end. Pay by card, bank transfer or cash, monthly or yearly. If you don't continue, your menu simply goes offline."
+        "text": "We'll get in touch before your free months end. Pay by card or in cash, monthly or yearly. If you don't continue, your menu simply goes offline."
       }
     },
     "faq": {
@@ -1223,7 +1223,7 @@
         },
         "pay": {
           "q": "How can I pay?",
-          "a": "By card, bank transfer or cash. For card payments we send you a secure payment page; for cash we arrange it with you."
+          "a": "By card or in cash. For card payments we send you a secure payment page before the trial ends; for cash we get in touch to arrange it."
         },
         "yearly": {
           "q": "Is it cheaper to pay yearly?",
@@ -1435,7 +1435,7 @@
           },
           "pay": {
             "q": "How do I pay?",
-            "a": "By card, bank transfer or cash, monthly or yearly. Nothing is charged during the free trial."
+            "a": "By card or in cash, monthly or yearly. Nothing is charged during the free trial."
           }
         }
       }
