@@ -584,8 +584,9 @@ keeps its state instead of using `?dish=`, and is non-modal so the page
 keeps scrolling while it is open), feature groups, and a contact
 block. The home page's hero shows the same demo without controls. Prices for the demo are formatted on the server
 (`server/demo-menu.ts`). **Contact details live only in
-`lib/site-contact.ts`** (email, WhatsApp/phone; to be confirmed by the
-owner).
+`lib/site-contact.ts`** (email info.menupedia@gmail.com, WhatsApp/phone,
+and `SOCIAL_PROFILES`: Instagram, Facebook and X page URLs, each shown as
+an icon in the footer once filled in).
 
 **Home page** (`(site)/page.tsx`, for restaurant owners): hero with the
 demo phone, "How it works" (3 steps), six feature tiles (texts reused from
@@ -678,8 +679,8 @@ URL, the wide share image (`public/og-image.png`, 1200×630, X's large
 card), canonical and hreflang links. Pages without their
 own fall back to the home page's texts (root layout). The home page carries WebSite and Organization JSON-LD
 (`server/site-structured-data.ts`) with the brand's other spellings
-(Menu-pedia, menu-pedia.com) and a `SITE_PROFILES` list to fill with social
-profiles. `app/llms.txt` is a summary for AI assistants, built from the
+(Menu-pedia, menu-pedia.com) and `SITE_PROFILES` (`sameAs`), taken from
+`SOCIAL_PROFILES` in `lib/site-contact`. `app/llms.txt` is a summary for AI assistants, built from the
 features messages, `lib/plans` and `lib/site-contact`. Every public
 restaurant page ends with a small "Menu by Menupedia" link to the home page
 (`components/public/MenuByMenupedia`, added once in `[restaurantSlug]/layout.tsx`;

@@ -1,5 +1,5 @@
 // src/server/site-structured-data.ts
-import { CONTACT_EMAIL } from "~/lib/site-contact";
+import { CONTACT_EMAIL, SOCIAL_PROFILES } from "~/lib/site-contact";
 
 export const SITE_NAME = "Menupedia";
 
@@ -8,10 +8,10 @@ export const SITE_NAME = "Menupedia";
 // site, so a search for any of them can find it.
 export const SITE_ALTERNATE_NAMES = ["Menu-pedia", "Menu Pedia", "menu-pedia.com"];
 
-// Menupedia's own profiles elsewhere (Instagram, LinkedIn, X, YouTube …),
-// as full URLs. Search engines and AI assistants use them to tie those
-// profiles to this site. Add each one once it exists.
-export const SITE_PROFILES: string[] = [];
+// Menupedia's own profiles elsewhere (lib/site-contact SOCIAL_PROFILES).
+// Search engines and AI assistants use them to tie those profiles to this
+// site.
+export const SITE_PROFILES: string[] = Object.values(SOCIAL_PROFILES).filter(Boolean);
 
 /**
  * schema.org WebSite and Organization data for the home page. Google takes

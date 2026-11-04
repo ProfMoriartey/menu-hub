@@ -1,17 +1,34 @@
 // src/components/shared/SiteFooter.tsx
 "use client";
 
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode, SVGProps } from "react";
 import Image from "next/image";
-import { Mail, MessageCircle } from "lucide-react";
+import { Facebook, Instagram, Mail, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Link } from "~/i18n/navigation";
 import { LanguageSwitcher } from "~/components/shared/LanguageSwitcher";
 import { CONTACT_HREF } from "~/components/shared/Navbar";
-import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
+import { CONTACT_EMAIL, SOCIAL_PROFILES, whatsappLink } from "~/lib/site-contact";
 
 const linkClass = "text-muted-foreground hover:text-foreground text-sm transition-colors";
+
+/** The X (Twitter) logo, which the icon set doesn't have. */
+function XLogo(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+// Each social page that's filled in (lib/site-contact), with its icon.
+// Brand names stay untranslated.
+const SOCIAL_LINKS: { url: string; label: string; Icon: ComponentType<SVGProps<SVGSVGElement>> }[] = [
+  { url: SOCIAL_PROFILES.instagram, label: "Instagram", Icon: Instagram },
+  { url: SOCIAL_PROFILES.facebook, label: "Facebook", Icon: Facebook },
+  { url: SOCIAL_PROFILES.x, label: "X", Icon: XLogo },
+].filter((link) => link.url);
 
 /** The footer of the marketing pages: what Menupedia is, links, contact. */
 export function SiteFooter() {
@@ -27,6 +44,24 @@ export function SiteFooter() {
             <Image src="/menupedia-logo-dark.svg" alt="Menupedia" width={469} height={100} unoptimized className="hidden h-8 w-auto dark:block" />
           </Link>
           <p className="text-muted-foreground max-w-xs text-sm leading-relaxed">{t("tagline")}</p>
+          {SOCIAL_LINKS.length > 0 && (
+            <ul className="flex gap-2">
+              {SOCIAL_LINKS.map(({ url, label, Icon }) => (
+                <li key={label}>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    title={label}
+                    className="border-border text-muted-foreground hover:text-foreground hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
+                  >
+                    <Icon className="h-4 w-4" aria-hidden />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <FooterColumn title={t("product")}>
