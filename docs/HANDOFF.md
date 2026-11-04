@@ -334,7 +334,8 @@ goes for **0007 and 0008 (2026-10-26)**: public pages read their columns.
   anything else ("3.000 دينار", "10-12 TL") shows exactly as typed. The
   editors show the raw `"{price} {currency}"`.
 - Colors come from theme tokens; charts were validated with the dataviz
-  method (bar color `#D97706` passes on both theme surfaces).
+  method (bar color `#BE7721`, the brand orange, passes on both theme
+  surfaces).
 
 ### Code style
 - Match the surrounding code; comments explain *why*, in plain sentences.

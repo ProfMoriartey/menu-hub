@@ -7,9 +7,10 @@ import { ScanLine } from "lucide-react";
 import type { ScanStats as ScanStatsData } from "~/server/qr-scans";
 import { cn } from "~/lib/utils";
 
-// Validated against both theme surfaces (light #FAFAF9, dark #44403C): the
+// The brand orange (light --primary). Reads at 3:1 or more on both theme
+// surfaces (light card #FCF9F4: 3.4:1, dark card #2A2315: 4.3:1); the
 // theme's lighter dark-mode amber falls outside the chart lightness band.
-const BAR_COLOR = "#D97706";
+const BAR_COLOR = "#BE7721";
 const CHART_HEIGHT = 128;
 
 function StatTile({ label, value }: { label: string; value: string }) {
