@@ -58,7 +58,7 @@ export async function publicPageMetadata({
       title,
       description,
       siteName,
-      locale,
+      locale: ogLocale(locale),
       images: image ? [{ url: image.url, alt: title }] : undefined,
     },
     twitter: {
@@ -67,6 +67,58 @@ export async function publicPageMetadata({
       description,
       images: image ? [image.url] : undefined,
     },
+  };
+}
+
+// Link previews name the language as language_COUNTRY (Open Graph's form).
+const OG_LOCALES: Record<string, string> = {
+  en: "en_US",
+  tr: "tr_TR",
+  ar: "ar_AR",
+  es: "es_ES",
+  ru: "ru_RU",
+};
+export const ogLocale = (locale: string) => OG_LOCALES[locale] ?? locale;
+
+/**
+ * Everything search engines and link previews read for one of Menupedia's
+ * own pages: the same title and description in Google, WhatsApp, Instagram
+ * and X, the page's own address, the logo card and the language links.
+ * `path` has no locale ("" for home).
+ */
+export function sitePageMetadata({
+  locale,
+  path,
+  title,
+  description,
+}: {
+  locale: string;
+  path: string;
+  title: string;
+  description: string;
+}): Metadata {
+  const origin = cachedPageOrigin();
+  const image = {
+    url: `${origin}/menupedia1.png`,
+    width: 1000,
+    height: 1000,
+    alt: "Menupedia",
+  };
+  return {
+    title: { absolute: title },
+    description,
+    alternates: sitePageAlternates(locale, path),
+    openGraph: {
+      type: "website",
+      url: `${origin}/${locale}${path}`,
+      title,
+      description,
+      siteName: "Menupedia",
+      locale: ogLocale(locale),
+      images: [image],
+    },
+    // A square logo: the small card, not the wide one.
+    twitter: { card: "summary", title, description, images: [image.url] },
   };
 }
 

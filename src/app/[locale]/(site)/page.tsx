@@ -30,17 +30,18 @@ import { getDirectoryVenues } from "~/server/directory-venues";
 import { venueWithBranches } from "~/lib/menus-directory";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
 import { jsonLd } from "~/server/menu-structured-data";
-import { sitePageAlternates } from "~/server/public-metadata";
+import { sitePageMetadata } from "~/server/public-metadata";
 import { cachedPageOrigin } from "~/server/public-origin";
 import { siteStructuredData } from "~/server/site-structured-data";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [t, locale] = await Promise.all([getTranslations("HomePage"), getLocale()]);
-  return {
-    title: { absolute: t("metaTitle") },
+  return sitePageMetadata({
+    locale,
+    path: "",
+    title: t("metaTitle"),
     description: t("metaDescription"),
-    alternates: sitePageAlternates(locale, ""),
-  };
+  });
 }
 
 const STEPS = ["s1", "s2", "s3"] as const;

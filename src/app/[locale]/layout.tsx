@@ -4,9 +4,10 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider, themeInitScript } from "~/context/ThemeContext";
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "~/i18n/routing";
+import { ogLocale } from "~/server/public-metadata";
 
 // Determine the base URL for your application
 const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"; // Ensure this is set in your .env.local for production
@@ -18,17 +19,21 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>; // MODIFIED: Explicitly type params as a Promise
 }): Promise<Metadata> {
   const { locale } = await params; // MODIFIED: Await params before destructuring locale
-
-  const ogLocale = locale.replace("-", "_"); // Converts 'en-US' to 'en_US' if necessary
+  // The fallback for pages without their own description (sign-up and the
+  // like): the home page's, so previews say the same thing as Google does.
+  const t = await getTranslations({
+    locale: hasLocale(routing.locales, locale) ? locale : routing.defaultLocale,
+    namespace: "HomePage",
+  });
 
   return {
     metadataBase: new URL(APP_BASE_URL), // ADDED: metadataBase property here
     title: "Menupedia",
-    description: "The Smart Way to Share Menus",
+    description: t("metaDescription"),
     icons: [{ rel: "icon", url: "/favicon.ico" }],
     openGraph: {
-      title: "Menupedia",
-      description: "The Smart Way to Share Menus",
+      title: t("metaTitle"),
+      description: t("metaDescription"),
       url: APP_BASE_URL,
       siteName: "Menupedia",
       images: [
@@ -36,10 +41,10 @@ export async function generateMetadata({
           url: `${APP_BASE_URL}/menupedia1.png`,
           width: 1000,
           height: 1000,
-          alt: "Menupedia Logo and Slogan",
+          alt: "Menupedia",
         },
       ],
-      locale: ogLocale,
+      locale: ogLocale(locale),
       type: "website",
     },
   };

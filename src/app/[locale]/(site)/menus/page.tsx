@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { connection } from "next/server";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getDirectoryVenues } from "~/server/directory-venues";
-import { sitePageAlternates } from "~/server/public-metadata";
+import { sitePageMetadata } from "~/server/public-metadata";
 import { MenusDirectory, type DirectoryFilters } from "~/components/menus/MenusDirectory";
 import type { DirectoryScope } from "~/lib/menus-directory";
 
@@ -11,11 +11,12 @@ import type { DirectoryScope } from "~/lib/menus-directory";
 // every filtered view counts as this one page rather than a near-copy.
 export async function generateMetadata(): Promise<Metadata> {
   const [t, locale] = await Promise.all([getTranslations("MenusPage"), getLocale()]);
-  return {
+  return sitePageMetadata({
+    locale,
+    path: "/menus",
     title: `${t("metaTitle")} | Menupedia`,
     description: t("metaDescription"),
-    alternates: sitePageAlternates(locale, "/menus"),
-  };
+  });
 }
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
