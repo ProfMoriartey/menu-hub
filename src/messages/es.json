@@ -742,6 +742,14 @@
       "email": "Enviar un correo",
       "whatsapp": "Escríbenos por WhatsApp",
       "whatsappMessage": "¡Hola! Me gustaría saber más sobre Menupedia para mi restaurante."
+    },
+    "pricing": {
+      "title": "{months} gratis, y después un solo plan sencillo",
+      "text": "Tras la prueba, {price} al mes incluye todo lo de esta página. Sin extras ni cargos por escaneo.",
+      "link": "Ver precios"
+    },
+    "featureLinks": {
+      "languages": "Cómo funcionan los menús en varios idiomas"
     }
   },
   "aboutPage": {
@@ -1160,40 +1168,7 @@
     "included": {
       "title": "Todo está incluido en el plan",
       "intro": "Sin extras ni cargos por escaneo, mesa o plato.",
-      "items": {
-        "menu": {
-          "title": "Tu menú completo",
-          "text": "Categorías y platos con precios, fotos, ingredientes y etiquetas dietéticas."
-        },
-        "qr": {
-          "title": "Códigos QR y tarjetas de mesa",
-          "text": "Códigos con tu logo que siguen funcionando aunque cambie tu menú, y tarjetas de mesa listas para imprimir."
-        },
-        "languages": {
-          "title": "5 idiomas",
-          "text": "Tu menú en inglés, turco, árabe, español y ruso, para cada cliente en su idioma."
-        },
-        "look": {
-          "title": "Tu diseño y tus colores",
-          "text": "Tres diseños de menú y tus propios colores para el modo claro y el oscuro."
-        },
-        "branches": {
-          "title": "Sucursales",
-          "text": "Una página para cada sucursal, con su dirección, teléfono y horario."
-        },
-        "team": {
-          "title": "Tu equipo",
-          "text": "Invita a tu personal a mantener el menú al día, cada uno con su propio acceso."
-        },
-        "google": {
-          "title": "Visible en Google",
-          "text": "Páginas que los buscadores entienden, con tus platos, precios y horarios."
-        },
-        "stats": {
-          "title": "Estadísticas de escaneos",
-          "text": "Mira cuántos clientes abrieron tu menú cada día."
-        }
-      }
+      "link": "Ver todas las funciones"
     },
     "trial": {
       "title": "Cómo funciona la prueba gratuita",

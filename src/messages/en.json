@@ -742,6 +742,14 @@
       "email": "Send an email",
       "whatsapp": "Message us on WhatsApp",
       "whatsappMessage": "Hello! I'd like to know more about Menupedia for my restaurant."
+    },
+    "pricing": {
+      "title": "{months} free, then one simple plan",
+      "text": "After the trial, {price} a month covers everything on this page. No add-ons, no charge per scan.",
+      "link": "See pricing"
+    },
+    "featureLinks": {
+      "languages": "How multilingual menus work"
     }
   },
   "aboutPage": {
@@ -1160,40 +1168,7 @@
     "included": {
       "title": "Everything is in the plan",
       "intro": "No add-ons, and no charges per scan, table or dish.",
-      "items": {
-        "menu": {
-          "title": "Your full menu",
-          "text": "Categories and dishes with prices, photos, ingredients and dietary labels."
-        },
-        "qr": {
-          "title": "QR codes and table cards",
-          "text": "Codes with your logo that keep working when your menu changes, and table cards ready to print."
-        },
-        "languages": {
-          "title": "5 languages",
-          "text": "Your menu in English, Turkish, Arabic, Spanish and Russian, for each guest in their language."
-        },
-        "look": {
-          "title": "Your design and colours",
-          "text": "Three menu designs and your own colours, for light and dark mode."
-        },
-        "branches": {
-          "title": "Branches",
-          "text": "A page for each branch, with its own address, phone and opening hours."
-        },
-        "team": {
-          "title": "Your team",
-          "text": "Invite your staff to keep the menu up to date, each with their own sign-in."
-        },
-        "google": {
-          "title": "Found on Google",
-          "text": "Pages search engines understand, with your dishes, prices and opening hours."
-        },
-        "stats": {
-          "title": "Scan statistics",
-          "text": "See how many guests opened your menu each day."
-        }
-      }
+      "link": "See every feature"
     },
     "trial": {
       "title": "How the free trial works",

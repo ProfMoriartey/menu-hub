@@ -742,6 +742,14 @@
       "email": "E-posta gönderin",
       "whatsapp": "WhatsApp'tan yazın",
       "whatsappMessage": "Merhaba! Restoranım için Menupedia hakkında bilgi almak istiyorum."
+    },
+    "pricing": {
+      "title": "{months} ücretsiz, sonra tek ve basit bir plan",
+      "text": "Deneme süresinden sonra aylık {price} ile bu sayfadaki her şey sizin. Ek paket yok, okutma başına ücret yok.",
+      "link": "Fiyatlara bakın"
+    },
+    "featureLinks": {
+      "languages": "Çok dilli menü nasıl çalışır"
     }
   },
   "aboutPage": {
@@ -1160,40 +1168,7 @@
     "included": {
       "title": "Her şey plana dahil",
       "intro": "Ek paket yok; okutma, masa ya da yemek başına ücret yok.",
-      "items": {
-        "menu": {
-          "title": "Menünüzün tamamı",
-          "text": "Fiyat, fotoğraf, içindekiler ve diyet etiketleriyle kategoriler ve yemekler."
-        },
-        "qr": {
-          "title": "QR kodlar ve masa kartları",
-          "text": "Menünüz değişse de çalışmaya devam eden logolu QR kodlar ve basıma hazır masa kartları."
-        },
-        "languages": {
-          "title": "5 dil",
-          "text": "Menünüz İngilizce, Türkçe, Arapça, İspanyolca ve Rusça; her misafire kendi dilinde."
-        },
-        "look": {
-          "title": "Tasarımınız ve renkleriniz",
-          "text": "Üç menü tasarımı ve açık-koyu mod için kendi renkleriniz."
-        },
-        "branches": {
-          "title": "Şubeler",
-          "text": "Her şube için kendi adresi, telefonu ve çalışma saatleriyle ayrı bir sayfa."
-        },
-        "team": {
-          "title": "Ekibiniz",
-          "text": "Menüyü güncel tutmaları için çalışanlarınızı davet edin; her birinin kendi girişi olur."
-        },
-        "google": {
-          "title": "Google'da bulunun",
-          "text": "Yemeklerinizi, fiyatlarınızı ve çalışma saatlerinizi arama motorlarının anladığı sayfalar."
-        },
-        "stats": {
-          "title": "Okutma istatistikleri",
-          "text": "Menünüzü her gün kaç misafirin açtığını görün."
-        }
-      }
+      "link": "Tüm özellikleri görün"
     },
     "trial": {
       "title": "Ücretsiz deneme nasıl işler?",

@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import {
+  ArrowRight,
   BarChart3,
   ChefHat,
   Clock,
@@ -23,7 +24,8 @@ import { Button } from "~/components/ui/button";
 import { MenuDemo } from "~/components/features/MenuDemo";
 import { getDemoMenus } from "~/server/demo-menu";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
-import { PricingSection } from "~/components/plans/PricingSection";
+import { Link } from "~/i18n/navigation";
+import { planFacts } from "~/server/plan-facts";
 import { sitePageMetadata } from "~/server/public-metadata";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -77,17 +79,22 @@ const GROUPS: { id: string; features: { id: string; icon: LucideIcon }[] }[] = [
   },
 ];
 
+// Features with a page of their own, linked from their card.
+const FEATURE_PAGES: Record<string, string> = { languages: "/multilingual-menu" };
+
 /**
  * What restaurants get, with a working demo menu (a made-up restaurant) so
  * potential customers can try designs, colours and languages themselves.
  * Was /themes, which showed the old menu designs; /themes redirects here.
  * Getting started and teamwork are told on the About page ("How it works").
+ * Prices are on /pricing: this page only points there.
  */
 export default async function FeaturesPage({ params }: Props) {
   setRequestLocale((await params).locale);
-  const [t, locale] = await Promise.all([
+  const locale = await getLocale();
+  const [t, facts] = await Promise.all([
     getTranslations("featuresPage"),
-    getLocale(),
+    planFacts(locale),
   ]);
 
   return (
@@ -150,6 +157,15 @@ export default async function FeaturesPage({ params }: Props) {
                   <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
                     {t(`features.${id}.text`)}
                   </p>
+                  {FEATURE_PAGES[id] && (
+                    <Link
+                      href={FEATURE_PAGES[id]}
+                      className="text-primary mt-3 inline-flex items-center gap-1 text-sm font-medium hover:underline"
+                    >
+                      {t(`featureLinks.${id}`)}
+                      <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden />
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -157,7 +173,23 @@ export default async function FeaturesPage({ params }: Props) {
         ))}
       </div>
 
-      <PricingSection className="container mx-auto px-4 pb-24" />
+      {/* The price in a line; the plan, trial and questions are on /pricing. */}
+      <section
+        aria-labelledby="pricing-band-title"
+        className="container mx-auto px-4 pb-16"
+      >
+        <div className="bg-card border-border mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-2xl border px-6 py-8 text-center shadow-sm sm:flex-row sm:text-start">
+          <div className="flex-1">
+            <h2 id="pricing-band-title" className="text-xl font-bold tracking-tight">
+              {t("pricing.title", facts)}
+            </h2>
+            <p className="text-muted-foreground mt-1 text-sm">{t("pricing.text", facts)}</p>
+          </div>
+          <Button size="lg" variant="outline" className="shrink-0" asChild>
+            <Link href="/pricing">{t("pricing.link")}</Link>
+          </Button>
+        </div>
+      </section>
 
       <section
         id="contact"

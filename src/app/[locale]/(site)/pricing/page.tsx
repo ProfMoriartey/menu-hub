@@ -1,17 +1,6 @@
 // app/[locale]/(site)/pricing/page.tsx
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import {
-  BarChart3,
-  Languages,
-  MapPin,
-  Palette,
-  QrCode,
-  Search,
-  Users,
-  UtensilsCrossed,
-  type LucideIcon,
-} from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { PricingSection } from "~/components/plans/PricingSection";
@@ -37,27 +26,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-// What the plan includes. Texts in pricingPage.included.items.
-const INCLUDED: { id: string; icon: LucideIcon }[] = [
-  { id: "menu", icon: UtensilsCrossed },
-  { id: "qr", icon: QrCode },
-  { id: "languages", icon: Languages },
-  { id: "look", icon: Palette },
-  { id: "branches", icon: MapPin },
-  { id: "team", icon: Users },
-  { id: "google", icon: Search },
-  { id: "stats", icon: BarChart3 },
-];
-
 const TRIAL_STEPS = ["s1", "s2", "s3"] as const;
 
 const QUESTIONS = ["free", "after", "pay", "yearly", "extras", "guests", "chains"] as const;
 
 /**
  * The plans and what they cost, for restaurant owners comparing digital
- * menus ("QR menü fiyatları"): the plan cards, what's included, how the
- * free trial works and the questions people ask about paying. Prices and
- * the trial length come from lib/plans (server/plan-facts).
+ * menus ("QR menü fiyatları"): the plan card (with what it includes), how
+ * the free trial works and the questions people ask about paying. Every
+ * feature in detail is on /features, linked from here. Prices and the
+ * trial length come from lib/plans (server/plan-facts).
  */
 export default async function PricingPage({ params }: Props) {
   const { locale } = await params;
@@ -75,20 +53,13 @@ export default async function PricingPage({ params }: Props) {
 
       <PricingSection className="container mx-auto px-4 py-12" />
 
+      {/* The plan card lists what's included; every feature is on /features. */}
       <PageSection id="included" title={t("included.title")} intro={t("included.intro")}>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {INCLUDED.map(({ id, icon: Icon }) => (
-            <li key={id} className="bg-card border-border rounded-xl border p-5 shadow-sm">
-              <span className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-lg">
-                <Icon className="h-5 w-5" aria-hidden />
-              </span>
-              <h3 className="mt-4 font-semibold">{t(`included.items.${id}.title`)}</h3>
-              <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-                {t(`included.items.${id}.text`)}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <div className="flex justify-center">
+          <Button variant="outline" asChild>
+            <Link href="/features">{t("included.link")}</Link>
+          </Button>
+        </div>
       </PageSection>
 
       <PageSection id="trial" title={t("trial.title")}>

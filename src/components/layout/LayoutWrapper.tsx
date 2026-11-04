@@ -21,6 +21,9 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
     "", // For the root path when locale prefix is removed (e.g., example.com/en -> "")
     "/menus",
     "/features",
+    "/pricing",
+    "/multilingual-menu",
+    "/faq",
     "/about",
     // Signing up and creating a restaurant.
     "/start",

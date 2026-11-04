@@ -615,6 +615,15 @@ Business are offered again. The navbar's "Pricing" opens `/pricing`; the
 footer links all three. Runtime-built keys (`faq.items.${id}.q` …) aren't
 covered by `i18n:check`.
 
+Each page has one job, and links to the others rather than repeating them:
+Features shows what a menu can do (the demo and the feature cards) and only
+a one-line pricing band to `/pricing`; Pricing has the plan card (its
+checklist is what's included), the trial and payment questions, and links
+to Features for the details; Multilingual menu covers languages, linked
+from the Features page's languages card (`FEATURE_PAGES`). A new marketing
+page also needs its path in `LayoutWrapper`'s `basePublicPaths`, or it
+shows without the navbar, footer and background glow.
+
 **About page** (`/about`, server component, no animation library): the
 story, "How it works" in four steps (account and team invites, building
 the menu with the checklist and preview, design/colours/hours/languages,
