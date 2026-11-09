@@ -46,8 +46,9 @@ cannot restyle the dashboard by accident.
 | `sold-out` | `#c42318` | `#ff7a6e` | the SOLD OUT stamp (5.8 / 6.1:1) |
 
 Contrast ratios are WCAG 2 against the surface named. Focus rings are drawn
-outside the element, so `--table-focus` follows the surface around it: brass
-on the cloth, brass-ink inside a `.table-plate`.
+outside the element, so `--table-focus` follows the surface around it:
+brass-ink by default (porcelain, paper, off-white), brass on the cloth
+(`.table-cloth` switches it).
 
 ## Material
 
@@ -63,7 +64,10 @@ on the cloth, brass-ink inside a `.table-plate`.
   photo's edge. No photo: an empty plate (no icon, no broken image).
 - **Place cards** (`<PlaceCard>`): white paper, small uppercase seat label,
   the name below, a slight tilt (mirrored on RTL pages), the current one
-  ringed in brass. Always a real button or link, at least 44 px.
+  ringed in brass (a ring, so keyboard focus keeps its own outline). The
+  words take their direction from their script (`dir="auto"`). Always a real
+  button (`aria-pressed`) or, with `asChild`, a link (set `aria-current`),
+  at least 44 px.
 - **Leaders** (`<LeaderRow>`): name, dotted leader, price; prices in tabular
   figures; long names wrap and the leader follows the last line
   (`align-items: last baseline`); RTL flips it with no extra code.
@@ -86,8 +90,11 @@ One stack (`--table-font`) for every locale: the browser picks the face per
 script by unicode-range, so an Arabic place card on an English page is set in
 Noto Sans Arabic, and a page only downloads the scripts it shows. Fonts are
 declared in `src/components/table/fonts.ts`, not the root layout, so only
-routes that render `<TableWorld>` preload Bricolage (latin + latin-ext);
-Onest and Noto Sans Arabic are never preloaded (`display: swap`). The
+routes that render `<TableWorld>` preload Bricolage latin only (latin-ext loads
+on demand for Turkish); Onest and Noto Sans Arabic are never preloaded
+(`display: swap`). Bricolage and Onest use `adjustFontFallback: false`:
+next/font's Arial stand-in has Cyrillic and Arabic glyphs and, placed
+mid-stack, would set Russian and Arabic in Arial on Mac, Windows and iOS. The
 dashboard and admin keep Geist.
 
 ## Motion
@@ -108,9 +115,9 @@ renders without the font. viewBox 469 x 100, the same proportions as the old
 logo, so the navbar and footer only changed their `src`. **Pending the
 owner's approval.**
 
-The old `public/menupedia-logo.svg`, `-dark.svg` and `.png` are kept (the PNG
-is the logo in the site's structured data until the owner approves the new
-one).
+The old `public/menupedia-logo.svg`, `-dark.svg` and `.png` are kept
+(unreferenced now; delete once the owner approves). The site's structured
+data uses the new square mark, `public/icon-512.png`.
 
 ## Raster provenance
 
@@ -128,9 +135,11 @@ All made once on 2026-11-09 by Chrollo; no image generation, no stock.
 ## Open
 
 - Wordmark and colours need the owner's approval.
-- `public/menupedia-logo.png` (structured data) still shows the old logo.
+- Radix portals (dropdowns, dialogs) render into `<body>`, outside
+  `<TableWorld>`: give portal content its own `table-world` class, or put
+  the class on a public-only layout that hosts them.
 - Clerk's sign-in `appearance` still uses the old orange and Geist (ticket 2).
 - Geist is still declared (and preloaded) in the root layout for every page.
   Once all public pages are inside `<TableWorld>`, move it to the dashboard
-  and admin layouts so public pages preload only Bricolage (latin ~77 KB,
-  latin-ext ~31 KB, woff2).
+  and admin layouts so public pages preload only Bricolage (latin ~77 KB
+  woff2).

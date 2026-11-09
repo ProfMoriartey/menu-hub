@@ -12,10 +12,14 @@ import { Bricolage_Grotesque, Noto_Sans_Arabic, Onest } from "next/font/google";
  */
 
 export const bricolage = Bricolage_Grotesque({
-  subsets: ["latin", "latin-ext"],
+  // Preloads latin only; latin-ext (Turkish ğ ş ı İ) still loads on demand.
+  subsets: ["latin"],
   // Optical size: tighter, more characterful letters at headline sizes.
   axes: ["opsz"],
   display: "swap",
+  // No Arial stand-in mid-stack: it has Cyrillic and Arabic and would win
+  // over Onest and Noto Sans Arabic on Mac, Windows and iOS.
+  adjustFontFallback: false,
   variable: "--font-bricolage",
 });
 
@@ -24,6 +28,7 @@ export const onest = Onest({
   subsets: ["cyrillic"],
   display: "swap",
   preload: false,
+  adjustFontFallback: false,
   variable: "--font-onest",
 });
 

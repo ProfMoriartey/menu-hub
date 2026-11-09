@@ -2,7 +2,7 @@ import { cn } from "~/lib/utils";
 
 type LeaderRowProps = Omit<React.HTMLAttributes<HTMLElement>, "children"> & {
   as?: "div" | "li";
-  /** The dish name. Long names wrap; the dots follow the last line. */
+  /** The dish name. Long names wrap; the price stays on the last line. */
   name: React.ReactNode;
   /** The element for the name, e.g. "h3" in a menu section. */
   nameAs?: "span" | "h3" | "h4" | "p";
@@ -19,7 +19,8 @@ type LeaderRowProps = Omit<React.HTMLAttributes<HTMLElement>, "children"> & {
 
 /**
  * name ··········· price. The leader fills the space between, prices line
- * up on the end edge, and right-to-left flips it with no extra code.
+ * up on the end edge and sit on the name's last line, and right-to-left
+ * flips it with no extra code.
  */
 export function LeaderRow({
   as: Tag = "div",
@@ -35,7 +36,7 @@ export function LeaderRow({
 }: LeaderRowProps) {
   return (
     <Tag className={cn(muted && "text-ink-muted", className)} {...props}>
-      <div className="flex gap-1.5 [align-items:last_baseline]">
+      <div className="table-leader-row">
         <Name
           className={cn(
             "min-w-0 text-base leading-snug font-bold [overflow-wrap:anywhere]",

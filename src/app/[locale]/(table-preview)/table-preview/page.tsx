@@ -133,7 +133,6 @@ export default async function TablePreview({
                 label={s.label}
                 name={s.name}
                 lang={s.lang}
-                dir={s.lang === "ar" ? "rtl" : undefined}
                 tilt={s.tilt}
                 active={s.lang === active}
                 className={`lg:absolute ${seatPos[i]}`}

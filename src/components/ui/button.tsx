@@ -23,17 +23,17 @@ const buttonVariants = cva(
         // The Table (public site; inside <TableWorld> only): a cloth-red
         // pill on porcelain, and a white one on the cloth.
         table:
-          "bg-cloth-action text-on-cloth shadow-[0_2px_6px_rgb(20_4_8/0.2)] hover:brightness-110 active:translate-y-px",
+          "bg-cloth-action text-on-cloth shadow-[0_2px_6px_rgb(20_4_8/0.2)] hover:brightness-110 active:translate-y-px focus-visible:ring-0 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]",
         tableOnCloth:
-          "bg-place-card text-cloth shadow-[0_2px_6px_rgb(20_4_8/0.25)] hover:bg-plate active:translate-y-px",
+          "bg-place-card text-cloth shadow-[0_2px_6px_rgb(20_4_8/0.25)] hover:bg-plate-rim active:translate-y-px focus-visible:ring-0 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-9",
-        // Pill for The Table's buttons: 44 px tall at least, brass focus.
-        pill: "min-h-11 rounded-full px-6 py-2.5 text-base font-bold focus-visible:ring-0 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]",
+        // Pill for The Table's buttons: 44 px tall at least.
+        pill: "min-h-11 rounded-full px-6 py-2.5 text-base font-bold",
       },
     },
     defaultVariants: {

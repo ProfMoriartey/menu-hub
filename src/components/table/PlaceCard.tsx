@@ -10,8 +10,6 @@ type PlaceCardProps = Omit<React.ComponentProps<"button">, "children"> & {
   tilt?: number;
   /** The current seat: ringed in brass. */
   active?: boolean;
-  /** The words' direction, e.g. "rtl" for an Arabic card on any page. */
-  dir?: "ltr" | "rtl";
   /** "sm" for crowded tables (phones). */
   size?: "md" | "sm";
   /**
@@ -34,17 +32,17 @@ export function PlaceCard({
   tilt = 0,
   active = false,
   size = "md",
-  dir,
   asChild = false,
   className,
   style,
   children,
   ...props
 }: PlaceCardProps) {
-  // The card's own language direction applies to its words only, so the
-  // card itself still lays out (and is positioned) in the page's direction.
+  // The words take their direction from their own script (an Arabic card
+  // reads right to left on any page, a Latin one left to right on an Arabic
+  // page); the card itself lays out and is positioned in the page's.
   const body = (
-    <span dir={dir} className="flex flex-col items-start gap-1">
+    <span dir="auto" className="flex flex-col items-start gap-1">
       <small className="text-place-card-muted text-[0.6875rem] leading-none font-bold tracking-[0.12em] uppercase">
         {label}
       </small>
@@ -61,15 +59,22 @@ export function PlaceCard({
     // dir, so an Arabic card on an English page keeps its tilt).
     "rotate-[var(--tilt)] [[dir=rtl]_&]:rotate-[calc(var(--tilt)*-1)]",
     "motion-safe:transition-[translate,box-shadow] motion-safe:duration-200 motion-safe:ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_24px_rgb(20_4_8/0.34)]",
-    // Brass ring for the current seat (keyboard focus adds its own ring).
-    active && "outline-brass outline-3 outline-offset-3 outline-solid",
+    // Brass ring for the current seat, drawn as a ring so the outline stays
+    // free for keyboard focus (pushed further out when both show).
+    active &&
+      "ring-brass ring-offset-cloth ring-3 ring-offset-3 focus-visible:outline-offset-8",
     className,
   );
   const tiltStyle = { "--tilt": `${tilt}deg`, ...style } as React.CSSProperties;
 
   if (asChild && children) {
     return (
-      <Slot data-active={active || undefined} className={classes} style={tiltStyle}>
+      <Slot
+        {...props}
+        data-active={active || undefined}
+        className={classes}
+        style={tiltStyle}
+      >
         <Slottable>{children}</Slottable>
         {body}
       </Slot>
