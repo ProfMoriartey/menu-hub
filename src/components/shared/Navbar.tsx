@@ -53,7 +53,7 @@ export function Navbar() {
       <div className="container mx-auto flex h-16 items-center gap-2 px-4">
         <Link href="/" className="me-4 flex shrink-0 items-center" aria-label={t("home")}>
           <Image
-            src="/menupedia-logo.svg"
+            src="/brand/menupedia-wordmark.svg"
             alt="Menupedia"
             width={469}
             height={100}
@@ -62,7 +62,7 @@ export function Navbar() {
             className="h-8 w-auto dark:hidden"
           />
           <Image
-            src="/menupedia-logo-dark.svg"
+            src="/brand/menupedia-wordmark-dark.svg"
             alt="Menupedia"
             width={469}
             height={100}
