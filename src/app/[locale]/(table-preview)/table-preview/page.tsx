@@ -108,7 +108,7 @@ export default async function TablePreview({
           <div className="relative mx-auto -mt-10 h-[470px] w-[250px] rotate-4 rounded-[38px] bg-[#141112] p-3 shadow-[-18px_30px_50px_rgb(0_0_0/0.4)] lg:absolute lg:start-[820px] lg:top-[70px] lg:mt-0 lg:h-[590px] lg:w-[290px] lg:rotate-8 [[dir=rtl]_&]:-rotate-4 lg:[[dir=rtl]_&]:-rotate-8">
             <div className="bg-plate text-ink h-full overflow-hidden rounded-[28px] px-3.5 py-4">
               <p className="text-lg font-bold">Lokanta Demo</p>
-              <p className="mt-0.5 mb-3 text-[0.6875rem] font-bold text-[#2f7d32] dark:text-[#7fcf83]">● {t.open}</p>
+              <p className="mt-0.5 mb-3 text-[0.6875rem] font-bold text-[#2f7d32]">● {t.open}</p>
               <div className="flex gap-1">
                 {t.chips.map((c, i) => (
                   <span key={c} className={`rounded-full px-2.5 py-1.5 text-[0.6875rem] font-bold ${i === 0 ? "bg-[#2f7d32] text-white" : "bg-plate-rim"}`}>{c}</span>
@@ -118,7 +118,7 @@ export default async function TablePreview({
                 {t.dishes.map(([name, price, src], i) => (
                   <li key={name} className="relative grid grid-cols-[56px_1fr] items-center gap-2.5 border-b border-dashed border-[#ddd] py-2.5">
                     <PlatePhoto src={src} alt="" size={56} />
-                    <LeaderRow name={name} price={price} muted={i === 3} nameClassName="text-[0.84rem]" priceClassName={i === 3 ? "" : "text-[#2f7d32] dark:text-[#7fcf83]"} />
+                    <LeaderRow name={name} price={price} muted={i === 3} nameClassName="text-[0.84rem]" priceClassName={i === 3 ? "" : "text-[#2f7d32]"} />
                     {i === 3 ? <Stamp className="absolute start-0 top-8 px-1 text-[0.6875rem] tracking-normal">{t.soldOut}</Stamp> : null}
                   </li>
                 ))}

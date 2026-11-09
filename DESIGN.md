@@ -29,21 +29,26 @@ cannot restyle the dashboard by accident.
 |---|---|---|---|
 | `cloth` | `#7a1f2b` | `#6a1a25` | the linen ground |
 | `cloth-deep` | `#5e1520` | `#4c1019` | darker cloth band |
-| `cloth-action` | `#7a1f2b` | `#a3303f` | primary pill on porcelain (white text 10.2 / 6.9:1) |
-| `cloth-ink` | `#7a1f2b` | `#f0a3ad` | cloth-red text on porcelain (9.8 / 7.8:1) |
+| `cloth-action` | `#7a1f2b` | same | primary pill on porcelain (white text 10.2:1) |
+| `cloth-ink` | `#7a1f2b` | same | cloth-red text on porcelain (9.8 / 7.9:1) |
 | `on-cloth` | `#ffffff` | `#fff8f5` | text on the cloth (10.2 / 11.2:1) |
 | `on-cloth-muted` | `#f1dcdf` | `#ecd3d6` | quieter text on the cloth (7.8 / 8.3:1) |
-| `plate` | `#fbfaf7` | `#2a2321` | porcelain well |
-| `plate-rim` | `#ebe6de` | `#352c29` | the rim |
-| `plate-rim-shadow` | `#d8d1c6` | `#1b1514` | line where the rim rises |
-| `ink` | `#221a17` | `#f3ece6` | text on plates (16.4 / 13.2:1) |
-| `ink-muted` | `#5a4f4a` | `#c7bab1` | secondary text on plates (7.6 / 8.2:1) |
+| `plate` | `#fbfaf7` | `#e9e2d7` | porcelain well (dimmed at night) |
+| `plate-rim` | `#ebe6de` | `#d9cfc1` | the rim |
+| `plate-rim-shadow` | `#d8d1c6` | `#c4b9a9` | line where the rim rises |
+| `ink` | `#221a17` | same | text on plates (16.4 / 13.3:1) |
+| `ink-muted` | `#5a4f4a` | same | secondary text on plates (7.6 / 6.2:1; 5.2:1 on the night rim) |
 | `brass` | `#c9a24a` | `#d8b45e` | active seat ring, focus on the cloth (4.3 / 5.9:1) |
-| `brass-ink` | `#7d5f17` | `#d8b45e` | focus on porcelain (5.7 / 7.8:1) |
+| `brass-ink` | `#7d5f17` | same | focus on porcelain (5.7 / 4.6:1) |
 | `place-card` | `#ffffff` | `#ece5db` | place cards (dimmed paper at night) |
-| `place-card-ink` | `#221a17` | `#221a17` | place card text |
+| `place-card-ink` | `#221a17` | same | place card text |
 | `place-card-muted` | `#6f6460` | `#625853` | "Seat 1" label (5.7 / 5.5:1) |
-| `sold-out` | `#c42318` | `#ff7a6e` | the SOLD OUT stamp (5.8 / 6.1:1) |
+| `sold-out` | `#c42318` | same | the SOLD OUT stamp (5.8 / 4.5:1) |
+
+Dark mode keeps the material: the cloth deepens, plates and place cards stay
+porcelain and paper, dimmed so they don't glare, and ink stays dark (lead's
+ruling, 2026-11-09: the contract's porcelain-white plates win over the
+ticket's "warm dark porcelain").
 
 Contrast ratios are WCAG 2 against the surface named. Focus rings are drawn
 outside the element, so `--table-focus` follows the surface around it:
@@ -99,6 +104,15 @@ next/font's Arial stand-in has Cyrillic and Arabic glyphs and, placed
 mid-stack, would set Russian and Arabic in Arial on Mac, Windows and iOS. The
 dashboard and admin keep Geist.
 
+## Eyebrow
+
+The home plate carries a small eyebrow above the headline ("Digital menus
+for restaurants and cafés"): plain letter-spaced caps in cloth red on the
+plate, never a pill, chip or badge, no icon. The detector's
+`hero-eyebrow-chip` finding is justified: required by the direction
+contract's FIRST VIEWPORT and the approved sketch (lead's ruling,
+2026-11-09). Arabic eyebrows are never letter-spaced.
+
 ## Motion
 
 Place cards lift on hover (200 ms ease-out, `motion-safe` only). The
@@ -139,10 +153,6 @@ All made once on 2026-11-09 by Chrollo; no image generation, no stock.
 ## Open
 
 - Wordmark and colours need the owner's approval.
-- Decisions raised to the lead: the eyebrow above the headline (the contract
-  asks for it; the design skill bans it) and the dark-mode plate (built as
-  the ticket asked, warm dark porcelain; the design review prefers dimmed
-  porcelain).
 - Ticket 2 (from the reviews of the preview): lay the first viewport out
   relative to its container (fixed px clip cards and phone from 1024 to
   ~1310 px); keep hero copy inside the plate at 320 px; a looser line height

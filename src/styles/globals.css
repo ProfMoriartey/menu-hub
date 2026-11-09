@@ -352,26 +352,25 @@
     -moz-osx-font-smoothing: grayscale;
   }
   .dark .table-world {
-    /* The cloth stays wine red at night; plates turn warm dark porcelain. */
+    /* The cloth stays wine red at night and goes a little deeper. Plates
+       and place cards stay porcelain and paper (the contract's main
+       material), dimmed so they don't glare in a dark room; ink stays dark. */
     --table-cloth: #6a1a25;
     --table-cloth-deep: #4c1019;
-    --table-cloth-action: #a3303f; /* white text 6.9:1 */
-    --table-cloth-ink: #f0a3ad; /* 7.8:1 on the dark plate */
-    --table-on-cloth: #fff8f5;
-    --table-on-cloth-muted: #ecd3d6;
-    --table-plate: #2a2321;
-    --table-plate-rim: #352c29;
-    --table-plate-rim-shadow: #1b1514;
-    --table-ink: #f3ece6; /* 13.2:1 on the dark plate */
-    --table-ink-muted: #c7bab1; /* 8.2:1 */
+    --table-on-cloth: #fff8f5; /* 11.2:1 on the cloth */
+    --table-on-cloth-muted: #ecd3d6; /* 8.3:1 */
+    --table-plate: #e9e2d7;
+    --table-plate-rim: #d9cfc1;
+    --table-plate-rim-shadow: #c4b9a9;
+    --table-ink-muted: #5a4f4a; /* 6.2:1 on the dimmed plate, 5.2:1 on the rim */
     --table-brass: #d8b45e; /* 5.9:1 on the cloth */
-    --table-brass-ink: #d8b45e; /* 7.8:1 on the dark plate */
-    /* Place cards stay paper, dimmed so they don't glare. */
+    --table-brass-ink: #7d5f17; /* 4.6:1 on the dimmed plate */
     --table-place-card: #ece5db;
-    --table-place-card-ink: #221a17;
     --table-place-card-muted: #625853; /* 5.5:1 on the dimmed card */
-    --table-sold-out: #ff7a6e; /* 6.1:1 on the dark plate */
+    /* Unchanged from light: ink (13.3:1 on the dimmed plate), cloth-action
+       and cloth-ink (7.9:1), sold-out (4.5:1), place-card-ink. */
   }
+
 
   /* Browser surfaces in the world's colours. */
   .table-world ::selection {
