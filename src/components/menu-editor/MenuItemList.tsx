@@ -155,7 +155,9 @@ function ItemRow({
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       className={cn(
-        "bg-card border-border relative flex items-center gap-3 border-b px-3 py-3 last:border-b-0 sm:gap-4 sm:px-4",
+        // Phones: the actions get their own line under the dish, so its
+        // name and price keep the full width.
+        "bg-card border-border relative flex flex-wrap items-center gap-x-3 gap-y-2 border-b px-3 py-3 last:border-b-0 sm:flex-nowrap sm:gap-4 sm:px-4",
         isDragging && "ring-primary/40 z-10 rounded-lg shadow-lg ring-2",
       )}
     >
@@ -192,10 +194,10 @@ function ItemRow({
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex min-w-0 items-center gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 sm:flex-nowrap">
             <p
               className={cn(
-                "truncate font-medium group-hover:underline group-focus-visible:underline",
+                "line-clamp-2 font-medium break-words group-hover:underline group-focus-visible:underline sm:line-clamp-1",
                 availability === "hidden" && "text-muted-foreground",
               )}
             >
@@ -232,14 +234,14 @@ function ItemRow({
         </p>
       </button>
 
-      <div className="flex shrink-0 flex-col items-end gap-1">
+      <div className="flex w-full shrink-0 flex-col items-start gap-1 ps-9 sm:w-auto sm:items-end sm:ps-0">
         <div className="flex items-center">
           <AvailabilitySelect
             value={availability}
             onChange={changeAvailability}
             disabled={isSavingAvailability}
             label={tAvailability("changeLabel", { name: item.name })}
-            className="h-8 w-auto gap-1.5 px-2 text-xs"
+            className="h-10 w-auto gap-1.5 px-2 text-xs sm:h-8"
           />
           <Button
             type="button"
@@ -248,7 +250,6 @@ function ItemRow({
             onClick={onEdit}
             aria-label={t("items.editLabel", { name: item.name })}
             title={t("items.edit")}
-            className="hidden sm:inline-flex"
           >
             <Pencil className="h-4 w-4" />
           </Button>
@@ -271,7 +272,7 @@ function ItemRow({
         </div>
         {rowError && (
           <p
-            className="text-destructive max-w-56 text-end text-xs"
+            className="text-destructive max-w-56 text-start text-xs sm:text-end"
             role="alert"
           >
             {rowError}
