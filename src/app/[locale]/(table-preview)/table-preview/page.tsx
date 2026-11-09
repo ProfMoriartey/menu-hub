@@ -119,7 +119,7 @@ export default async function TablePreview({
                   <li key={name} className="relative grid grid-cols-[56px_1fr] items-center gap-2.5 border-b border-dashed border-[#ddd] py-2.5">
                     <PlatePhoto src={src} alt="" size={56} />
                     <LeaderRow name={name} price={price} muted={i === 3} nameClassName="text-[0.84rem]" priceClassName={i === 3 ? "" : "text-[#2f7d32]"} />
-                    {i === 3 ? <Stamp className="absolute start-0 top-8 text-[0.625rem]">{t.soldOut}</Stamp> : null}
+                    {i === 3 ? <Stamp className="absolute start-0 top-8 text-[0.6875rem]">{t.soldOut}</Stamp> : null}
                   </li>
                 ))}
               </ul>

@@ -45,7 +45,7 @@ export function PlaceCard({
   // card itself still lays out (and is positioned) in the page's direction.
   const body = (
     <span dir={dir} className="flex flex-col items-start gap-1">
-      <small className="text-place-card-muted text-[0.625rem] leading-none font-bold tracking-[0.12em] uppercase">
+      <small className="text-place-card-muted text-[0.6875rem] leading-none font-bold tracking-[0.12em] uppercase">
         {label}
       </small>
       <span className={cn("leading-tight font-bold", size === "sm" ? "text-[0.9375rem]" : "text-[1.25rem]")}>
