@@ -127,7 +127,7 @@ instantly.
 `menupedia-wordmark-dark.svg` (porcelain, for the cloth and dark mode). The
 mark is a plate seen from above: a disc with the well's edge cut out as a
 thin ring (even-odd, transparent, so it sits on any ground). The well sits
-slightly up and to the start, so the rim reads as a lit crescent rather than
+up and to the start (a sixth of the radius), so the rim reads as a lit crescent rather than
 a centred dot. "Menupedia" is Bricolage Grotesque 700 at optical size 96,
 converted to outlines, so it
 renders without the font. viewBox 469 x 100, the same proportions as the old
@@ -163,6 +163,8 @@ All made once on 2026-11-09 by Chrollo; no image generation, no stock.
   instance serves all locales); the Arabic headline swaps in after load.
   /ru still preloads Bricolage latin (~77 KB) though Russian pages set Onest
   first.
+- Ticket 2: the "●" in "Open now" is the only glyph Bricolage lacks and pulls
+  in Onest and Noto symbol subsets (~34 KB): draw the dot in CSS.
 - Radix portals (dropdowns, dialogs) render into `<body>`, outside
   `<TableWorld>`: give portal content its own `table-world` class, or put
   the class on a public-only layout that hosts them.
