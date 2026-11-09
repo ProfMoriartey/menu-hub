@@ -2,25 +2,22 @@
 
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import createMiddleware from "next-intl/middleware";
-import { NextResponse } from "next/server"; // Import NextResponse for skipping middleware
-import { routing } from "./i18n/routing"; // Assuming this defines your locales
+import {
+  NextResponse,
+  type NextFetchEvent,
+  type NextRequest,
+} from "next/server";
+import { routing } from "./i18n/routing";
 
-// Initialize next-intl middleware with your routing configuration
 const nextIntlMiddleware = createMiddleware(routing);
 
 /**
- * Function to check if a pathname should be excluded from localization.
- * We need to exclude API routes, webhooks, and tRPC endpoints.
+ * Paths with no language prefix and no sign-in: /r/ is the permanent menu
+ * link in QR codes (app/r); sitemap.xml, robots.txt and llms.txt live at the
+ * root, where crawlers look.
  */
-function isApiRoute(pathname: string): boolean {
-  // Use .startsWith to check for /api/ and /trpc/ routes. /r/ is the
-  // permanent menu link route (app/r), which has no language prefix.
-  // sitemap.xml, robots.txt and llms.txt (app/sitemap.ts, app/robots.ts,
-  // app/llms.txt) live at the root too: a language prefix would move them
-  // where crawlers don't look.
+function isRootPublicRoute(pathname: string): boolean {
   return (
-    pathname.startsWith("/api") ||
-    pathname.startsWith("/trpc") ||
     pathname.startsWith("/r/") ||
     pathname === "/sitemap.xml" ||
     pathname === "/robots.txt" ||
@@ -28,71 +25,60 @@ function isApiRoute(pathname: string): boolean {
   );
 }
 
-export default clerkMiddleware((auth, req) => {
-  const pathname = req.nextUrl.pathname;
+/** API routes skip localization but keep Clerk (uploads check who is asking). */
+function isApiRoute(pathname: string): boolean {
+  return pathname.startsWith("/api") || pathname.startsWith("/trpc");
+}
 
-  // 1. Check if the path is an API/Webhook route
-  if (isApiRoute(pathname)) {
-    // If it's an API route, skip next-intl and just proceed.
-    // We explicitly return NextResponse.next() to prevent localization.
-    return NextResponse.next();
-  }
+// First segments after the locale that belong to the site, not to a restaurant.
+const SITE_SEGMENTS = new Set([
+  "about",
+  "admin",
+  "dashboard",
+  "faq",
+  "features",
+  "invite",
+  "kvkk",
+  "menus",
+  "multilingual-menu",
+  "pricing",
+  "sign-in",
+  "start",
+]);
 
-  // 2. For all other routes, apply Clerk authentication and then next-intl localization
+/**
+ * A guest's menu page: /{locale}/{restaurant}/... These never ask who the
+ * visitor is, so they skip Clerk: without this, a guest's first visit is sent
+ * through Clerk's handshake redirects before the menu shows. Two exceptions
+ * need Clerk: the dashboard's preview link (/preview) and a preview in draft
+ * mode (it checks the visitor can manage the menu).
+ */
+function isGuestMenuRoute(req: NextRequest): boolean {
+  const [locale, first, ...rest] = req.nextUrl.pathname
+    .split("/")
+    .filter(Boolean);
+  if (!locale || !first) return false;
+  if (!(routing.locales as readonly string[]).includes(locale)) return false;
+  if (SITE_SEGMENTS.has(first)) return false;
+  if (rest.at(-1) === "preview") return false;
+  return !req.cookies.has("__prerender_bypass");
+}
+
+const withClerk = clerkMiddleware((_auth, req) => {
+  if (isApiRoute(req.nextUrl.pathname)) return NextResponse.next();
   return nextIntlMiddleware(req);
 });
 
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  const { pathname } = req.nextUrl;
+  if (isRootPublicRoute(pathname)) return NextResponse.next();
+  if (isGuestMenuRoute(req)) return nextIntlMiddleware(req);
+  return withClerk(req, event);
+}
+
 export const config = {
   matcher: [
-    // This matcher is still useful but its job is now streamlined by the logic above.
-    // It should include all paths you want Clerk and next-intl to process (including /api and /trpc).
-    // The conditional logic in the default export handles the exclusion.
+    // Everything except Next.js internals and static files.
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
   ],
 };
-
-// import { clerkMiddleware } from "@clerk/nextjs/server";
-// import createMiddleware from "next-intl/middleware";
-// import { routing } from "./i18n/routing";
-
-// const nextIntlMiddleware = createMiddleware(routing);
-
-// export default clerkMiddleware((auth, req) => {
-//   return nextIntlMiddleware(req);
-// });
-
-// export const config = {
-//   matcher: [
-//     // Match all pathnames except for Next.js internals and static files
-//     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-//     // Always run for API and tRPC routes
-//     "/(api|trpc)(.*)",
-//   ],
-// };
-
-// Middleware for clerk
-// import { clerkMiddleware } from "@clerk/nextjs/server";
-
-// export default clerkMiddleware();
-
-// export const config = {
-//   matcher: [
-//     // Skip Next.js internals and all static files, unless found in search params
-//     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-//     // Always run for API routes
-//     "/(api|trpc)(.*)",
-//   ],
-// };
-
-// Middleware for next-intl
-// import createMiddleware from "next-intl/middleware";
-// import { routing } from "./i18n/routing";
-
-// export default createMiddleware(routing);
-
-// export const config = {
-//   // Match all pathnames except for
-//   // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
-//   // - … the ones containing a dot (e.g. `favicon.ico`)
-//   matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
-// };
