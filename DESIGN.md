@@ -52,8 +52,9 @@ brass-ink by default (porcelain, paper, off-white), brass on the cloth
 
 ## Material
 
-- **Cloth** (`.table-cloth`, `<Cloth>`): two hairline repeating gradients,
-  warp and weft, over the cloth colour. No images, no SVG noise; painted once
+- **Cloth** (`.table-cloth`, `<Cloth>`): hairline repeating gradients, warp
+  and weft, plus a coarser thread at prime periods (13, 17 px) so the weave
+  reads as linen, not graph paper. No images, no SVG noise; painted once
   per layer, so scrolling is unaffected. `tone="deep"` for the darker cloth.
 - **Plate** (`.table-plate`, `<Plate>`): a radial gradient draws the well,
   the rim (9% of the radius) and the thin shadow line where the rim rises;
@@ -86,7 +87,8 @@ brass-ink by default (porcelain, paper, off-white), brass on the cloth
   so Russian falls through to Onest, a friendly grotesk of similar build.
 - **Noto Sans Arabic** (variable): Arabic.
 
-One stack (`--table-font`) for every locale: the browser picks the face per
+One stack (`--table-font`) for every locale (Russian pages put Onest first,
+so Latin words in Russian text share its face): the browser picks the face per
 script by unicode-range, so an Arabic place card on an English page is set in
 Noto Sans Arabic, and a page only downloads the scripts it shows. Fonts are
 declared in `src/components/table/fonts.ts`, not the root layout, so only
@@ -109,8 +111,10 @@ instantly.
 `public/brand/menupedia-wordmark.svg` (cloth red, for light grounds) and
 `menupedia-wordmark-dark.svg` (porcelain, for the cloth and dark mode). The
 mark is a plate seen from above: a disc with the well's edge cut out as a
-thin ring (even-odd, transparent, so it sits on any ground). "Menupedia" is
-Bricolage Grotesque 700 at optical size 48, converted to outlines, so it
+thin ring (even-odd, transparent, so it sits on any ground). The well sits
+slightly up and to the start, so the rim reads as a lit crescent rather than
+a centred dot. "Menupedia" is Bricolage Grotesque 700 at optical size 96,
+converted to outlines, so it
 renders without the font. viewBox 469 x 100, the same proportions as the old
 logo, so the navbar and footer only changed their `src`. **Pending the
 owner's approval.**
@@ -125,16 +129,27 @@ All made once on 2026-11-09 by Chrollo; no image generation, no stock.
 
 | File | Size | How |
 |---|---|---|
-| `public/brand/menupedia-wordmark*.svg` | 469 x 100 | Node script with opentype.js: the static instance of Bricolage Grotesque (opsz 48, wght 700) from Google Fonts (SIL Open Font License), text to SVG paths; the mark drawn as SVG circles. |
+| `public/brand/menupedia-wordmark*.svg` | 469 x 100 | Node script with opentype.js: the static instance of Bricolage Grotesque (opsz 96, wght 700) from Google Fonts (SIL Open Font License), text to SVG paths; the mark drawn as SVG circles. |
 | `public/icon.svg` | 64 x 64 | the mark in porcelain on a cloth-red rounded square |
 | `public/favicon.ico` | 32 x 32 | Playwright screenshot of the square mark (no rounded corners), wrapped as a PNG-in-ICO |
 | `public/apple-icon.png` | 180 x 180 | Playwright screenshot of the square mark |
 | `public/icon-192.png`, `icon-512.png` | 192, 512 | same; the plate stays inside the maskable safe zone |
-| `public/og-image.png` | 1200 x 630 | Playwright screenshot of an HTML template: the cloth texture, a plate with the wordmark, the headline "Every seat reads your menu in their language." and four place cards (English, Türkçe, العربية, Русский), set in Bricolage Grotesque, Onest and Noto Sans Arabic |
+| `public/og-image.png` | 1200 x 630 | Playwright screenshot of an HTML template: the cloth texture, a plate with the wordmark, the headline "Every seat reads your menu in their language.", the Lokanta Demo phone (demo dishes, photos from `public/demo/`) and five place cards (English ringed, Türkçe, العربية, Español, Русский), set in Bricolage Grotesque, Onest and Noto Sans Arabic |
 
 ## Open
 
 - Wordmark and colours need the owner's approval.
+- Decisions raised to the lead: the eyebrow above the headline (the contract
+  asks for it; the design skill bans it) and the dark-mode plate (built as
+  the ticket asked, warm dark porcelain; the design review prefers dimmed
+  porcelain).
+- Ticket 2 (from the reviews of the preview): lay the first viewport out
+  relative to its container (fixed px clip cards and phone from 1024 to
+  ~1310 px); keep hero copy inside the plate at 320 px; a looser line height
+  for Arabic headlines; restaurant brand colours on the dark plate need a
+  contrast guard; set the public pages' html/body background to the cloth.
+- Arabic and Cyrillic faces are not preloaded on /ar and /ru (one font
+  instance serves all locales); the Arabic headline swaps in after load.
 - Radix portals (dropdowns, dialogs) render into `<body>`, outside
   `<TableWorld>`: give portal content its own `table-world` class, or put
   the class on a public-only layout that hosts them.

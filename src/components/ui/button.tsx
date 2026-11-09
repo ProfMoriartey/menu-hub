@@ -23,9 +23,9 @@ const buttonVariants = cva(
         // The Table (public site; inside <TableWorld> only): a cloth-red
         // pill on porcelain, and a white one on the cloth.
         table:
-          "bg-cloth-action text-on-cloth shadow-[0_2px_6px_rgb(20_4_8/0.2)] hover:brightness-110 active:translate-y-px focus-visible:ring-0 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]",
+          "bg-cloth-action text-on-cloth shadow-[0_2px_6px_rgb(20_4_8/0.2)] transition-[filter,translate,box-shadow] motion-reduce:transition-none hover:brightness-110 active:translate-y-px focus-visible:ring-0 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]",
         tableOnCloth:
-          "bg-place-card text-cloth shadow-[0_2px_6px_rgb(20_4_8/0.25)] hover:bg-plate-rim active:translate-y-px focus-visible:ring-0 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]",
+          "bg-place-card text-cloth shadow-[0_2px_6px_rgb(20_4_8/0.25)] transition-[background-color,translate,box-shadow] motion-reduce:transition-none hover:bg-plate-rim active:translate-y-px focus-visible:ring-0 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

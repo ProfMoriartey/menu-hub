@@ -383,6 +383,14 @@
     outline-offset: 3px;
   }
 
+  /* Russian pages set Latin words ("QR-код") in Onest too, so a line
+     never mixes two faces. */
+  .table-world:lang(ru) {
+    --table-font:
+      var(--font-onest), var(--font-noto-arabic), ui-sans-serif, system-ui,
+      sans-serif;
+  }
+
   /* Arabic letters join: never letter-space them (eyebrows, stamps). */
   .table-world :lang(ar) {
     letter-spacing: 0 !important;
@@ -396,9 +404,13 @@
   .table-cloth {
     --table-focus: var(--table-brass);
     background-color: var(--table-cloth);
+    /* A third, coarser thread at a prime period breaks the even check
+       into something closer to linen. */
     background-image:
       repeating-linear-gradient(0deg, rgb(0 0 0 / 0.055) 0 1px, transparent 1px 4px),
-      repeating-linear-gradient(90deg, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 5px);
+      repeating-linear-gradient(90deg, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 13px),
+      repeating-linear-gradient(90deg, rgb(0 0 0 / 0.035) 0 2px, transparent 2px 17px);
     color: var(--table-on-cloth);
   }
   .table-cloth[data-tone="deep"] {

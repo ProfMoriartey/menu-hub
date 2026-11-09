@@ -49,7 +49,6 @@ export function LeaderRow({
         <span
           className={cn(
             "shrink-0 text-[0.9375rem] font-bold whitespace-nowrap tabular-nums",
-            muted && "line-through decoration-1",
             priceClassName,
           )}
         >
