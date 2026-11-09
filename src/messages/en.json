@@ -1422,5 +1422,11 @@
       "pricing": "See pricing",
       "multilingual": "Multilingual menus"
     }
+  },
+  "NotFoundPage": {
+    "title": "We couldn't find this page",
+    "text": "The menu or page you're looking for may have moved or no longer exists.",
+    "browseMenus": "Browse menus",
+    "home": "Go to the home page"
   }
 }

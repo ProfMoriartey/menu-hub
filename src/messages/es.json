@@ -1422,5 +1422,11 @@
       "pricing": "Ver precios",
       "multilingual": "Menús multilingües"
     }
+  },
+  "NotFoundPage": {
+    "title": "No encontramos esta página",
+    "text": "Es posible que el menú o la página que buscas se haya movido o ya no exista.",
+    "browseMenus": "Ver menús",
+    "home": "Ir a la página de inicio"
   }
 }

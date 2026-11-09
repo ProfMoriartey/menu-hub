@@ -1422,5 +1422,11 @@
       "pricing": "Fiyatları görün",
       "multilingual": "Çok dilli menüler"
     }
+  },
+  "NotFoundPage": {
+    "title": "Bu sayfayı bulamadık",
+    "text": "Aradığınız menü veya sayfa taşınmış ya da artık mevcut olmayabilir.",
+    "browseMenus": "Menülere göz atın",
+    "home": "Ana sayfaya dönün"
   }
 }
