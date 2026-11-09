@@ -70,7 +70,8 @@ brass-ink by default (porcelain, paper, off-white), brass on the cloth
   photo's edge. No photo: an empty plate (no icon, no broken image).
 - **Place cards** (`<PlaceCard>`): white paper, small uppercase seat label,
   the name below, a slight tilt (mirrored on RTL pages), the current one
-  ringed in brass (a ring, so keyboard focus keeps its own outline; its
+  ringed in brass (a ring, so keyboard focus keeps its own outline, white
+  on the cloth just outside the ring; its
   offset gap is cloth red, so the active state is for cards on the cloth). Each
   line takes its direction from its own script (`dir="auto"`). Always a real
   button (`aria-pressed`) or, with `asChild`, a link (set `aria-current`),

@@ -63,10 +63,13 @@ export function PlaceCard({
     // dir, so an Arabic card on an English page keeps its tilt).
     "rotate-[var(--tilt)] [[dir=rtl]_&]:rotate-[calc(var(--tilt)*-1)]",
     "motion-safe:transition-[translate,box-shadow] motion-safe:duration-200 motion-safe:ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_24px_rgb(20_4_8/0.34)]",
+    // Keyboard focus: a white line on the cloth, just outside where the
+    // brass ring of the current seat sits, so focus and "current" never look
+    // alike and both show when they meet.
+    "focus-visible:outline-on-cloth focus-visible:outline-offset-6",
     // Brass ring for the current seat, drawn as a ring so the outline stays
-    // free for keyboard focus (pushed further out when both show).
-    active &&
-      "ring-brass ring-offset-cloth ring-3 ring-offset-3 focus-visible:outline-offset-8",
+    // free for keyboard focus.
+    active && "ring-brass ring-offset-cloth ring-3 ring-offset-3",
     className,
   );
   const tiltStyle = { "--tilt": `${tilt}deg`, ...style } as React.CSSProperties;
