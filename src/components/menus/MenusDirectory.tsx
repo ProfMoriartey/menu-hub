@@ -412,7 +412,9 @@ export function MenusDirectory({
         <>
           {!anyFilter && featured.length > 0 && featured.length < venues.length && (
             <Section title={t("featured")}>
-              <div className="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-2">
+              {/* `relative` keeps the cards' absolutely placed parts inside
+                  the scroller; without it they widen the page on phones. */}
+              <div className="scrollbar-hide relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-2">
                 {featured.map((venue, i) => (
                   <MenuCard
                     key={venue.id}

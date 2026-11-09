@@ -53,6 +53,10 @@ interface MenuPageProps {
   branchSlug: string | null;
 }
 
+/** The text, trimmed, or undefined when there is none. */
+const filled = (text: string | null | undefined) =>
+  text?.trim() ? text.trim() : undefined;
+
 export async function menuPageMetadata({
   restaurantSlug,
   branchSlug,
@@ -74,12 +78,14 @@ export async function menuPageMetadata({
   return publicPageMetadata({
     locale,
     path: base,
+    // filled(): the admin form saves an empty field as "", which would
+    // otherwise give the menu a blank tab title and link preview.
     title:
-      (useSeoFields ? restaurant.metaTitle : null) ??
+      (useSeoFields ? filled(restaurant.metaTitle) : undefined) ??
       t("metaMenuTitle", { name }),
     description: clip(
-      (useSeoFields ? restaurant.metaDescription : null) ??
-        localizeDescription(restaurant, languages, locale).text ??
+      (useSeoFields ? filled(restaurant.metaDescription) : undefined) ??
+        filled(localizeDescription(restaurant, languages, locale).text) ??
         t("metaMenuDescription", { name: restaurant.name }),
     ),
     image: restaurantPreviewImage(restaurant),
@@ -166,7 +172,7 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
           the controls. The description, hours and map are on About. */}
       <header className="menu-header border-border border-b">
         <div className="container mx-auto px-4 py-3 sm:py-4">
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-start gap-3 sm:gap-4">
             {/* The logo opens the details page too, like the Details button. */}
             <Link
               href={`${base}/about`}
@@ -182,7 +188,9 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
             </Link>
 
             <div className="min-w-0 flex-1">
-              <h1 className="text-foreground truncate text-xl leading-tight font-bold sm:text-3xl">
+              {/* Up to three lines: the name is what guests look for first, so
+                  it isn't cut short to make room for the controls. */}
+              <h1 className="text-foreground line-clamp-3 text-xl leading-tight font-bold break-words text-balance sm:text-3xl">
                 {restaurantDetails.name}
               </h1>
 
@@ -195,7 +203,7 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
                     branches={choices}
                     allHref={`/${restaurantDetails.slug}`}
                     onAll={branch === null}
-                    className="bg-secondary text-secondary-foreground hover:bg-secondary/80 h-7 max-w-[12rem] border-transparent px-2.5 text-xs"
+                    className="bg-secondary text-secondary-foreground hover:bg-secondary/80 h-7 max-w-full border-transparent px-2.5 text-xs"
                   />
                 )}
                 <Button
