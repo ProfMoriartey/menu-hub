@@ -8,7 +8,7 @@ type PlaceCardProps = Omit<React.ComponentProps<"button">, "children"> & {
   name: React.ReactNode;
   /** Rotation in degrees; mirrored in right-to-left pages. */
   tilt?: number;
-  /** The current seat: ringed in brass. */
+  /** The current seat: ringed in brass (drawn for a card on the cloth). */
   active?: boolean;
   /** "sm" for crowded tables (phones). */
   size?: "md" | "sm";
@@ -38,15 +38,19 @@ export function PlaceCard({
   children,
   ...props
 }: PlaceCardProps) {
-  // The words take their direction from their own script (an Arabic card
+  // Each line takes its direction from its own script (an Arabic name
   // reads right to left on any page, a Latin one left to right on an Arabic
   // page); the card itself lays out and is positioned in the page's.
   const body = (
-    <span dir="auto" className="flex flex-col items-start gap-1">
-      <small className="text-place-card-muted text-[0.6875rem] leading-none font-bold tracking-[0.12em] uppercase">
+    <span className="flex flex-col items-start gap-1">
+      <small
+        dir="auto"
+        className="text-place-card-muted self-stretch text-[0.6875rem] leading-none font-bold tracking-[0.12em] uppercase">
         {label}
       </small>
-      <span className={cn("leading-tight font-bold", size === "sm" ? "text-[0.9375rem]" : "text-[1.25rem]")}>
+      <span
+        dir="auto"
+        className={cn("self-stretch leading-tight font-bold", size === "sm" ? "text-[0.9375rem]" : "text-[1.25rem]")}>
         {name}
       </span>
     </span>

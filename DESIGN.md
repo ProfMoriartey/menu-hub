@@ -53,7 +53,7 @@ ticket's "warm dark porcelain").
 Contrast ratios are WCAG 2 against the surface named. Focus rings are drawn
 outside the element, so `--table-focus` follows the surface around it:
 brass-ink by default (porcelain, paper, off-white), brass on the cloth
-(`.table-cloth` switches it).
+(`.table-cloth` switches it), brass-ink again inside a `.table-plate`.
 
 ## Material
 
@@ -70,8 +70,9 @@ brass-ink by default (porcelain, paper, off-white), brass on the cloth
   photo's edge. No photo: an empty plate (no icon, no broken image).
 - **Place cards** (`<PlaceCard>`): white paper, small uppercase seat label,
   the name below, a slight tilt (mirrored on RTL pages), the current one
-  ringed in brass (a ring, so keyboard focus keeps its own outline). The
-  words take their direction from their script (`dir="auto"`). Always a real
+  ringed in brass (a ring, so keyboard focus keeps its own outline; its
+  offset gap is cloth red, so the active state is for cards on the cloth). Each
+  line takes its direction from its own script (`dir="auto"`). Always a real
   button (`aria-pressed`) or, with `asChild`, a link (set `aria-current`),
   at least 44 px.
 - **Leaders** (`<LeaderRow>`): name, dotted leader, price; prices in tabular
@@ -80,8 +81,8 @@ brass-ink by default (porcelain, paper, off-white), brass on the cloth
 - **Stamp** (`<Stamp>`): red, bordered, uppercase, tilted -8° (mirrored in
   RTL). The only ornament. Arabic is never letter-spaced.
 - **Buttons**: `Button` variants `table` (cloth-red pill on porcelain) and
-  `tableOnCloth` (white pill on the cloth), size `pill` (44 px min, brass
-  focus ring). Use them only inside `<TableWorld>`.
+  `tableOnCloth` (white pill on the cloth), size `pill` (44 px min); both variants draw the
+  `--table-focus` outline. Use them only inside `<TableWorld>`.
 
 ## Type
 
@@ -160,6 +161,8 @@ All made once on 2026-11-09 by Chrollo; no image generation, no stock.
   contrast guard; set the public pages' html/body background to the cloth.
 - Arabic and Cyrillic faces are not preloaded on /ar and /ru (one font
   instance serves all locales); the Arabic headline swaps in after load.
+  /ru still preloads Bricolage latin (~77 KB) though Russian pages set Onest
+  first.
 - Radix portals (dropdowns, dialogs) render into `<body>`, outside
   `<TableWorld>`: give portal content its own `table-world` class, or put
   the class on a public-only layout that hosts them.

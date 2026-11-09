@@ -340,7 +340,7 @@
     --table-sold-out: #c42318; /* 5.8:1 on white */
     /* Focus ring colour for the surface the ring is drawn on (it sits
        outside the element): brass-ink by default (light surfaces), brass
-       on the cloth (.table-cloth switches it). */
+       on the cloth (.table-cloth), brass-ink again on a plate. */
     --table-focus: var(--table-brass-ink);
     --table-font:
       var(--font-bricolage), var(--font-onest), var(--font-noto-arabic),
@@ -420,6 +420,7 @@
      thin shadow line where it rises, and a cast shadow on the cloth. The rim
      width scales with the plate (--plate-rim). */
   .table-plate {
+    --table-focus: var(--table-brass-ink);
     --plate-rim: 9%;
     border-radius: 9999px;
     background: radial-gradient(
@@ -444,8 +445,12 @@
   .table-leader-row {
     display: flex;
     gap: 0.375rem;
-    align-items: flex-end; /* where last baseline is unsupported */
     align-items: last baseline;
+  }
+  @supports not (align-items: last baseline) {
+    .table-leader-row {
+      align-items: flex-end;
+    }
   }
   .table-leader {
     flex: 1 1 1.5rem;
