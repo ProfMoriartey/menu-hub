@@ -47,7 +47,7 @@ export async function generateMetadata({
           url: `${APP_BASE_URL}/og-image.png`,
           width: 1200,
           height: 630,
-          alt: "Menupedia, the smart way to share menus",
+          alt: "Menupedia: every seat reads your menu in their language",
         },
       ],
       locale: ogLocale(locale),

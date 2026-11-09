@@ -61,6 +61,26 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* The Table (public site). Defined only inside .table-world, so outside
+     it these utilities resolve to nothing and the dashboard is untouched. */
+  --color-cloth: var(--table-cloth);
+  --color-cloth-deep: var(--table-cloth-deep);
+  --color-cloth-action: var(--table-cloth-action);
+  --color-cloth-ink: var(--table-cloth-ink);
+  --color-on-cloth: var(--table-on-cloth);
+  --color-on-cloth-muted: var(--table-on-cloth-muted);
+  --color-plate: var(--table-plate);
+  --color-plate-rim: var(--table-plate-rim);
+  --color-plate-rim-shadow: var(--table-plate-rim-shadow);
+  --color-ink: var(--table-ink);
+  --color-ink-muted: var(--table-ink-muted);
+  --color-brass: var(--table-brass);
+  --color-brass-ink: var(--table-brass-ink);
+  --color-place-card: var(--table-place-card);
+  --color-place-card-ink: var(--table-place-card-ink);
+  --color-place-card-muted: var(--table-place-card-muted);
+  --color-sold-out: var(--table-sold-out);
 }
 
 :root {
@@ -288,5 +308,155 @@
   body {
     @apply bg-background text-foreground;
      cursor: url('/fork_cursor.png'), auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   The Table: the public site's world (DESIGN.md). A wine-red linen cloth,
+   porcelain plates, warm ink, brass for focus, white place cards. Scoped to
+   .table-world (components/table/TableWorld) so the dashboard and admin,
+   which share the (site) layout, keep their own look.
+   ------------------------------------------------------------------------ */
+@layer base {
+  .table-world {
+    --table-cloth: #7a1f2b;
+    --table-cloth-deep: #5e1520;
+    /* Buttons in cloth red on porcelain (white text 10:1). */
+    --table-cloth-action: #7a1f2b;
+    /* Cloth red as text on porcelain (eyebrows, links): 9.8:1. */
+    --table-cloth-ink: #7a1f2b;
+    --table-on-cloth: #ffffff;
+    --table-on-cloth-muted: #f1dcdf; /* 7.8:1 on the cloth */
+    --table-plate: #fbfaf7;
+    --table-plate-rim: #ebe6de;
+    --table-plate-rim-shadow: #d8d1c6;
+    --table-ink: #221a17; /* 16:1 on the plate */
+    --table-ink-muted: #5a4f4a; /* 7.6:1 on the plate */
+    --table-brass: #c9a24a; /* highlights and focus on the cloth (4.3:1) */
+    --table-brass-ink: #7d5f17; /* focus on porcelain and paper (5.7:1) */
+    --table-place-card: #ffffff;
+    --table-place-card-ink: #221a17;
+    --table-place-card-muted: #6f6460; /* 5.7:1 on the card */
+    --table-sold-out: #c42318; /* 5.8:1 on white */
+    /* Focus ring colour for the surface the ring is drawn on (it sits
+       outside the element): brass-ink by default (light surfaces), brass
+       on the cloth (.table-cloth), brass-ink again on a plate. */
+    --table-focus: var(--table-brass-ink);
+    --table-font:
+      var(--font-bricolage), var(--font-onest), var(--font-noto-arabic),
+      ui-sans-serif, system-ui, sans-serif;
+
+    font-family: var(--table-font);
+    color: var(--table-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .dark .table-world {
+    /* The cloth stays wine red at night and goes a little deeper. Plates
+       and place cards stay porcelain and paper (the contract's main
+       material), dimmed so they don't glare in a dark room; ink stays dark. */
+    --table-cloth: #6a1a25;
+    --table-cloth-deep: #4c1019;
+    --table-on-cloth: #fff8f5; /* 11.2:1 on the cloth */
+    --table-on-cloth-muted: #ecd3d6; /* 8.3:1 */
+    --table-plate: #e9e2d7;
+    --table-plate-rim: #d9cfc1;
+    --table-plate-rim-shadow: #c4b9a9;
+    --table-ink-muted: #5a4f4a; /* 6.2:1 on the dimmed plate, 5.2:1 on the rim */
+    --table-brass: #d8b45e; /* 5.9:1 on the cloth */
+    --table-brass-ink: #7d5f17; /* 4.6:1 on the dimmed plate */
+    --table-place-card: #ece5db;
+    --table-place-card-muted: #625853; /* 5.5:1 on the dimmed card */
+    /* Unchanged from light: ink (13.3:1 on the dimmed plate), cloth-action
+       and cloth-ink (7.9:1), sold-out (4.5:1), place-card-ink. */
+  }
+
+
+  /* Browser surfaces in the world's colours. */
+  .table-world ::selection {
+    background: var(--table-brass);
+    color: #221a17;
+  }
+  .table-world :focus-visible {
+    outline: 3px solid var(--table-focus);
+    outline-offset: 3px;
+  }
+
+  /* Russian pages set Latin words ("QR-код") in Onest too, so a line
+     never mixes two faces. */
+  .table-world:lang(ru) {
+    --table-font:
+      var(--font-onest), var(--font-noto-arabic), ui-sans-serif, system-ui,
+      sans-serif;
+  }
+
+  /* Arabic letters join: never letter-space them (eyebrows, stamps). */
+  .table-world :lang(ar) {
+    letter-spacing: 0 !important;
+  }
+}
+
+@layer components {
+  /* The woven linen: two hairline gradients, warp and weft. Gradients only
+     (no image, no noise SVG), painted once per layer, so scrolling stays
+     cheap. */
+  .table-cloth {
+    --table-focus: var(--table-brass);
+    background-color: var(--table-cloth);
+    /* A third, coarser thread at a prime period breaks the even check
+       into something closer to linen. */
+    background-image:
+      repeating-linear-gradient(0deg, rgb(0 0 0 / 0.055) 0 1px, transparent 1px 4px),
+      repeating-linear-gradient(90deg, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 13px),
+      repeating-linear-gradient(90deg, rgb(0 0 0 / 0.03) 0 1px, transparent 1px 17px);
+    color: var(--table-on-cloth);
+  }
+  .table-cloth[data-tone="deep"] {
+    background-color: var(--table-cloth-deep);
+  }
+
+  /* A porcelain plate seen from above: the flat well, a soft rim with a
+     thin shadow line where it rises, and a cast shadow on the cloth. The rim
+     width scales with the plate (--plate-rim). */
+  .table-plate {
+    --table-focus: var(--table-brass-ink);
+    --plate-rim: 9%;
+    border-radius: 9999px;
+    background: radial-gradient(
+      closest-side,
+      var(--table-plate) calc(100% - var(--plate-rim)),
+      var(--table-plate-rim-shadow) calc(100% - var(--plate-rim) + 1px),
+      var(--table-plate-rim) calc(100% - var(--plate-rim) + 3px),
+      var(--table-plate-rim) calc(100% - 2px),
+      var(--table-plate-rim-shadow) 100%
+    );
+    box-shadow:
+      0 1.5rem 3rem -0.5rem rgb(20 4 8 / 0.42),
+      0 0.25rem 0.5rem rgb(20 4 8 / 0.18),
+      inset 0 0.6rem 2.5rem rgb(0 0 0 / 0.05);
+    color: var(--table-ink);
+  }
+
+  /* Prices after a dotted leader (LeaderRow). The leader is an empty flex
+     item: its baseline is its bottom edge, so lifting it a little sets the
+     dots level with the name's last line (they start at the end of the
+     name's box, so a wrapped name leaves a gap before them). */
+  .table-leader-row {
+    display: flex;
+    gap: 0.375rem;
+    align-items: last baseline;
+  }
+  @supports not (align-items: last baseline) {
+    .table-leader-row {
+      align-items: flex-end;
+    }
+  }
+  .table-leader {
+    flex: 1 1 1.5rem;
+    min-width: 1.5rem;
+    border-bottom: 2px dotted currentColor;
+    opacity: 0.45;
+    translate: 0 -0.28em;
   }
 }
