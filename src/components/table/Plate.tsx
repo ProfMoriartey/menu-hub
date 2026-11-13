@@ -8,6 +8,8 @@ const PLATE_SIZES = {
   // The home page's main plate. On phones it is wider than the screen, as
   // if seen up close: put it in a centred row that clips (overflow-x-hidden).
   hero: "size-[min(40rem,130vw)]",
+  // As wide as its container (a column, a grid cell); give it a max width.
+  fluid: "w-full aspect-square",
 } as const;
 
 type PlateProps = React.HTMLAttributes<HTMLElement> & {
@@ -89,5 +91,26 @@ export function PlatePhoto({
         }}
       />
     </span>
+  );
+}
+
+/**
+ * A rectangular porcelain platter, for content that needs rows (a list of
+ * leader rows) where a round plate would not hold it. Same well, rim and
+ * shadow as the plate.
+ */
+export function Platter({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "bg-plate text-ink rounded-[2rem] p-6 shadow-[0_18px_30px_rgb(20_4_8/0.35),inset_0_0_0_6px_var(--table-plate-rim),inset_0_0_0_7px_var(--table-plate-rim-shadow)] sm:p-9",
+        "[--table-focus:var(--table-brass-ink)]",
+        className,
+      )}
+      {...props}
+    />
   );
 }

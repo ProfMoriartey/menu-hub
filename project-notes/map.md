@@ -13,6 +13,7 @@ One line per area: where it is, and what to copy.
 
 ## Components (`src/components`)
 - `table/`: design primitives for the new look (Cloth, Plate, PlaceCard, Stamp, LeaderRow, `TableWorld` wrapper, `fonts.ts`). Wrap a page in `<TableWorld>` and compose these.
+- `home/`: the home page's sections (Hero, HowItWorks, GuestsSee, Features, ExampleMenus, Pricing, ContactClose) plus `DemoPhone` and `SeatCards`; the page only composes them. Pattern in DESIGN.md "Home pattern".
 - `layout/LayoutWrapper.tsx`: on public paths (incl. `/sign-in`) wraps the page in `TableWorld` with skip link, navbar, `<main id="main">` and footer; pages must not add their own `<main>`. The dashboard and admin have their own shells and never see the navbar.
 - `shared/`: navbar (cloth bar, mobile sheet is a Radix dialog), site footer, language switcher (`variant` select | card | cards), theme toggle (`quiet` on the cloth), marketing blocks, restaurant logo.
 - `public/`: guest menu (MenuDisplayClient, MenuLayout, MenuItemCard, CategoryNav, BranchPicker, OpeningHours, SoldOutBadge, DishSheet).
