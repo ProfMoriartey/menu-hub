@@ -193,6 +193,41 @@ search field sits on a pill platter, dish results are leader rows on a
 button. The phone filter sheet and the select popovers carry `table-world`.
 No sample dish row on the plates: the directory data has no dish or price.
 
+## Guest menu pattern
+
+Guest pages (`[restaurantSlug]/**`, ticket 7) live in The Table but keep the
+restaurant's colour and logo. The layout wraps them in
+`<TableWorld className="guest-menu">`; `.guest-menu` (globals.css) maps the
+shadcn tokens the guest components use to the world, so `bg-card` is a white
+place card (dimmed paper at night) and `text-foreground` is ink in both
+modes. The ground is warm off-white `#f5f0e8` by day, warm near-black
+`#1d1714` at night; text set straight on it uses `text-on-ground` /
+`text-on-ground-muted`, never `text-foreground` or `text-primary`.
+
+- The restaurant's colour: the theme's light primary, or its header when
+  the theme is dark all over, or the legacy brand colour
+  (`guestBrandColor`). `guestBrandCss` turns it into `--brand` (the 6 px
+  band under the header, `bg-brand`) and `--brand-ink` (prices, open-now,
+  active pills via `--primary`), darkened towards ink until 4.5:1 on the
+  ground by day and on the dimmed plate at night (demo green #2f7d32 becomes
+  #2e732f at night; light yellow #f5e663 becomes #766c35 / #6c6132). No
+  colour set: cloth red. The theme's other roles are not used on guest
+  pages any more.
+- Menu page: white header (logo, full name that wraps, open-now line with a
+  drawn dot, controls that wrap to a second row), band, search and filter,
+  sticky pill nav on the ground, muted caps section headings with a rule,
+  dishes as white cards: classic = leader row and a 96 px `PlatePhoto`;
+  photo grid = a 128 px plate on top (shrinks, stays round), leader row
+  under; compact = leader rows in one card, no photos.
+- Sold out: `Stamp` in the flow under the name, never over it.
+- Item page and sheet: a large plate, `LeaderRow` with the name as the
+  heading, stamp under it. About: band, white card, controls on a paper
+  pill over the ground. 404 and error: the ground and an empty plate.
+- Portals (dish sheet, filter popover, language list, branch dialog) add
+  `table-world guest-menu` and `tableFontVariables` themselves.
+- Font: Bricolage (one latin woff2 preloaded) on guest pages; LCP measured
+  no worse than the system/Geist baseline (`pnpm check:lcp`).
+
 ## Open
 
 - ~~`/menus` restyled in the Table (ticket 6).~~ Done, see "Menus pattern".
@@ -207,8 +242,12 @@ No sample dish row on the plates: the directory data has no dish or price.
   instance serves all locales); the Arabic headline swaps in after load.
   /ru still preloads Bricolage latin (~77 KB) though Russian pages set Onest
   first.
-- Ticket 2: the "●" in "Open now" is the only glyph Bricolage lacks and pulls
-  in Onest and Noto symbol subsets (~34 KB): draw the dot in CSS.
+- ~~Ticket 2: the "●" in "Open now" ... draw the dot in CSS.~~ Done in
+  ticket 7 (`OpenStatusText` draws it; no "●" glyph left in the code).
+- ~~Guest menus in The Table, sold-out stamp clear of names, guest portals
+  carry the scope (ticket 7).~~ Done, see "Guest menu pattern".
+- The colours editor still offers seven roles per mode; guest pages now use
+  only one colour from it (owner to decide whether to simplify the editor).
 - Radix portals (done in ticket 2): the mobile sheet and the language popover
   carry `table-world` plus `tableFontVariables` on their own content, so they
   get the tokens and fonts. Do the same for any new portal.
