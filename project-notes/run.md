@@ -8,6 +8,7 @@ Needs Postgres 16 binaries in `/usr/lib/postgresql/16/bin` and a `postgres` syst
 | `pnpm dev:seed` | Resets and inserts 4 fake restaurants (5 menu languages, 3 designs, edge-case dishes). Prints URLs. Needs `dev:setup` first. |
 | `pnpm dev` | Next dev server on :3000. |
 | `pnpm check:ui [baseUrl] [paths...] [--shots dir]` | Browser sweep (paths x en/tr/ar/es/ru x 320/390/768/1440). Exits 1 on overflow or console errors. |
+| `pnpm check:lcp [baseUrl] [paths...] [--runs n]` | LCP median at 390 px, CPU 4x and Fast 3G, cold cache (default: the 4 seeded menus). Run against `pnpm build && pnpm start` (load `.env.development.local` into the shell first), not `pnpm dev`. |
 | `pnpm lint` / `pnpm typecheck` / `pnpm i18n:check` | Static checks. |
 
 ## Env (`.env.development.local`, git-ignored; values are dummies)

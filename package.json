@@ -23,7 +23,8 @@
     "i18n:check": "node scripts/i18n/check-keys.cjs && node scripts/i18n/check-format.mjs",
     "dev:setup": "node scripts/dev/setup.mjs",
     "dev:seed": "node --env-file=.env.development.local scripts/dev/seed.mjs",
-    "check:ui": "node scripts/dev/check-ui.mjs"
+    "check:ui": "node scripts/dev/check-ui.mjs",
+    "check:lcp": "node scripts/dev/lcp.mjs"
   },
   "dependencies": {
     "@clerk/localizations": "^3.37.10",
