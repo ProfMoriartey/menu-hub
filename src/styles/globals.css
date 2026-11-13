@@ -499,3 +499,16 @@ html.dark:has(.guest-menu) {
     translate: 0 -0.28em;
   }
 }
+
+/* The phone's menu turning to another language (hero seat cards). */
+@keyframes plate-turn {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateY(-70deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .plate-turn {
+    animation: plate-turn 400ms ease-out;
+  }
+}

@@ -899,7 +899,8 @@
       "phoneLabel": "Menú de demostración de Lokanta Demo, un restaurante ficticio",
       "seatsLabel": "Idioma del menú",
       "seat": "Asiento {n}",
-      "ctaStart": "Crea tu carta"
+      "ctaStart": "Crea tu carta",
+      "showing": "Mostrando el menú en {language}"
     },
     "steps": {
       "title": "Cómo funciona",

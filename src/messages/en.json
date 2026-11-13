@@ -899,7 +899,8 @@
       "phoneLabel": "Demo menu of Lokanta Demo, a made-up restaurant",
       "seatsLabel": "Menu language",
       "seat": "Seat {n}",
-      "ctaStart": "Create your menu"
+      "ctaStart": "Create your menu",
+      "showing": "Showing the menu in {language}"
     },
     "steps": {
       "title": "How it works",
