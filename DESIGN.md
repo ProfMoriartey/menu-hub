@@ -155,21 +155,25 @@ All made once on 2026-11-09 by Chrollo; no image generation. The only photos are
 ## Open
 
 - Wordmark and colours need the owner's approval.
-- Ticket 2 (from the reviews of the preview): lay the first viewport out
+- Ticket 3 (from the reviews of the preview): lay the first viewport out
   relative to its container (fixed px clip cards and phone from 1024 to
   ~1310 px); keep hero copy inside the plate at 320 px; a looser line height
   for Arabic headlines; restaurant brand colours on the dark plate need a
-  contrast guard; set the public pages' html/body background to the cloth.
+  contrast guard. (Done in ticket 2: the html background is the cloth on
+  public pages, `html:has(.table-world)` in globals.css.)
 - Arabic and Cyrillic faces are not preloaded on /ar and /ru (one font
   instance serves all locales); the Arabic headline swaps in after load.
   /ru still preloads Bricolage latin (~77 KB) though Russian pages set Onest
   first.
 - Ticket 2: the "●" in "Open now" is the only glyph Bricolage lacks and pulls
   in Onest and Noto symbol subsets (~34 KB): draw the dot in CSS.
-- Radix portals (dropdowns, dialogs) render into `<body>`, outside
-  `<TableWorld>`: give portal content its own `table-world` class, or put
-  the class on a public-only layout that hosts them.
-- Clerk's sign-in `appearance` still uses the old orange and Geist (ticket 2).
+- Radix portals (done in ticket 2): the mobile sheet and the language popover
+  carry `table-world` plus `tableFontVariables` on their own content, so they
+  get the tokens and fonts. Do the same for any new portal.
+- Clerk's `appearance` (done in ticket 2, `(site)/layout.tsx`): cloth-red
+  primary, `--table-font`, brass-ink focus, see-through card on a porcelain
+  plate. It could not be seen offline (the widget needs Clerk); check it once
+  with real keys.
 - Geist is still declared (and preloaded) in the root layout for every page.
   Once all public pages are inside `<TableWorld>`, move it to the dashboard
   and admin layouts so public pages preload only Bricolage (latin ~77 KB

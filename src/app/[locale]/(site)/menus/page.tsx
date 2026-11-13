@@ -54,14 +54,14 @@ export default async function MenusPage({ searchParams }: { searchParams: Search
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl">{t("title")}</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl text-base sm:text-lg">{t("intro")}</p>
       </header>
-      <main className="mx-auto max-w-5xl px-4 pb-16">
+      <div className="mx-auto max-w-5xl px-4 pb-16">
         <MenusDirectory
           venues={venues}
           local={local}
           defaultScope={defaultScope}
           initialFilters={initialFilters}
         />
-      </main>
+      </div>
     </div>
   );
 }

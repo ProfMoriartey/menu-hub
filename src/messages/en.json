@@ -11,7 +11,11 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "pricing": "Pricing",
-    "getStarted": "Get started"
+    "getStarted": "Get started",
+    "exampleMenus": "Example menus",
+    "startFree": "Start free",
+    "menuTitle": "Menu",
+    "skip": "Skip to content"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Browse our delicious menu",
@@ -930,7 +934,7 @@
   },
   "Footer": {
     "home": "Menupedia home",
-    "tagline": "Digital menus that restaurants, cafés and shops run themselves. Guests scan, read in their language, and order with confidence.",
+    "tagline": "Digital menus that restaurants, cafés and shops run themselves. Guests scan a code and read the menu in their own language.",
     "product": "Product",
     "menus": "Menus",
     "features": "Features",
@@ -1428,5 +1432,8 @@
     "text": "The menu or page you're looking for may have moved or no longer exists.",
     "browseMenus": "Browse menus",
     "home": "Go to the home page"
+  },
+  "ThemeToggle": {
+    "label": "Switch light or dark"
   }
 }

@@ -11,3 +11,5 @@
 - `pnpm db:migrate` and `db:push` are different: see decisions.
 - Unknown `restaurants.theme` values map to Classic (`menuDesignOf`); legacy design names are translated there.
 - Opening hours: a range whose close is at or before its open runs past midnight; `null` shows nothing.
+- Signed-out controls (Sign in, Start free) sit inside Clerk's `SignedOut`, so offline (Clerk blocked) the navbar shows neither; the dashboard link and user button likewise.
+- Portal content (Radix popover/dialog) is outside `.table-world`: give it the class and `tableFontVariables` itself.

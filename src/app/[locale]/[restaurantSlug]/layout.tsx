@@ -43,6 +43,7 @@ const CLIENT_NAMESPACES = [
   "PublicMenu",
   "Availability",
   "LanguageSwitcher",
+  "ThemeToggle",
   "UnsavedChanges",
 ];
 
