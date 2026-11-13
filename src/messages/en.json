@@ -1222,7 +1222,8 @@
     "included": {
       "title": "Everything is in the plan",
       "intro": "No add-ons, and no charges per scan, table or dish.",
-      "link": "See every feature"
+      "link": "See every feature",
+      "yes": "Included"
     },
     "trial": {
       "title": "How the free trial works",

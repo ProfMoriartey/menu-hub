@@ -1,7 +1,72 @@
 // src/components/shared/MarketingBlocks.tsx
 import type { ReactNode } from "react";
+import { ArrowRight } from "lucide-react";
+import { Link } from "~/i18n/navigation";
 import { Cloth } from "~/components/table/Cloth";
 import { cn } from "~/lib/utils";
+
+/** A quiet text link on the cloth: underlined, 44 px tall, brass focus. */
+export const CLOTH_LINK =
+  "text-on-cloth inline-flex min-h-11 items-center gap-2 rounded-full px-2 font-bold underline underline-offset-4 outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]";
+
+/** The opening of a page on The Table: the one h1 and an intro on the cloth, then any actions. */
+export function ClothHero({
+  eyebrow,
+  title,
+  intro,
+  children,
+}: {
+  eyebrow?: string;
+  title: string;
+  intro: string;
+  children?: ReactNode;
+}) {
+  return (
+    <Cloth as="section">
+      <div className="mx-auto max-w-3xl px-4 pt-14 pb-12 text-center sm:pt-20 lg:pb-16">
+        {eyebrow && (
+          <p className="text-on-cloth-muted text-sm font-bold tracking-[0.12em] uppercase rtl:tracking-normal">{eyebrow}</p>
+        )}
+        <h1 className="text-on-cloth mt-3 text-4xl font-extrabold tracking-[-0.03em] text-balance sm:text-5xl rtl:leading-snug rtl:tracking-normal">
+          {title}
+        </h1>
+        <p className="text-on-cloth-muted mx-auto mt-4 max-w-2xl text-lg text-pretty">{intro}</p>
+        {children && <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">{children}</div>}
+      </div>
+    </Cloth>
+  );
+}
+
+export interface PlatterItem {
+  id: string;
+  title: string;
+  text: string;
+  /** A link under the text, to a page of its own. */
+  link?: { href: string; label: string };
+}
+
+/** Items of a menu section: a bold name and a plain line, dotted rules between. Put it in a `Platter`. */
+export function PlatterList({ items, className }: { items: PlatterItem[]; className?: string }) {
+  return (
+    <ul className={cn("divide-plate-rim-shadow divide-y divide-dotted [&>li]:py-4 [&>li:first-child]:pt-0 [&>li:last-child]:pb-0", className)}>
+      {items.map(({ id, title, text, link }) => (
+        <li key={id}>
+          <h3 className="text-lg leading-snug font-bold">{title}</h3>
+          <p className="text-ink-muted mt-1 leading-relaxed">{text}</p>
+          {link && (
+            <Link
+              href={link.href}
+              className="text-cloth-ink mt-1 inline-flex min-h-11 items-center gap-1.5 rounded-full font-bold underline underline-offset-4 outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]"
+            >
+              {link.label}
+              <ArrowRight className="size-4 rtl:rotate-180" aria-hidden />
+            </Link>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 /** The opening of a marketing page: a small label, the page's heading and an intro. */
 export function PageHero({

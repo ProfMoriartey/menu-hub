@@ -1222,7 +1222,8 @@
     "included": {
       "title": "Her şey plana dahil",
       "intro": "Ek paket yok; okutma, masa ya da yemek başına ücret yok.",
-      "link": "Tüm özellikleri görün"
+      "link": "Tüm özellikleri görün",
+      "yes": "Dahil"
     },
     "trial": {
       "title": "Ücretsiz deneme nasıl işler?",
