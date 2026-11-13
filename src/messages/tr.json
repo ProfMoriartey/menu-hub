@@ -884,7 +884,9 @@
     "branchesCount": "{count} şube",
     "branchesPlace": "{count} şube · {places}",
     "openAtBranches": "{count} şubede şu an açık",
-    "closedAtBranches": "Şu an kapalı"
+    "closedAtBranches": "Şu an kapalı",
+    "exampleLabel": "Örnek",
+    "backHome": "Ana sayfaya dön"
   },
   "HomePage": {
     "metaTitle": "Menupedia: restoran ve kafeler için dijital menüler",

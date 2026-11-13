@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getDirectoryVenues } from "~/server/directory-venues";
 import { sitePageMetadata } from "~/server/public-metadata";
 import { MenusDirectory, type DirectoryFilters } from "~/components/menus/MenusDirectory";
+import { Cloth } from "~/components/table/Cloth";
 import type { DirectoryScope } from "~/lib/menus-directory";
 
 // The canonical link leaves out the search and filters (?q=, ?city= …), so
@@ -49,12 +50,14 @@ export default async function MenusPage({ searchParams }: { searchParams: Search
   };
 
   return (
-    <div className="text-foreground min-h-screen">
-      <header className="mx-auto max-w-5xl px-4 pt-10 pb-6 sm:pt-16">
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl">{t("title")}</h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl text-base sm:text-lg">{t("intro")}</p>
+    <Cloth as="div" className="min-h-screen">
+      <header className="mx-auto max-w-6xl px-4 pt-12 pb-8 text-center sm:pt-16">
+        <h1 className="text-on-cloth text-4xl font-extrabold tracking-[-0.03em] text-balance sm:text-5xl rtl:tracking-normal rtl:leading-snug">
+          {t("title")}
+        </h1>
+        <p className="text-on-cloth-muted mx-auto mt-3 max-w-2xl text-lg text-pretty">{t("intro")}</p>
       </header>
-      <div className="mx-auto max-w-5xl px-4 pb-16">
+      <div className="mx-auto max-w-6xl px-4 pb-20 lg:pb-28">
         <MenusDirectory
           venues={venues}
           local={local}
@@ -62,6 +65,6 @@ export default async function MenusPage({ searchParams }: { searchParams: Search
           initialFilters={initialFilters}
         />
       </div>
-    </div>
+    </Cloth>
   );
 }

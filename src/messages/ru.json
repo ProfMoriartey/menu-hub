@@ -884,7 +884,9 @@
     "branchesCount": "{count, plural, one {# филиал} few {# филиала} many {# филиалов} other {# филиала}}",
     "branchesPlace": "{count, plural, one {# филиал} few {# филиала} many {# филиалов} other {# филиала}} · {places}",
     "openAtBranches": "Открыто сейчас: {count, plural, one {# филиал} few {# филиала} many {# филиалов} other {# филиала}}",
-    "closedAtBranches": "Сейчас закрыто"
+    "closedAtBranches": "Сейчас закрыто",
+    "exampleLabel": "Пример",
+    "backHome": "Назад на главную"
   },
   "HomePage": {
     "metaTitle": "Menupedia: цифровые меню для ресторанов и кафе",
