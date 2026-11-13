@@ -7,6 +7,9 @@ import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { RotateCw } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import { Plate } from "~/components/table/Plate";
+import { tableFontVariables } from "~/components/table/fonts";
+import { cn } from "~/lib/utils";
 
 const COPY = {
   en: [
@@ -51,13 +54,20 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <main className="bg-background flex min-h-screen items-center justify-center px-4 py-16">
+    // The Table's ground and an empty plate, as on the 404 page.
+    <main
+      className={cn(
+        "table-world guest-menu flex min-h-screen items-center justify-center px-4 py-16",
+        tableFontVariables,
+      )}
+    >
       <div role="alert" className="max-w-md text-center">
-        <h1 className="text-foreground text-2xl font-bold text-balance">
+        <Plate size="md" aria-hidden className="mx-auto size-36 sm:size-44" />
+        <h1 className="text-on-ground mt-8 text-2xl font-extrabold tracking-[-0.02em] text-balance rtl:tracking-normal">
           {title}
         </h1>
-        <p className="text-muted-foreground mt-3 text-pretty">{text}</p>
-        <Button size="lg" className="mt-8" onClick={reset}>
+        <p className="text-on-ground-muted mt-3 text-pretty">{text}</p>
+        <Button variant="table" size="pill" className="mt-8" onClick={reset}>
           <RotateCw className="h-4 w-4" aria-hidden />
           {retry}
         </Button>

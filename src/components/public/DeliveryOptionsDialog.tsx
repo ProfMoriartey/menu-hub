@@ -44,8 +44,8 @@ export function DeliveryOptionsDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full sm:w-auto font-bold" size="lg">
-          <ShoppingBag className="mr-2 h-5 w-5" />
+        <Button className="h-11 w-full rounded-full font-bold sm:w-auto" size="lg">
+          <ShoppingBag className="me-2 h-5 w-5" aria-hidden />
           {buttonLabel}
         </Button>
       </DialogTrigger>

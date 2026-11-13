@@ -39,6 +39,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
 export function LanguageSwitcher({
   className,
   compact = false,
+  contentClassName,
   variant = "select",
 }: {
   className?: string;
@@ -46,6 +47,8 @@ export function LanguageSwitcher({
   // Just the language code ("TR") on the trigger, for tight spaces like a
   // phone-sized menu header. The list still names each language in full.
   compact?: boolean;
+  /** The select's list (a portal), e.g. to give it a scope's tokens. */
+  contentClassName?: string;
 }) {
   const t = useTranslations("LanguageSwitcher");
   const tUnsaved = useTranslations("UnsavedChanges");
@@ -135,7 +138,7 @@ export function LanguageSwitcher({
           <SelectValue />
         )}
       </SelectTrigger>
-      <SelectContent align="end">
+      <SelectContent align="end" className={contentClassName}>
         {routing.locales.map((code) => (
           <SelectItem
             key={code}

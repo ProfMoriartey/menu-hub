@@ -13,3 +13,4 @@
 - Opening hours: a range whose close is at or before its open runs past midnight; `null` shows nothing.
 - Signed-out controls (Sign in, Start free) sit inside Clerk's `SignedOut`, so offline (Clerk blocked) the navbar shows neither; the dashboard link and user button likewise.
 - Portal content (Radix popover/dialog) is outside `.table-world`: give it the class and `tableFontVariables` itself.
+- Guest pages: text straight on the ground uses `text-on-ground(-muted)`; `text-foreground`/`text-primary` are dark ink meant for cards and vanish on the night ground.

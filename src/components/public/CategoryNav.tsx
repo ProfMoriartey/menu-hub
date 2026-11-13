@@ -144,8 +144,10 @@ export function CategoryNav({
     <nav
       aria-label={t("categoriesNav")}
       className={cn(
-        "bg-card rounded-lg shadow-md",
-        variant === "bar" && "sticky top-0 z-10 px-1.5 py-2 sm:px-2 sm:py-3",
+        variant === "sidebar" && "bg-card rounded-lg shadow-md",
+        // On the ground, full width while stuck, so dishes pass under it.
+        variant === "bar" &&
+          "bg-ground/95 sticky top-0 z-10 -mx-4 px-2 py-2 backdrop-blur-sm sm:py-3",
         variant === "sidebar" &&
           "sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto p-4",
         className,
@@ -155,7 +157,7 @@ export function CategoryNav({
         ref={listRef}
         className={cn(
           variant === "bar" &&
-            "scrollbar-hide flex gap-2 overflow-x-auto px-2 whitespace-nowrap",
+            "scrollbar-hide flex gap-2 overflow-x-auto px-2 py-1 whitespace-nowrap",
           variant === "sidebar" && "space-y-2",
         )}
       >
@@ -170,13 +172,14 @@ export function CategoryNav({
                 onClick={() => onSelect(category.slug)}
                 className={cn(
                   "font-medium transition-colors duration-200",
-                  variant === "bar" && "rounded-full px-4 py-2 text-sm",
+                  variant === "bar" &&
+                    "min-h-11 rounded-full border px-4 py-2 text-sm",
                   variant === "sidebar" &&
                     "w-full rounded-md px-4 py-2 text-start text-base",
                   active
-                    ? "bg-primary text-primary-foreground shadow-sm"
+                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
                     : variant === "bar"
-                      ? "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground"
+                      ? "bg-card text-card-foreground border-border/70 hover:bg-muted"
                       : "bg-background text-foreground hover:bg-muted-foreground/10",
                 )}
               >

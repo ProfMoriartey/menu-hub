@@ -22,7 +22,7 @@ export function DietaryBadges({
       {labels.map((label) => (
         <li
           key={label}
-          className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold"
+          className="bg-muted text-muted-foreground border-border rounded-full border px-2 py-0.5 text-xs font-semibold"
         >
           {t(DIETARY_LABEL_KEYS[label])}
         </li>

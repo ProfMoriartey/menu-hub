@@ -1,6 +1,6 @@
 # State
 
-- The Table redesign is partly built: primitives, tokens and fonts exist in `src/components/table/` and `globals.css`; only `ui/button.tsx` and `TableWorld` itself use them. Marketing pages, `/menus`, guest menus and sign-in still use the earlier look.
+- The Table redesign is partly built: primitives, tokens and fonts exist in `src/components/table/` and `globals.css`. Home, `/menus`, navbar/footer and guest menus (ticket 7) are in The Table; check the branch history for the rest.
 - `DESIGN.md` is a working draft; `.impeccable/surfaces/` holds the direction for the pages above.
 - Guest menu has three designs (classic, photo-grid, compact), 5 menu languages, branches with opening hours, sold-out and hidden items, per-restaurant colour themes.
 - Dashboard and admin are complete and unchanged by the redesign.

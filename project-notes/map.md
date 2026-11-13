@@ -16,7 +16,7 @@ One line per area: where it is, and what to copy.
 - `home/`: the home page's sections (Hero, HowItWorks, GuestsSee, Features, ExampleMenus, Pricing, ContactClose) plus `DemoPhone` and `SeatCards`; the page only composes them. Pattern in DESIGN.md "Home pattern".
 - `layout/LayoutWrapper.tsx`: on public paths (incl. `/sign-in`) wraps the page in `TableWorld` with skip link, navbar, `<main id="main">` and footer; pages must not add their own `<main>`. The dashboard and admin have their own shells and never see the navbar.
 - `shared/`: navbar (cloth bar, mobile sheet is a Radix dialog), site footer, language switcher (`variant` select | card | cards), theme toggle (`quiet` on the cloth), marketing blocks, restaurant logo.
-- `public/`: guest menu (MenuDisplayClient, MenuLayout, MenuItemCard, CategoryNav, BranchPicker, OpeningHours, SoldOutBadge, DishSheet).
+- `public/`: guest menu, in The Table via `.guest-menu` (DESIGN.md "Guest menu pattern") (MenuDisplayClient, MenuLayout, MenuItemCard, CategoryNav, BranchPicker, OpeningHours, SoldOutBadge, DishSheet).
 - `menus/`: the `/menus` directory (MenusDirectory, MenuCard, filters).
 - `ui/`: shadcn primitives (button, card, dialog, input, select, switch, popover, command).
 - Also: `admin/`, `dashboard/`, `menu-editor/`, `colors/`, `menu-languages/`, `branches/`, `share/`, `plans/`, `forms/`.
@@ -31,7 +31,7 @@ One line per area: where it is, and what to copy.
 - RTL: `ar` only; use logical properties.
 
 ## Data and logic
-- `src/lib/`: `demo-menu.ts` (fake demo menu, not in DB), `color-theme.ts` (light/dark palettes), `brand-color.ts` (older single accent), `menu-design.ts` (classic | photo-grid | compact), `menu-languages.ts`, `opening-hours.ts`, `plans.ts`, `billing.ts`.
+- `src/lib/`: `demo-menu.ts` (fake demo menu, not in DB), `color-theme.ts` (light/dark palettes; `guestBrandCss` for guest pages), `brand-color.ts` (older single accent), `menu-design.ts` (classic | photo-grid | compact), `menu-languages.ts`, `opening-hours.ts`, `plans.ts`, `billing.ts`.
 - `src/server/`: `db/schema.ts` (tables prefixed `menu-hub_`), `db/migrations/`, queries (`public-menu.ts`, `public-branch.ts`, `menu-data.ts`, `directory-venues.ts`, ...).
 - `scripts/dev/`: local setup, seed, UI checker. `scripts/*.mjs`: uploads cleanup and photo shrink.
 

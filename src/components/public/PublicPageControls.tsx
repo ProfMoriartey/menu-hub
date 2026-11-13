@@ -2,6 +2,7 @@
 import { LanguageSwitcher } from "~/components/shared/LanguageSwitcher";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
 import { cn } from "~/lib/utils";
+import { tableFontVariables } from "~/components/table/fonts";
 
 // Language and light/dark switches for guests, top corner of every public
 // restaurant page. Guests scanning a QR code abroad need the language most.
@@ -17,11 +18,13 @@ export function PublicPageControls({
       <LanguageSwitcher
         compact={compact}
         className={cn(
-          "bg-card/80 w-auto backdrop-blur",
-          compact && "h-8 gap-1 px-2",
+          "bg-card dark:bg-card border-border/70 h-11 w-auto rounded-full data-[size=default]:h-11",
+          compact && "gap-1 px-3",
         )}
+        // The list opens in a portal, outside the guest menu's scope.
+        contentClassName={cn("table-world guest-menu", tableFontVariables)}
       />
-      <ThemeToggle />
+      <ThemeToggle className="size-11 rounded-full" />
     </div>
   );
 }
