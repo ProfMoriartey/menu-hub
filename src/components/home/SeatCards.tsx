@@ -6,11 +6,11 @@ import { cn } from "~/lib/utils";
 // Where each seat sits around the phone on wide screens (percent of the
 // table, logical sides so Arabic mirrors); narrower screens wrap them in a row.
 const SEATS: Record<MenuLanguage, { tilt: number; spot: string }> = {
-  en: { tilt: -4, spot: "lg:top-[4%] lg:start-[4%]" },
-  tr: { tilt: 3, spot: "lg:top-[16%] lg:end-[3%]" },
-  ar: { tilt: -2, spot: "lg:top-[47%] lg:start-[1%]" },
-  es: { tilt: 4, spot: "lg:bottom-[15%] lg:end-[4%]" },
-  ru: { tilt: -3, spot: "lg:bottom-[3%] lg:start-[22%]" },
+  en: { tilt: -4, spot: "lg:top-[3%] lg:start-[1%]" },
+  tr: { tilt: 3, spot: "lg:top-[10%] lg:end-[1%]" },
+  ar: { tilt: -2, spot: "lg:top-[46%] lg:start-[0%]" },
+  es: { tilt: 4, spot: "lg:bottom-[20%] lg:end-[1%]" },
+  ru: { tilt: -3, spot: "lg:bottom-[4%] lg:start-[18%]" },
 };
 
 /**

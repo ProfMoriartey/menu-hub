@@ -18,7 +18,7 @@ export async function Hero() {
   const [t, locale] = await Promise.all([getTranslations("HomePage.hero"), getLocale()]);
   return (
     <Cloth className="overflow-x-clip">
-      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-12 px-4 pt-4 pb-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-8 lg:px-8 lg:pt-8 lg:pb-24">
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-8 px-4 pt-4 pb-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-8 lg:px-8 lg:pt-8 lg:pb-10">
         <div className="flex justify-center">
           <Plate size="fluid" className="@container w-[min(40rem,150vw)] lg:w-full lg:max-w-[40rem]">
             <div className="flex w-[min(68%,calc(100vw-3.5rem))] flex-col items-center text-center">
@@ -41,8 +41,8 @@ export async function Hero() {
           </Plate>
         </div>
 
-        <div className="relative mx-auto flex w-full max-w-[34rem] flex-col items-center gap-10 lg:block lg:aspect-[5/6] lg:max-w-none">
-          <div className="flex justify-center lg:absolute lg:left-1/2 lg:top-1/2 lg:w-[52%] lg:-translate-x-1/2 lg:-translate-y-1/2">
+        <div className="relative mx-auto flex w-full max-w-[34rem] flex-col items-center gap-8 lg:block lg:aspect-[1/1] lg:max-w-none">
+          <div className="flex justify-center lg:absolute lg:left-1/2 lg:top-1/2 lg:w-[58%] lg:-translate-x-1/2 lg:-translate-y-1/2">
             <DemoPhone locale="en" label={t("phoneLabel")} priority />
           </div>
           <SeatCards active="en" />

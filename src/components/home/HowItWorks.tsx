@@ -9,7 +9,7 @@ export async function HowItWorks() {
   const t = await getTranslations("HomePage.steps");
   return (
     <PageSection id="steps" tone="cloth" title={t("title")}>
-      <ol className="grid justify-items-center gap-14 lg:grid-cols-3 lg:gap-8">
+      <ol className="grid justify-items-center gap-14 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
         {STEPS.map((step, i) => (
           <li key={step} className="relative w-full max-w-80">
             <Plate as="div" size="fluid" className="@container">

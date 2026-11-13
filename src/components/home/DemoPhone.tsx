@@ -40,7 +40,7 @@ export async function DemoPhone({
       role="group"
       aria-label={label}
       className={cn(
-        "bg-ink aspect-[9/17] w-full max-w-[15.5rem] -rotate-6 rounded-[2.4rem] p-[0.55rem] shadow-[0_24px_40px_rgb(20_4_8/0.45)] [[dir=rtl]_&]:rotate-6",
+        "bg-ink aspect-[9/19] w-full max-w-[min(17rem,78vw)] -rotate-6 rounded-[2.4rem] p-[0.55rem] shadow-[0_24px_40px_rgb(20_4_8/0.45)] [[dir=rtl]_&]:rotate-6",
         className,
       )}
     >
