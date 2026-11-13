@@ -24,6 +24,6 @@ Needs Postgres 16 binaries in `/usr/lib/postgresql/16/bin` and a `postgres` syst
 - Postgres refuses to run as root; the script uses `runuser -u postgres`.
 - Port is random per setup; it is stored in `/var/tmp/menu-hub-pg/port` and in the env file. If the machine restarts, run `dev:setup` again (it restarts the cluster, possibly on a new port, and rewrites the env file).
 - Guest pages are cached. After re-seeding, restart `pnpm dev` if a menu looks stale.
-- Site pages (`/`, `/menus`, `/pricing`, dashboard) go through Clerk. With the dummy keys, Clerk redirects the first request to its hosted handshake (`example.clerk.accounts.dev`), which cannot load, so `check:ui` reports navigation errors for them. Real Clerk development keys are needed to check those pages; guest menus do not use Clerk and check fine.
+- Site pages go through Clerk. With dummy keys the first request is redirected to Clerk's hosted handshake. `check:ui` avoids it by setting `__clerk_db_jwt` and `__client_uat=0` cookies (signed-out dev browser) and blocking `*.clerk.accounts.dev`; blocked requests are counted separately, not as failures. `/sign-in` only renders Clerk's widget, which cannot load here, so it measures as empty.
 - `pnpm lint` and `drizzle-kit` load `~/env`; without a `.env` they fail on DATABASE_URL. Prefix with `SKIP_ENV_VALIDATION=1` (typecheck needs nothing).
 - Never run `playwright install`; the browser is preinstalled.

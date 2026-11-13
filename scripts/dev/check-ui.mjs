@@ -5,6 +5,8 @@ import { mkdirSync } from "node:fs";
 
 const { chromium } = createRequire(import.meta.url)("playwright");
 
+const CLERK = /\.clerk\.accounts\.dev/;
+let blocked = 0;
 const LOCALES = ["en", "tr", "ar", "es", "ru"];
 const WIDTHS = [320, 390, 768, 1440];
 const SEEDED = ["demo-lokanta", "demo-limon-cafe", "demo-nacht-bistro", "demo-bosphorus", "demo-bosphorus/kadikoy"];
@@ -85,15 +87,20 @@ const rows = [];
 let fail = false;
 for (const width of WIDTHS) {
   const ctx = await browser.newContext({ viewport: { width, height: 900 } });
+  // Dummy Clerk keys: pretend a signed-out visitor with a dev browser (skips Clerk's handshake redirect) and
+  // block the unreachable Clerk host. Blocked requests and the console noise they cause are counted apart.
+  const host = new URL(base).hostname;
+  await ctx.addCookies(["__clerk_db_jwt=x", "__client_uat=0"].map((c) => ({ name: c.split("=")[0], value: c.split("=")[1], domain: host, path: "/" })));
+  await ctx.route(CLERK, (route) => { blocked++; return route.abort(); });
   for (const path of paths) {
     for (const locale of LOCALES) {
       const url = `${base}/${locale}${path === "/" ? "" : path}`;
       const page = await ctx.newPage();
       const errors = [], failed = [];
-      page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+      page.on("console", (m) => m.type() === "error" && !CLERK.test(m.location().url) && !/^Clerk: Failed to load/.test(m.text()) && errors.push(m.text()));
       page.on("pageerror", (e) => errors.push(String(e)));
-      page.on("requestfailed", (r) => failed.push(`${r.url()} ${r.failure()?.errorText}`));
-      page.on("response", (r) => r.status() >= 400 && failed.push(`${r.url()} ${r.status()}`));
+      page.on("requestfailed", (r) => !CLERK.test(r.url()) && failed.push(`${r.url()} ${r.failure()?.errorText}`));
+      page.on("response", (r) => r.status() >= 400 && !CLERK.test(r.url()) && failed.push(`${r.url()} ${r.status()}`));
       let res = null, r = null;
       try {
         res = await page.goto(url, { waitUntil: "load", timeout: 120000 });
@@ -151,5 +158,5 @@ for (const path of paths) {
   show("CONTRAST", (x) => x.contrast);
 }
 const sum = (k) => rows.reduce((a, x) => a + (Array.isArray(x[k]) ? x[k].length : +x[k]), 0);
-console.log(`\n${rows.length} page checks: overflow ${rows.filter((x) => x.o).length}, console errors ${sum("errors")}, failed requests ${sum("failed")}, small targets ${sum("small")}, low contrast ${sum("contrast")}, contrast skipped (images/gradients/transparent) ${sum("skipped")} elements`);
+console.log(`\n${rows.length} page checks: overflow ${rows.filter((x) => x.o).length}, console errors ${sum("errors")}, failed requests ${sum("failed")}, small targets ${sum("small")}, low contrast ${sum("contrast")}, blocked Clerk requests ${blocked}, contrast skipped (images/gradients/transparent) ${sum("skipped")} elements`);
 process.exit(fail ? 1 : 0);
