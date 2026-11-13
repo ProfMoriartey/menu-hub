@@ -884,7 +884,9 @@
     "branchesCount": "{count, plural, one {# sucursal} other {# sucursales}}",
     "branchesPlace": "{count, plural, one {# sucursal} other {# sucursales}} · {places}",
     "openAtBranches": "{count, plural, one {Abierto ahora en # sucursal} other {Abierto ahora en # sucursales}}",
-    "closedAtBranches": "Cerrado ahora"
+    "closedAtBranches": "Cerrado ahora",
+    "exampleLabel": "Ejemplo",
+    "backHome": "Volver al inicio"
   },
   "HomePage": {
     "metaTitle": "Menupedia: menús digitales para restaurantes y cafés",

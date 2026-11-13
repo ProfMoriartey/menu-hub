@@ -884,7 +884,9 @@
     "branchesCount": "{count, plural, one {فرع واحد} two {فرعان} few {# فروع} many {# فرعًا} other {# فرع}}",
     "branchesPlace": "{count, plural, one {فرع واحد} two {فرعان} few {# فروع} many {# فرعًا} other {# فرع}} · {places}",
     "openAtBranches": "مفتوح الآن في {count, plural, one {فرع واحد} two {فرعين} few {# فروع} many {# فرعًا} other {# فرع}}",
-    "closedAtBranches": "مغلق الآن"
+    "closedAtBranches": "مغلق الآن",
+    "exampleLabel": "مثال",
+    "backHome": "العودة إلى الصفحة الرئيسية"
   },
   "HomePage": {
     "metaTitle": "Menupedia: قوائم رقمية للمطاعم والمقاهي",

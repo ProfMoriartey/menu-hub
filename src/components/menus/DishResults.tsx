@@ -1,13 +1,13 @@
 // src/components/menus/DishResults.tsx
-import Image from "next/image";
-import { UtensilsCrossed } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "~/i18n/navigation";
-import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
+import { LeaderRow } from "~/components/table/LeaderRow";
+import { PlatePhoto, Platter } from "~/components/table/Plate";
+import { Stamp } from "~/components/table/Stamp";
 import type { DishResult } from "~/app/actions/search";
 import type { DirectoryVenue } from "~/lib/menus-directory";
 
-/** Dishes found across every menu, each linking to its page on its menu. */
+/** Dishes found across every menu, as leader rows on a platter, each linking to its page on its menu. */
 export function DishResults({
   dishes,
   venues,
@@ -18,47 +18,35 @@ export function DishResults({
   const t = useTranslations("MenusPage");
 
   return (
-    <ul className="divide-border border-border bg-card divide-y overflow-hidden rounded-2xl border">
-      {dishes.map((dish) => {
-        const venue = venues.get(dish.restaurantId);
-        if (!venue) return null;
-        return (
-          <li key={dish.id}>
-            <Link
-              href={`/${venue.slug}/item/${dish.slug}`}
-              className="hover:bg-accent/40 focus-visible:bg-accent/40 flex items-center gap-3 p-3 outline-none"
-            >
-              <div className="bg-muted relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
-                {dish.imageUrl ? (
-                  <Image src={dish.imageUrl} alt="" fill sizes="64px" className="object-cover" />
-                ) : (
-                  <UtensilsCrossed
-                    className="text-muted-foreground absolute inset-0 m-auto h-6 w-6"
-                    aria-hidden
-                  />
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="line-clamp-2 font-medium" lang={dish.lang}>
-                  {dish.name}
-                </p>
-                <p className="text-muted-foreground mt-1 flex items-center gap-1.5 text-sm">
-                  <RestaurantLogo restaurant={venue} className="h-5 w-5 rounded-md text-[9px]" imageSizes="20px" />
-                  <span className="line-clamp-1">{venue.name}</span>
-                </p>
-              </div>
-              <div className="shrink-0 text-end">
-                <p className="font-semibold tabular-nums" dir="ltr">
-                  {dish.price}
-                </p>
-                {dish.soldOut && (
-                  <p className="text-muted-foreground text-xs">{t("soldOut")}</p>
-                )}
-              </div>
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
+    <Platter className="p-5 sm:p-7">
+      <ul className="divide-plate-rim-shadow divide-y">
+        {dishes.map((dish) => {
+          const venue = venues.get(dish.restaurantId);
+          if (!venue) return null;
+          return (
+            <li key={dish.id}>
+              <Link
+                href={`/${venue.slug}/item/${dish.slug}`}
+                className="flex min-h-11 items-center gap-3 rounded-lg py-3 outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)]"
+              >
+                <PlatePhoto src={dish.imageUrl} alt="" size={56} />
+                <LeaderRow
+                  as="div"
+                  className="min-w-0 flex-1"
+                  muted={dish.soldOut}
+                  name={<span lang={dish.lang}>{dish.name}</span>}
+                  price={<bdi dir="ltr">{dish.price}</bdi>}
+                >
+                  <p className="text-ink-muted mt-0.5 flex flex-wrap items-center gap-x-2 text-sm">
+                    <span className="line-clamp-1">{venue.name}</span>
+                    {dish.soldOut && <Stamp className="text-[0.6875rem]">{t("soldOut")}</Stamp>}
+                  </p>
+                </LeaderRow>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </Platter>
   );
 }

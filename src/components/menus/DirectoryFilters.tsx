@@ -3,7 +3,7 @@
 
 import { useState, type ReactNode } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Clock, Flag, Languages, MapPin, SlidersHorizontal, X, type LucideIcon } from "lucide-react";
+import { Check, Clock, Flag, Languages, MapPin, SlidersHorizontal, X, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
 import {
@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { tableFontVariables } from "~/components/table/fonts";
 import { VenueTypeIcon } from "~/components/shared/VenueTypeIcon";
 import { cn } from "~/lib/utils";
 import type { VenueType } from "~/lib/venue-types";
@@ -50,10 +51,10 @@ export interface FilterModel {
   resultCount: number;
 }
 
-// An unpressed chip; on hover it takes the accent colour and its text.
-const CHIP_IDLE =
-  "border-border bg-card hover:border-accent hover:bg-accent hover:text-accent-foreground";
-const CHIP_PRESSED = "border-primary bg-primary text-primary-foreground";
+// A white place card, brass when chosen (on the cloth, or on the sheet's
+// porcelain: the thin edge keeps the white card visible on both).
+const CHIP_IDLE = "bg-place-card text-place-card-ink border-ink/20 hover:-translate-y-0.5";
+const CHIP_PRESSED = "bg-brass text-place-card-ink border-ink/40";
 
 const ALL = "all";
 
@@ -74,12 +75,12 @@ export function Chip({
       aria-pressed={pressed}
       onClick={onClick}
       className={cn(
-        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium whitespace-nowrap transition-colors",
-        "focus-visible:ring-ring outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+        "inline-flex min-h-11 max-w-full cursor-pointer items-center gap-1.5 rounded-[4px] border px-4 text-base font-bold shadow-[0_6px_12px_rgb(20_4_8/0.25)] motion-safe:transition-[translate] motion-safe:duration-200",
         pressed ? CHIP_PRESSED : CHIP_IDLE,
         className,
       )}
     >
+      {pressed && <Check className="size-4 shrink-0" aria-hidden />}
       {children}
     </button>
   );
@@ -95,12 +96,12 @@ export function InlineFilters({ model }: { model: FilterModel }) {
   return (
     <div className="hidden space-y-4 sm:block">
       {m.types.length > 0 && (
-        <div role="group" aria-label={t("typeFilterLabel")} className="flex flex-wrap gap-2">
+        <div role="group" aria-label={t("typeFilterLabel")} className="flex flex-wrap gap-3">
           <TypeChips model={m} />
         </div>
       )}
       {hasMore && (
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3">
           <ToggleChips model={m} />
           {m.countries.length > 1 && (
             <FilterSelect
@@ -123,7 +124,13 @@ export function InlineFilters({ model }: { model: FilterModel }) {
             />
           )}
           {m.activeCount > 0 && (
-            <Button type="button" variant="ghost" size="sm" onClick={m.clear}>
+            <Button
+              type="button"
+              variant="tableOnCloth"
+              size="pill"
+              className="px-4 text-base"
+              onClick={m.clear}
+            >
               {t("clearFilters")}
             </Button>
           )}
@@ -150,17 +157,17 @@ export function FilterSheetButton({ model }: { model: FilterModel }) {
         <button
           type="button"
           className={cn(
-            "relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border shadow-sm transition-colors sm:hidden",
+            "relative flex size-14 shrink-0 cursor-pointer items-center justify-center rounded-[4px] border shadow-[0_6px_12px_rgb(20_4_8/0.25)] sm:hidden",
             m.activeCount > 0 ? CHIP_PRESSED : CHIP_IDLE,
           )}
           aria-label={
             m.activeCount > 0 ? t("filtersActive", { count: m.activeCount }) : t("filters")
           }
         >
-          <SlidersHorizontal className="h-5 w-5" aria-hidden />
+          <SlidersHorizontal className="size-5" aria-hidden />
           {m.activeCount > 0 && (
             <span
-              className="bg-background text-foreground border-primary absolute -end-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border px-1 text-xs font-semibold tabular-nums"
+              className="bg-place-card text-place-card-ink border-ink/40 absolute -end-2 -top-2 flex h-6 min-w-6 items-center justify-center rounded-full border px-1 text-xs font-bold tabular-nums"
               aria-hidden
             >
               {m.activeCount}
@@ -170,15 +177,15 @@ export function FilterSheetButton({ model }: { model: FilterModel }) {
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50" />
-        <DialogPrimitive.Content className="bg-card text-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom fixed inset-x-0 bottom-0 z-50 flex max-h-[85dvh] flex-col rounded-t-2xl shadow-xl outline-none">
-          <div className="bg-muted-foreground/30 mx-auto mt-2 h-1 w-10 shrink-0 rounded-full" aria-hidden />
+        <DialogPrimitive.Content className={cn("table-world bg-plate text-ink [--table-focus:var(--table-brass-ink)]", tableFontVariables, "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom fixed inset-x-0 bottom-0 z-50 flex max-h-[85dvh] flex-col rounded-t-[2rem] shadow-xl outline-none")}>
+          <div className="bg-ink-muted/40 mx-auto mt-3 h-1 w-10 shrink-0 rounded-full" aria-hidden />
           <div className="flex items-center justify-between px-5 pt-3 pb-2">
             <DialogPrimitive.Title className="text-xl font-bold">{t("filters")}</DialogPrimitive.Title>
             <DialogPrimitive.Close
-              className="hover:bg-accent hover:text-accent-foreground flex h-9 w-9 items-center justify-center rounded-full"
+              className="hover:bg-plate-rim flex size-11 items-center justify-center rounded-full"
               aria-label={t("closeFilters")}
             >
-              <X className="h-5 w-5" aria-hidden />
+              <X className="size-5" aria-hidden />
             </DialogPrimitive.Close>
           </div>
           <DialogPrimitive.Description className="sr-only">{t("filtersDescription")}</DialogPrimitive.Description>
@@ -216,12 +223,12 @@ export function FilterSheetButton({ model }: { model: FilterModel }) {
             )}
           </div>
 
-          <div className="border-border flex items-center gap-3 border-t px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-            <Button type="button" variant="ghost" onClick={m.clear} disabled={m.activeCount === 0}>
+          <div className="border-plate-rim-shadow flex items-center gap-3 border-t px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <Button type="button" variant="ghost" size="pill" onClick={m.clear} disabled={m.activeCount === 0}>
               {t("clearAll")}
             </Button>
             <DialogPrimitive.Close asChild>
-              <Button type="button" className="h-11 flex-1 rounded-full">
+              <Button type="button" variant="table" size="pill" className="flex-1">
                 {t("showResults", { count: m.resultCount })}
               </Button>
             </DialogPrimitive.Close>
@@ -254,20 +261,20 @@ export function ActiveFilterPills({ model }: { model: FilterModel }) {
   if (pills.length === 0) return null;
 
   return (
-    <div className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 sm:hidden">
+    <div className="flex flex-wrap gap-3 sm:hidden">
       {pills.map((pill) => (
         <button
           key={pill.key}
           type="button"
           onClick={pill.remove}
           className={cn(
-            "inline-flex h-8 shrink-0 items-center gap-1 rounded-full border ps-3 pe-2 text-sm font-medium whitespace-nowrap",
+            "inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-[4px] border ps-3 pe-2.5 text-sm font-bold whitespace-nowrap shadow-[0_6px_12px_rgb(20_4_8/0.25)]",
             CHIP_PRESSED,
           )}
           aria-label={t("removeFilter", { name: pill.label })}
         >
           {pill.label}
-          <X className="h-3.5 w-3.5" aria-hidden />
+          <X className="size-4" aria-hidden />
         </button>
       ))}
     </div>
@@ -287,9 +294,9 @@ function TypeChips({ model: m }: { model: FilterModel }) {
           pressed={m.type === option.type}
           onClick={() => m.setType(m.type === option.type ? "" : option.type)}
         >
-          <VenueTypeIcon type={option.type} className="h-4 w-4" />
+          <VenueTypeIcon type={option.type} className="size-4 shrink-0" />
           {option.label}
-          <span className="opacity-60 tabular-nums">{option.count}</span>
+          <span className="opacity-70 tabular-nums">{option.count}</span>
         </Chip>
       ))}
     </>
@@ -302,13 +309,13 @@ function ToggleChips({ model: m }: { model: FilterModel }) {
     <>
       {m.showOpenNow && (
         <Chip pressed={m.openNow} onClick={() => m.setOpenNow(!m.openNow)}>
-          <Clock className="h-4 w-4" aria-hidden />
+          <Clock className="size-4 shrink-0" aria-hidden />
           {t("openNow")}
         </Chip>
       )}
       {m.myLanguageName !== null && (
         <Chip pressed={m.inMyLanguage} onClick={() => m.setInMyLanguage(!m.inMyLanguage)}>
-          <Languages className="h-4 w-4" aria-hidden />
+          <Languages className="size-4 shrink-0" aria-hidden />
           {t("inLanguage", { language: m.myLanguageName })}
         </Chip>
       )}
@@ -339,7 +346,7 @@ function OptionChips({
           onClick={() => onChange(value === option.key ? "" : option.key)}
         >
           {option.name}
-          <span className="opacity-60 tabular-nums">{option.count}</span>
+          <span className="opacity-70 tabular-nums">{option.count}</span>
         </Chip>
       ))}
     </>
@@ -349,8 +356,8 @@ function OptionChips({
 function SheetSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-3">
-      <h3 className="text-muted-foreground text-sm font-semibold">{title}</h3>
-      <div className="flex flex-wrap gap-2">{children}</div>
+      <h3 className="text-ink-muted text-sm font-bold">{title}</h3>
+      <div className="flex flex-wrap gap-3">{children}</div>
     </section>
   );
 }
@@ -376,16 +383,14 @@ function FilterSelect({
       <SelectTrigger
         aria-label={label}
         className={cn(
-          "h-9 w-auto gap-1.5 rounded-full px-3.5 text-sm font-medium transition-colors",
-          value
-            ? `${CHIP_PRESSED} dark:bg-primary dark:hover:bg-primary [&_svg]:!text-primary-foreground`
-            : `${CHIP_IDLE} dark:bg-card dark:hover:bg-accent hover:[&_svg]:!text-accent-foreground`,
+          "data-[size=default]:h-auto min-h-11 w-auto cursor-pointer gap-1.5 rounded-[4px] border px-4 text-base font-bold shadow-[0_6px_12px_rgb(20_4_8/0.25)] [&_svg]:!text-current",
+          value ? `${CHIP_PRESSED} dark:bg-brass dark:hover:bg-brass` : `${CHIP_IDLE} dark:bg-place-card dark:hover:bg-place-card`,
         )}
       >
-        <Icon className="h-4 w-4" aria-hidden />
+        <Icon className="size-4" aria-hidden />
         <SelectValue />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className={cn("table-world bg-plate text-ink", tableFontVariables)}>
         <SelectItem value={ALL}>{allLabel}</SelectItem>
         {options.map((option) => (
           <SelectItem key={option.key} value={option.key}>
