@@ -18,7 +18,7 @@ export function PublicPageControls({
       <LanguageSwitcher
         compact={compact}
         className={cn(
-          "bg-card dark:bg-card border-border/70 h-11 w-auto rounded-full",
+          "bg-card dark:bg-card border-border/70 h-11 w-auto rounded-full data-[size=default]:h-11",
           compact && "gap-1 px-3",
         )}
         // The list opens in a portal, outside the guest menu's scope.

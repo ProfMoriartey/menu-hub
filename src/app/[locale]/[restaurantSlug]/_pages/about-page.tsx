@@ -141,12 +141,12 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
 
           {/* Action buttons directly under logo */}
           <div className="mb-6 w-full max-w-sm grid grid-cols-2 gap-3 sm:flex sm:max-w-none sm:justify-center sm:gap-4">
-            <Link href={base} passHref className="w-full sm:w-auto">
-              <Button size="lg" className="w-full font-bold px-4">
-                <UtensilsCrossed className="me-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <Button asChild size="lg" className="h-11 w-full rounded-full px-5 font-bold sm:w-auto">
+              <Link href={base}>
+                <UtensilsCrossed className="me-2 h-4 w-4 sm:h-5 sm:w-5" aria-hidden />
                 {t("menuButton")}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             {hasDelivery && (
               <div className="w-full sm:w-auto">
                 <DeliveryOptionsDialog 
@@ -282,23 +282,23 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
                   const choice = choices.find((c) => c.id === b.id)!
                   return (
                     <li key={b.id} className="border-border rounded-xl border p-4">
-                      <Link href={choice.href} className="inline-flex min-h-11 items-center text-lg font-semibold hover:underline">
+                      <Link href={choice.href} className="inline-flex min-h-11 min-w-11 items-center text-lg font-semibold hover:underline">
                         {choice.label}
                       </Link>
                       {choice.place && <p className="text-muted-foreground">{choice.place}</p>}
                       <OpenStatusText hours={choice.hours} timeZone={choice.timeZone} className="mt-1 text-sm" />
                       <div className="mt-3 flex flex-wrap items-center gap-x-4 text-sm">
                         {b.phoneNumber && (
-                          <a href={`tel:${b.phoneNumber}`} className="text-primary inline-flex min-h-11 items-center gap-1.5 font-medium hover:underline">
+                          <a href={`tel:${b.phoneNumber}`} className="text-primary inline-flex min-h-11 min-w-11 items-center gap-1.5 font-medium hover:underline">
                             <Phone className="h-4 w-4" aria-hidden /> <span dir="ltr">{b.phoneNumber}</span>
                           </a>
                         )}
                         {b.mapUrl && (
-                          <a href={b.mapUrl} target="_blank" rel="noopener noreferrer" className="text-primary inline-flex min-h-11 items-center font-medium hover:underline">
+                          <a href={b.mapUrl} target="_blank" rel="noopener noreferrer" className="text-primary inline-flex min-h-11 min-w-11 items-center font-medium hover:underline">
                             {t("getDirections")}
                           </a>
                         )}
-                        <Link href={choice.href} className="text-primary inline-flex min-h-11 items-center font-medium hover:underline">
+                        <Link href={choice.href} className="text-primary inline-flex min-h-11 min-w-11 items-center font-medium hover:underline">
                           {t("branchDetails")}
                         </Link>
                       </div>
@@ -325,7 +325,7 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
                         href={restaurantDetails.mapUrl} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-primary inline-flex min-h-11 items-center font-medium hover:underline"
+                        className="text-primary inline-flex min-h-11 min-w-11 items-center font-medium hover:underline"
                       >
                         {t("getDirections")}
                       </a>

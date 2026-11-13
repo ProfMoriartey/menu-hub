@@ -60,14 +60,14 @@ export function MenuItemDetail({ item, restaurant }: MenuItemDetailProps) {
             <p className="text-muted-foreground text-sm font-medium">
               <Link
                 href={`/${restaurant.slug}`}
-                className="hover:text-foreground inline-flex min-h-11 items-center hover:underline"
+                className="hover:text-foreground inline-flex min-h-11 min-w-11 items-center hover:underline"
               >
                 {restaurant.name}
               </Link>
               <span aria-hidden> · </span>
               <Link
                 href={menuHref}
-                className="hover:text-foreground inline-flex min-h-11 items-center hover:underline"
+                className="hover:text-foreground inline-flex min-h-11 min-w-11 items-center hover:underline"
               >
                 <span lang={item.category.lang} dir="auto">
                   {item.category.name}
