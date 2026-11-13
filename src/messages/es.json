@@ -21,7 +21,7 @@
     "browseMenuDefault": "Explora nuestro delicioso menú",
     "noMenuItemsAvailable": "Aún no hay elementos de menú disponibles para este restaurante.",
     "checkBackLater": "¡Por favor, vuelve a comprobarlo más tarde!",
-    "restaurantDetailsButton": "Detalles" 
+    "restaurantDetailsButton": "Detalles"
   },
   "menuItemDetailPage": {
     "pageTitle": "Detalles del Artículo del Menú",
@@ -30,22 +30,22 @@
     "ingredientsLabel": "Ingredientes",
     "dietaryLabels": "Información Dietética"
   },
-"restaurantProfilePage": {
-      "backToMenu": "Volver al Menú",
-      "menuButton": "Menú",
-      "orderButton": "Pedir",
-      "informationHeading": "Información",
-      "locationHeading": "Ubicación",
-      "foodTypeLabel": "Cocina",
-      "establishmentTypeLabel": "Tipo",
-      "phoneLabel": "Contacto",
-      "countryLabel": "País",
-      "locationLabel": "Ubicación",
-      "addressLabel": "Dirección",
-      "getDirections": "Cómo Llegar",
-      "branchesHeading": "Sucursales",
-      "branchDetails": "Horario y detalles"
-    },
+  "restaurantProfilePage": {
+    "backToMenu": "Volver al Menú",
+    "menuButton": "Menú",
+    "orderButton": "Pedir",
+    "informationHeading": "Información",
+    "locationHeading": "Ubicación",
+    "foodTypeLabel": "Cocina",
+    "establishmentTypeLabel": "Tipo",
+    "phoneLabel": "Contacto",
+    "countryLabel": "País",
+    "locationLabel": "Ubicación",
+    "addressLabel": "Dirección",
+    "getDirections": "Cómo Llegar",
+    "branchesHeading": "Sucursales",
+    "branchDetails": "Horario y detalles"
+  },
   "Dashboard": {
     "title": "Sus Menús Asignados",
     "accessLevelLabel": "Nivel de Acceso",
@@ -891,41 +891,88 @@
     "metaDescription": "Un menú QR que tus clientes abren en su móvil, en su idioma, y que actualizas tú mismo en segundos. Para restaurantes, cafés, panaderías y más.",
     "hero": {
       "eyebrow": "Menús digitales para restaurantes, cafés y más",
-      "title": "Tu menú en cada móvil, en cada idioma",
-      "intro": "Tus clientes escanean un código QR y tu menú se abre al instante, con fotos, precios y horario. Lo cambias tú mismo y está publicado en segundos.",
-      "ctaMenus": "Ver menús",
-      "point1": "Sin instalar apps",
-      "point2": "5 idiomas",
-      "point3": "Publicado en segundos",
-      "demoCaption": "Un menú de demostración que funciona. Toca un plato.",
+      "title": "Cada asiento lee tu menú en su idioma.",
+      "intro": "Los clientes escanean un código QR y tu menú se abre en su móvil, en su idioma. Lo cambias tú mismo y se publica en segundos.",
+      "priceNote": "{months, plural, one {Gratis el primer mes} other {Gratis los primeros # meses}}, después {price} al mes.",
+      "phoneLabel": "Menú de demostración de Lokanta Demo, un restaurante ficticio",
+      "seatsLabel": "Idioma del menú",
+      "seat": "Asiento {n}",
       "ctaStart": "Crea tu carta"
     },
     "steps": {
       "title": "Cómo funciona",
-      "intro": "Del primer mensaje a los menús en las mesas, sin volver a imprimir nada.",
+      "step": "Paso {n}",
       "s1": {
-        "title": "Te lo preparamos",
-        "text": "Cuéntanos sobre tu local. Creamos la página de tu menú y te enviamos enlaces de acceso para ti y tu equipo."
+        "title": "Lo preparamos contigo",
+        "text": "Cuéntanos sobre tu local. Creamos tu página de menú y enviamos enlaces de acceso a ti y a tu equipo."
       },
       "s2": {
         "title": "Añade tu menú",
-        "text": "Platos, precios, fotos y etiquetas dietéticas. Una lista de pasos y una vista previa privada te ayudan a dejarlo listo antes de que lo vean tus clientes."
+        "text": "Platos, precios, fotos y etiquetas dietéticas, revisados en una vista previa privada."
       },
       "s3": {
         "title": "Ponlo en las mesas",
-        "text": "Imprime tarjetas QR para las mesas. Tus clientes escanean y tú ves cuántos abrieron tu menú cada día."
+        "text": "Imprime tarjetas QR para las mesas. Ves cuántos clientes abren tu menú cada día."
       }
     },
-    "features": {
-      "title": "Todo lo que tu menú necesita",
-      "intro": "Pensado para el móvil en la mesa y para dueños que quieren hacer los cambios ellos mismos.",
-      "cta": "Ver todas las funciones"
+    "guests": {
+      "title": "Lo que ven tus clientes",
+      "intro": "Una página que se abre en el navegador: sin app ni cuenta.",
+      "p1": "Fotos y precios en su propio formato",
+      "p2": "Su idioma, el árabe de derecha a izquierda",
+      "p3": "Búsqueda y filtros dietéticos",
+      "p4": "Horario y platos agotados marcados",
+      "caption": "Lokanta Demo es un restaurante ficticio."
     },
-    "menus": {
-      "title": "Menús en Menupedia",
-      "titleLocal": "Menús en {country}",
-      "intro": "Locales que ya usan Menupedia. Abre uno para verlo como lo ven sus clientes.",
+    "features": {
+      "title": "Qué hace",
+      "intro": "Pensado para los móviles en la mesa y para dueños que cambian las cosas ellos mismos.",
+      "cta": "Ver todas las funciones",
+      "items": {
+        "designs": {
+          "name": "Diseños de menú",
+          "note": "Clásico, cuadrícula de fotos o compacto. Cámbialo cuando quieras.",
+          "value": "3"
+        },
+        "languages": {
+          "name": "Idiomas",
+          "note": "Inglés, turco, árabe, español y ruso.",
+          "value": "5"
+        },
+        "colors": {
+          "name": "Temas de color",
+          "note": "Tus propios colores, con vista previa en vivo.",
+          "value": "claro y oscuro"
+        },
+        "instant": {
+          "name": "Actualizaciones",
+          "note": "Cambia un precio o marca un plato como agotado. Sin reimprimir.",
+          "value": "segundos"
+        },
+        "hours": {
+          "name": "Horario",
+          "note": "«Abierto ahora» calculado en tu zona horaria.",
+          "value": "integrado"
+        },
+        "qr": {
+          "name": "Tarjetas QR de mesa",
+          "note": "Listas para imprimir, con tu logo.",
+          "value": "incluidas"
+        }
+      }
+    },
+    "examples": {
+      "title": "Menús de ejemplo",
+      "intro": "Menús creados con Menupedia. Abre uno y léelo como lo haría un cliente.",
+      "label": "Ejemplo",
       "cta": "Ver todos los menús"
+    },
+    "pricing": {
+      "title": "Empieza gratis",
+      "free": "{months, plural, one {# mes gratis} other {# meses gratis}}",
+      "then": "después {price} al mes",
+      "text": "Un solo plan con todo incluido: sin cargos extra por escaneo, mesa ni plato. No hace falta tarjeta para registrarte.",
+      "cta": "Ver precios"
     },
     "contact": {
       "title": "Pon tu menú en línea",
