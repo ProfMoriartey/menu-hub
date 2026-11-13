@@ -41,7 +41,7 @@ export function MenuItemDetail({ item, restaurant }: MenuItemDetailProps) {
               {t("backToMenu")}
             </Link>
           </Button>
-          <PublicPageControls className="ms-auto" />
+          <PublicPageControls className="bg-card ms-auto rounded-full p-0.5 shadow-sm" />
         </div>
 
         {/* A white place card; the dish sits on a large round plate. */}

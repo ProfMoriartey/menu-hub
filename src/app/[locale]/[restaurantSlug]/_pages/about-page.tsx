@@ -104,14 +104,18 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
   const themeClass = `theme-${restaurantDetails.theme ?? "default"}`
 
   return (
-    <div className={cn("relative min-h-screen p-4 sm:p-8", "bg-background text-foreground", themeClass)}>
+    <div className={cn("relative", themeClass)}>
+      {/* The band in the restaurant's colour, as under the menu's header. */}
+      <div aria-hidden className="bg-brand h-1.5" />
+      <div className="relative p-4 sm:p-8">
       
       {/* Theme Toggle - Top Right */}
       <div className="absolute end-4 top-4 z-50">
-        <PublicPageControls />
+        {/* On the ground: the controls sit on a paper card. */}
+        <PublicPageControls className="bg-card rounded-full p-0.5 shadow-sm" />
       </div>
 
-      <div className={cn("container mx-auto max-w-4xl rounded-lg p-6 shadow-lg sm:p-8 mt-12", "bg-card")}>
+      <div className="bg-card text-card-foreground border-border/60 container mx-auto mt-14 max-w-4xl rounded-3xl border p-6 shadow-[0_2px_6px_rgb(34_26_23/0.08)] sm:p-8">
         
         {/* Header section - centered for mobile and desktop */}
         <div className="mb-10 flex flex-col items-center border-b pb-8">
@@ -166,30 +170,30 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
 
           {/* Social icons under description */}
           {hasSocials && (
-            <div className="mt-6 flex gap-5">
+            <div className="mt-6 flex gap-2">
               {socials.instagram && (
-                <a href={socials.instagram} aria-label="Instagram" title="Instagram" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Instagram className="h-7 w-7" />
+                <a href={socials.instagram} aria-label="Instagram" title="Instagram" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary inline-flex size-11 items-center justify-center rounded-full transition-colors">
+                  <Instagram className="h-6 w-6" />
                 </a>
               )}
               {socials.facebook && (
-                <a href={socials.facebook} aria-label="Facebook" title="Facebook" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Facebook className="h-7 w-7" />
+                <a href={socials.facebook} aria-label="Facebook" title="Facebook" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary inline-flex size-11 items-center justify-center rounded-full transition-colors">
+                  <Facebook className="h-6 w-6" />
                 </a>
               )}
               {socials.twitter && (
-                <a href={socials.twitter} aria-label="Twitter" title="Twitter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Twitter className="h-7 w-7" />
+                <a href={socials.twitter} aria-label="Twitter" title="Twitter" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary inline-flex size-11 items-center justify-center rounded-full transition-colors">
+                  <Twitter className="h-6 w-6" />
                 </a>
               )}
               {socials.tiktok && (
-                <a href={socials.tiktok} aria-label="TikTok" title="TikTok" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Music2 className="h-7 w-7" />
+                <a href={socials.tiktok} aria-label="TikTok" title="TikTok" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary inline-flex size-11 items-center justify-center rounded-full transition-colors">
+                  <Music2 className="h-6 w-6" />
                 </a>
               )}
               {socials.website && (
-                <a href={socials.website} aria-label={tMenu("websiteLabel")} title={tMenu("websiteLabel")} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Globe className="h-7 w-7" />
+                <a href={socials.website} aria-label={tMenu("websiteLabel")} title={tMenu("websiteLabel")} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary inline-flex size-11 items-center justify-center rounded-full transition-colors">
+                  <Globe className="h-6 w-6" />
                 </a>
               )}
             </div>
@@ -278,23 +282,23 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
                   const choice = choices.find((c) => c.id === b.id)!
                   return (
                     <li key={b.id} className="border-border rounded-xl border p-4">
-                      <Link href={choice.href} className="text-lg font-semibold hover:underline">
+                      <Link href={choice.href} className="inline-flex min-h-11 items-center text-lg font-semibold hover:underline">
                         {choice.label}
                       </Link>
                       {choice.place && <p className="text-muted-foreground">{choice.place}</p>}
                       <OpenStatusText hours={choice.hours} timeZone={choice.timeZone} className="mt-1 text-sm" />
-                      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+                      <div className="mt-3 flex flex-wrap items-center gap-x-4 text-sm">
                         {b.phoneNumber && (
-                          <a href={`tel:${b.phoneNumber}`} className="text-primary inline-flex items-center gap-1.5 font-medium hover:underline">
+                          <a href={`tel:${b.phoneNumber}`} className="text-primary inline-flex min-h-11 items-center gap-1.5 font-medium hover:underline">
                             <Phone className="h-4 w-4" aria-hidden /> <span dir="ltr">{b.phoneNumber}</span>
                           </a>
                         )}
                         {b.mapUrl && (
-                          <a href={b.mapUrl} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:underline">
+                          <a href={b.mapUrl} target="_blank" rel="noopener noreferrer" className="text-primary inline-flex min-h-11 items-center font-medium hover:underline">
                             {t("getDirections")}
                           </a>
                         )}
-                        <Link href={choice.href} className="text-primary font-medium hover:underline">
+                        <Link href={choice.href} className="text-primary inline-flex min-h-11 items-center font-medium hover:underline">
                           {t("branchDetails")}
                         </Link>
                       </div>
@@ -321,7 +325,7 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
                         href={restaurantDetails.mapUrl} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-primary hover:underline font-medium"
+                        className="text-primary inline-flex min-h-11 items-center font-medium hover:underline"
                       >
                         {t("getDirections")}
                       </a>
@@ -349,6 +353,7 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
           </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   )
