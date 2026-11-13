@@ -15,6 +15,8 @@ export async function MenuByMenupedia() {
       <Link
         href="/"
         target="_blank"
+        // Guests on mobile data shouldn't download the home page per menu view.
+        prefetch={false}
         rel="noopener"
         className="hover:text-on-ground inline-block rounded-sm px-2 py-3 underline-offset-2 transition-colors hover:underline"
       >
