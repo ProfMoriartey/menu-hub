@@ -81,6 +81,12 @@
   --color-place-card-ink: var(--table-place-card-ink);
   --color-place-card-muted: var(--table-place-card-muted);
   --color-sold-out: var(--table-sold-out);
+  /* Guest menus (.guest-menu): the ground and text set straight on it. */
+  --color-ground: var(--guest-ground);
+  --color-on-ground: var(--guest-on-ground);
+  --color-on-ground-muted: var(--guest-on-ground-muted);
+  --color-brand: var(--brand, var(--table-cloth));
+  --color-brand-ink: var(--brand-ink, var(--table-cloth-ink));
 }
 
 :root {
@@ -227,6 +233,13 @@ html:has(.table-world) {
 html.dark:has(.table-world) {
   background-color: #6a1a25;
 }
+/* Guest menus: the off-white ground (warm near-black at night). */
+html:has(.guest-menu) {
+  background-color: #f5f0e8;
+}
+html.dark:has(.guest-menu) {
+  background-color: #1d1714;
+}
 
 /* The public menu's top section, in its own colour. Text inside switches
    to the header's text colours, so it stays readable on any header colour. */
@@ -356,6 +369,47 @@ html.dark:has(.table-world) {
        and cloth-ink (7.9:1), sold-out (4.5:1), place-card-ink. */
   }
 
+
+  /* Guest menus: The Table inside the restaurant's own colour. The shadcn
+     tokens the menu components use are mapped to the world, so cards are
+     white place cards (dimmed paper at night) with dark ink in both modes;
+     only text set straight on the ground (section headings, the credit)
+     uses --guest-on-ground. --brand-* come from the restaurant layout
+     (lib/color-theme guestBrandCss); without them, cloth red. */
+  .guest-menu {
+    --guest-ground: #f5f0e8;
+    --guest-on-ground: var(--table-ink); /* 14.8:1 */
+    --guest-on-ground-muted: var(--table-ink-muted); /* 6.6:1 */
+    --background: var(--guest-ground);
+    --foreground: var(--table-ink);
+    --card: var(--table-place-card);
+    --card-foreground: var(--table-ink);
+    --popover: var(--table-place-card);
+    --popover-foreground: var(--table-ink);
+    --primary: var(--brand-ink, var(--table-cloth-ink));
+    --primary-foreground: var(--brand-ink-fg, #ffffff);
+    --secondary: var(--table-plate);
+    --secondary-foreground: var(--table-ink);
+    --accent: var(--table-plate-rim);
+    --accent-foreground: var(--table-ink);
+    --muted: var(--table-plate);
+    --muted-foreground: var(--table-ink-muted); /* 7.6:1 on white, 5.5:1 dimmed */
+    --border: var(--table-plate-rim-shadow);
+    --input: var(--table-plate-rim-shadow);
+    --ring: var(--table-brass-ink);
+    background-color: var(--guest-ground);
+    color: var(--table-ink);
+  }
+  .dark .guest-menu {
+    --guest-ground: #1d1714;
+    --guest-on-ground: #efe8dd; /* 15:1 */
+    --guest-on-ground-muted: #c2b6aa; /* 9:1 */
+    --table-focus: var(--table-brass);
+  }
+  /* Inside cards and the header the focus ring is drawn on porcelain. */
+  .dark .guest-menu .bg-card * {
+    --table-focus: var(--table-brass-ink);
+  }
 
   /* Browser surfaces in the world's colours. */
   .table-world ::selection {

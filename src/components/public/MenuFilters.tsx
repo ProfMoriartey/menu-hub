@@ -12,6 +12,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
+import { tableFontVariables } from "~/components/table/fonts";
 import { DIETARY_LABEL_KEYS } from "~/lib/dietary-labels";
 
 import type { PublicCategory } from "~/components/public/menu-types";
@@ -150,7 +151,7 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
         {showSearch && (
           <div role="search" className="relative min-w-0 flex-1">
             <Search
-              className="text-muted-foreground pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2"
+              className="text-muted-foreground pointer-events-none absolute start-4 top-1/2 h-4 w-4 -translate-y-1/2"
               aria-hidden
             />
             <Input
@@ -161,14 +162,14 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
               aria-label={t("searchLabel")}
               enterKeyHint="search"
               // The native clear button differs per browser; ours is below.
-              className="bg-card h-10 ps-9 pe-10 text-base [&::-webkit-search-cancel-button]:hidden"
+              className="bg-card border-border/70 h-11 rounded-full ps-10 pe-11 text-base [&::-webkit-search-cancel-button]:hidden"
             />
             {filters.query && (
               <button
                 type="button"
                 onClick={() => filters.setQuery("")}
                 aria-label={t("clearSearch")}
-                className="text-muted-foreground hover:text-foreground absolute end-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full"
+                className="text-muted-foreground hover:text-foreground absolute end-0 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
@@ -182,7 +183,7 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-card h-10 shrink-0",
+                  "bg-card border-border/70 h-11 shrink-0 rounded-full",
                   !showSearch && "ms-auto",
                 )}
                 aria-label={t("filterLabel", { count: filters.labels.length })}
@@ -196,7 +197,11 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent align="end" className="w-72 space-y-3">
+            <PopoverContent
+              align="end"
+              // A portal, outside the guest menu: it brings the scope along.
+              className={cn("table-world guest-menu w-72 space-y-3", tableFontVariables)}
+            >
               <p className="text-sm font-medium">{t("dietaryFilters")}</p>
               <div
                 role="group"
@@ -212,10 +217,10 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
                       aria-pressed={on}
                       onClick={() => filters.toggleLabel(label)}
                       className={cn(
-                        "inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
+                        "inline-flex min-h-11 items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
                         on
                           ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-card text-foreground border-border hover:bg-accent hover:text-accent-foreground",
+                          : "bg-card text-foreground border-border hover:bg-muted",
                       )}
                     >
                       {on && <Check className="h-3.5 w-3.5" aria-hidden />}
@@ -233,7 +238,7 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
       <p
         aria-live="polite"
         className={cn(
-          "text-muted-foreground flex items-center gap-2 text-sm",
+          "text-on-ground-muted flex items-center gap-2 text-sm",
           !filters.isFiltering && "sr-only",
         )}
       >
@@ -243,7 +248,7 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
             <button
               type="button"
               onClick={filters.clear}
-              className="text-primary font-medium underline underline-offset-2 hover:no-underline"
+              className="text-on-ground min-h-11 font-medium underline underline-offset-2 hover:no-underline"
             >
               {t("clearFilters")}
             </button>
@@ -257,12 +262,12 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
 export function NoMenuResults({ onClear }: { onClear: () => void }) {
   const t = useTranslations("PublicMenu");
   return (
-    <div className="text-muted-foreground py-12 text-center">
+    <div className="text-on-ground-muted py-12 text-center">
       <p>{t("noResults")}</p>
       <button
         type="button"
         onClick={onClear}
-        className="text-primary mt-2 font-medium underline underline-offset-2 hover:no-underline"
+        className="text-on-ground mt-2 min-h-11 font-medium underline underline-offset-2 hover:no-underline"
       >
         {t("clearFilters")}
       </button>

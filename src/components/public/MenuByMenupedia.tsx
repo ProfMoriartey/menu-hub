@@ -11,12 +11,12 @@ import { Link } from "~/i18n/navigation";
 export async function MenuByMenupedia() {
   const t = await getTranslations("PublicMenu");
   return (
-    <footer className="text-muted-foreground px-4 pt-2 pb-8 text-center text-xs">
+    <footer className="text-on-ground-muted px-4 pt-4 pb-8 text-center text-sm">
       <Link
         href="/"
         target="_blank"
         rel="noopener"
-        className="hover:text-foreground rounded-sm underline-offset-2 transition-colors hover:underline"
+        className="hover:text-on-ground inline-flex min-h-11 items-center rounded-sm px-2 underline-offset-2 transition-colors hover:underline"
       >
         {t.rich("madeWith", {
           brand: (chunks) => (
