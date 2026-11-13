@@ -152,15 +152,43 @@ All made once on 2026-11-09 by Chrollo; no image generation. The only photos are
 | `public/icon-192.png`, `icon-512.png` | 192, 512 | same; the plate stays inside the maskable safe zone |
 | `public/og-image.png` | 1200 x 630 | Playwright screenshot of an HTML template: the cloth texture, a plate with the wordmark, the headline "Every seat reads your menu in their language.", the Lokanta Demo phone (demo dishes, photos from `public/demo/`) and five place cards (English ringed, Türkçe, العربية, Español, Русский), set in Bricolage Grotesque, Onest and Noto Sans Arabic |
 
+## Home pattern
+
+`src/app/[locale]/(site)/page.tsx` only composes; each section is a small
+server component in `src/components/home/`. Copy this for the other pages.
+
+- Order: Hero, HowItWorks, GuestsSee, Features, ExampleMenus, Pricing,
+  ContactClose. One h1 (the hero plate), then one h2 per section, h3 inside.
+- Sections are bands of cloth, full width, alternating `tone` cloth / deep,
+  built with `PageSection tone="cloth|deep"` (heading and intro centred on the
+  cloth, `py-16 lg:py-24`, `max-w-6xl`) and `CtaCard tone` for the close.
+  Without `tone` they keep their old look for pages not yet moved.
+- Content is made of primitives: `Plate size="fluid"` (as wide as its
+  grid cell; give it `max-w-80` and `@container`, size type with `cqw` and
+  keep text in a 66-70% wide box so it stays inside the rim), `Platter` for
+  rows (leader rows on a rectangular porcelain tray), `PlatePhoto`,
+  `PlaceCard`, `LeaderRow`, `Stamp`. No cards, no icon tiles. Step numbers are
+  paper cards tucked under the plate's rim.
+- Hero: fractions of the container, never fixed px. On phones the plate is
+  `min(40rem,150vw)` wide inside an `overflow-x-clip` cloth and the copy box is
+  `min(68%, 100vw - 3.5rem)`. Verify copy against the circle, not the box.
+- Arabic: `rtl:tracking-normal` and `rtl:leading-snug` (1.3 on the h1) on
+  headlines; caps labels lose their letter-spacing.
+- `DemoPhone` takes a `locale`; the place cards (`SeatCards`) are buttons
+  with no handler yet (ticket 4).
+- `check:ui` skips text on gradients, which includes every plate: plate text
+  uses `ink` / `ink-muted` on `plate`, 13:1 and above in both themes (see
+  Colour tokens).
+
 ## Open
 
 - Wordmark and colours need the owner's approval.
-- Ticket 3 (from the reviews of the preview): lay the first viewport out
-  relative to its container (fixed px clip cards and phone from 1024 to
-  ~1310 px); keep hero copy inside the plate at 320 px; a looser line height
-  for Arabic headlines; restaurant brand colours on the dark plate need a
-  contrast guard. (Done in ticket 2: the html background is the cloth on
-  public pages, `html:has(.table-world)` in globals.css.)
+- ~~Ticket 3 (from the reviews of the preview): first viewport relative to its
+  container; hero copy inside the plate at 320 px; looser Arabic headline
+  line height; contrast guard for brand colours on the dark plate.~~ Done in
+  ticket 3 (see "Home pattern"). The only restaurant colour on the home is
+  Lokanta Demo's green band on the phone's screen (white on it, 10:1); no
+  brand colour sits on a dimmed plate.
 - Arabic and Cyrillic faces are not preloaded on /ar and /ru (one font
   instance serves all locales); the Arabic headline swaps in after load.
   /ru still preloads Bricolage latin (~77 KB) though Russian pages set Onest

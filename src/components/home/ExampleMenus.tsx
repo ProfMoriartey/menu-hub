@@ -18,7 +18,7 @@ export async function ExampleMenus({ venues }: { venues: DirectoryVenue[] }) {
   return (
     <PageSection id="examples" tone="deep" title={t("title")} intro={t("intro")}>
       <ul className="grid justify-items-center gap-12 lg:grid-cols-3 lg:gap-8">
-        {shown.map((venue, i) => {
+        {shown.map((venue) => {
           const kind = [venue.typeLabel, venue.cuisine].filter(Boolean).join(" · ");
           return (
             <li key={venue.id} className="w-full max-w-80">

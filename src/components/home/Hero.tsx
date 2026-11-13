@@ -18,11 +18,11 @@ export async function Hero() {
   const [t, locale] = await Promise.all([getTranslations("HomePage.hero"), getLocale()]);
   return (
     <Cloth className="overflow-x-clip">
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pt-4 pb-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-8 lg:px-8 lg:pt-8 lg:pb-24">
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-12 px-4 pt-4 pb-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-8 lg:px-8 lg:pt-8 lg:pb-24">
         <div className="flex justify-center">
           <Plate size="fluid" className="@container w-[min(40rem,150vw)] lg:w-full lg:max-w-[40rem]">
-            <div className="flex w-[min(72%,calc(100vw-3.5rem))] flex-col items-center text-center">
-              <p className="text-cloth-ink text-[0.75rem] font-bold tracking-[0.14em] uppercase rtl:tracking-normal">
+            <div className="flex w-[min(68%,calc(100vw-3.5rem))] flex-col items-center text-center">
+              <p className="text-cloth-ink max-w-[86%] text-[0.75rem] leading-snug text-balance font-bold tracking-[0.14em] uppercase rtl:tracking-normal">
                 {t("eyebrow")}
               </p>
               <h1 className="mt-2.5 text-[clamp(1.75rem,8.2vw,2.75rem)] leading-[1.02] font-extrabold tracking-[-0.035em] text-balance lg:text-[clamp(1.9rem,7cqw,3.1rem)] rtl:leading-[1.3] rtl:tracking-normal">
@@ -34,7 +34,7 @@ export async function Hero() {
               <Button variant="table" size="pill" className="mt-4" asChild>
                 <Link href="/start">{t("ctaStart")}</Link>
               </Button>
-              <p className="text-ink-muted mt-2.5 text-[0.8125rem] leading-snug">
+              <p className="text-ink-muted mt-2.5 max-w-[86%] text-[0.8125rem] leading-snug text-balance">
                 {t("priceNote", { months: freeMonths, price: monthlyPrice(locale) })}
               </p>
             </div>
