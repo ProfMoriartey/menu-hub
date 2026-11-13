@@ -21,6 +21,7 @@ import {
   type MenuLanguage,
 } from "~/lib/menu-languages";
 import { MENU_DESIGNS, type MenuDesign } from "~/lib/menu-design";
+import { Platter } from "~/components/table/Plate";
 import { cn } from "~/lib/utils";
 
 import type { DemoMenus } from "~/server/demo-menu";
@@ -47,7 +48,7 @@ function Choice<T extends string>({
 }) {
   return (
     <div className="space-y-1.5">
-      <p className="text-sm font-medium">{label}</p>
+      <p className="text-sm font-bold">{label}</p>
       <div className="flex flex-wrap gap-1.5" role="group" aria-label={label}>
         {options.map((option) => (
           <button
@@ -56,10 +57,10 @@ function Choice<T extends string>({
             aria-pressed={value === option}
             onClick={() => onChange(option)}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors",
+              "inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 text-sm font-bold outline-none transition-colors focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)] motion-reduce:transition-none",
               value === option
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border bg-card hover:bg-accent hover:text-accent-foreground",
+                ? "border-cloth-action bg-cloth-action text-on-cloth"
+                : "border-plate-rim-shadow bg-place-card text-place-card-ink hover:bg-plate-rim",
             )}
           >
             {render(option)}
@@ -128,7 +129,7 @@ export function MenuDemo({
   return (
     <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
       {controls && (
-        <div className="w-full max-w-sm space-y-5 lg:order-2 lg:pt-6">
+        <Platter className="w-full max-w-sm space-y-5 sm:p-7 lg:order-2">
           <Choice
             label={t("design")}
             options={MENU_DESIGNS}
@@ -153,7 +154,7 @@ export function MenuDemo({
                         (role) => (
                           <span
                             key={role}
-                            className="ring-card h-3.5 w-3.5 rounded-full ring-2"
+                            className="ring-place-card h-3.5 w-3.5 rounded-full ring-2"
                             style={{
                               background: PRESETS.find((p) => p.id === id)!
                                 .theme[mode][role],
@@ -191,15 +192,15 @@ export function MenuDemo({
             onChange={setLang}
             render={(l) => <span lang={l}>{LANGUAGE_NAMES[l]}</span>}
           />
-          <p className="text-muted-foreground text-sm">{t("hint")}</p>
-        </div>
+          <p className="text-ink-muted text-sm">{t("hint")}</p>
+        </Platter>
       )}
 
       {/* The phone. Its screen gets the chosen colours and the menu's
           language and direction; the sheet opens inside it. A slim bezel in
-          the site's card colour; "isolate" keeps the sheet and its shade
+          warm ink; "isolate" keeps the sheet and its shade
           under the site's sticky navbar. */}
-      <div className="bg-card ring-foreground/15 relative isolate h-[620px] w-[320px] shrink-0 rounded-[2.5rem] p-[5px] shadow-[0_30px_60px_-24px_rgba(120,60,10,0.45)] ring-1 lg:order-1">
+      <div className="bg-ink relative isolate h-[620px] w-[320px] shrink-0 rounded-[2.5rem] p-[6px] shadow-[0_24px_40px_rgb(20_4_8/0.45)] lg:order-1">
         <div className="ring-border relative h-full overflow-hidden rounded-[2.2rem] ring-1">
           <div
             ref={setFrame}
