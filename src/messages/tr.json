@@ -899,7 +899,8 @@
       "phoneLabel": "Hayali bir restoran olan Lokanta Demo'nun demo menüsü",
       "seatsLabel": "Menü dili",
       "seat": "Koltuk {n}",
-      "ctaStart": "Menünüzü oluşturun"
+      "ctaStart": "Menünüzü oluşturun",
+      "showing": "Menü {language} dilinde gösteriliyor"
     },
     "steps": {
       "title": "Nasıl çalışır",

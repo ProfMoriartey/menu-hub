@@ -899,7 +899,8 @@
       "phoneLabel": "Демо-меню Lokanta Demo, вымышленного ресторана",
       "seatsLabel": "Язык меню",
       "seat": "Место {n}",
-      "ctaStart": "Создать меню"
+      "ctaStart": "Создать меню",
+      "showing": "Меню показано на языке: {language}"
     },
     "steps": {
       "title": "Как это работает",

@@ -118,9 +118,21 @@ contract's FIRST VIEWPORT and the approved sketch (lead's ruling,
 ## Motion
 
 Place cards lift on hover (200 ms ease-out, `motion-safe` only). The
-signature move (tap a place card, the phone's menu turns to that language,
-Arabic flips) is built in ticket 2; with reduced motion it switches
-instantly.
+signature move is built (ticket 4, see "Signature interaction"); with reduced
+motion it switches instantly.
+
+### Signature interaction
+
+Tap a place card and the phone's menu turns to that language (400 ms
+`plate-turn` in `globals.css`, `transform`/`opacity` only, no layout shift;
+Arabic flips the screen to RTL). `home/HeroStage.tsx` is the one client
+island: it holds the active seat (starting as the page's language, so /ar
+opens in Arabic) and picks one of five server-rendered `DemoScreen`s; the
+URL and the site's language never change. Seats are plain tab-order buttons
+with `aria-pressed` and a polite live region ("Showing the menu in ...", key
+`HomePage.hero.showing`). The phone screen has a fixed size, carries `lang` and
+`dir`, and crops what does not fit. Texts and prices: `src/lib/demo-menu.ts`
+(fake data, five languages), formatted in `src/server/demo-menu.ts`.
 
 ## Logo
 

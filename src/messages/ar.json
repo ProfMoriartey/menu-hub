@@ -899,7 +899,8 @@
       "phoneLabel": "القائمة التجريبية لمطعم Lokanta Demo، وهو مطعم وهمي",
       "seatsLabel": "لغة القائمة",
       "seat": "مقعد {n}",
-      "ctaStart": "أنشئ قائمتك"
+      "ctaStart": "أنشئ قائمتك",
+      "showing": "تُعرض القائمة بلغة {language}"
     },
     "steps": {
       "title": "كيف تعمل",

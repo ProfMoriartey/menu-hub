@@ -12,29 +12,17 @@ import { cn } from "~/lib/utils";
 // 10:1, and it sits on the phone's screen, never on a dimmed plate.
 const LOKANTA_GREEN = "#1f4a38";
 
-/**
- * A phone lying on the table, showing the Lokanta Demo menu in `locale`.
- * One component for the first viewport and the "what guests see" section;
- * it only reads `locale`, so a client wrapper can turn it later. The screen
- * takes its language and direction from `locale`, not from the page.
- */
-export async function DemoPhone({
-  locale,
+/** The phone's body; `children` is its screen. */
+export function PhoneShell({
   label,
-  priority = false,
   className,
+  children,
 }: {
-  locale: MenuLanguage;
   /** Accessible name of the phone (already translated, in the page's language). */
   label: string;
-  /** The first photo of the page's first phone only. */
-  priority?: boolean;
   className?: string;
+  children: React.ReactNode;
 }) {
-  const t = await getTranslations({ locale, namespace: "MenusPage" });
-  const menu = getDemoMenus()[locale];
-  let first = true;
-
   return (
     <div
       role="group"
@@ -44,6 +32,50 @@ export async function DemoPhone({
         className,
       )}
     >
+      {children}
+    </div>
+  );
+}
+
+/**
+ * A phone lying on the table, showing the Lokanta Demo menu in `locale`
+ * (the "what guests see" section). The hero swaps screens instead, see
+ * HeroStage.
+ */
+export function DemoPhone({
+  locale,
+  label,
+  className,
+}: {
+  locale: MenuLanguage;
+  label: string;
+  className?: string;
+}) {
+  return (
+    <PhoneShell label={label} className={className}>
+      <DemoScreen locale={locale} />
+    </PhoneShell>
+  );
+}
+
+/**
+ * The phone's screen: the menu in `locale`, whose language and direction
+ * it takes, not the page's. Fixed height (the shell's ratio); what does not
+ * fit is cropped, so a longer language never moves the page.
+ */
+export async function DemoScreen({
+  locale,
+  priority = false,
+}: {
+  locale: MenuLanguage;
+  /** The first photo of the page's first phone only. */
+  priority?: boolean;
+}) {
+  const t = await getTranslations({ locale, namespace: "MenusPage" });
+  const menu = getDemoMenus()[locale];
+  let first = true;
+
+  return (
       <div
         lang={locale}
         dir={locale === "ar" ? "rtl" : "ltr"}
@@ -93,6 +125,5 @@ export async function DemoPhone({
           ))}
         </div>
       </div>
-    </div>
   );
 }
