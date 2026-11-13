@@ -2,7 +2,8 @@
 "use client"; // This component must be a Client Component to use usePathname and useLocale
 
 import { usePathname } from "next/navigation";
-import { useLocale } from "next-intl"; // CORRECTED: Import useLocale directly from 'next-intl'
+import { useLocale, useTranslations } from "next-intl";
+import { TableWorld } from "~/components/table/TableWorld";
 import { Navbar } from "~/components/shared/Navbar";
 import { SiteFooter } from "~/components/shared/SiteFooter";
 import type React from "react";
@@ -14,6 +15,7 @@ interface LayoutWrapperProps {
 export function LayoutWrapper({ children }: LayoutWrapperProps) {
   const pathname = usePathname();
   const locale = useLocale(); // Get the current locale from next-intl
+  const t = useTranslations("navbar");
 
   // Define paths where the Navbar SHOULD be visible (locale-agnostic)
   const basePublicPaths = [
@@ -29,6 +31,8 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
     "/start",
     // The KVKK privacy notice.
     "/kvkk",
+    // Sign in sits on a plate, on the cloth.
+    "/sign-in",
     // Add other base paths that should always show the navbar, e.g., "/contact"
   ];
 
@@ -45,13 +49,21 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
   return (
     <>
       {isPublicNavbarVisible ? (
-        // The marketing pages share a soft amber glow behind everything.
-        <div className="relative isolate">
-          <div className="site-glow pointer-events-none absolute inset-0 -z-10" aria-hidden />
+        // The public site lives in The Table: its colours, type and focus
+        // rings apply to the bar, the page and the footer.
+        <TableWorld className="relative isolate">
+          <a
+            href="#main"
+            className="bg-place-card text-place-card-ink absolute start-3 top-3 z-[60] -translate-y-24 rounded-full px-5 py-3 font-bold shadow-lg focus:translate-y-0"
+          >
+            {t("skip")}
+          </a>
           <Navbar />
-          {children}
+          <main id="main" tabIndex={-1} className="outline-none">
+            {children}
+          </main>
           <SiteFooter />
-        </div>
+        </TableWorld>
       ) : (
         children
       )}

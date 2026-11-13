@@ -5,13 +5,15 @@ import type { ComponentType, ReactNode, SVGProps } from "react";
 import Image from "next/image";
 import { Facebook, Instagram, Mail, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Link } from "~/i18n/navigation";
+import { Cloth } from "~/components/table/Cloth";
 import { LanguageSwitcher } from "~/components/shared/LanguageSwitcher";
 import { CONTACT_HREF } from "~/components/shared/Navbar";
 import { CONTACT_EMAIL, SOCIAL_PROFILES, whatsappLink } from "~/lib/site-contact";
 
-const linkClass = "text-muted-foreground hover:text-foreground text-sm transition-colors";
+const linkClass =
+  "text-on-cloth-muted hover:text-on-cloth flex min-h-11 items-center text-[0.9375rem] underline-offset-4 transition-colors hover:underline";
 
 /** The X (Twitter) logo, which the icon set doesn't have. */
 function XLogo(props: SVGProps<SVGSVGElement>) {
@@ -36,16 +38,15 @@ export function SiteFooter() {
   const tContact = useTranslations("featuresPage.contact");
 
   return (
-    <footer className="border-border border-t">
-      <div className="container mx-auto grid gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+    <Cloth as="footer" tone="deep">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
         <div className="space-y-3">
-          <Link href="/" className="inline-flex" aria-label={t("home")}>
-            <Image src="/brand/menupedia-wordmark.svg" alt="Menupedia" width={469} height={100} unoptimized className="h-8 w-auto dark:hidden" />
-            <Image src="/brand/menupedia-wordmark-dark.svg" alt="Menupedia" width={469} height={100} unoptimized className="hidden h-8 w-auto dark:block" />
+          <Link href="/" className="inline-flex min-h-11 items-center" aria-label={t("home")}>
+            <Image src="/brand/menupedia-wordmark-dark.svg" alt="Menupedia" width={469} height={100} unoptimized className="h-8 w-auto" />
           </Link>
-          <p className="text-muted-foreground max-w-xs text-sm leading-relaxed">{t("tagline")}</p>
+          <p className="text-on-cloth-muted max-w-xs text-sm leading-relaxed">{t("tagline")}</p>
           {SOCIAL_LINKS.length > 0 && (
-            <ul className="flex gap-2">
+            <ul className="flex gap-1">
               {SOCIAL_LINKS.map(({ url, label, Icon }) => (
                 <li key={label}>
                   <a
@@ -54,7 +55,7 @@ export function SiteFooter() {
                     rel="noopener noreferrer"
                     aria-label={label}
                     title={label}
-                    className="border-border text-muted-foreground hover:text-foreground hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
+                    className="text-on-cloth-muted hover:text-on-cloth hover:bg-on-cloth/10 flex size-11 items-center justify-center rounded-full border border-white/25 transition-colors"
                   >
                     <Icon className="h-4 w-4" aria-hidden />
                   </a>
@@ -112,7 +113,7 @@ export function SiteFooter() {
 
         <FooterColumn title={t("forRestaurants")}>
           <li>
-            <a href={`mailto:${CONTACT_EMAIL}`} className={`${linkClass} inline-flex items-center gap-2`}>
+            <a href={`mailto:${CONTACT_EMAIL}`} className={`${linkClass} gap-2`}>
               <Mail className="h-4 w-4 shrink-0" aria-hidden /> {t("email")}
             </a>
           </li>
@@ -121,18 +122,16 @@ export function SiteFooter() {
               href={whatsappLink(tContact("whatsappMessage"))}
               target="_blank"
               rel="noreferrer"
-              className={`${linkClass} inline-flex items-center gap-2`}
+              className={`${linkClass} gap-2`}
             >
               <MessageCircle className="h-4 w-4 shrink-0" aria-hidden /> WhatsApp
             </a>
           </li>
           <li>
             <SignedOut>
-              <SignInButton mode="modal" forceRedirectUrl="/dashboard" signUpForceRedirectUrl="/dashboard">
-                <button type="button" className={linkClass}>
-                  {t("signIn")}
-                </button>
-              </SignInButton>
+              <Link href="/sign-in" className={linkClass}>
+                {t("signIn")}
+              </Link>
             </SignedOut>
             <SignedIn>
               <Link href="/dashboard" className={linkClass}>
@@ -143,26 +142,26 @@ export function SiteFooter() {
         </FooterColumn>
       </div>
 
-      <div className="border-border border-t">
-        <div className="container mx-auto flex flex-col-reverse items-center justify-between gap-4 px-4 py-5 sm:flex-row">
-          <div className="text-muted-foreground flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs">
+      <div className="border-t border-white/15">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-on-cloth-muted flex flex-wrap items-center gap-x-4 text-sm">
             <p>{t("rights", { year: new Date().getFullYear() })}</p>
-            <Link href="/kvkk" className="hover:text-foreground underline-offset-2 hover:underline">
+            <Link href="/kvkk" className="hover:text-on-cloth flex min-h-11 items-center underline underline-offset-4">
               {t("kvkk")}
             </Link>
           </div>
-          <LanguageSwitcher />
+          <LanguageSwitcher variant="cards" />
         </div>
       </div>
-    </footer>
+    </Cloth>
   );
 }
 
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h2 className="text-sm font-semibold">{title}</h2>
-      <ul className="mt-3 space-y-2">{children}</ul>
+      <h2 className="text-on-cloth text-sm font-bold tracking-wide uppercase">{title}</h2>
+      <ul className="mt-2">{children}</ul>
     </div>
   );
 }

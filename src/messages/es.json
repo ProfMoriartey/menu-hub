@@ -11,7 +11,11 @@
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú",
     "pricing": "Precios",
-    "getStarted": "Empezar"
+    "getStarted": "Empezar",
+    "exampleMenus": "Menús de ejemplo",
+    "startFree": "Empieza gratis",
+    "menuTitle": "Menú",
+    "skip": "Saltar al contenido"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Explora nuestro delicioso menú",
@@ -930,7 +934,7 @@
   },
   "Footer": {
     "home": "Inicio de Menupedia",
-    "tagline": "Menús digitales que los restaurantes, cafés y tiendas gestionan ellos mismos. Los clientes escanean, leen en su idioma y piden con confianza.",
+    "tagline": "Menús digitales que los restaurantes, cafés y tiendas gestionan ellos mismos. Los clientes escanean un código y leen la carta en su idioma.",
     "product": "Producto",
     "menus": "Menús",
     "features": "Funciones",
@@ -1428,5 +1432,8 @@
     "text": "Es posible que el menú o la página que buscas se haya movido o ya no exista.",
     "browseMenus": "Ver menús",
     "home": "Ir a la página de inicio"
+  },
+  "ThemeToggle": {
+    "label": "Cambiar entre claro y oscuro"
   }
 }

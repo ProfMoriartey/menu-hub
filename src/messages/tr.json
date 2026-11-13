@@ -11,7 +11,11 @@
     "openMenu": "Menüyü aç",
     "closeMenu": "Menüyü kapat",
     "pricing": "Fiyatlar",
-    "getStarted": "Başlayın"
+    "getStarted": "Başlayın",
+    "exampleMenus": "Örnek menüler",
+    "startFree": "Ücretsiz başla",
+    "menuTitle": "Menü",
+    "skip": "İçeriğe geç"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Lezzetli menümüzü inceleyin",
@@ -930,7 +934,7 @@
   },
   "Footer": {
     "home": "Menupedia ana sayfa",
-    "tagline": "Restoranların, kafelerin ve dükkânların kendi yönettiği dijital menüler. Misafirler okutur, kendi dilinde okur ve gönül rahatlığıyla sipariş verir.",
+    "tagline": "Restoranların, kafelerin ve dükkânların kendi yönettiği dijital menüler. Misafirler kodu okutur, menüyü kendi dilinde okur.",
     "product": "Ürün",
     "menus": "Menüler",
     "features": "Özellikler",
@@ -1428,5 +1432,8 @@
     "text": "Aradığınız menü veya sayfa taşınmış ya da artık mevcut olmayabilir.",
     "browseMenus": "Menülere göz atın",
     "home": "Ana sayfaya dönün"
+  },
+  "ThemeToggle": {
+    "label": "Açık veya koyu temaya geç"
   }
 }
