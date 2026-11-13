@@ -411,6 +411,26 @@ html.dark:has(.guest-menu) {
     --table-focus: var(--table-brass-ink);
   }
 
+  /* Forms on a plate (sign-up, invitation): maps the shadcn tokens the form
+     components use to porcelain and ink, in both themes. Put it on or
+     inside a Platter. */
+  .table-form {
+    --background: var(--table-place-card);
+    --foreground: var(--table-ink);
+    --card: var(--table-place-card);
+    --card-foreground: var(--table-ink);
+    --primary: var(--table-cloth-action);
+    --primary-foreground: #ffffff;
+    --muted: var(--table-plate-rim);
+    --muted-foreground: var(--table-ink-muted);
+    --accent: var(--table-plate-rim);
+    --accent-foreground: var(--table-ink);
+    --border: var(--table-plate-rim-shadow);
+    --input: var(--table-plate-rim-shadow);
+    --ring: var(--table-brass-ink);
+    color: var(--table-ink);
+  }
+
   /* Browser surfaces in the world's colours. */
   .table-world ::selection {
     background: var(--table-brass);

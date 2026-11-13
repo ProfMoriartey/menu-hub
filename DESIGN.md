@@ -240,6 +240,28 @@ modes. The ground is warm off-white `#f5f0e8` by day, warm near-black
 - Font: Bricolage (one latin woff2 preloaded) on guest pages; LCP measured
   no worse than the system/Geist baseline (`pnpm check:lcp`).
 
+## Marketing pages
+
+Same recipe as the home: small server components, bands of cloth, plates.
+Shared blocks live in `shared/MarketingBlocks.tsx` (`ClothHero`: the one h1 on
+the cloth; `PageSection tone`; `PlatterList`: named rows with dotted rules on
+a `Platter`; `CLOTH_LINK`), `shared/StepPlates.tsx` (the home's steps, also
+used by pricing, about, multilingual), `shared/FaqList` (rows on a platter)
+and the home's `ContactClose` (every page closes with it; `#contact` is its
+id). Forms on a plate use `.table-form` (maps the shadcn tokens to porcelain
+and ink).
+
+| Page | Blocks |
+|---|---|
+| `/features` | ClothHero, `MenuDemo` (controls on a platter, phone in a warm-ink bezel), feature groups as platters of `PlatterList`, price line, ContactClose |
+| `/pricing` | ClothHero, home `PricingPlate` + leader rows of what is included, StepPlates (trial), FaqList (FAQPage JSON-LD kept), ContactClose. The old monthly/yearly toggle and card are gone: one plan; the yearly price is in the FAQ |
+| `/faq` | ClothHero, one platter of `FaqList` per group on alternating bands (FAQPage JSON-LD kept), ContactClose |
+| `/about` | ClothHero, story platter, StepPlates (4), audience platters, values `PlatterList`, ContactClose (the doodle is gone) |
+| `/multilingual-menu` | ClothHero, StepPlates, MenuDemo, details `PlatterList`, FaqList, ContactClose |
+| `/start` | cloth, h1, the form on a `table-form` platter (signed-out visitors still go to sign-in; not rendered offline) |
+| `/kvkk` | h1 on the cloth, the notice on one wide platter, 17 px text, 1.75 line height |
+| `/invite/[token]` | no navbar: brings its own `TableWorld` and `main`; place-card language list, form states on a platter |
+
 ## Open
 
 - ~~`/menus` restyled in the Table (ticket 6).~~ Done, see "Menus pattern".

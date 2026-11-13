@@ -252,7 +252,7 @@ export function MenuDemo({
                         type="button"
                         onClick={() => showCategory(category.slug)}
                         className={cn(
-                          "shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                          "inline-flex min-h-11 shrink-0 items-center rounded-full px-3.5 text-xs font-medium transition-colors",
                           active
                             ? "bg-primary text-primary-foreground"
                             : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground",

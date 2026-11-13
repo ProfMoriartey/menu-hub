@@ -7,6 +7,9 @@ import { CircleAlert, UserPlus } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
+import { Cloth } from "~/components/table/Cloth";
+import { Platter } from "~/components/table/Plate";
+import { TableWorld } from "~/components/table/TableWorld";
 import { LanguageSwitcher } from "~/components/shared/LanguageSwitcher";
 import { InviteResponse } from "~/components/dashboard/InviteResponse";
 import {
@@ -24,14 +27,15 @@ export const metadata: Metadata = {
 
 function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-background flex min-h-screen flex-col items-center px-4 py-10 sm:py-16">
-      <div className="mb-6 flex w-full max-w-md justify-end">
-        <LanguageSwitcher className="w-auto" />
-      </div>
-      <div className="bg-card border-border w-full max-w-md space-y-5 rounded-xl border p-6 shadow-sm sm:p-8">
-        {children}
-      </div>
-    </div>
+    // No navbar here, so the page brings its own world and main landmark.
+    <TableWorld>
+      <Cloth as="main" className="flex min-h-screen flex-col items-center px-4 py-10 sm:py-16">
+        <div className="mb-8 flex w-full max-w-md justify-end">
+          <LanguageSwitcher variant="cards" />
+        </div>
+        <Platter className="table-form w-full max-w-md space-y-5">{children}</Platter>
+      </Cloth>
+    </TableWorld>
   );
 }
 
@@ -59,7 +63,7 @@ export default async function InvitePage({
         <CircleAlert className="text-muted-foreground h-8 w-8" aria-hidden />
         <h1 className="text-xl font-semibold">{t("invalidTitle")}</h1>
         <p className="text-muted-foreground">{t("invalidText")}</p>
-        <Button variant="outline" asChild>
+        <Button variant="table" size="pill" asChild>
           <Link href={userId ? "/dashboard" : "/"}>
             {userId ? t("toDashboard") : t("toHome")}
           </Link>
@@ -128,7 +132,7 @@ export default async function InvitePage({
           })}
         </p>
         <SignOutButton redirectUrl={here}>
-          <Button variant="outline">{t("switchAccount")}</Button>
+          <Button variant="table" size="pill">{t("switchAccount")}</Button>
         </SignOutButton>
       </Card>
     );
