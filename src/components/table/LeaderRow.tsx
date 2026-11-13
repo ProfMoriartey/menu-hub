@@ -5,7 +5,7 @@ type LeaderRowProps = Omit<React.HTMLAttributes<HTMLElement>, "children"> & {
   /** The dish name. Long names wrap; the price stays on the last line. */
   name: React.ReactNode;
   /** The element for the name, e.g. "h3" in a menu section. */
-  nameAs?: "span" | "h3" | "h4" | "p";
+  nameAs?: "span" | "h1" | "h2" | "h3" | "h4" | "p";
   /** The formatted price (the caller formats for the locale). */
   price: React.ReactNode;
   /** Lines under the name: description, tags. */
