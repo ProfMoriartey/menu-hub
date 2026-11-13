@@ -1,10 +1,10 @@
 // app/[locale]/(site)/faq/page.tsx
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "~/i18n/navigation";
-import { Button } from "~/components/ui/button";
+import { ContactClose } from "~/components/home/ContactClose";
 import { FaqList, faqStructuredData, type FaqItem } from "~/components/shared/FaqList";
-import { CtaCard, PageHero } from "~/components/shared/MarketingBlocks";
+import { ClothHero, PageSection } from "~/components/shared/MarketingBlocks";
+import { Platter } from "~/components/table/Plate";
 import { jsonLd } from "~/server/menu-structured-data";
 import { planFacts } from "~/server/plan-facts";
 import { sitePageMetadata } from "~/server/public-metadata";
@@ -53,36 +53,26 @@ export default async function FaqPage({ params }: Props) {
   }));
 
   return (
-    <div className="text-foreground">
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLd(faqStructuredData(groups.flatMap((g) => g.items))) }}
       />
-      <PageHero title={t("hero.title")} intro={t("hero.intro")} />
-
-      <div className="container mx-auto max-w-3xl space-y-12 px-4 pb-12">
-        {groups.map((group) => (
-          <section key={group.id} aria-labelledby={`faq-${group.id}`}>
-            <h2 id={`faq-${group.id}`} className="mb-4 text-2xl font-bold tracking-tight">
-              {group.title}
-            </h2>
+      <ClothHero title={t("hero.title")} intro={t("hero.intro")} />
+      {groups.map((group, i) => (
+        <PageSection
+          key={group.id}
+          id={`faq-${group.id}`}
+          tone={i % 2 === 0 ? "deep" : "cloth"}
+          title={group.title}
+          className="max-w-3xl"
+        >
+          <Platter>
             <FaqList items={group.items} />
-          </section>
-        ))}
-      </div>
-
-      <CtaCard title={t("more.title")} text={t("more.text")}>
-        <Button size="lg" asChild>
-          {/* The home page's contact band (Navbar's CONTACT_HREF). */}
-          <Link href="/#contact">{t("more.contact")}</Link>
-        </Button>
-        <Button size="lg" variant="outline" asChild>
-          <Link href="/pricing">{t("more.pricing")}</Link>
-        </Button>
-        <Button size="lg" variant="ghost" asChild>
-          <Link href="/multilingual-menu">{t("more.multilingual")}</Link>
-        </Button>
-      </CtaCard>
-    </div>
+          </Platter>
+        </PageSection>
+      ))}
+      <ContactClose />
+    </>
   );
 }

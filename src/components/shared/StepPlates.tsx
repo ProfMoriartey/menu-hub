@@ -1,11 +1,12 @@
 import { getTranslations } from "next-intl/server";
+import { cn } from "~/lib/utils";
 import { Plate } from "~/components/table/Plate";
 
 /** Steps as plates, each with its number on a card tucked under the rim (the home's "How it works"). */
 export async function StepPlates({ steps }: { steps: { id: string; title: string; text: string }[] }) {
   const t = await getTranslations("HomePage.steps");
   return (
-    <ol className="grid justify-items-center gap-14 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+    <ol className={cn("grid justify-items-center gap-14 sm:grid-cols-2 lg:gap-8", steps.length === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3")}>
       {steps.map(({ id, title, text }, i) => (
         <li key={id} className="relative w-full max-w-80">
           <Plate as="div" size="fluid" className="@container">
