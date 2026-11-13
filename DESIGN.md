@@ -180,8 +180,22 @@ server component in `src/components/home/`. Copy this for the other pages.
   uses `ink` / `ink-muted` on `plate`, 13:1 and above in both themes (see
   Colour tokens).
 
+## Menus pattern
+
+`/menus` is one cloth page: h1 and intro on the cloth, then `src/components/menus/`.
+Each example menu is a `Plate` (as in the home's ExampleMenus, with the same
+"Example" label) that links to the menu; place, hours and dish count sit under
+it on the cloth and its languages are small static place cards. Grid is by
+container (`@container`: 1, 2 at `@2xl`, 3 at `@5xl` columns). Filters and
+scope are place-card chips (white, brass and a check when chosen, 44 px), the
+search field sits on a pill platter, dish results are leader rows on a
+`Platter`, empty and no-result states are a bare plate with one line and a
+button. The phone filter sheet and the select popovers carry `table-world`.
+No sample dish row on the plates: the directory data has no dish or price.
+
 ## Open
 
+- ~~`/menus` restyled in the Table (ticket 6).~~ Done, see "Menus pattern".
 - Wordmark and colours need the owner's approval.
 - ~~Ticket 3 (from the reviews of the preview): first viewport relative to its
   container; hero copy inside the plate at 320 px; looser Arabic headline
