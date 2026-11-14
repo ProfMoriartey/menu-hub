@@ -12,7 +12,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const t = await getTranslations("DashboardShell");
 
   return (
-    <div className="bg-background min-h-screen">
+    // At night, the same deep crimson as the marketing pages' damask (plain: no pattern behind forms).
+    <div className="bg-background dark:bg-[var(--cloth-ground)] min-h-screen">
       <header className="bg-card border-border sticky top-0 z-20 border-b print:hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <Link href="/dashboard" className="text-primary inline-flex items-center gap-2 font-extrabold tracking-tight">

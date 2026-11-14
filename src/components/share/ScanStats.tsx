@@ -10,7 +10,8 @@ import { cn } from "~/lib/utils";
 // A mid crimson, between the light --primary and the dark-mode rose. Reads
 // at 3:1 or more on both theme surfaces (light card #FCF9F4: 4.1:1, dark
 // card #30201F: 3.6:1), which neither theme's own primary does on the other.
-const BAR_COLOR = "#D24B5E";
+// The brand colour: crimson by day, gold by night.
+const BAR_COLOR = "var(--primary)";
 const CHART_HEIGHT = 128;
 
 function StatTile({ label, value }: { label: string; value: string }) {

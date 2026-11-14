@@ -41,7 +41,8 @@ export default async function AdminDashboardLayout({
 
   return (
     // ClerkProvider removed here
-    <div className={cn("min-h-screen", "bg-background")}>
+    // At night, the same deep crimson as the marketing pages' damask (plain).
+    <div className={cn("min-h-screen", "bg-background dark:bg-[var(--cloth-ground)]")}>
       {/* Top Navigation Bar for Admin */}
       <header className="bg-card text-card-foreground border-border sticky top-0 z-20 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b px-4 py-3 sm:px-8 print:hidden">
         <div className="flex items-center gap-6">

@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `fb55780` on
+that cost time before. Last updated 2026-11-14, after commit `202c33c` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -785,6 +785,12 @@ only: never merge it, and never use its logo.** Look at it with
   2026-11-14), and no "Make from dark mode" either; `darkFromLight` only
   remains inside `startingTheme`, for restaurants with the old single
   brand colour.
+- *Dashboard and admin at night*: their page background is the marketing
+  damask's deep crimson (`dark:bg-[var(--cloth-ground)]` on each layout's
+  root), plain, with no pattern behind forms (owner's call, 2026-11-14);
+  by day they stay on the plain page colour. Warnings (`--attention`) are
+  a warm coral `#f0997d` at night, kept apart from the gold; the QR-scan
+  chart bars use `--primary` (crimson by day, gold by night).
 - *Dashboard*: no tablecloth behind the work screens (forms and lists stay
   plain). Light touches only: restaurant logos served on small plates
   (`PlatedLogo`) on the home cards and the restaurant header, and an
@@ -833,21 +839,24 @@ Git history (`git log`) has a detailed commit message for each change.
 each, owner commits).** Done and committed: font, pricing structure,
 plates, home sections, crimson rebrand (`d308882`), tablecloth backgrounds, dashboard
 touches (`4f9359e`), the restaurant menus' cloth choice (migration
-`0020`, applied in dev and production), the new logo (`fb55780`). Done,
-awaiting the owner's commit: dark mode in ivory and gold (item 4). Next:
+`0020`, applied in dev and production), the new logo (`fb55780`), dark mode in ivory and gold (`202c33c`).
+Done, awaiting the owner's commit: the clean-up (item 5). Next:
 1. (done) Tablecloth backgrounds.
 2. (done) A cloth choice for restaurant menus.
 3. (done) New logo.
-4. (built, on trial) **Dark mode in ivory and gold**: the pink is gone;
+4. (done) **Dark mode in ivory and gold**: the pink is gone;
    dark `--primary`/`--accent` are the logo's gold `#dcaa48` (dark text
    `#2a1a0a` on it, 7.9:1; gold 5.8–8.4:1 on the dark surfaces), text stays
    ivory. Same in `DEFAULT_THEME.dark` / `SITE_TOKENS.dark`, so restaurants
    without their own colours follow. The menu damask's night ground now
    comes from its own token `--cloth-night-tone` (`:root`; `#f2a7b1` keeps
-   the site's crimson; custom palettes set it to their primary). Open
-   question for the owner: keep the damask crimson, or set the token to
-   the gold (which gives a chocolate brown). Comparison:
+   the site's crimson; custom palettes set it to their primary). The owner
+   chose to keep the damask crimson (2026-11-14); the gold version (a
+   chocolate brown) was rejected. Comparison:
    https://claude.ai/artifact/Kth7mdrm7H82Bpk1nGgASa
+5. (done) Clean-up after the redesign: the last pinks gone (warnings,
+   scan chart), the unused old logo image `public/menupedia1.png`
+   deleted, dashboard and admin on the night crimson in dark mode.
 
 **Possible follow-ups to team management:** sending invitation emails (needs
 an email service such as Resend and a verified sender domain; links are
