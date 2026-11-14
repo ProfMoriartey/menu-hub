@@ -31,6 +31,8 @@ const PARAM = "dish";
 
 const DishSheetContext = createContext<{
   open: (item: PublicMenuItem) => void;
+  // Demos: there is no dish page, so dishes are buttons, not links.
+  inPlace?: boolean;
 } | null>(null);
 
 /** Opens dishes in the bottom sheet; null outside a menu (e.g. previews). */
@@ -137,7 +139,7 @@ export function DishSheetInPlaceProvider({
     return null;
   }, [categories, openSlug]);
   const context = useMemo(
-    () => ({ open: (item: PublicMenuItem) => setOpenSlug(item.slug) }),
+    () => ({ open: (item: PublicMenuItem) => setOpenSlug(item.slug), inPlace: true }),
     [],
   );
 
@@ -179,6 +181,11 @@ function DishSheetContent({
 }) {
   const t = useTranslations("PublicMenu");
   const contained = Boolean(container);
+  // The dish that opened the sheet (focused when it mounts): focus goes back
+  // there on close, since the sheet has no Radix trigger.
+  const opener = useRef(
+    typeof document === "undefined" ? null : document.activeElement,
+  );
 
   return (
     <DialogPrimitive.Portal container={container}>
@@ -192,6 +199,13 @@ function DishSheetContent({
         <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50" />
       )}
       <DialogPrimitive.Content
+        onCloseAutoFocus={(e) => {
+          const el = opener.current;
+          if (el instanceof HTMLElement && el.isConnected) {
+            e.preventDefault();
+            el.focus();
+          }
+        }}
         className={[
           "bg-card text-foreground z-50 flex flex-col overflow-hidden shadow-xl outline-none",
           // On the page it is a portal, outside the guest menu: bring the scope.

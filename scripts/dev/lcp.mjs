@@ -28,6 +28,8 @@ for (const path of paths) {
   let element = "";
   for (let i = 0; i < runs; i++) {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+    // Site pages: a signed-out dev browser skips Clerk's handshake (as in check-ui.mjs).
+    await context.addCookies(["__clerk_db_jwt=x", "__client_uat=0"].map((c) => ({ name: c.split("=")[0], value: c.split("=")[1], domain: new URL(base).hostname, path: "/" })));
     await context.route(/\.clerk\.accounts\.dev/, (route) => route.abort());
     const page = await context.newPage();
     const cdp = await context.newCDPSession(page);

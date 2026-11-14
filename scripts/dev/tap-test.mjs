@@ -19,6 +19,7 @@ const SEATS = [
 ];
 const PAGES = ["en", "ar"];
 const SCREEN = "div[lang][dir].bg-plate";
+const XSCREEN = "div[@lang][@dir][contains(@class,'bg-plate')]";
 
 const browser = await chromium.launch();
 const rows = [];
@@ -33,7 +34,8 @@ async function newCtx(opts) {
 
 async function state(page, group) {
   const pressed = await group.locator("button").evaluateAll((bs) => bs.map((b) => b.getAttribute("aria-pressed")));
-  const screens = page.locator(`${SCREEN}:visible`);
+  // Scope to the hero: the nearest ancestor of the card group that also holds the phone screen.
+  const screens = group.locator(`xpath=ancestor::*[.//${XSCREEN}][1]`).locator(`${SCREEN}:visible`);
   const n = await screens.count();
   const screen = n ? await screens.first().evaluate((e) => ({ lang: e.getAttribute("lang"), dir: e.getAttribute("dir") })) : null;
   return { pressed, screen, n };

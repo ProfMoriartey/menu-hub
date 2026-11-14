@@ -39,6 +39,16 @@ function DishLink({
   children: React.ReactNode;
 }) {
   const sheet = useDishSheet();
+  if (sheet?.inPlace)
+    return (
+      <button
+        type="button"
+        onClick={() => sheet.open(item)}
+        className={cn("group block w-full text-start", className)}
+      >
+        {children}
+      </button>
+    );
   return (
     <Link
       href={`/${restaurantSlug}/item/${item.slug}`}

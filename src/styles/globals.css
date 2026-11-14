@@ -393,8 +393,9 @@ html.dark:has(.guest-menu) {
     --table-brass-ink: #7d5f17; /* 4.6:1 on the dimmed plate */
     --table-place-card: #ece5db;
     --table-place-card-muted: #625853; /* 5.5:1 on the dimmed card */
+    --table-sold-out: #9e1b12; /* 4.6:1 on the stamp's see-through dimmed plate */
     /* Unchanged from light: ink (13.3:1 on the dimmed plate), cloth-action
-       and cloth-ink (7.9:1), sold-out (4.5:1), place-card-ink. */
+       and cloth-ink (7.9:1), place-card-ink. */
   }
 
 
