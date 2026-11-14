@@ -3,7 +3,6 @@
     "home": "Inicio",
     "restaurants": "Menús",
     "themes": "Funciones",
-    "aboutUs": "Acerca de Nosotros",
     "language": "Idioma",
     "mainNav": "Principal",
     "signIn": "Iniciar sesión",
@@ -11,7 +10,6 @@
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú",
     "pricing": "Precios",
-    "getStarted": "Empezar",
     "exampleMenus": "Menús de ejemplo",
     "startFree": "Empieza gratis",
     "menuTitle": "Menú",
@@ -817,13 +815,6 @@
         "title": "Tu restaurante",
         "text": "Tu nombre, tu diseño y tus colores. El menú debe sentirse parte de tu restaurante, no del nuestro."
       }
-    },
-    "cta": {
-      "title": "Compruébalo tú mismo",
-      "text": "Prueba nuestro restaurante de demostración o mira los menús que ya están en Menupedia.",
-      "features": "Ver las funciones",
-      "restaurants": "Ver menús",
-      "contact": "Contactar"
     }
   },
   "VenueTypes": {
@@ -1274,11 +1265,7 @@
       }
     },
     "cta": {
-      "title": "Empieza tu prueba gratuita",
-      "text": "Crea tu menú hoy y no pagues nada durante {months}.",
-      "start": "Crea tu menú",
-      "faq": "Leer las preguntas frecuentes",
-      "contact": "Haznos una pregunta"
+      "start": "Crea tu menú"
     }
   },
   "multilingualPage": {
@@ -1469,13 +1456,6 @@
           }
         }
       }
-    },
-    "more": {
-      "title": "¿Aún tienes preguntas?",
-      "text": "Escríbenos por correo o por WhatsApp; te ayudaremos con gusto.",
-      "contact": "Contáctanos",
-      "pricing": "Ver precios",
-      "multilingual": "Menús multilingües"
     }
   },
   "NotFoundPage": {

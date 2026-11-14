@@ -325,24 +325,6 @@ export function paletteTokens(p: Palette): Record<string, string> {
   };
 }
 
-const declarations = (p: Palette) =>
-  Object.entries(paletteTokens(p))
-    .map(([token, value]) => `--${token}:${value}`)
-    .join(";");
-
-/**
- * CSS for `.brand-scope` in light and dark mode. Only built from validated
- * hex colours, so it's safe to put in a <style> tag. The <body> gets it too
- * (while a `.brand-scope` is on the page): pop-ups such as the dish sheet,
- * the filter panel and the language list are drawn at the end of <body>,
- * outside the scope.
- */
-export function colorThemeCss(theme: ColorTheme): string | null {
-  const valid = parseColorTheme(theme);
-  if (!valid) return null;
-  return `.brand-scope,body:has(.brand-scope){${declarations(valid.light)}}.dark .brand-scope,.dark body:has(.brand-scope){${declarations(valid.dark)}}`;
-}
-
 export type ContrastWarning =
   | "textOnBackground"
   | "textOnCard"
