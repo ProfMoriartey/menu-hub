@@ -39,7 +39,7 @@ export function LeaderRow({
       <div className="table-leader-row">
         <Name
           className={cn(
-            "min-w-[min(min-content,100%)] text-base leading-snug font-bold [overflow-wrap:break-word]",
+            "min-w-0 text-base leading-snug font-bold [overflow-wrap:break-word]",
             nameClassName,
           )}
         >

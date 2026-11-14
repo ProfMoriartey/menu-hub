@@ -530,8 +530,11 @@ html.dark:has(.guest-menu) {
      item: its baseline is its bottom edge, so lifting it a little sets the
      dots level with the name's last line (they start at the end of the
      name's box, so a wrapped name leaves a gap before them). */
+  /* A name too long to sit beside its price keeps its words whole and the
+     leader and price drop to a line of their own. */
   .table-leader-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.375rem;
     align-items: last baseline;
   }

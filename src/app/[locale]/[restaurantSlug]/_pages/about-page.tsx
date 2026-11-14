@@ -307,7 +307,7 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
                 })}
               </ul>
             </div>
-          ) : (
+          ) : restaurantDetails.address ? (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold border-s-4 border-primary ps-3">
               {t("locationHeading")}
@@ -351,7 +351,7 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
               )}
             </div>
           </div>
-          )}
+          ) : null}
         </div>
       </div>
       </div>
