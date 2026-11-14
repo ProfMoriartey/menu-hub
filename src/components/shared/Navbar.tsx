@@ -55,8 +55,8 @@ export function Navbar() {
           <Image
             src="/menupedia-logo.svg"
             alt="Menupedia"
-            width={469}
-            height={100}
+            width={626}
+            height={116}
             unoptimized
             priority
             className="h-8 w-auto dark:hidden"
@@ -64,8 +64,8 @@ export function Navbar() {
           <Image
             src="/menupedia-logo-dark.svg"
             alt="Menupedia"
-            width={469}
-            height={100}
+            width={626}
+            height={116}
             unoptimized
             priority
             className="hidden h-8 w-auto dark:block"

@@ -798,6 +798,22 @@ only: never merge it, and never use its logo.** Look at it with
   and the "already signed up" box use the solid card colour in dark mode
   (`dark:bg-card`), because inputs are see-through and the cloth would
   show through them.
+- *Logo* (2026-11-14, the owner's design through eight rounds of
+  mock-ups): a rounded crimson square, the site's plate in its middle, and
+  a gold bookmark ribbon falling from the top edge across the plate. The
+  name "Menupedia" in Bricolage Grotesque ExtraBold, with a gold ribbon
+  underline that starts in a notch under the M, leaves a gap round the
+  tail of the p, turns up behind the i and comes out as its dot. Colours:
+  crimson `#9b1c2e`, gold `#dcaa48`, ivory `#f3e9e1` (the name in dark
+  mode). The letters are outlines, so the files need no font. Files in
+  `public/`: `menupedia-logo.svg` / `-dark.svg` (navbar, footer; 626 x
+  116), `icon.svg` and `favicon.ico` (browser tab), `apple-icon.png`
+  (square; iOS rounds it), `icon-192/512.png`, `icon-maskable-512.png`
+  (Android, plate shrunk into the safe zone), `menupedia-logo.png`
+  (search engines) and `og-image.png` (link previews). They are built by
+  two scripts kept with the mock-ups (not in the repo); to change the logo,
+  ask for them to be rebuilt rather than editing the SVG paths by hand.
+  Mock-ups: https://claude.ai/artifact/Qnuyd7ksCY62QUqd8s33PE (private).
 - *Mock-ups*: the tablecloth options, the crimson light/dark mock-up, the
   stoneware choice and the guest-menu cloth choice are on a private
   artifact: https://claude.ai/artifact/LoTiUJnYqSLCcLZmwjgq7m (the owner
@@ -816,15 +832,19 @@ Git history (`git log`) has a detailed commit message for each change.
 **Redesign steps (agreed 2026-11-14; one at a time, plan first, owner OKs
 each, owner commits).** Done and committed: font, pricing structure,
 plates, home sections, crimson rebrand (`d308882`), tablecloth backgrounds, dashboard
-touches (`4f9359e`). Done, awaiting the owner's commit: the restaurant
-menus' cloth choice (see §8; migration `0020` applied in dev
-2026-11-14, production still needs it). Next:
+touches (`4f9359e`), the restaurant menus' cloth choice (migration
+`0020`, applied in dev and production). Done, awaiting the owner's
+commit: the new logo (see §8). Next:
 1. (done) Tablecloth backgrounds.
 2. (done) A cloth choice for restaurant menus.
-3. **New logo** (later; the owner has an idea): a plate with a fork and
-   knife coming in from the left, an SVG in `currentColor`, for navbar,
-   footer and favicon. Until then the logo files in `public/` are still
-   the old orange.
+3. (done) New logo.
+4. **Dark mode in ivory and gold** (chosen 2026-11-14, from the logo
+   mock-ups): the pink (`#f2a7b1`) goes; in dark mode headings/name-like
+   accents are ivory and buttons, prices, links and the selected category
+   gold, so the site uses the logo's three colours. Plan to be shown to
+   the owner before building (touches the dark tokens, the restaurant
+   default dark theme, and the menu damask's night ground, which is built
+   from the dark primary).
 
 **Possible follow-ups to team management:** sending invitation emails (needs
 an email service such as Resend and a verified sender domain; links are
