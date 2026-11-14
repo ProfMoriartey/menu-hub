@@ -47,7 +47,7 @@ export function siteStructuredData({
         name: SITE_NAME,
         alternateName: SITE_ALTERNATE_NAMES,
         url: home,
-        logo: `${origin}/menupedia-logo.png`,
+        logo: `${origin}/icon-512.png`,
         description,
         email: CONTACT_EMAIL,
         sameAs: SITE_PROFILES.length > 0 ? SITE_PROFILES : undefined,

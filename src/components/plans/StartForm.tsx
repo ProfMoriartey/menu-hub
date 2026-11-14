@@ -296,7 +296,7 @@ export function StartForm({
           </div>
         </section>
 
-        <Button type="submit" size="lg" className="rounded-full px-6">
+        <Button type="submit" size="lg" className="min-h-11 rounded-full px-6">
           {t("next")}
         </Button>
       </form>
@@ -448,10 +448,10 @@ export function StartForm({
       </section>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="button" variant="ghost" size="lg" className="rounded-full" onClick={() => toStep(1)}>
+        <Button type="button" variant="ghost" size="lg" className="min-h-11 rounded-full" onClick={() => toStep(1)}>
           <ArrowLeft className="h-4 w-4 rtl:rotate-180" /> {t("back")}
         </Button>
-        <Button type="submit" size="lg" className="rounded-full px-6" disabled={isPending}>
+        <Button type="submit" size="lg" className="min-h-11 rounded-full px-6" disabled={isPending}>
           {isPending ? t("submitting") : t("submit")}
         </Button>
         {errorLine}

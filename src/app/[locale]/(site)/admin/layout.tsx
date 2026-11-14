@@ -6,6 +6,7 @@ import { cn } from "~/lib/utils";
 import { ThemeToggle } from "~/components/shared/ThemeToggle"; // Assuming this is correct
 import { AdminNav } from "~/components/admin/AdminNav";
 import { countOpenRequests } from "~/server/plan-requests";
+import { GeistVar } from "~/styles/geist";
 
 // Ensure ClerkProvider is in the root app/layout.tsx, not here.
 
@@ -42,6 +43,7 @@ export default async function AdminDashboardLayout({
   return (
     // ClerkProvider removed here
     <div className={cn("min-h-screen", "bg-background")}>
+      <GeistVar />
       {/* Top Navigation Bar for Admin */}
       <header className="bg-card text-card-foreground border-border sticky top-0 z-20 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b px-4 py-3 sm:px-8 print:hidden">
         <div className="flex items-center gap-6">

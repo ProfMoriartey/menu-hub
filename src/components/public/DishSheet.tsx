@@ -10,10 +10,12 @@ import {
   useRef,
   useState,
 } from "react";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { ExternalLink, ImageIcon, X } from "lucide-react";
+import { ExternalLink, X } from "lucide-react";
+import { LeaderRow } from "~/components/table/LeaderRow";
+import { PlatePhoto } from "~/components/table/Plate";
+import { tableFontVariables } from "~/components/table/fonts";
 import { Link } from "~/i18n/navigation";
 import { DietaryBadges } from "~/components/public/DietaryBadges";
 import { SoldOutBadge } from "~/components/public/SoldOutBadge";
@@ -29,6 +31,8 @@ const PARAM = "dish";
 
 const DishSheetContext = createContext<{
   open: (item: PublicMenuItem) => void;
+  // Demos: there is no dish page, so dishes are buttons, not links.
+  inPlace?: boolean;
 } | null>(null);
 
 /** Opens dishes in the bottom sheet; null outside a menu (e.g. previews). */
@@ -135,7 +139,7 @@ export function DishSheetInPlaceProvider({
     return null;
   }, [categories, openSlug]);
   const context = useMemo(
-    () => ({ open: (item: PublicMenuItem) => setOpenSlug(item.slug) }),
+    () => ({ open: (item: PublicMenuItem) => setOpenSlug(item.slug), inPlace: true }),
     [],
   );
 
@@ -177,6 +181,11 @@ function DishSheetContent({
 }) {
   const t = useTranslations("PublicMenu");
   const contained = Boolean(container);
+  // The dish that opened the sheet (focused when it mounts): focus goes back
+  // there on close, since the sheet has no Radix trigger.
+  const opener = useRef(
+    typeof document === "undefined" ? null : document.activeElement,
+  );
 
   return (
     <DialogPrimitive.Portal container={container}>
@@ -190,8 +199,17 @@ function DishSheetContent({
         <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50" />
       )}
       <DialogPrimitive.Content
+        onCloseAutoFocus={(e) => {
+          const el = opener.current;
+          if (el instanceof HTMLElement && el.isConnected) {
+            e.preventDefault();
+            el.focus();
+          }
+        }}
         className={[
           "bg-card text-foreground z-50 flex flex-col overflow-hidden shadow-xl outline-none",
+          // On the page it is a portal, outside the guest menu: bring the scope.
+          contained ? "" : `table-world guest-menu ${tableFontVariables}`,
           "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom",
           contained
             ? // Inside a phone-sized frame: always the phone's bottom sheet.
@@ -209,7 +227,7 @@ function DishSheetContent({
           aria-hidden
         />
         <DialogPrimitive.Close
-          className="bg-card/90 text-foreground hover:bg-card absolute end-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full shadow-sm backdrop-blur"
+          className="bg-card/90 text-foreground hover:bg-card absolute end-3 top-3 z-10 flex size-11 items-center justify-center rounded-full shadow-sm backdrop-blur"
           aria-label={t("closeDish")}
         >
           <X className="h-4 w-4" aria-hidden />
@@ -217,24 +235,38 @@ function DishSheetContent({
 
         <div className="scrollbar-thin overflow-y-auto overscroll-contain">
           {/* Keyed by photo, so another dish starts out loading again. */}
-          {item.imageUrl && <DishPhoto key={item.imageUrl} src={item.imageUrl} alt={item.name} />}
+          {/* The dish on a large round plate. Fetched first: it's what the guest opened. */}
+          {item.imageUrl && (
+            <PlatePhoto
+              src={item.imageUrl}
+              alt={item.name}
+              size={240}
+              priority
+              className="mx-auto mt-8 block aspect-square !h-auto max-w-[calc(100%-2.5rem)]"
+            />
+          )}
           <div className="space-y-3 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-            <div className={item.imageUrl ? "" : "pe-10 pt-4"}>
+            <div className={item.imageUrl ? "" : "pe-12 pt-4"}>
               <p className="text-muted-foreground text-sm">
                 <span lang={category.lang} dir="auto">
                   {category.name}
                 </span>
               </p>
-              <DialogPrimitive.Title className="text-2xl leading-tight font-bold">
-                <span lang={item.lang} dir="auto">
-                  {item.name}
-                </span>
-              </DialogPrimitive.Title>
+              <LeaderRow
+                nameAs="h2"
+                name={
+                  <DialogPrimitive.Title asChild>
+                    <span lang={item.lang} dir="auto">
+                      {item.name}
+                    </span>
+                  </DialogPrimitive.Title>
+                }
+                price={<bdi dir="ltr">{item.displayPrice}</bdi>}
+                nameClassName="text-2xl leading-tight font-extrabold"
+                priceClassName="text-primary text-xl"
+              />
             </div>
-            <p className="text-primary text-xl font-bold tabular-nums">
-              {item.displayPrice}
-              <SoldOutBadge availability={item.availability} />
-            </p>
+            <SoldOutBadge availability={item.availability} className="ms-1" />
             {item.description ? (
               <DialogPrimitive.Description className="text-muted-foreground leading-relaxed">
                 <span lang={item.lang} dir="auto">
@@ -264,7 +296,7 @@ function DishSheetContent({
             {restaurantSlug && (
               <Link
                 href={`/${restaurantSlug}/item/${item.slug}`}
-                className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 pt-1 text-sm underline underline-offset-2"
+                className="text-muted-foreground hover:text-foreground inline-flex min-h-11 items-center gap-1.5 text-sm underline underline-offset-2"
               >
                 <ExternalLink className="h-3.5 w-3.5" aria-hidden />{" "}
                 {t("dishPage")}
@@ -274,31 +306,5 @@ function DishSheetContent({
         </div>
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
-  );
-}
-
-/**
- * The dish's photo, with a pulsing placeholder until it has loaded, then a
- * short fade in. Fetched first (priority): it's what the guest opened.
- */
-function DishPhoto({ src, alt }: { src: string; alt: string }) {
-  const [loaded, setLoaded] = useState(false);
-  return (
-    <div className="relative aspect-[4/3] w-full overflow-hidden">
-      {!loaded && (
-        <div className="bg-foreground/[0.06] absolute inset-0 flex animate-pulse items-center justify-center" aria-hidden>
-          <ImageIcon className="text-muted-foreground/50 h-10 w-10" />
-        </div>
-      )}
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        priority
-        sizes="(min-width: 640px) 512px, 100vw"
-        onLoad={() => setLoaded(true)}
-        className={`object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
-      />
-    </div>
   );
 }

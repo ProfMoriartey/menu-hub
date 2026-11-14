@@ -3,7 +3,6 @@
     "home": "Ana Sayfa",
     "restaurants": "Menüler",
     "themes": "Özellikler",
-    "aboutUs": "Hakkımızda",
     "language": "Dil",
     "mainNav": "Ana menü",
     "signIn": "Giriş yap",
@@ -11,13 +10,16 @@
     "openMenu": "Menüyü aç",
     "closeMenu": "Menüyü kapat",
     "pricing": "Fiyatlar",
-    "getStarted": "Başlayın"
+    "exampleMenus": "Örnek menüler",
+    "startFree": "Ücretsiz başla",
+    "menuTitle": "Menü",
+    "skip": "İçeriğe geç"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Lezzetli menümüzü inceleyin",
     "noMenuItemsAvailable": "Bu restoran için henüz menü öğesi bulunmamaktadır.",
     "checkBackLater": "Lütfen daha sonra tekrar kontrol edin!",
-    "restaurantDetailsButton": "Detaylar" 
+    "restaurantDetailsButton": "Detaylar"
   },
   "menuItemDetailPage": {
     "pageTitle": "Menü Öğesi Detayları",
@@ -26,22 +28,22 @@
     "ingredientsLabel": "İçerikler",
     "dietaryLabels": "Diyet Bilgileri"
   },
-"restaurantProfilePage": {
-      "backToMenu": "Menüye Dön",
-      "menuButton": "Menü",
-      "orderButton": "Sipariş Ver",
-      "informationHeading": "Bilgiler",
-      "locationHeading": "Konum",
-      "foodTypeLabel": "Mutfak",
-      "establishmentTypeLabel": "Tür",
-      "phoneLabel": "İletişim",
-      "countryLabel": "Ülke",
-      "locationLabel": "Konum",
-      "addressLabel": "Adres",
-      "getDirections": "Yol Tarifi Al",
-      "branchesHeading": "Şubeler",
-      "branchDetails": "Saatler ve bilgiler"
-    },
+  "restaurantProfilePage": {
+    "backToMenu": "Menüye Dön",
+    "menuButton": "Menü",
+    "orderButton": "Sipariş Ver",
+    "informationHeading": "Bilgiler",
+    "locationHeading": "Konum",
+    "foodTypeLabel": "Mutfak",
+    "establishmentTypeLabel": "Tür",
+    "phoneLabel": "İletişim",
+    "countryLabel": "Ülke",
+    "locationLabel": "Konum",
+    "addressLabel": "Adres",
+    "getDirections": "Yol Tarifi Al",
+    "branchesHeading": "Şubeler",
+    "branchDetails": "Saatler ve bilgiler"
+  },
   "Dashboard": {
     "title": "Atanmış Menüleriniz",
     "accessLevelLabel": "Erişim Seviyesi",
@@ -813,13 +815,6 @@
         "title": "Sizin restoranınız",
         "text": "Sizin adınız, tasarımınız ve renkleriniz. Menü bizim değil, restoranınızın bir parçası gibi hissettirmeli."
       }
-    },
-    "cta": {
-      "title": "Kendiniz görün",
-      "text": "Demo restoranımızı deneyin ya da Menupedia'daki menülere göz atın.",
-      "features": "Özellikleri keşfedin",
-      "restaurants": "Menülere göz atın",
-      "contact": "Bize ulaşın"
     }
   },
   "VenueTypes": {
@@ -880,48 +875,98 @@
     "branchesCount": "{count} şube",
     "branchesPlace": "{count} şube · {places}",
     "openAtBranches": "{count} şubede şu an açık",
-    "closedAtBranches": "Şu an kapalı"
+    "closedAtBranches": "Şu an kapalı",
+    "exampleLabel": "Örnek",
+    "backHome": "Ana sayfaya dön"
   },
   "HomePage": {
     "metaTitle": "Menupedia: restoran ve kafeler için dijital menüler",
     "metaDescription": "Misafirlerinizin telefonda, kendi dillerinde açtığı ve sizin saniyeler içinde güncellediğiniz bir QR menü. Restoranlar, kafeler, fırınlar ve daha fazlası için.",
     "hero": {
       "eyebrow": "Restoranlar, kafeler ve daha fazlası için dijital menüler",
-      "title": "Menünüz her telefonda, her dilde",
-      "intro": "Misafirler QR kodu okutur ve menünüz fotoğraflar, fiyatlar ve çalışma saatleriyle hemen açılır. Değişiklikleri kendiniz yaparsınız, saniyeler içinde yayında olur.",
-      "ctaMenus": "Menülere göz atın",
-      "point1": "Uygulama gerekmez",
-      "point2": "5 dil",
-      "point3": "Saniyeler içinde yayında",
-      "demoCaption": "Çalışan bir demo menü. Bir yemeğe dokunun.",
-      "ctaStart": "Menünüzü oluşturun"
+      "title": "Her koltuk menünüzü kendi dilinde okur.",
+      "intro": "Misafirler QR kodu okutur, menünüz telefonlarında kendi dillerinde açılır. Değişiklikleri kendiniz yaparsınız, saniyeler içinde yayında olur.",
+      "priceNote": "İlk {months} ay ücretsiz, sonra ayda {price}.",
+      "phoneLabel": "Hayali bir restoran olan Lokanta Demo'nun demo menüsü",
+      "seatsLabel": "Menü dili",
+      "seat": "Koltuk {n}",
+      "ctaStart": "Menünüzü oluşturun",
+      "showing": "Menü {language} dilinde gösteriliyor"
     },
     "steps": {
       "title": "Nasıl çalışır",
-      "intro": "İlk mesajdan masalardaki menülere kadar, hiçbir şeyi yeniden bastırmadan.",
+      "step": "Adım {n}",
       "s1": {
         "title": "Sizi kuruyoruz",
-        "text": "Bize mekânınızı anlatın. Menü sayfanızı oluşturup size ve ekibinize giriş bağlantıları göndeririz."
+        "text": "Mekânınızdan bahsedin. Menü sayfanızı oluşturur, size ve ekibinize giriş bağlantıları göndeririz."
       },
       "s2": {
         "title": "Menünüzü ekleyin",
-        "text": "Yemekler, fiyatlar, fotoğraflar ve diyet etiketleri. Kontrol listesi ve özel önizleme, misafirler görmeden her şeyi hazırlamanıza yardım eder."
+        "text": "Yemekler, fiyatlar, fotoğraflar ve beslenme etiketleri; özel önizlemede kontrol edin."
       },
       "s3": {
         "title": "Masalara koyun",
-        "text": "QR masa kartlarını yazdırın. Misafirler okutur, siz de menünüzün her gün kaç kez açıldığını görürsünüz."
+        "text": "QR masa kartlarını yazdırın. Menünüzün günde kaç kez açıldığını görürsünüz."
       }
     },
-    "features": {
-      "title": "Menünüzün ihtiyacı olan her şey",
-      "intro": "Masadaki telefonlar ve değişiklikleri kendisi yapmak isteyen işletme sahipleri için tasarlandı.",
-      "cta": "Tüm özellikleri görün"
+    "guests": {
+      "title": "Misafirleriniz ne görür",
+      "intro": "Tarayıcıda açılan bir sayfa: uygulama da hesap da gerekmez.",
+      "p1": "Fotoğraflar ve kendi biçimlerinde fiyatlar",
+      "p2": "Kendi dilleri, Arapça sağdan sola",
+      "p3": "Arama ve beslenme filtreleri",
+      "p4": "Çalışma saatleri ve tükenen yemekler işaretli",
+      "caption": "Lokanta Demo hayali bir restorandır."
     },
-    "menus": {
-      "title": "Menupedia'daki menüler",
-      "titleLocal": "{country} içindeki menüler",
-      "intro": "Menupedia'yı kullanan mekânlar. Birini açıp misafirlerin gördüğü gibi görün.",
-      "cta": "Tüm menüleri görün"
+    "features": {
+      "title": "Neler yapar",
+      "intro": "Masadaki telefonlar ve değişiklikleri kendi yapmak isteyen işletmeciler için.",
+      "cta": "Tüm özellikleri gör",
+      "items": {
+        "designs": {
+          "name": "Menü tasarımları",
+          "note": "Klasik, fotoğraf ızgarası ya da kompakt. İstediğiniz zaman değiştirin.",
+          "value": "3"
+        },
+        "languages": {
+          "name": "Diller",
+          "note": "İngilizce, Türkçe, Arapça, İspanyolca ve Rusça.",
+          "value": "5"
+        },
+        "colors": {
+          "name": "Renk temaları",
+          "note": "Kendi renkleriniz, canlı önizlemeyle.",
+          "value": "açık ve koyu"
+        },
+        "instant": {
+          "name": "Güncellemeler",
+          "note": "Fiyatı değiştirin ya da yemeği tükendi yapın. Yeniden baskı yok.",
+          "value": "saniyeler"
+        },
+        "hours": {
+          "name": "Çalışma saatleri",
+          "note": "“Şimdi açık” bilgisi saat diliminize göre hesaplanır.",
+          "value": "dahili"
+        },
+        "qr": {
+          "name": "QR masa kartları",
+          "note": "Logonuzla, yazdırmaya hazır.",
+          "value": "dahil"
+        }
+      }
+    },
+    "examples": {
+      "title": "Örnek menüler",
+      "intro": "Menupedia ile hazırlanmış menüler. Birini açın, bir misafir gibi okuyun.",
+      "label": "Örnek",
+      "cta": "Tüm menüleri gör"
+    },
+    "pricing": {
+      "title": "Ücretsiz başlayın",
+      "free": "{months} ay ücretsiz",
+      "then": "sonra ayda {price}",
+      "text": "Her şeyin dahil olduğu tek plan: tarama, masa ya da yemek başına ek ücret yok. Kayıt için kart gerekmez.",
+      "cta": "Fiyatları gör"
     },
     "contact": {
       "title": "Menünüzü internete taşıyın",
@@ -930,7 +975,7 @@
   },
   "Footer": {
     "home": "Menupedia ana sayfa",
-    "tagline": "Restoranların, kafelerin ve dükkânların kendi yönettiği dijital menüler. Misafirler okutur, kendi dilinde okur ve gönül rahatlığıyla sipariş verir.",
+    "tagline": "Restoranların, kafelerin ve dükkânların kendi yönettiği dijital menüler. Misafirler kodu okutur, menüyü kendi dilinde okur.",
     "product": "Ürün",
     "menus": "Menüler",
     "features": "Özellikler",
@@ -1168,7 +1213,8 @@
     "included": {
       "title": "Her şey plana dahil",
       "intro": "Ek paket yok; okutma, masa ya da yemek başına ücret yok.",
-      "link": "Tüm özellikleri görün"
+      "link": "Tüm özellikleri görün",
+      "yes": "Dahil"
     },
     "trial": {
       "title": "Ücretsiz deneme nasıl işler?",
@@ -1219,11 +1265,7 @@
       }
     },
     "cta": {
-      "title": "Ücretsiz denemenizi başlatın",
-      "text": "Menünüzü bugün oluşturun, {months} boyunca hiçbir ücret ödemeyin.",
-      "start": "Menünüzü oluşturun",
-      "faq": "SSS'yi okuyun",
-      "contact": "Bize soru sorun"
+      "start": "Menünüzü oluşturun"
     }
   },
   "multilingualPage": {
@@ -1414,13 +1456,6 @@
           }
         }
       }
-    },
-    "more": {
-      "title": "Hâlâ sorunuz mu var?",
-      "text": "Bize e-posta gönderin ya da WhatsApp'tan yazın; yardımcı olmaktan memnuniyet duyarız.",
-      "contact": "Bize ulaşın",
-      "pricing": "Fiyatları görün",
-      "multilingual": "Çok dilli menüler"
     }
   },
   "NotFoundPage": {
@@ -1428,5 +1463,8 @@
     "text": "Aradığınız menü veya sayfa taşınmış ya da artık mevcut olmayabilir.",
     "browseMenus": "Menülere göz atın",
     "home": "Ana sayfaya dönün"
+  },
+  "ThemeToggle": {
+    "label": "Açık veya koyu temaya geç"
   }
 }

@@ -35,15 +35,53 @@ const clerkLocalizations = {
   tr: withTitle(trTR, "{{applicationName}} ile devam edin"),
 };
 
-// Sign-in screens in Menupedia's colours. The primary is the darker brand
-// orange that keeps white button text readable (see --primary in globals.css).
+// Sign-in screens in The Table's colours (DESIGN.md): the card is see-through
+// so it sits on the porcelain plate of the sign-in page; the primary is cloth
+// red (white text 10:1), focus is brass-ink (5.7:1 on porcelain), the font is
+// the brand font (falls back to Geist where the widget renders outside the
+// world, e.g. a portal).
+type Appearance = NonNullable<React.ComponentProps<typeof ClerkProvider>["appearance"]>;
+const FOCUS = "3px solid #7d5f17";
 const clerkAppearance = {
   variables: {
-    colorPrimary: "#a0611a",
-    borderRadius: "0.625rem",
-    fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
+    colorPrimary: "#7a1f2b",
+    colorTextOnPrimaryBackground: "#ffffff",
+    colorText: "#221a17",
+    colorTextSecondary: "#5a4f4a",
+    colorBackground: "#fbfaf7",
+    colorInputBackground: "#ffffff",
+    colorInputText: "#221a17",
+    colorNeutral: "#221a17",
+    colorDanger: "#c42318",
+    borderRadius: "0.75rem",
+    fontFamily: "var(--table-font, var(--font-geist-sans)), system-ui, sans-serif",
   },
-};
+  elements: {
+    // Fill the plate, so a 320 px screen never scrolls sideways.
+    rootBox: { width: "100%" },
+    cardBox: { width: "100%", maxWidth: "100%", boxShadow: "none", background: "transparent", border: "none" },
+    card: { boxShadow: "none", background: "transparent", border: "none" },
+    formButtonPrimary: {
+      borderRadius: "9999px",
+      minHeight: "2.75rem",
+      fontWeight: 700,
+      "&:focus-visible": { outline: FOCUS, outlineOffset: "3px", boxShadow: "none" },
+    },
+    formFieldInput: {
+      minHeight: "2.75rem",
+      "&:focus": { outline: FOCUS, outlineOffset: "1px", boxShadow: "none" },
+    },
+    socialButtonsBlockButton: {
+      minHeight: "2.75rem",
+      "&:focus-visible": { outline: FOCUS, outlineOffset: "2px", boxShadow: "none" },
+    },
+    footerActionLink: {
+      color: "#7a1f2b",
+      fontWeight: 700,
+      "&:focus-visible": { outline: FOCUS, outlineOffset: "2px", boxShadow: "none" },
+    },
+  },
+} satisfies Appearance;
 
 /**
  * Everything except the public restaurant pages: home, restaurants list,

@@ -325,24 +325,6 @@ export function paletteTokens(p: Palette): Record<string, string> {
   };
 }
 
-const declarations = (p: Palette) =>
-  Object.entries(paletteTokens(p))
-    .map(([token, value]) => `--${token}:${value}`)
-    .join(";");
-
-/**
- * CSS for `.brand-scope` in light and dark mode. Only built from validated
- * hex colours, so it's safe to put in a <style> tag. The <body> gets it too
- * (while a `.brand-scope` is on the page): pop-ups such as the dish sheet,
- * the filter panel and the language list are drawn at the end of <body>,
- * outside the scope.
- */
-export function colorThemeCss(theme: ColorTheme): string | null {
-  const valid = parseColorTheme(theme);
-  if (!valid) return null;
-  return `.brand-scope,body:has(.brand-scope){${declarations(valid.light)}}.dark .brand-scope,.dark body:has(.brand-scope){${declarations(valid.dark)}}`;
-}
-
 export type ContrastWarning =
   | "textOnBackground"
   | "textOnCard"
@@ -387,4 +369,65 @@ export function contrastWarnings(
   return checks
     .filter(([, , ratio, min]) => ratio < min)
     .map(([warning, roles]) => ({ warning, roles }));
+}
+
+// Guest menus are set in The Table (DESIGN.md "Guest menu pattern"): the
+// world's ground, cards and ink, with the restaurant's colour for the band
+// under the header, prices, the open-now line and the active category. Text
+// in that colour sits on white cards by day and dimmed porcelain at night,
+// so it is darkened towards the world's ink until it reads at 4.5:1 there.
+const GUEST_INK = "#221a17";
+const GUEST_SURFACES: Record<ThemeMode, string> = {
+  light: "#f5f0e8", // the ground, the darkest light surface it is set on
+  dark: "#e9e2d7", // the dimmed plate
+};
+
+/** The brand colour as text on a light surface: 4.5:1 at least. */
+export function inkOn(hex: string, surface: string): string {
+  for (let step = 0; step <= 20; step++) {
+    const candidate = mix(hex, GUEST_INK, step / 20);
+    if (contrast(candidate, surface) >= 4.5) return candidate;
+  }
+  return GUEST_INK;
+}
+
+/**
+ * The colour a guest menu is branded with: the theme's (light) primary, or
+ * its header when the theme is dark all over (a navy restaurant whose primary
+ * is a light blue meant for its dark cards is branded navy).
+ */
+export function guestBrandColor(
+  theme: ColorTheme | null,
+  brandColor: string | null,
+): string | null {
+  const valid = theme && parseColorTheme(theme);
+  if (valid) {
+    const { background, header, primary } = valid.light;
+    return contrast(background, "#ffffff") > contrast(background, "#000000") ? header : primary;
+  }
+  return isBrandColor(brandColor) ? brandColor.toLowerCase() : null;
+}
+
+// The band on the night ground (globals.css .dark .guest-menu): lightened
+// until it shows (3:1), so a navy restaurant keeps its band in dark mode.
+function bandAtNight(hex: string): string {
+  for (let step = 0; step <= 20; step++) {
+    const candidate = mix(hex, "#ffffff", step / 20);
+    if (contrast(candidate, "#1d1714") >= 3) return candidate;
+  }
+  return "#ffffff";
+}
+
+/**
+ * CSS for `.brand-scope` on guest menus (and <body>, for pop-ups drawn
+ * outside it): --brand (the band), --brand-ink (text) and --brand-ink-fg
+ * (text on a --brand-ink pill), per mode. Validated hex only.
+ */
+export function guestBrandCss(hex: string): string | null {
+  if (!isBrandColor(hex)) return null;
+  const tokens = (mode: ThemeMode) => {
+    const ink = inkOn(hex, GUEST_SURFACES[mode]);
+    return `--brand:${mode === "dark" ? bandAtNight(hex) : hex};--brand-ink:${ink};--brand-ink-fg:${bestText(ink)}`;
+  };
+  return `.brand-scope,body:has(.brand-scope){${tokens("light")}}.dark .brand-scope,.dark body:has(.brand-scope){${tokens("dark")}}`;
 }

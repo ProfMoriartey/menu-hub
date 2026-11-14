@@ -1,7 +1,6 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
 import { ThemeProvider, themeInitScript } from "~/context/ThemeContext";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -47,7 +46,7 @@ export async function generateMetadata({
           url: `${APP_BASE_URL}/og-image.png`,
           width: 1200,
           height: 630,
-          alt: "Menupedia, the smart way to share menus",
+          alt: "Menupedia: every seat reads your menu in their language",
         },
       ],
       locale: ogLocale(locale),
@@ -55,11 +54,6 @@ export async function generateMetadata({
     },
   };
 }
-
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
 
 // One build per language, so pages that don't depend on the visitor (About,
 // Features, KVKK) are rendered once and served from the cache.
@@ -86,7 +80,6 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className={`${geist.variable}`}
       // themeInitScript adds the "dark" class before React hydrates
       suppressHydrationWarning
     >

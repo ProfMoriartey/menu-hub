@@ -57,7 +57,7 @@ export function OpeningStatus({
           ? "gap-1.5 px-2 py-0.5 text-xs"
           : "gap-2 px-3 py-1 text-sm",
         status?.isOpen
-          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+          ? "bg-card text-primary"
           : "bg-muted text-muted-foreground",
         // Holds its place until the time is known, so nothing moves.
         !status && "invisible",
@@ -68,7 +68,7 @@ export function OpeningStatus({
       <span
         className={cn(
           "h-2 w-2 rounded-full",
-          status?.isOpen ? "bg-emerald-500" : "bg-muted-foreground/60",
+          status?.isOpen ? "bg-primary" : "bg-muted-foreground/60",
         )}
         aria-hidden
       />
@@ -95,25 +95,28 @@ export function OpenStatusText({
   const t = useTranslations("PublicMenu");
   const locale = useLocale();
   const now = useNow();
-  if (!now || !hours || !timeZone) return null;
+  if (!hours || !timeZone) return null;
+  // Worked out in the browser: hold the line's place until then, so the
+  // header doesn't shift when it appears.
+  if (!now) return <span aria-hidden className={cn("block", className)}>&nbsp;</span>;
   const status = describeOpenStatus(hours, timeZone, now, t, locale);
 
   return (
     <span
       className={cn(
-        "block font-medium",
-        status.isOpen
-          ? "text-emerald-600 dark:text-emerald-400"
-          : "text-muted-foreground",
+        "flex items-center gap-1.5 font-medium",
+        // The restaurant's colour, darkened to 4.5:1 (lib/color-theme).
+        status.isOpen ? "text-primary" : "text-muted-foreground",
         className,
       )}
     >
+      {/* The dot is drawn, not a glyph: "●" pulls in symbol font subsets. */}
+      <span aria-hidden className="size-2 shrink-0 rounded-full bg-current" />
       {[status.label, status.detail].filter(Boolean).join(" · ")}
     </span>
   );
 }
 
-/** The week's hours, today highlighted (once known), for the about page. */
 export function OpeningHoursTable({ hours, timeZone }: Props) {
   const t = useTranslations("PublicMenu");
   const locale = useLocale();
@@ -130,17 +133,17 @@ export function OpeningHoursTable({ hours, timeZone }: Props) {
             key={day}
             className={cn(
               "border-border border-b last:border-b-0",
-              day === today && "font-semibold",
+              day === today && "bg-muted font-semibold",
             )}
             aria-current={day === today ? "date" : undefined}
           >
-            <th scope="row" className="py-2 pe-4 text-start font-medium">
+            <th scope="row" className="px-2 py-2 text-start font-medium">
               {dayName(day, locale)}
               {day === today && (
                 <span className="text-primary ms-2 text-xs">{t("today")}</span>
               )}
             </th>
-            <td className="py-2 text-end tabular-nums" dir="ltr">
+            <td className="px-2 py-2 text-end tabular-nums" dir="ltr">
               {hours[day].length === 0 ? (
                 <span className="text-muted-foreground" dir="auto">
                   {t("closedDay")}

@@ -9,9 +9,10 @@ import { getRestaurantBySlug } from "~/server/public-menu";
 import { getRestaurantRole } from "~/app/actions/auth";
 import { PreviewBanner } from "~/components/public/PreviewBanner";
 import { MenuByMenupedia } from "~/components/public/MenuByMenupedia";
-import { brandCss } from "~/lib/brand-color";
-import { colorThemeCss } from "~/lib/color-theme";
+import { guestBrandCss, guestBrandColor } from "~/lib/color-theme";
+import { TableWorld } from "~/components/table/TableWorld";
 import { isLive } from "~/lib/access";
+import { cn } from "~/lib/utils";
 
 interface DynamicPublicLayoutProps {
   children: React.ReactNode;
@@ -43,6 +44,7 @@ const CLIENT_NAMESPACES = [
   "PublicMenu",
   "Availability",
   "LanguageSwitcher",
+  "ThemeToggle",
   "UnsavedChanges",
 ];
 
@@ -83,15 +85,12 @@ export default async function DynamicPublicLayout({
     return notFound();
   }
 
-  // The restaurant's own colours, when an admin has enabled them: its saved
-  // theme, or the single brand colour picked before themes existed.
-  const brand = !restaurant.brandColorEnabled
-    ? null
-    : restaurant.colorTheme
-      ? colorThemeCss(restaurant.colorTheme)
-      : restaurant.brandColor
-        ? brandCss(restaurant.brandColor)
-        : null;
+  // The restaurant's own colour, when an admin has enabled it: its saved
+  // theme's primary, or the single brand colour picked before themes existed.
+  const brandColor = restaurant.brandColorEnabled
+    ? guestBrandColor(restaurant.colorTheme, restaurant.brandColor)
+    : null;
+  const brand = brandColor ? guestBrandCss(brandColor) : null;
 
   const withMessages = async (content: React.ReactNode) => {
     const page = (
@@ -102,16 +101,13 @@ export default async function DynamicPublicLayout({
     );
     return (
       <NextIntlClientProvider messages={await clientMessages()}>
-        {brand ? (
-          // Its own background and text, so the page behind the menu matches.
-          <div className="brand-scope bg-background text-foreground min-h-screen">
-            {/* Built from validated #rrggbb values only (lib/color-theme). */}
-            <style dangerouslySetInnerHTML={{ __html: brand }} />
-            {page}
-          </div>
-        ) : (
-          page
-        )}
+        {/* The Table's guest structure in the restaurant's colour
+            (globals.css .guest-menu, DESIGN.md "Guest menu pattern"). */}
+        <TableWorld className={cn("guest-menu min-h-screen", brand && "brand-scope")}>
+          {/* Built from validated #rrggbb values only (lib/color-theme). */}
+          {brand && <style dangerouslySetInnerHTML={{ __html: brand }} />}
+          {page}
+        </TableWorld>
       </NextIntlClientProvider>
     );
   };

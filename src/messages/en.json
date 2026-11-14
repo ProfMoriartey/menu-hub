@@ -3,7 +3,6 @@
     "home": "Home",
     "restaurants": "Menus",
     "themes": "Features",
-    "aboutUs": "About Us",
     "language": "Language",
     "mainNav": "Main",
     "signIn": "Sign in",
@@ -11,13 +10,16 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "pricing": "Pricing",
-    "getStarted": "Get started"
+    "exampleMenus": "Example menus",
+    "startFree": "Start free",
+    "menuTitle": "Menu",
+    "skip": "Skip to content"
   },
   "restaurantMenuPage": {
     "browseMenuDefault": "Browse our delicious menu",
     "noMenuItemsAvailable": "No menu items available for this restaurant yet.",
     "checkBackLater": "Please check back later!",
-    "restaurantDetailsButton": "Details"  
+    "restaurantDetailsButton": "Details"
   },
   "menuItemDetailPage": {
     "pageTitle": "Menu Item Details",
@@ -27,20 +29,20 @@
     "dietaryLabels": "Dietary Information"
   },
   "restaurantProfilePage": {
-   "backToMenu": "Back to Menu",
-      "menuButton": "Menu",
-      "orderButton": "Order",
-      "informationHeading": "Information",
-      "locationHeading": "Location",
-      "foodTypeLabel": "Cuisine",
-      "establishmentTypeLabel": "Type",
-      "phoneLabel": "Contact",
-      "countryLabel": "Country",
-      "locationLabel": "Location",
-      "addressLabel": "Address",
-      "getDirections": "Get Directions",
-      "branchesHeading": "Branches",
-      "branchDetails": "Hours and details"
+    "backToMenu": "Back to Menu",
+    "menuButton": "Menu",
+    "orderButton": "Order",
+    "informationHeading": "Information",
+    "locationHeading": "Location",
+    "foodTypeLabel": "Cuisine",
+    "establishmentTypeLabel": "Type",
+    "phoneLabel": "Contact",
+    "countryLabel": "Country",
+    "locationLabel": "Location",
+    "addressLabel": "Address",
+    "getDirections": "Get Directions",
+    "branchesHeading": "Branches",
+    "branchDetails": "Hours and details"
   },
   "Dashboard": {
     "title": "Your Assigned Menus",
@@ -813,13 +815,6 @@
         "title": "Your restaurant",
         "text": "Your name, your design and your colours. The menu should feel like part of your restaurant, not ours."
       }
-    },
-    "cta": {
-      "title": "See it for yourself",
-      "text": "Try our demo restaurant, or browse the menus already on Menupedia.",
-      "features": "Explore the features",
-      "restaurants": "Browse menus",
-      "contact": "Get in touch"
     }
   },
   "VenueTypes": {
@@ -880,48 +875,98 @@
     "branchesCount": "{count, plural, one {# branch} other {# branches}}",
     "branchesPlace": "{count, plural, one {# branch} other {# branches}} · {places}",
     "openAtBranches": "{count, plural, one {Open now at # branch} other {Open now at # branches}}",
-    "closedAtBranches": "Closed now"
+    "closedAtBranches": "Closed now",
+    "exampleLabel": "Example",
+    "backHome": "Back to the home page"
   },
   "HomePage": {
     "metaTitle": "Menupedia: digital menus for restaurants and cafés",
     "metaDescription": "A QR menu your guests open on their phone, in their language, and that you update yourself in seconds. For restaurants, cafés, bakeries and more.",
     "hero": {
       "eyebrow": "Digital menus for restaurants, cafés and more",
-      "title": "Your menu on every phone, in every language",
-      "intro": "Guests scan a QR code and your menu opens instantly, with photos, prices and opening hours. You change it yourself, and it's live in seconds.",
-      "ctaMenus": "Browse menus",
-      "point1": "No app to install",
-      "point2": "5 languages",
-      "point3": "Live in seconds",
-      "demoCaption": "A working demo menu. Tap a dish.",
-      "ctaStart": "Create your menu"
+      "title": "Every seat reads your menu in their language.",
+      "intro": "Guests scan a QR code and your menu opens on their phone, in their language. You change it yourself, and it's live in seconds.",
+      "priceNote": "{months, plural, one {Free for # month} other {Free for # months}}, then {price} a month.",
+      "phoneLabel": "Demo menu of Lokanta Demo, a made-up restaurant",
+      "seatsLabel": "Menu language",
+      "seat": "Seat {n}",
+      "ctaStart": "Create your menu",
+      "showing": "Showing the menu in {language}"
     },
     "steps": {
       "title": "How it works",
-      "intro": "From first message to menus on the tables, without reprinting anything.",
+      "step": "Step {n}",
       "s1": {
         "title": "We set you up",
         "text": "Tell us about your place. We create your menu page and send sign-in links to you and your staff."
       },
       "s2": {
         "title": "Add your menu",
-        "text": "Dishes, prices, photos and dietary labels. A checklist and a private preview help you get it right before guests see it."
+        "text": "Dishes, prices, photos and dietary labels, checked in a private preview."
       },
       "s3": {
         "title": "Put it on the tables",
-        "text": "Print QR table cards. Guests scan, and you see how many opened your menu each day."
+        "text": "Print QR table cards. You see how many guests open your menu each day."
       }
     },
-    "features": {
-      "title": "Everything your menu needs",
-      "intro": "Made for phones at the table, and for owners who want to change things themselves.",
-      "cta": "See all features"
+    "guests": {
+      "title": "What your guests see",
+      "intro": "A page that opens in the browser: no app, no account.",
+      "p1": "Photos, and prices in their own format",
+      "p2": "Their language, Arabic right to left",
+      "p3": "Search and dietary filters",
+      "p4": "Opening hours, and sold-out dishes marked",
+      "caption": "Lokanta Demo is a made-up restaurant."
     },
-    "menus": {
-      "title": "Menus on Menupedia",
-      "titleLocal": "Menus in {country}",
-      "intro": "Places already using Menupedia. Open one to see it as guests do.",
+    "features": {
+      "title": "What it does",
+      "intro": "Made for phones at the table, and for owners who change things themselves.",
+      "cta": "See all features",
+      "items": {
+        "designs": {
+          "name": "Menu designs",
+          "note": "Classic, photo grid or compact. Switch any time.",
+          "value": "3"
+        },
+        "languages": {
+          "name": "Languages",
+          "note": "English, Turkish, Arabic, Spanish and Russian.",
+          "value": "5"
+        },
+        "colors": {
+          "name": "Colour themes",
+          "note": "Your own colours, with a live preview.",
+          "value": "light and dark"
+        },
+        "instant": {
+          "name": "Updates",
+          "note": "Change a price or mark a dish sold out. No reprinting.",
+          "value": "seconds"
+        },
+        "hours": {
+          "name": "Opening hours",
+          "note": "“Open now” worked out in your time zone.",
+          "value": "built in"
+        },
+        "qr": {
+          "name": "QR table cards",
+          "note": "Print-ready, with your logo.",
+          "value": "included"
+        }
+      }
+    },
+    "examples": {
+      "title": "Example menus",
+      "intro": "Menus built on Menupedia. Open one to read it the way a guest does.",
+      "label": "Example",
       "cta": "See all menus"
+    },
+    "pricing": {
+      "title": "Start free",
+      "free": "{months, plural, one {# month free} other {# months free}}",
+      "then": "then {price} a month",
+      "text": "One plan with everything in it: no extra charge per scan, table or dish. No card needed to sign up.",
+      "cta": "See pricing"
     },
     "contact": {
       "title": "Get your menu online",
@@ -930,7 +975,7 @@
   },
   "Footer": {
     "home": "Menupedia home",
-    "tagline": "Digital menus that restaurants, cafés and shops run themselves. Guests scan, read in their language, and order with confidence.",
+    "tagline": "Digital menus that restaurants, cafés and shops run themselves. Guests scan a code and read the menu in their own language.",
     "product": "Product",
     "menus": "Menus",
     "features": "Features",
@@ -1168,7 +1213,8 @@
     "included": {
       "title": "Everything is in the plan",
       "intro": "No add-ons, and no charges per scan, table or dish.",
-      "link": "See every feature"
+      "link": "See every feature",
+      "yes": "Included"
     },
     "trial": {
       "title": "How the free trial works",
@@ -1219,11 +1265,7 @@
       }
     },
     "cta": {
-      "title": "Start your free trial",
-      "text": "Set up your menu today and pay nothing for {months}.",
-      "start": "Create your menu",
-      "faq": "Read the FAQ",
-      "contact": "Ask us a question"
+      "start": "Create your menu"
     }
   },
   "multilingualPage": {
@@ -1414,13 +1456,6 @@
           }
         }
       }
-    },
-    "more": {
-      "title": "Still have a question?",
-      "text": "Email us or message us on WhatsApp. We're happy to help.",
-      "contact": "Get in touch",
-      "pricing": "See pricing",
-      "multilingual": "Multilingual menus"
     }
   },
   "NotFoundPage": {
@@ -1428,5 +1463,8 @@
     "text": "The menu or page you're looking for may have moved or no longer exists.",
     "browseMenus": "Browse menus",
     "home": "Go to the home page"
+  },
+  "ThemeToggle": {
+    "label": "Switch light or dark"
   }
 }

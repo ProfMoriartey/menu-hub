@@ -2,14 +2,17 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Globe, Navigation, Search, SearchX, X } from "lucide-react";
+import { Globe, Navigation, Search, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Plate, Platter } from "~/components/table/Plate";
 import { MenuCard } from "~/components/menus/MenuCard";
 import { DishResults } from "~/components/menus/DishResults";
 import {
   ActiveFilterPills,
+  Chip,
   FilterSheetButton,
   InlineFilters,
   type FilterModel,
@@ -27,7 +30,6 @@ import {
   type LocalArea,
 } from "~/lib/menus-directory";
 import { foldText } from "~/lib/fold-text";
-import { cn } from "~/lib/utils";
 
 export interface DirectoryFilters {
   scope: DirectoryScope;
@@ -202,11 +204,12 @@ export function MenusDirectory({
       (text) => text && fold(text).includes(folded),
     );
 
-  const places = venues.flatMap((v) => {
-    const kept = filtered(v);
-    return kept && (!query || matchesQuery(kept)) ? [kept] : [];
-  });
-  const featured = venues.filter((v) => v.featured);
+  const places = venues
+    .flatMap((v) => {
+      const kept = filtered(v);
+      return kept && (!query || matchesQuery(kept)) ? [kept] : [];
+    })
+    .sort((a, b) => Number(b.featured) - Number(a.featured));
   // Every card would name the same country.
   const hideCountry = scope === "local" || Boolean(country);
 
@@ -261,7 +264,16 @@ export function MenusDirectory({
   }, [filters, defaultScope]);
 
   if (allVenues.length === 0) {
-    return <EmptyState title={t("empty")} />;
+    return (
+      <EmptyState
+        title={t("empty")}
+        action={
+          <Button variant="table" size="pill" asChild>
+            <Link href="/">{t("backHome")}</Link>
+          </Button>
+        }
+      />
+    );
   }
 
   const clearFilters = () => update(NO_FILTERS);
@@ -290,66 +302,64 @@ export function MenusDirectory({
   };
 
   const searchEverywhere = (
-    <Button variant="outline" onClick={() => setScope("global")}>
-      <Globe className="h-4 w-4" aria-hidden /> {t("searchEverywhere")}
+    <Button variant="table" size="pill" onClick={() => setScope("global")}>
+      <Globe aria-hidden /> {t("searchEverywhere")}
     </Button>
   );
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-4">
+    <div className="space-y-12">
+      <div className="space-y-5">
         {canBeLocal ? (
-          <div
-            role="group"
-            aria-label={t("scopeLabel")}
-            className="bg-muted inline-flex max-w-full rounded-full p-1"
-          >
-            <ScopeButton pressed={scope === "local"} onClick={() => setScope("local")}>
-              <Navigation className="h-4 w-4 shrink-0" aria-hidden />
+          <div role="group" aria-label={t("scopeLabel")} className="flex flex-wrap gap-3">
+            <Chip pressed={scope === "local"} onClick={() => setScope("local")}>
+              <Navigation className="size-4 shrink-0" aria-hidden />
               <span className="truncate">{local.name}</span>
-              <span className="opacity-60 tabular-nums">{local.count}</span>
-            </ScopeButton>
-            <ScopeButton pressed={scope === "global"} onClick={() => setScope("global")}>
-              <Globe className="h-4 w-4 shrink-0" aria-hidden />
+              <span className="opacity-70 tabular-nums">{local.count}</span>
+            </Chip>
+            <Chip pressed={scope === "global"} onClick={() => setScope("global")}>
+              <Globe className="size-4 shrink-0" aria-hidden />
               {t("everywhere")}
-              <span className="opacity-60 tabular-nums">{allVenues.length}</span>
-            </ScopeButton>
+              <span className="opacity-70 tabular-nums">{allVenues.length}</span>
+            </Chip>
           </div>
         ) : (
           local && (
-            <p className="text-muted-foreground flex items-center gap-2 text-sm">
-              <Globe className="h-4 w-4 shrink-0" aria-hidden />
+            <p className="text-on-cloth-muted flex items-center gap-2 text-sm">
+              <Globe className="size-4 shrink-0" aria-hidden />
               {t("noLocalMenus", { country: local.name })}
             </p>
           )
         )}
 
-        <div className="flex items-center gap-2">
-          <form role="search" onSubmit={(e) => e.preventDefault()} className="relative flex-1">
-            <Search
-              className="text-muted-foreground pointer-events-none absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2"
-              aria-hidden
-            />
-            <Input
-              type="search"
-              value={filters.query}
-              onChange={(e) => update({ query: e.target.value })}
-              placeholder={t("searchPlaceholder")}
-              aria-label={t("searchLabel")}
-              enterKeyHint="search"
-              className="bg-card h-12 rounded-full ps-12 pe-12 text-base shadow-sm [&::-webkit-search-cancel-button]:hidden"
-            />
-            {filters.query && (
-              <button
-                type="button"
-                onClick={() => update({ query: "" })}
-                className="text-muted-foreground hover:bg-accent hover:text-accent-foreground absolute end-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full"
-                aria-label={t("clearSearch")}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </form>
+        <div className="flex items-center gap-3">
+          <Platter className="flex-1 rounded-full p-2 sm:p-2">
+            <form role="search" onSubmit={(e) => e.preventDefault()} className="relative">
+              <Search
+                className="text-ink-muted pointer-events-none absolute start-4 top-1/2 size-5 -translate-y-1/2"
+                aria-hidden
+              />
+              <Input
+                type="search"
+                value={filters.query}
+                onChange={(e) => update({ query: e.target.value })}
+                placeholder={t("searchPlaceholder")}
+                aria-label={t("searchLabel")}
+                enterKeyHint="search"
+                className="text-ink placeholder:text-ink-muted h-11 rounded-full border-0 bg-transparent ps-12 pe-12 text-base shadow-none focus-visible:ring-0 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)] dark:bg-transparent [&::-webkit-search-cancel-button]:hidden"
+              />
+              {filters.query && (
+                <button
+                  type="button"
+                  onClick={() => update({ query: "" })}
+                  className="text-ink hover:bg-plate-rim absolute end-0 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full"
+                  aria-label={t("clearSearch")}
+                >
+                  <X className="size-4" aria-hidden />
+                </button>
+              )}
+            </form>
+          </Platter>
           <FilterSheetButton model={model} />
         </div>
 
@@ -379,14 +389,14 @@ export function MenusDirectory({
               count={dishSearch.state === "done" ? dishes.length : undefined}
             >
               {dishSearch.state === "loading" ? (
-                <p className="text-muted-foreground text-sm">{t("searchingDishes")}</p>
+                <p className="text-on-cloth-muted text-sm">{t("searchingDishes")}</p>
               ) : dishSearch.state === "error" ? (
-                <p className="text-destructive text-sm">{t("dishSearchFailed")}</p>
+                <p className="text-on-cloth text-sm font-bold">{t("dishSearchFailed")}</p>
               ) : dishes.length > 0 ? (
                 <DishResults dishes={dishes} venues={byId} />
               ) : (
                 places.length > 0 && (
-                  <p className="text-muted-foreground text-sm">{t("noDishes", { query })}</p>
+                  <p className="text-on-cloth-muted text-sm">{t("noDishes", { query })}</p>
                 )
               )}
             </Section>
@@ -400,7 +410,7 @@ export function MenusDirectory({
                   scope === "local" ? (
                     searchEverywhere
                   ) : anyFilter ? (
-                    <Button variant="outline" onClick={clearFilters}>
+                    <Button variant="table" size="pill" onClick={clearFilters}>
                       {t("clearFilters")}
                     </Button>
                   ) : undefined
@@ -410,23 +420,6 @@ export function MenusDirectory({
         </>
       ) : (
         <>
-          {!anyFilter && featured.length > 0 && featured.length < venues.length && (
-            <Section title={t("featured")}>
-              {/* `relative` keeps the cards' absolutely placed parts inside
-                  the scroller; without it they widen the page on phones. */}
-              <div className="scrollbar-hide relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-2">
-                {featured.map((venue, i) => (
-                  <MenuCard
-                    key={venue.id}
-                    venue={venue}
-                    priority={i < 2}
-                    hideCountry={hideCountry}
-                    className="w-[82%] shrink-0 snap-start sm:w-80"
-                  />
-                ))}
-              </div>
-            </Section>
-          )}
           <Section title={anyFilter ? t("matching") : t("allMenus")} count={places.length}>
             {places.length > 0 ? (
               <CardGrid venues={places} hideCountry={hideCountry} />
@@ -434,12 +427,12 @@ export function MenusDirectory({
               <EmptyState
                 title={t("noMatches")}
                 action={
-                  <div className="flex flex-wrap justify-center gap-2">
-                    <Button variant="outline" onClick={clearFilters}>
+                  <>
+                    <Button variant="table" size="pill" onClick={clearFilters}>
                       {t("clearFilters")}
                     </Button>
                     {scope === "local" && searchEverywhere}
-                  </div>
+                  </>
                 }
               />
             )}
@@ -447,33 +440,6 @@ export function MenusDirectory({
         </>
       )}
     </div>
-  );
-}
-
-function ScopeButton({
-  pressed,
-  onClick,
-  children,
-}: {
-  pressed: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={pressed}
-      onClick={onClick}
-      className={cn(
-        "inline-flex h-9 min-w-0 items-center gap-1.5 rounded-full px-4 text-sm font-medium whitespace-nowrap transition-colors",
-        "focus-visible:ring-ring outline-none focus-visible:ring-2",
-        pressed
-          ? "bg-background text-foreground shadow-sm"
-          : "text-muted-foreground hover:text-foreground",
-      )}
-    >
-      {children}
-    </button>
   );
 }
 
@@ -487,11 +453,11 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <section className="space-y-4">
-      <h2 className="flex items-baseline gap-2 text-xl font-bold">
+    <section className="space-y-6">
+      <h2 className="text-on-cloth flex items-baseline gap-2 text-2xl font-extrabold tracking-tight rtl:tracking-normal">
         {title}
         {count !== undefined && (
-          <span className="text-muted-foreground text-base font-normal tabular-nums">{count}</span>
+          <span className="text-on-cloth-muted text-base font-normal tabular-nums">{count}</span>
         )}
       </h2>
       {children}
@@ -499,22 +465,29 @@ function Section({
   );
 }
 
+// Plates in one column on phones, two and three as the container widens.
 function CardGrid({ venues, hideCountry }: { venues: DirectoryVenue[]; hideCountry: boolean }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {venues.map((venue, i) => (
-        <MenuCard key={venue.id} venue={venue} priority={i < 2} hideCountry={hideCountry} />
-      ))}
+    <div className="@container">
+      <ul className="grid grid-cols-1 justify-items-center gap-12 @2xl:grid-cols-2 @5xl:grid-cols-3">
+        {venues.map((venue, i) => (
+          <MenuCard key={venue.id} venue={venue} priority={i < 3} hideCountry={hideCountry} />
+        ))}
+      </ul>
     </div>
   );
 }
 
+// A bare plate: one line and a way back.
 function EmptyState({ title, action }: { title: string; action?: ReactNode }) {
   return (
-    <div className="border-border flex flex-col items-center gap-4 rounded-2xl border border-dashed px-6 py-14 text-center">
-      <SearchX className="text-muted-foreground h-8 w-8" aria-hidden />
-      <p className="text-muted-foreground max-w-sm">{title}</p>
-      {action}
+    <div className="flex justify-center py-4">
+      <Plate size="fluid" className="max-w-80 @container">
+        <div className="flex w-[66%] flex-col items-center gap-3 text-center">
+          <p className="text-[clamp(0.9375rem,5.5cqw,1.125rem)] leading-snug font-bold">{title}</p>
+          {action}
+        </div>
+      </Plate>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { cn } from "~/lib/utils";
+import { tableFontVariables } from "~/components/table/fonts";
 import { OpenStatusText } from "~/components/public/OpeningHours";
 import type { OpeningHours } from "~/lib/opening-hours";
 
@@ -51,17 +52,19 @@ export function BranchPicker({ restaurantName, branches, allHref, onAll, classNa
     <Dialog>
       <DialogTrigger
         className={cn(
-          "border-border bg-background hover:bg-muted inline-flex max-w-full items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium",
+          "border-border bg-card hover:bg-muted inline-flex min-h-11 max-w-full items-center gap-1.5 rounded-full border px-3 py-1 text-start text-sm font-medium",
           className,
         )}
       >
         <MapPin className="text-primary h-3.5 w-3.5 shrink-0" aria-hidden />
-        <span className="truncate">
+        {/* Wraps, never cut short: branch names can be long. */}
+        <span className="min-w-0 leading-tight [overflow-wrap:break-word]">
           {current ? current.label : t("chooseBranch", { count: branches.length })}
         </span>
         <ChevronDown className="text-muted-foreground h-3.5 w-3.5 shrink-0" aria-hidden />
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh] overflow-y-auto">
+      {/* A portal, outside the guest menu: it brings the scope along. */}
+      <DialogContent className={cn("table-world guest-menu max-h-[85vh] overflow-y-auto", tableFontVariables)}>
         <DialogHeader>
           <DialogTitle>{t("branchPickerTitle", { name: restaurantName })}</DialogTitle>
           <DialogDescription>{t("branchPickerIntro")}</DialogDescription>
@@ -73,7 +76,7 @@ export function BranchPicker({ restaurantName, branches, allHref, onAll, classNa
                 href={branch.href}
                 aria-current={branch.current ? "page" : undefined}
                 className={cn(
-                  "flex items-start gap-3 rounded-xl px-3 py-2.5",
+                  "flex min-h-11 items-start gap-3 rounded-xl px-3 py-2.5",
                   branch.current ? "bg-primary/10" : "hover:bg-muted",
                 )}
               >
@@ -93,7 +96,7 @@ export function BranchPicker({ restaurantName, branches, allHref, onAll, classNa
         {!onAll && (
           <Link
             href={allHref}
-            className="text-muted-foreground hover:text-foreground border-border inline-flex items-center gap-2 border-t pt-3 text-sm"
+            className="text-muted-foreground hover:text-foreground border-border inline-flex min-h-11 items-center gap-2 border-t pt-1 text-sm"
           >
             <Store className="h-4 w-4" aria-hidden /> {t("allBranches")}
           </Link>

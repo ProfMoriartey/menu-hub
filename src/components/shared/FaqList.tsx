@@ -8,28 +8,23 @@ export interface FaqItem {
 }
 
 /**
- * Questions that open to their answers. Plain <details>, so it works without
+ * Questions that open to their answers, as rows on a `Platter`. Plain <details>, so it works without
  * JavaScript and every answer is in the page for search engines and AI
  * assistants, even while closed.
  */
 export function FaqList({ items, className }: { items: FaqItem[]; className?: string }) {
   return (
-    <div
-      className={cn(
-        "bg-card border-border divide-border divide-y rounded-2xl border shadow-sm",
-        className,
-      )}
-    >
+    <div className={cn("divide-plate-rim-shadow divide-y divide-dotted", className)}>
       {items.map(({ question, answer }) => (
-        <details key={question} className="group px-5 py-4 sm:px-6">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
+        <details key={question} className="group py-1">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 rounded-md py-2 font-bold outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-[var(--table-focus)] [&::-webkit-details-marker]:hidden">
             {question}
             <ChevronDown
-              className="text-muted-foreground h-4 w-4 shrink-0 transition-transform group-open:rotate-180"
+              className="text-ink-muted size-5 shrink-0 transition-transform motion-reduce:transition-none group-open:rotate-180"
               aria-hidden
             />
           </summary>
-          <p className="text-muted-foreground mt-3 leading-relaxed">{answer}</p>
+          <p className="text-ink-muted pb-3 leading-relaxed">{answer}</p>
         </details>
       ))}
     </div>

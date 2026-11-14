@@ -5,6 +5,7 @@ import { LayoutDashboard } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { LanguageSwitcher } from "~/components/shared/LanguageSwitcher";
 import { ThemeToggle } from "~/components/shared/ThemeToggle";
+import { GeistVar } from "~/styles/geist";
 
 // The bar on every dashboard page: back to the dashboard home, language,
 // theme and account. Each page below handles its own sign-in check.
@@ -13,6 +14,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="bg-background min-h-screen">
+      <GeistVar />
       <header className="bg-card border-border sticky top-0 z-20 border-b print:hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <Link href="/dashboard" className="text-primary inline-flex items-center gap-2 font-extrabold tracking-tight">

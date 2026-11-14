@@ -28,7 +28,7 @@ const DISHES: Record<MenuDesign, { Dish: typeof ClassicDish; list: string }> = {
   },
   compact: {
     Dish: CompactDish,
-    list: "bg-card border-border divide-border divide-y overflow-hidden rounded-xl border shadow-sm",
+    list: "bg-card border-border/60 divide-border/70 divide-y overflow-hidden rounded-2xl border shadow-[0_2px_6px_rgb(34_26_23/0.08)]",
   },
 };
 
@@ -75,15 +75,18 @@ export function MenuLayout({
           key={category.id}
           id={categorySectionId(category.slug)}
           aria-labelledby={`${categorySectionId(category.slug)}-heading`}
-          className="scroll-mt-20"
+          // Compact rows run name to price: keep the leaders a readable length.
+          className={cn("scroll-mt-24", design === "compact" && "max-w-3xl")}
         >
           <h2
             id={`${categorySectionId(category.slug)}-heading`}
-            className="text-foreground mb-3 text-xl font-semibold sm:text-2xl"
+            // Muted, with a rule to the end: a section of the menu, not a title.
+            className="text-on-ground-muted mb-3 flex items-center gap-3 text-sm font-bold tracking-[0.08em] uppercase sm:text-base"
           >
-            <span lang={category.lang} dir="auto">
+            <span lang={category.lang} dir="auto" className="min-w-0 [overflow-wrap:break-word]">
               {category.name}
             </span>
+            <span aria-hidden className="bg-on-ground-muted/30 h-px min-w-6 flex-1" />
           </h2>
           {/* Compact rows are plain list items; cards are a grid. */}
           {/* Each dish rises in on load and slides as it scrolls in and

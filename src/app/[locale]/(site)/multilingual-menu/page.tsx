@@ -1,21 +1,12 @@
 // app/[locale]/(site)/multilingual-menu/page.tsx
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import {
-  ArrowLeftRight,
-  Clock,
-  Coins,
-  Languages,
-  Leaf,
-  ScanLine,
-  Search,
-  type LucideIcon,
-} from "lucide-react";
-import { Link } from "~/i18n/navigation";
-import { Button } from "~/components/ui/button";
 import { MenuDemo } from "~/components/features/MenuDemo";
+import { ContactClose } from "~/components/home/ContactClose";
 import { FaqList, faqStructuredData } from "~/components/shared/FaqList";
-import { CtaCard, PageHero, PageSection } from "~/components/shared/MarketingBlocks";
+import { ClothHero, PageSection, PlatterList } from "~/components/shared/MarketingBlocks";
+import { StepPlates } from "~/components/shared/StepPlates";
+import { Platter } from "~/components/table/Plate";
 import { getDemoMenus } from "~/server/demo-menu";
 import { jsonLd } from "~/server/menu-structured-data";
 import { sitePageMetadata } from "~/server/public-metadata";
@@ -33,21 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-const STEPS: { id: string; icon: LucideIcon }[] = [
-  { id: "s1", icon: Languages },
-  { id: "s2", icon: ArrowLeftRight },
-  { id: "s3", icon: ScanLine },
-];
+const STEPS = ["s1", "s2", "s3"] as const;
 
 // What guests get in their language. Texts in multilingualPage.details.items.
-const DETAILS: { id: string; icon: LucideIcon }[] = [
-  { id: "rtl", icon: ArrowLeftRight },
-  { id: "prices", icon: Coins },
-  { id: "search", icon: Search },
-  { id: "labels", icon: Leaf },
-  { id: "hours", icon: Clock },
-  { id: "google", icon: Search },
-];
+const DETAILS = ["rtl", "prices", "search", "labels", "hours", "google"] as const;
 
 const QUESTIONS = ["auto", "languages", "qr", "switch", "price"] as const;
 
@@ -67,80 +47,35 @@ export default async function MultilingualMenuPage({ params }: Props) {
   }));
 
   return (
-    <div className="text-foreground">
+    <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqStructuredData(questions)) }} />
-      <PageHero eyebrow={t("hero.eyebrow")} title={t("hero.title")} intro={t("hero.intro")} />
+      <ClothHero eyebrow={t("hero.eyebrow")} title={t("hero.title")} intro={t("hero.intro")} />
 
-      <PageSection id="steps" title={t("steps.title")} className="pt-0">
-        <ol className="grid gap-4 md:grid-cols-3">
-          {STEPS.map(({ id, icon: Icon }, index) => (
-            <li key={id} className="bg-card border-border relative rounded-xl border p-5 shadow-sm">
-              <span
-                className="text-muted-foreground absolute end-4 top-4 text-sm font-semibold tabular-nums"
-                aria-hidden
-              >
-                {index + 1}
-              </span>
-              <span className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-lg">
-                <Icon className="h-5 w-5" aria-hidden />
-              </span>
-              <h3 className="mt-4 font-semibold">{t(`steps.${id}.title`)}</h3>
-              <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{t(`steps.${id}.text`)}</p>
-            </li>
-          ))}
-        </ol>
+      <PageSection id="steps" tone="deep" title={t("steps.title")}>
+        <StepPlates steps={STEPS.map((id) => ({ id, title: t(`steps.${id}.title`), text: t(`steps.${id}.text`) }))} />
       </PageSection>
 
-      <section
-        id="demo"
-        aria-labelledby="demo-title"
-        className="bg-muted/40 border-border my-12 scroll-mt-16 border-y py-16"
-      >
-        <div className="container mx-auto px-4">
-          <div className="mx-auto mb-10 max-w-2xl text-center">
-            <h2 id="demo-title" className="text-3xl font-bold tracking-tight">
-              {t("demo.title")}
-            </h2>
-            <p className="text-muted-foreground mt-3">{t("demo.intro")}</p>
-          </div>
-          <MenuDemo menus={getDemoMenus()} initialLanguage={locale} />
-        </div>
-      </section>
-
-      <PageSection id="details" title={t("details.title")}>
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {DETAILS.map(({ id, icon: Icon }) => (
-            <li key={id} className="flex gap-4">
-              <span className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
-                <Icon className="h-5 w-5" aria-hidden />
-              </span>
-              <div>
-                <h3 className="font-semibold">{t(`details.items.${id}.title`)}</h3>
-                <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-                  {t(`details.items.${id}.text`)}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
+      <PageSection id="demo" tone="cloth" title={t("demo.title")} intro={t("demo.intro")}>
+        <MenuDemo menus={getDemoMenus()} initialLanguage={locale} />
       </PageSection>
 
-      <PageSection id="who" title={t("who.title")} className="max-w-3xl">
-        <p className="text-muted-foreground text-center text-lg leading-relaxed">{t("who.text")}</p>
+      <PageSection id="details" tone="deep" title={t("details.title")} className="max-w-3xl">
+        <Platter>
+          <PlatterList items={DETAILS.map((id) => ({ id, title: t(`details.items.${id}.title`), text: t(`details.items.${id}.text`) }))} />
+        </Platter>
       </PageSection>
 
-      <PageSection id="multilingual-faq" title={t("faq.title")} className="max-w-3xl">
-        <FaqList items={questions} />
+      <PageSection id="who" tone="cloth" title={t("who.title")} className="max-w-3xl">
+        <p className="text-on-cloth-muted text-center text-lg leading-relaxed text-pretty">{t("who.text")}</p>
       </PageSection>
 
-      <CtaCard title={t("cta.title")} text={t("cta.text")}>
-        <Button size="lg" asChild>
-          <Link href="/start">{t("cta.start")}</Link>
-        </Button>
-        <Button size="lg" variant="outline" asChild>
-          <Link href="/pricing">{t("cta.pricing")}</Link>
-        </Button>
-      </CtaCard>
-    </div>
+      <PageSection id="multilingual-faq" tone="deep" title={t("faq.title")} className="max-w-3xl">
+        <Platter>
+          <FaqList items={questions} />
+        </Platter>
+      </PageSection>
+
+      <ContactClose />
+    </>
   );
 }
