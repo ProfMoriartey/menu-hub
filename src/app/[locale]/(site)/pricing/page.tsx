@@ -4,8 +4,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PlanSummary } from "~/components/plans/PlanSummary";
 import { ContactBand } from "~/components/shared/ContactBand";
 import { FaqList, faqStructuredData } from "~/components/shared/FaqList";
-import { PageHero, PageSection } from "~/components/shared/MarketingBlocks";
-import { StepPlates } from "~/components/shared/StepPlates";
+import { CourseTitle, NumberedLines } from "~/components/shared/CourseTitle";
+import { PageSection } from "~/components/shared/MarketingBlocks";
 import { jsonLd } from "~/server/menu-structured-data";
 import { planFacts } from "~/server/plan-facts";
 import { sitePageMetadata } from "~/server/public-metadata";
@@ -32,9 +32,9 @@ const QUESTIONS = ["free", "after", "pay", "yearly", "extras", "guests", "chains
 
 /**
  * The plan and what it costs, for restaurant owners comparing digital
- * menus ("QR menü fiyatları"): the free months and the price beside what
- * is included, how the free trial works and the questions people ask
- * about paying. Monthly or yearly is chosen on /start; every feature in
+ * menus ("QR menü fiyatları"): one price card with the free months and
+ * the price, what is included and how the free trial works, then the
+ * questions people ask about paying. Monthly or yearly is chosen on /start; every feature in
  * detail is on /features. Prices and the trial length come from lib/plans
  * (server/plan-facts).
  */
@@ -50,17 +50,20 @@ export default async function PricingPage({ params }: Props) {
   return (
     <div className="text-foreground">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqStructuredData(questions)) }} />
-      <PageHero title={t("hero.title")} intro={t("hero.intro", facts)} className="pb-4" />
-
-      <PageSection id="included" title={t("included.title")} intro={t("included.intro")}>
-        <PlanSummary link={{ href: "/features", label: t("included.link") }} />
-      </PageSection>
-
-      <PageSection id="trial" title={t("trial.title")}>
-        <StepPlates
-          steps={TRIAL_STEPS.map((id) => ({ id, title: t(`trial.${id}.title`, facts), text: t(`trial.${id}.text`, facts) }))}
-        />
-      </PageSection>
+      <section className="container mx-auto px-4 pt-12 pb-12 sm:pt-16">
+        <div className="napkin mx-auto mb-10 w-fit max-w-2xl px-6 py-4 text-center">
+          <h1 className="text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">{t("hero.title")}</h1>
+          <p className="text-muted-foreground mt-3">{t("included.intro")}</p>
+        </div>
+        <PlanSummary link={{ href: "/features", label: t("included.link") }}>
+          <section aria-labelledby="plan-trial" className="mt-10">
+            <CourseTitle id="plan-trial">{t("trial.title")}</CourseTitle>
+            <NumberedLines
+              items={TRIAL_STEPS.map((id) => ({ id, title: t(`trial.${id}.title`, facts), text: t(`trial.${id}.text`, facts) }))}
+            />
+          </section>
+        </PlanSummary>
+      </section>
 
       <PageSection id="pricing-faq" title={t("faq.title")} className="max-w-3xl">
         <FaqList items={questions} />

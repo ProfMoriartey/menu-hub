@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `33463a2` on
+that cost time before. Last updated 2026-11-14, after commit `ff08c9d` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -484,8 +484,9 @@ had switched on and branches beyond one become overrides) and 0015 (drops
 `plan_name`).
 
 **Sign-up and publishing:** the home and pricing pages show the plan with
-`components/plans/PlanSummary` (free months and price on a plate, what's
-included as leader rows from `plan-lines.ts`, create button; the home one
+`components/plans/PlanSummary` (one price card on a platter: free months,
+monthly and yearly price, what's included as leader rows from
+`plan-lines.ts`, optional extra part, note and create button; the home one
 is `#pricing`). The old `PricingSection` card with a monthly/yearly toggle
 is gone (2026-11-14); monthly or yearly is chosen on `/start`. `/start?plan=&cycle=` signs people up (Clerk `SignIn withSignUp`)
 and creates their restaurant (`actions/onboarding.createOwnRestaurant`):
@@ -618,9 +619,10 @@ there (`CONTACT_HREF`). Texts: `HomePage`; footer: `Footer`. **No doodles**: the
 removed 2026-11-14 (the owner: the site has enough personality); section
 headings are centred on napkins, and a **platter** (`Platter`, the
 rectangular plate) goes only under larger blocks of text: the guests
-points, the features list, and the plan's list in `PlanSummary` (so on
-/pricing too). The contact band is centred. When a feature is added, add it to
-the Features page's `GROUPS` and messages (`featuresPage.features`).
+points, the features list, and the price card (`PlanSummary`, home and
+/pricing). The contact band is centred. When a feature is added, add it to
+the Features page's `COURSES` and messages (`featuresPage.features`, with
+a `value`).
 
 **Pricing, multilingual menu and FAQ pages** (`/pricing`,
 `/multilingual-menu`, `/faq`; texts `pricingPage`, `multilingualPage`,
@@ -640,12 +642,11 @@ footer links all three. Runtime-built keys (`faq.items.${id}.q` …) aren't
 covered by `i18n:check`.
 
 Each page has one job, and links to the others rather than repeating them:
-Features shows what a menu can do (the demo and the feature cards) and only
-a one-line pricing band to `/pricing`; Pricing (structure taken from the
-Table redesign) has, in order: the hero, "Everything is in the plan"
-(`PlanSummary`), the trial steps (`StepPlates`), the questions and the
+Features shows what a menu can do (the demo and the features menu) and only
+the bill line to `/pricing`; Pricing has, in order: a small heading, the
+price card (`PlanSummary` with the trial inside), the questions and the
 contact band; it links to Features for the details; Multilingual menu covers languages, linked
-from the Features page's languages card (`FEATURE_PAGES`). A new marketing
+from the Features page's languages line (`FEATURE_PAGES`). A new marketing
 page also needs its path in `LayoutWrapper`'s `basePublicPaths`, or it
 shows without the navbar, footer and background glow.
 
@@ -882,11 +883,18 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    the side) of `LeaderRow`s with a short note and a "price" each
    (`featuresPage.features.<id>.value`), ending with the bill (the price,
    link to /pricing). "Friendly for guests" was dropped.
-6e. (done, awaiting commit) About page pass: "Our story" on one platter
+6e. (done, `ff08c9d`) About page pass: "Our story" on one platter
    (the headline, the why, four one-line house rules, links to the demo
    and the menus), then the shared `ContactBand`. How it works, who it is
    for and the values cards went (said on home, features and the FAQ).
    `CourseTitle` (the heading between two rules) is shared with features.
+6f. (done, awaiting commit) Pricing page pass: one price card. `PlanSummary`
+   is a single platter (the free months big, the monthly and yearly price,
+   "What's included" as leader rows, then the page's own part, the note
+   and buttons under a double rule); home uses it too. On /pricing a small
+   heading replaces the hero, and the trial is three one-liners inside the
+   card (`NumberedLines`, shared with about's house rules) instead of
+   plates.
 7. **Next: one page at a time** (owner's rule): the other marketing pages
    get the same treatment, platters only where there is a lot of text.
 

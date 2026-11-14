@@ -1164,28 +1164,31 @@
     "metaTitle": "Precios del menú QR: {months} gratis | Menupedia",
     "metaDescription": "Menupedia es gratis durante {months} y después cuesta {price} al mes con todo incluido: menú con fotos, códigos QR, tarjetas de mesa, 5 idiomas y tu propio diseño.",
     "hero": {
-      "title": "Precios sencillos para tu menú digital",
-      "intro": "Empieza gratis: los primeros {months} no pagas nada y no necesitas tarjeta para registrarte. Después, un solo plan con todo incluido por {price} al mes."
+      "title": "Precios sencillos para tu menú digital"
     },
     "included": {
       "title": "Todo está incluido en el plan",
       "intro": "Sin extras ni cargos por escaneo, mesa o plato.",
+      "course": "Qué incluye",
       "link": "Ver todas las funciones",
       "yes": "Incluido"
+    },
+    "price": {
+      "yearly": "O {yearly} al año: {saving}."
     },
     "trial": {
       "title": "Cómo funciona la prueba gratuita",
       "s1": {
         "title": "Regístrate y crea tu menú",
-        "text": "Crea tu restaurante, añade tus platos y revísalo todo en una vista previa privada. Sin datos de tarjeta."
+        "text": "Sin datos de tarjeta."
       },
       "s2": {
         "title": "Úsalo durante {months}",
-        "text": "Publica tu menú, imprime tus tarjetas de mesa y actualiza el menú tantas veces como quieras, todo gratis."
+        "text": "Publicado en tus mesas y actualizado cuando quieras."
       },
       "s3": {
         "title": "Decide cuando termine la prueba",
-        "text": "Te contactaremos antes de que terminen tus meses gratis. Paga con tarjeta o en efectivo, al mes o al año. Si no continúas, tu menú simplemente deja de estar publicado."
+        "text": "Con tarjeta o en efectivo, al mes o al año. Si no sigues, tu menú deja de estar publicado."
       }
     },
     "faq": {

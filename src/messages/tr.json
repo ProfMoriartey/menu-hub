@@ -1164,28 +1164,31 @@
     "metaTitle": "QR menü fiyatları: {months} ücretsiz | Menupedia",
     "metaDescription": "Menupedia {months} boyunca ücretsiz, ardından her şey dahil aylık {price}: fotoğraflı menü, QR kodlar, masa kartları, 5 dil ve size özel tasarım.",
     "hero": {
-      "title": "Dijital menünüz için sade fiyatlar",
-      "intro": "Ücretsiz başlayın: ilk {months} hiçbir ücret ödemezsiniz ve kayıt için kart gerekmez. Sonrasında her şeyin dahil olduğu tek plan, aylık {price}."
+      "title": "Dijital menünüz için sade fiyatlar"
     },
     "included": {
       "title": "Her şey plana dahil",
       "intro": "Ek paket yok; okutma, masa ya da yemek başına ücret yok.",
+      "course": "Neler dahil",
       "link": "Tüm özellikleri görün",
       "yes": "Dahil"
+    },
+    "price": {
+      "yearly": "Ya da yıllık {yearly}: {saving}."
     },
     "trial": {
       "title": "Ücretsiz deneme nasıl işler?",
       "s1": {
         "title": "Kaydolun ve menünüzü oluşturun",
-        "text": "Restoranınızı oluşturun, yemeklerinizi ekleyin ve her şeyi özel bir önizlemede kontrol edin. Kart bilgisi gerekmez."
+        "text": "Kart bilgisi gerekmez."
       },
       "s2": {
         "title": "{months} boyunca kullanın",
-        "text": "Menünüzü yayına alın, masa kartlarınızı basın ve menünüzü dilediğiniz kadar güncelleyin; hepsi ücretsiz."
+        "text": "Masalarınızda yayında, dilediğiniz kadar güncelleyin."
       },
       "s3": {
         "title": "Deneme bitince karar verin",
-        "text": "Ücretsiz süreniz bitmeden sizinle iletişime geçeriz. Kartla ya da nakit, aylık veya yıllık ödeyin. Devam etmezseniz menünüz yalnızca yayından kalkar."
+        "text": "Kartla ya da nakit, aylık veya yıllık. Devam etmezseniz menünüz yayından kalkar."
       }
     },
     "faq": {

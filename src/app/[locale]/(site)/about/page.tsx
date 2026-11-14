@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Platter } from "~/components/shared/Plate";
-import { CourseTitle } from "~/components/shared/CourseTitle";
+import { CourseTitle, NumberedLines } from "~/components/shared/CourseTitle";
 import { ContactBand } from "~/components/shared/ContactBand";
 import { sitePageMetadata } from "~/server/public-metadata";
 
@@ -50,19 +50,9 @@ export default async function AboutPage({ params }: Props) {
 
           <section aria-labelledby="rules-title" className="mt-10">
             <CourseTitle id="rules-title">{t("rules.title")}</CourseTitle>
-            <ol className="mt-6 space-y-4">
-              {RULES.map((id, i) => (
-                <li key={id} className="flex gap-4">
-                  <span className="text-primary w-5 shrink-0 text-lg font-bold tabular-nums" aria-hidden>
-                    {i + 1}.
-                  </span>
-                  <p className="text-lg">
-                    <span className="font-semibold">{t(`rules.${id}.title`)}.</span>{" "}
-                    <span className="text-muted-foreground">{t(`rules.${id}.text`)}</span>
-                  </p>
-                </li>
-              ))}
-            </ol>
+            <NumberedLines
+              items={RULES.map((id) => ({ id, title: t(`rules.${id}.title`), text: t(`rules.${id}.text`) }))}
+            />
           </section>
 
           <div className="border-border mt-10 flex flex-wrap justify-center gap-x-8 gap-y-3 border-t pt-6">

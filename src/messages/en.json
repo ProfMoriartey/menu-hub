@@ -1164,28 +1164,31 @@
     "metaTitle": "QR menu pricing: {months} free | Menupedia",
     "metaDescription": "Menupedia is free for {months}, then {price} a month for everything: menu with photos, QR codes, table cards, 5 languages and your own design.",
     "hero": {
-      "title": "Simple pricing for your digital menu",
-      "intro": "Start free: the first {months} cost nothing, and you don't need a card to sign up. After that, one plan with everything for {price} a month."
+      "title": "Simple pricing for your digital menu"
     },
     "included": {
       "title": "Everything is in the plan",
       "intro": "No add-ons, and no charges per scan, table or dish.",
+      "course": "What's included",
       "link": "See every feature",
       "yes": "Included"
+    },
+    "price": {
+      "yearly": "Or {yearly} a year: {saving}."
     },
     "trial": {
       "title": "How the free trial works",
       "s1": {
         "title": "Sign up and build your menu",
-        "text": "Create your restaurant, add your dishes and check everything in a private preview. No card details needed."
+        "text": "No card details needed."
       },
       "s2": {
         "title": "Use it for {months}",
-        "text": "Put your menu live, print your table cards and update the menu as often as you like, all for free."
+        "text": "Live on your tables, updated as often as you like."
       },
       "s3": {
         "title": "Decide when the trial ends",
-        "text": "We'll get in touch before your free months end. Pay by card or in cash, monthly or yearly. If you don't continue, your menu simply goes offline."
+        "text": "Card or cash, monthly or yearly. If you stop, your menu goes offline."
       }
     },
     "faq": {
