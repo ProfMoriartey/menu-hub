@@ -217,7 +217,7 @@ export function PlanChangeForm({
               </button>
             ))}
           </div>
-          <div role="radiogroup" aria-label={t("cycleLabel")} className="bg-muted inline-flex rounded-full p-1">
+          <div role="radiogroup" aria-label={t("cycleLabel")} className="bg-muted inline-flex rounded-[14px] p-1">
             {(["monthly", "yearly"] as const).map((c) => (
               <button
                 key={c}
@@ -226,7 +226,7 @@ export function PlanChangeForm({
                 aria-checked={cycle === c}
                 onClick={() => setCycle(c)}
                 className={cn(
-                  "rounded-full px-4 py-1.5 text-sm font-medium",
+                  "rounded-[10px] px-4 py-1.5 text-sm font-medium",
                   cycle === c ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
                 )}
               >

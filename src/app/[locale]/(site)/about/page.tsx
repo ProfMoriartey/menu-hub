@@ -58,10 +58,7 @@ export default async function AboutPage({ params }: Props) {
     <div className="text-foreground">
       <section className="container mx-auto flex max-w-5xl flex-col items-center gap-8 px-4 pt-16 pb-12 sm:pt-24 md:flex-row">
         <div className="flex-1 text-center md:text-start">
-          <p className="text-primary text-sm font-semibold tracking-wide uppercase">
-            {t("hero.eyebrow")}
-          </p>
-          <h1 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
             {t("hero.title")}
           </h1>
           <p className="text-muted-foreground mt-4 text-lg leading-relaxed">

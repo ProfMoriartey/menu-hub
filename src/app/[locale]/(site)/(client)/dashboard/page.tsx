@@ -2,7 +2,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { getTranslations, getLocale } from "next-intl/server";
 import { and, eq } from "drizzle-orm";
-import { Clock, ExternalLink, Eye, Pencil, Plus, QrCode, ShieldCheck, Store, UserPlus, UtensilsCrossed } from "lucide-react";
+import { Clock, ExternalLink, Eye, Pencil, Plus, QrCode, ShieldCheck, Store, UtensilsCrossed } from "lucide-react";
 import { Link, redirect } from "~/i18n/navigation";
 import { db } from "~/server/db";
 import { planRequests, usersToRestaurants } from "~/server/db/schema";
@@ -128,9 +128,6 @@ export default async function ClientUserDashboardPage() {
               <div className="flex min-w-0 items-center gap-3">
                 <RestaurantLogo restaurant={invite.restaurant} />
                 <div className="min-w-0">
-                  <p className="text-muted-foreground flex items-center gap-1.5 text-sm">
-                    <UserPlus className="h-4 w-4" aria-hidden /> {tInvite("eyebrow")}
-                  </p>
                   <p className="truncate font-medium">{tInvite("title", { restaurant: invite.restaurant.name })}</p>
                 </div>
               </div>
@@ -145,7 +142,7 @@ export default async function ClientUserDashboardPage() {
           <Store className="text-primary mb-4 h-10 w-10" aria-hidden />
           <h2 className="text-lg font-semibold">{tHome("createTitle")}</h2>
           <p className="text-muted-foreground mt-1 max-w-md text-sm">{tHome("createText")}</p>
-          <Button className="mt-6 rounded-full px-6" asChild>
+          <Button className="mt-6 rounded-[10px] px-6" asChild>
             <Link href="/start">{tHome("createButton")}</Link>
           </Button>
           <p className="text-muted-foreground mt-4 max-w-sm text-xs">{tHome("joinTeamHint")}</p>

@@ -80,7 +80,7 @@ export function Navbar() {
                   href={link.href}
                   aria-current={isCurrent(link.href) ? "page" : undefined}
                   className={cn(
-                    "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
+                    "rounded-[10px] px-3.5 py-2 text-sm font-medium transition-colors",
                     isCurrent(link.href)
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -106,13 +106,13 @@ export function Navbar() {
                 {t("signIn")}
               </Button>
             </SignInButton>
-            <Button asChild className="ms-1 rounded-full">
+            <Button asChild className="ms-1 rounded-[10px]">
               {/* Sign up first, then the dashboard (to create the restaurant). */}
               <Link href="/sign-in?redirect_url=%2Fdashboard">{t("getStarted")}</Link>
             </Button>
           </SignedOut>
           <SignedIn>
-            <Button asChild className="ms-1 rounded-full">
+            <Button asChild className="ms-1 rounded-[10px]">
               <Link href="/dashboard">{t("dashboard")}</Link>
             </Button>
             <div className="ms-1 hidden md:flex">
@@ -123,7 +123,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}
-            className="hover:bg-muted ms-1 flex h-10 w-10 items-center justify-center rounded-full md:hidden"
+            className="hover:bg-muted ms-1 flex h-10 w-10 items-center justify-center rounded-[10px] md:hidden"
             aria-label={open ? t("closeMenu") : t("openMenu")}
             aria-expanded={open}
             aria-controls="site-menu"

@@ -170,7 +170,7 @@ export function CategoryNav({
                 onClick={() => onSelect(category.slug)}
                 className={cn(
                   "font-medium transition-colors duration-200",
-                  variant === "bar" && "rounded-full px-4 py-2 text-sm",
+                  variant === "bar" && "rounded-[10px] px-4 py-2 text-sm",
                   variant === "sidebar" &&
                     "w-full rounded-md px-4 py-2 text-start text-base",
                   active

@@ -51,7 +51,7 @@ export function BranchPicker({ restaurantName, branches, allHref, onAll, classNa
     <Dialog>
       <DialogTrigger
         className={cn(
-          "border-border bg-background hover:bg-muted inline-flex max-w-full items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium",
+          "border-border bg-background hover:bg-muted inline-flex max-w-full items-center gap-1.5 rounded-[10px] border px-3 py-1 text-sm font-medium",
           className,
         )}
       >

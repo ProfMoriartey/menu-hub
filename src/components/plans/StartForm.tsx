@@ -296,7 +296,7 @@ export function StartForm({
           </div>
         </section>
 
-        <Button type="submit" size="lg" className="rounded-full px-6">
+        <Button type="submit" size="lg" className="rounded-[10px] px-6">
           {t("next")}
         </Button>
       </form>
@@ -314,7 +314,7 @@ export function StartForm({
           </h2>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <div role="radiogroup" aria-label={t("cycleLabel")} className="bg-muted inline-flex rounded-full p-1">
+          <div role="radiogroup" aria-label={t("cycleLabel")} className="bg-muted inline-flex rounded-[14px] p-1">
             {(["monthly", "yearly"] as const).map((cycle) => (
               <button
                 key={cycle}
@@ -323,7 +323,7 @@ export function StartForm({
                 aria-checked={values.billingCycle === cycle}
                 onClick={() => set({ billingCycle: cycle })}
                 className={cn(
-                  "rounded-full px-4 py-1.5 text-sm font-medium",
+                  "rounded-[10px] px-4 py-1.5 text-sm font-medium",
                   values.billingCycle === cycle ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
                 )}
               >
@@ -448,10 +448,10 @@ export function StartForm({
       </section>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="button" variant="ghost" size="lg" className="rounded-full" onClick={() => toStep(1)}>
+        <Button type="button" variant="ghost" size="lg" className="rounded-[10px]" onClick={() => toStep(1)}>
           <ArrowLeft className="h-4 w-4 rtl:rotate-180" /> {t("back")}
         </Button>
-        <Button type="submit" size="lg" className="rounded-full px-6" disabled={isPending}>
+        <Button type="submit" size="lg" className="rounded-[10px] px-6" disabled={isPending}>
           {isPending ? t("submitting") : t("submit")}
         </Button>
         {errorLine}

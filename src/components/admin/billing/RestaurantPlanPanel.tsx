@@ -166,7 +166,7 @@ export function RestaurantPlanPanel({
           <>
             <fieldset className="space-y-1.5">
               <legend className="text-sm font-medium">Billed</legend>
-              <div role="radiogroup" aria-label="Billed" className="bg-muted inline-flex rounded-full p-1">
+              <div role="radiogroup" aria-label="Billed" className="bg-muted inline-flex rounded-[14px] p-1">
                 {BILLING_CYCLES.map((c) => (
                   <button
                     key={c.value}
@@ -175,7 +175,7 @@ export function RestaurantPlanPanel({
                     aria-checked={values.billingCycle === c.value}
                     onClick={() => set({ billingCycle: c.value })}
                     className={cn(
-                      "rounded-full px-4 py-1.5 text-sm font-medium",
+                      "rounded-[10px] px-4 py-1.5 text-sm font-medium",
                       values.billingCycle === c.value
                         ? "bg-background text-foreground shadow-sm"
                         : "text-muted-foreground",

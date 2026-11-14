@@ -168,7 +168,7 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
                 type="button"
                 onClick={() => filters.setQuery("")}
                 aria-label={t("clearSearch")}
-                className="text-muted-foreground hover:text-foreground absolute end-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full"
+                className="text-muted-foreground hover:text-foreground absolute end-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-[10px]"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
@@ -212,7 +212,7 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
                       aria-pressed={on}
                       onClick={() => filters.toggleLabel(label)}
                       className={cn(
-                        "inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
+                        "inline-flex items-center gap-1 rounded-[10px] border px-3 py-1.5 text-sm font-medium transition-colors",
                         on
                           ? "bg-primary text-primary-foreground border-primary"
                           : "bg-card text-foreground border-border hover:bg-accent hover:text-accent-foreground",

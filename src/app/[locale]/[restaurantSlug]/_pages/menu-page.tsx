@@ -209,7 +209,7 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="h-7 rounded-full px-2.5 text-xs font-medium"
+                  className="h-7 rounded-[10px] px-2.5 text-xs font-medium"
                   asChild
                 >
                   <Link href={`${base}/about`}>
@@ -223,7 +223,7 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
                     key={label}
                     variant="secondary"
                     size="icon"
-                    className="text-muted-foreground hover:text-foreground h-7 w-7 rounded-full"
+                    className="text-muted-foreground hover:text-foreground h-7 w-7 rounded-[10px]"
                     asChild
                   >
                     <a

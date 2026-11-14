@@ -104,20 +104,17 @@ export default async function HomePage() {
       <section>
         <div className="container mx-auto grid items-center gap-12 px-4 pt-8 pb-16 sm:pt-12 lg:grid-cols-2 lg:pb-24">
           <div className="text-center lg:text-start">
-            <p className="text-primary text-sm font-semibold tracking-wide uppercase">
-              {t("hero.eyebrow")}
-            </p>
-            <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-balance sm:text-6xl">
+            <h1 className="text-4xl font-extrabold tracking-tight text-balance sm:text-6xl">
               {t("hero.title")}
             </h1>
             <p className="text-muted-foreground mx-auto mt-5 max-w-xl text-lg leading-relaxed lg:mx-0">
               {t("hero.intro")}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <Button size="lg" className="rounded-full px-6" asChild>
+              <Button size="lg" className="rounded-[10px] px-6" asChild>
                 <Link href="/start">{t("hero.ctaStart")}</Link>
               </Button>
-              <Button size="lg" variant="outline" className="rounded-full px-6" asChild>
+              <Button size="lg" variant="outline" className="rounded-[10px] px-6" asChild>
                 <Link href="/menus">{t("hero.ctaMenus")}</Link>
               </Button>
             </div>
@@ -132,7 +129,6 @@ export default async function HomePage() {
 
           <div className="relative flex flex-col items-center gap-4">
             <MenuDemo menus={getDemoMenus()} initialLanguage={locale} controls={false} />
-            <p className="text-muted-foreground text-sm">{t("hero.demoCaption")}</p>
           </div>
         </div>
       </section>
@@ -192,7 +188,7 @@ export default async function HomePage() {
           ))}
         </ul>
         <div className="mt-8 text-center">
-          <Button variant="outline" className="rounded-full" asChild>
+          <Button variant="outline" className="rounded-[10px]" asChild>
             <Link href="/features">
               {t("features.cta")} <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </Link>
@@ -249,7 +245,7 @@ export default async function HomePage() {
               <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
                 <Button
                   size="lg"
-                  className="bg-background text-foreground hover:bg-background/90 rounded-full"
+                  className="bg-background text-foreground hover:bg-background/90 rounded-[10px]"
                   asChild
                 >
                   <a href={whatsappLink(tContact("whatsappMessage"))} target="_blank" rel="noreferrer">
@@ -259,7 +255,7 @@ export default async function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-primary-foreground/60 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground rounded-full bg-transparent"
+                  className="border-primary-foreground/60 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground rounded-[10px] bg-transparent"
                   asChild
                 >
                   <a href={`mailto:${CONTACT_EMAIL}`}>

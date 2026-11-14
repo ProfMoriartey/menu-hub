@@ -100,10 +100,7 @@ export default async function FeaturesPage({ params }: Props) {
   return (
     <div className="text-foreground">
       <section className="container mx-auto max-w-3xl px-4 pt-16 pb-12 text-center sm:pt-24">
-        <p className="text-primary text-sm font-semibold tracking-wide uppercase">
-          {t("hero.eyebrow")}
-        </p>
-        <h1 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">
+        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
           {t("hero.title")}
         </h1>
         <p className="text-muted-foreground mt-4 text-lg">{t("hero.intro")}</p>

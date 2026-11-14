@@ -2,24 +2,19 @@
 import type { ReactNode } from "react";
 import { cn } from "~/lib/utils";
 
-/** The opening of a marketing page: a small label, the page's heading and an intro. */
+/** The opening of a marketing page: the page's heading and an intro. */
 export function PageHero({
-  eyebrow,
   title,
   intro,
   className,
 }: {
-  eyebrow?: string;
   title: string;
   intro: string;
   className?: string;
 }) {
   return (
     <section className={cn("container mx-auto max-w-3xl px-4 pt-16 pb-12 text-center sm:pt-24", className)}>
-      {eyebrow && (
-        <p className="text-primary text-sm font-semibold tracking-wide uppercase">{eyebrow}</p>
-      )}
-      <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">{title}</h1>
+      <h1 className="text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">{title}</h1>
       <p className="text-muted-foreground mt-4 text-lg leading-relaxed">{intro}</p>
     </section>
   );

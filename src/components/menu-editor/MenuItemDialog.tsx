@@ -586,7 +586,7 @@ function MenuItemForm({
                         aria-pressed={selected}
                         onClick={() => toggleLabel(value)}
                         className={cn(
-                          "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-colors",
+                          "inline-flex items-center gap-1.5 rounded-[10px] border px-3 py-1 text-sm transition-colors",
                           "focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
                           selected
                             ? "border-primary bg-primary text-primary-foreground"

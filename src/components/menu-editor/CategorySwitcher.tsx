@@ -27,7 +27,7 @@ export function CategorySwitcher({
           href={`${basePath}/${c.slug}`}
           aria-current={c.id === currentId ? "page" : undefined}
           className={cn(
-            "shrink-0 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap transition-colors",
+            "shrink-0 rounded-[10px] border px-3 py-1.5 text-sm whitespace-nowrap transition-colors",
             c.id === currentId
               ? "border-primary bg-primary text-primary-foreground"
               : "border-border text-muted-foreground hover:bg-accent hover:text-foreground",

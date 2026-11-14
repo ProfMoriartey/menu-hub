@@ -182,7 +182,7 @@ export function MenuLanguagesSettings({
                       disabled={!on && atLimit}
                       onClick={() => toggleExtra(lang)}
                       className={cn(
-                        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-colors",
+                        "inline-flex items-center gap-1.5 rounded-[10px] border px-3 py-1 text-sm transition-colors",
                         "focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
                         on
                           ? "border-primary bg-primary text-primary-foreground"

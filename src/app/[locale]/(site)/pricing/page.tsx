@@ -49,7 +49,7 @@ export default async function PricingPage({ params }: Props) {
   return (
     <div className="text-foreground">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqStructuredData(questions)) }} />
-      <PageHero eyebrow={t("hero.eyebrow")} title={t("hero.title")} intro={t("hero.intro", facts)} className="pb-4" />
+      <PageHero title={t("hero.title")} intro={t("hero.intro", facts)} className="pb-4" />
 
       <PricingSection className="container mx-auto px-4 py-12" />
 

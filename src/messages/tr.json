@@ -661,7 +661,6 @@
     "metaTitle": "Özellikler | Menupedia",
     "metaDescription": "Restoranların kendi şekillendirdiği dijital menüler: üç tasarım, kendi renkleri, birden fazla dil, QR kodlar ve daha fazlası.",
     "hero": {
-      "eyebrow": "Özellikler",
       "title": "Menünüzün ihtiyacı olan her şey",
       "intro": "Misafirlerinizin tek okutmayla açtığı, sizin saniyeler içinde güncellediğiniz dijital bir menü. Aşağıda demo restoranımızda deneyin.",
       "ctaDemo": "Demoyu deneyin",
@@ -756,7 +755,6 @@
     "metaTitle": "Hakkında | Menupedia",
     "metaDescription": "Menupedia, restoranlara misafirlerin tek okutmayla açtığı ve restoranın kendisinin güncel tuttuğu dijital bir menü sunar.",
     "hero": {
-      "eyebrow": "Menupedia hakkında",
       "title": "Restoranların kendi yönettiği dijital menüler",
       "intro": "Misafirler masadaki QR kodu okutur ve menünüzü telefonlarında, kendi dillerinde görür. Fiyatları, ürünleri ve fotoğrafları siz değiştirirsiniz; saniyeler içinde yayındadır."
     },
@@ -886,14 +884,12 @@
     "metaTitle": "Menupedia: restoran ve kafeler için dijital menüler",
     "metaDescription": "Misafirlerinizin telefonda, kendi dillerinde açtığı ve sizin saniyeler içinde güncellediğiniz bir QR menü. Restoranlar, kafeler, fırınlar ve daha fazlası için.",
     "hero": {
-      "eyebrow": "Restoranlar, kafeler ve daha fazlası için dijital menüler",
       "title": "Menünüz her telefonda, her dilde",
       "intro": "Misafirler QR kodu okutur ve menünüz fotoğraflar, fiyatlar ve çalışma saatleriyle hemen açılır. Değişiklikleri kendiniz yaparsınız, saniyeler içinde yayında olur.",
       "ctaMenus": "Menülere göz atın",
       "point1": "Uygulama gerekmez",
       "point2": "5 dil",
       "point3": "Saniyeler içinde yayında",
-      "demoCaption": "Çalışan bir demo menü. Bir yemeğe dokunun.",
       "ctaStart": "Menünüzü oluşturun"
     },
     "steps": {
@@ -1161,7 +1157,6 @@
     "metaTitle": "QR menü fiyatları: {months} ücretsiz | Menupedia",
     "metaDescription": "Menupedia {months} boyunca ücretsiz, ardından her şey dahil aylık {price}: fotoğraflı menü, QR kodlar, masa kartları, 5 dil ve size özel tasarım.",
     "hero": {
-      "eyebrow": "Fiyatlar",
       "title": "Dijital menünüz için sade fiyatlar",
       "intro": "Ücretsiz başlayın: ilk {months} hiçbir ücret ödemezsiniz ve kayıt için kart gerekmez. Sonrasında her şeyin dahil olduğu tek plan, aylık {price}."
     },
@@ -1230,7 +1225,6 @@
     "metaTitle": "Çok dilli QR menü: 5 dilde dijital menü | Menupedia",
     "metaDescription": "Menünüzü misafirlerinize İngilizce, Türkçe, Arapça, İspanyolca veya Rusça sunun. Tek QR kod menüyü telefonun dilinde açar; Arapça sağdan sola.",
     "hero": {
-      "eyebrow": "Çok dilli menüler",
       "title": "Tek QR kod, her misafir menünüzü kendi dilinde okur",
       "intro": "Turistler, yabancı misafirler ve yurt dışından gelenler aynı kodu okutur ve yemeklerinizi İngilizce, Türkçe, Arapça, İspanyolca veya Rusça görür. Masada çeviri yapmaya son."
     },

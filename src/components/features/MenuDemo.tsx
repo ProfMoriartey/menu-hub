@@ -56,7 +56,7 @@ function Choice<T extends string>({
             aria-pressed={value === option}
             onClick={() => onChange(option)}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors",
+              "inline-flex items-center gap-1.5 rounded-[10px] border px-3 py-1.5 text-sm transition-colors",
               value === option
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-border bg-card hover:bg-accent hover:text-accent-foreground",
@@ -251,7 +251,7 @@ export function MenuDemo({
                         type="button"
                         onClick={() => showCategory(category.slug)}
                         className={cn(
-                          "shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                          "shrink-0 rounded-[10px] px-3 py-1.5 text-xs font-medium transition-colors",
                           active
                             ? "bg-primary text-primary-foreground"
                             : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground",

@@ -60,7 +60,7 @@ export function BillingDetailsFields({
 
   return (
     <div className="space-y-5">
-      <div role="radiogroup" aria-label={t("kind")} className="bg-muted inline-flex rounded-full p-1">
+      <div role="radiogroup" aria-label={t("kind")} className="bg-muted inline-flex rounded-[14px] p-1">
         {BILLING_KINDS.map((kind) => (
           <button
             key={kind}
@@ -69,7 +69,7 @@ export function BillingDetailsFields({
             aria-checked={values.kind === kind}
             onClick={() => onChange({ kind })}
             className={cn(
-              "rounded-full px-4 py-1.5 text-sm font-medium",
+              "rounded-[10px] px-4 py-1.5 text-sm font-medium",
               values.kind === kind ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
             )}
           >

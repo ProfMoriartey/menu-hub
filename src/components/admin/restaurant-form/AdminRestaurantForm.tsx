@@ -201,7 +201,7 @@ export function AdminRestaurantForm({ restaurant, action }: AdminRestaurantFormP
             key={section.id}
             href={`#${section.id}`}
             className={cn(
-              "border-border shrink-0 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap",
+              "border-border shrink-0 rounded-[10px] border px-3 py-1.5 text-sm whitespace-nowrap",
               sectionHasError(section, errors) && "border-destructive text-destructive",
             )}
           >

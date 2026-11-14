@@ -69,7 +69,7 @@ export default async function MultilingualMenuPage({ params }: Props) {
   return (
     <div className="text-foreground">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqStructuredData(questions)) }} />
-      <PageHero eyebrow={t("hero.eyebrow")} title={t("hero.title")} intro={t("hero.intro")} />
+      <PageHero title={t("hero.title")} intro={t("hero.intro")} />
 
       <PageSection id="steps" title={t("steps.title")} className="pt-0">
         <ol className="grid gap-4 md:grid-cols-3">

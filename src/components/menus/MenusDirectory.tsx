@@ -302,7 +302,7 @@ export function MenusDirectory({
           <div
             role="group"
             aria-label={t("scopeLabel")}
-            className="bg-muted inline-flex max-w-full rounded-full p-1"
+            className="bg-muted inline-flex max-w-full rounded-[14px] p-1"
           >
             <ScopeButton pressed={scope === "local"} onClick={() => setScope("local")}>
               <Navigation className="h-4 w-4 shrink-0" aria-hidden />
@@ -343,7 +343,7 @@ export function MenusDirectory({
               <button
                 type="button"
                 onClick={() => update({ query: "" })}
-                className="text-muted-foreground hover:bg-accent hover:text-accent-foreground absolute end-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full"
+                className="text-muted-foreground hover:bg-accent hover:text-accent-foreground absolute end-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-[10px]"
                 aria-label={t("clearSearch")}
               >
                 <X className="h-4 w-4" />
@@ -465,7 +465,7 @@ function ScopeButton({
       aria-pressed={pressed}
       onClick={onClick}
       className={cn(
-        "inline-flex h-9 min-w-0 items-center gap-1.5 rounded-full px-4 text-sm font-medium whitespace-nowrap transition-colors",
+        "inline-flex h-9 min-w-0 items-center gap-1.5 rounded-[10px] px-4 text-sm font-medium whitespace-nowrap transition-colors",
         "focus-visible:ring-ring outline-none focus-visible:ring-2",
         pressed
           ? "bg-background text-foreground shadow-sm"

@@ -88,13 +88,13 @@ export function MenuColorPreview({
             <div className="mt-1.5 flex flex-wrap gap-1.5">
               <span
                 data-role="secondary"
-                className="bg-secondary text-secondary-foreground rounded-full px-2.5 py-1 text-xs font-medium"
+                className="bg-secondary text-secondary-foreground rounded-[10px] px-2.5 py-1 text-xs font-medium"
               >
                 {t("sampleDetails")}
               </span>
               <span
                 data-role="primary"
-                className="bg-primary text-primary-foreground rounded-full px-2.5 py-1 text-xs font-medium"
+                className="bg-primary text-primary-foreground rounded-[10px] px-2.5 py-1 text-xs font-medium"
               >
                 {t("sampleOrder")}
               </span>
@@ -115,7 +115,7 @@ export function MenuColorPreview({
             key={category.id}
             data-role={index === 0 ? "primary" : "secondary accent"}
             className={cn(
-              "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+              "shrink-0 rounded-[10px] px-4 py-2 text-sm font-medium transition-colors",
               index === 0
                 ? "bg-primary text-primary-foreground"
                 : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground",

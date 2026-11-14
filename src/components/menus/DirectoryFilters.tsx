@@ -74,7 +74,7 @@ export function Chip({
       aria-pressed={pressed}
       onClick={onClick}
       className={cn(
-        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium whitespace-nowrap transition-colors",
+        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-[10px] border px-3.5 text-sm font-medium whitespace-nowrap transition-colors",
         "focus-visible:ring-ring outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
         pressed ? CHIP_PRESSED : CHIP_IDLE,
         className,
@@ -150,7 +150,7 @@ export function FilterSheetButton({ model }: { model: FilterModel }) {
         <button
           type="button"
           className={cn(
-            "relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border shadow-sm transition-colors sm:hidden",
+            "relative flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] border shadow-sm transition-colors sm:hidden",
             m.activeCount > 0 ? CHIP_PRESSED : CHIP_IDLE,
           )}
           aria-label={
@@ -175,7 +175,7 @@ export function FilterSheetButton({ model }: { model: FilterModel }) {
           <div className="flex items-center justify-between px-5 pt-3 pb-2">
             <DialogPrimitive.Title className="text-xl font-bold">{t("filters")}</DialogPrimitive.Title>
             <DialogPrimitive.Close
-              className="hover:bg-accent hover:text-accent-foreground flex h-9 w-9 items-center justify-center rounded-full"
+              className="hover:bg-accent hover:text-accent-foreground flex h-9 w-9 items-center justify-center rounded-[10px]"
               aria-label={t("closeFilters")}
             >
               <X className="h-5 w-5" aria-hidden />
@@ -221,7 +221,7 @@ export function FilterSheetButton({ model }: { model: FilterModel }) {
               {t("clearAll")}
             </Button>
             <DialogPrimitive.Close asChild>
-              <Button type="button" className="h-11 flex-1 rounded-full">
+              <Button type="button" className="h-11 flex-1 rounded-[10px]">
                 {t("showResults", { count: m.resultCount })}
               </Button>
             </DialogPrimitive.Close>
@@ -261,7 +261,7 @@ export function ActiveFilterPills({ model }: { model: FilterModel }) {
           type="button"
           onClick={pill.remove}
           className={cn(
-            "inline-flex h-8 shrink-0 items-center gap-1 rounded-full border ps-3 pe-2 text-sm font-medium whitespace-nowrap",
+            "inline-flex h-8 shrink-0 items-center gap-1 rounded-[10px] border ps-3 pe-2 text-sm font-medium whitespace-nowrap",
             CHIP_PRESSED,
           )}
           aria-label={t("removeFilter", { name: pill.label })}
@@ -376,7 +376,7 @@ function FilterSelect({
       <SelectTrigger
         aria-label={label}
         className={cn(
-          "h-9 w-auto gap-1.5 rounded-full px-3.5 text-sm font-medium transition-colors",
+          "h-9 w-auto gap-1.5 rounded-[10px] px-3.5 text-sm font-medium transition-colors",
           value
             ? `${CHIP_PRESSED} dark:bg-primary dark:hover:bg-primary [&_svg]:!text-primary-foreground`
             : `${CHIP_IDLE} dark:bg-card dark:hover:bg-accent hover:[&_svg]:!text-accent-foreground`,

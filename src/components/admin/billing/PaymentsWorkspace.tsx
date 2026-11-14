@@ -134,7 +134,7 @@ export function PaymentsWorkspace({
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <div role="group" aria-label="Status" className="bg-muted inline-flex rounded-full p-1">
+        <div role="group" aria-label="Status" className="bg-muted inline-flex rounded-[14px] p-1">
           {STATUS_FILTERS.map((f) => (
             <button
               key={f.id}
@@ -142,7 +142,7 @@ export function PaymentsWorkspace({
               aria-pressed={filters.status === f.id}
               onClick={() => update({ status: f.id })}
               className={cn(
-                "rounded-full px-3 py-1 text-sm font-medium",
+                "rounded-[10px] px-3 py-1 text-sm font-medium",
                 filters.status === f.id ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
               )}
             >

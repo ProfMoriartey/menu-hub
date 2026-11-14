@@ -25,7 +25,7 @@ export function PricingSection({ className }: { className?: string }) {
           {t("pricingTitle")}
         </h2>
         <p className="text-muted-foreground mt-3 max-w-2xl">{t("pricingIntro", { count: FREE_MONTHS })}</p>
-        <div role="radiogroup" aria-label={t("cycleLabel")} className="bg-muted mt-6 inline-flex rounded-full p-1">
+        <div role="radiogroup" aria-label={t("cycleLabel")} className="bg-muted mt-6 inline-flex rounded-[14px] p-1">
           {(["monthly", "yearly"] as const).map((c) => (
             <button
               key={c}
@@ -34,7 +34,7 @@ export function PricingSection({ className }: { className?: string }) {
               aria-checked={cycle === c}
               onClick={() => setCycle(c)}
               className={cn(
-                "rounded-full px-4 py-1.5 text-sm font-medium",
+                "rounded-[10px] px-4 py-1.5 text-sm font-medium",
                 cycle === c ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
               )}
             >
@@ -75,7 +75,7 @@ export function PricingSection({ className }: { className?: string }) {
               <p className="text-muted-foreground mt-3 text-sm">{t(`tagline.${tier}`)}</p>
               <PlanFeatureList tier={tier} className="mt-5 flex-1 space-y-2 text-sm" />
               <Button
-                className="mt-6 w-full rounded-full"
+                className="mt-6 w-full rounded-[10px]"
                 variant={popular || OFFERED_TIERS.length === 1 ? "default" : "outline"}
                 asChild
               >

@@ -661,7 +661,6 @@
     "metaTitle": "Funciones | Menupedia",
     "metaDescription": "Menús digitales que cada restaurante diseña a su gusto: tres diseños, sus propios colores, varios idiomas, códigos QR y más.",
     "hero": {
-      "eyebrow": "Funciones",
       "title": "Todo lo que tu menú necesita",
       "intro": "Un menú digital que tus clientes abren con un escaneo y que tú actualizas en segundos. Pruébalo abajo con nuestro restaurante de demostración.",
       "ctaDemo": "Probar la demo",
@@ -756,7 +755,6 @@
     "metaTitle": "Acerca de | Menupedia",
     "metaDescription": "Menupedia da a los restaurantes un menú digital que los clientes abren con un escaneo y que el propio restaurante mantiene al día.",
     "hero": {
-      "eyebrow": "Acerca de Menupedia",
       "title": "Menús digitales que los restaurantes gestionan ellos mismos",
       "intro": "Los clientes escanean un código QR en la mesa y ven tu menú en su móvil, en su idioma. Tú cambias precios, platos y fotos, y en segundos está publicado."
     },
@@ -886,14 +884,12 @@
     "metaTitle": "Menupedia: menús digitales para restaurantes y cafés",
     "metaDescription": "Un menú QR que tus clientes abren en su móvil, en su idioma, y que actualizas tú mismo en segundos. Para restaurantes, cafés, panaderías y más.",
     "hero": {
-      "eyebrow": "Menús digitales para restaurantes, cafés y más",
       "title": "Tu menú en cada móvil, en cada idioma",
       "intro": "Tus clientes escanean un código QR y tu menú se abre al instante, con fotos, precios y horario. Lo cambias tú mismo y está publicado en segundos.",
       "ctaMenus": "Ver menús",
       "point1": "Sin instalar apps",
       "point2": "5 idiomas",
       "point3": "Publicado en segundos",
-      "demoCaption": "Un menú de demostración que funciona. Toca un plato.",
       "ctaStart": "Crea tu carta"
     },
     "steps": {
@@ -1161,7 +1157,6 @@
     "metaTitle": "Precios del menú QR: {months} gratis | Menupedia",
     "metaDescription": "Menupedia es gratis durante {months} y después cuesta {price} al mes con todo incluido: menú con fotos, códigos QR, tarjetas de mesa, 5 idiomas y tu propio diseño.",
     "hero": {
-      "eyebrow": "Precios",
       "title": "Precios sencillos para tu menú digital",
       "intro": "Empieza gratis: los primeros {months} no pagas nada y no necesitas tarjeta para registrarte. Después, un solo plan con todo incluido por {price} al mes."
     },
@@ -1230,7 +1225,6 @@
     "metaTitle": "Menú QR multilingüe en 5 idiomas | Menupedia",
     "metaDescription": "Muestra tu menú en inglés, turco, árabe, español o ruso. Un solo código QR lo abre en el idioma del móvil de cada cliente, con el árabe de derecha a izquierda.",
     "hero": {
-      "eyebrow": "Menús en varios idiomas",
       "title": "Un código QR, y cada cliente lee tu menú en su idioma",
       "intro": "Turistas, extranjeros residentes y visitantes de otros países escanean el mismo código y ven tus platos en inglés, turco, árabe, español o ruso. Se acabó traducir en la mesa."
     },

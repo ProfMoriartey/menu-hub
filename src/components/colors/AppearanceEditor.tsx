@@ -368,7 +368,7 @@ export function AppearanceEditor({
                           setSaved(false);
                           setTheme(copy(preset.theme));
                         }}
-                        className="border-border hover:bg-accent bg-card inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm"
+                        className="border-border hover:bg-accent bg-card inline-flex items-center gap-2 rounded-[10px] border px-3 py-1.5 text-sm"
                       >
                         <span
                           className="flex -space-x-1 rtl:space-x-reverse"

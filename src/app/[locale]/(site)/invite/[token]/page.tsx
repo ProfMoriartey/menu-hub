@@ -3,7 +3,7 @@ import { type Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { SignIn, SignOutButton } from "@clerk/nextjs";
 import { getLocale, getTranslations } from "next-intl/server";
-import { CircleAlert, UserPlus } from "lucide-react";
+import { CircleAlert } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
@@ -75,9 +75,6 @@ export default async function InvitePage({
     <div className="flex items-center gap-4">
       <RestaurantLogo restaurant={restaurant} size="lg" />
       <div className="min-w-0">
-        <p className="text-muted-foreground flex items-center gap-1.5 text-sm">
-          <UserPlus className="h-4 w-4" aria-hidden /> {t("eyebrow")}
-        </p>
         <h1 className="truncate text-xl font-semibold">
           {t("title", { restaurant: restaurant.name })}
         </h1>

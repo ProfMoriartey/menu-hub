@@ -209,7 +209,7 @@ function DishSheetContent({
           aria-hidden
         />
         <DialogPrimitive.Close
-          className="bg-card/90 text-foreground hover:bg-card absolute end-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full shadow-sm backdrop-blur"
+          className="bg-card/90 text-foreground hover:bg-card absolute end-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-[10px] shadow-sm backdrop-blur"
           aria-label={t("closeDish")}
         >
           <X className="h-4 w-4" aria-hidden />
