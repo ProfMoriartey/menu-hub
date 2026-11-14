@@ -6,3 +6,4 @@
 - Dashboard and admin are complete and unchanged by the redesign.
 - Local tooling: `scripts/dev` (setup, seed, UI check). Baseline UI numbers are recorded when the checker is run on a clean checkout; compare against your own run.
 - Payments are recorded by hand by an admin; no payment provider is connected.
+- Marketing pages (features, pricing, faq, about, multilingual-menu, start, kvkk, invite) are in The Table; blocks per page in DESIGN.md "Marketing pages". Unused now: `PricingSection`/`PageHero`, `SittingDoodle`, and message keys such as `pricingPage.cta.faq`, `aboutPage.cta.*`, `faqPage.more.*`. `/start` and a valid `/invite/<token>` need a signed-in user or a DB invite and were not rendered offline.

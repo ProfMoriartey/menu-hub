@@ -4,11 +4,17 @@ import { auth } from "@clerk/nextjs/server";
 import { and, eq, inArray } from "drizzle-orm";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Store } from "lucide-react";
+import { Cloth } from "~/components/table/Cloth";
+import { Platter } from "~/components/table/Plate";
 import { Link, redirect } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { StartForm, type ReusableBilling } from "~/components/plans/StartForm";
 import { db } from "~/server/db";
-import { billingDetails, planRequests, usersToRestaurants } from "~/server/db/schema";
+import {
+  billingDetails,
+  planRequests,
+  usersToRestaurants,
+} from "~/server/db/schema";
 import { getPublicOrigin } from "~/server/public-origin";
 import { getVisitorCountry } from "~/server/visitor-country";
 import { countryOptions } from "~/lib/countries";
@@ -19,7 +25,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("metaTitle"), description: t("intro") };
 }
 
-const one = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
+const one = (value: string | string[] | undefined) =>
+  Array.isArray(value) ? value[0] : value;
 
 /**
  * Sign-up's second step: creating the restaurant, with a plan and how
@@ -37,39 +44,60 @@ export default async function StartPage({
   const plan = one(params.plan);
   const tier = isOfferedTier(plan) ? plan : OFFERED_TIERS[0]!;
   const cycle = one(params.cycle) === "yearly" ? "yearly" : "monthly";
-  const [t, locale, { userId }] = await Promise.all([getTranslations("Start"), getLocale(), auth()]);
+  const [t, locale, { userId }] = await Promise.all([
+    getTranslations("Start"),
+    getLocale(),
+    auth(),
+  ]);
   const here = `/${locale}/start?plan=${tier}&cycle=${cycle}`;
 
   if (!userId) {
-    return redirect({ href: `/sign-in?redirect_url=${encodeURIComponent(here)}`, locale });
+    return redirect({
+      href: `/sign-in?redirect_url=${encodeURIComponent(here)}`,
+      locale,
+    });
   }
 
   const header = (
     <div className="mx-auto max-w-2xl text-center">
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t("title")}</h1>
-      <p className="text-muted-foreground mt-3 text-lg">{t("intro")}</p>
+      <h1 className="text-on-cloth text-4xl font-extrabold tracking-[-0.03em] text-balance sm:text-5xl rtl:leading-snug rtl:tracking-normal">
+        {t("title")}
+      </h1>
+      <p className="text-on-cloth-muted mt-3 text-lg text-pretty">
+        {t("intro")}
+      </p>
     </div>
   );
 
   const earlier = await db.query.planRequests.findFirst({
-    where: and(eq(planRequests.requestedBy, userId), eq(planRequests.kind, "signup")),
+    where: and(
+      eq(planRequests.requestedBy, userId),
+      eq(planRequests.kind, "signup"),
+    ),
     with: { restaurant: { columns: { name: true, slug: true } } },
   });
   if (earlier) {
     return (
-      <div className="container mx-auto space-y-8 px-4 py-12">
+      <Cloth as="div" className="space-y-8 px-4 py-12 sm:py-16">
         {header}
-        <div className="bg-primary/5 border-primary/20 mx-auto flex max-w-2xl items-start gap-3 rounded-2xl border p-6">
-          <Store className="text-primary mt-0.5 h-5 w-5 shrink-0" aria-hidden />
+        <Platter className="table-form mx-auto flex max-w-2xl items-start gap-3">
+          <Store
+            className="text-cloth-ink mt-0.5 size-5 shrink-0"
+            aria-hidden
+          />
           <div className="space-y-3">
-            <h2 className="font-semibold">{t("alreadyTitle", { name: earlier.restaurant.name })}</h2>
-            <p className="text-muted-foreground text-sm">{t("alreadyText")}</p>
-            <Button asChild>
-              <Link href={`/dashboard/${earlier.restaurant.slug}/menu`}>{t("toDashboard")}</Link>
+            <h2 className="text-lg font-bold">
+              {t("alreadyTitle", { name: earlier.restaurant.name })}
+            </h2>
+            <p className="text-ink-muted">{t("alreadyText")}</p>
+            <Button variant="table" size="pill" asChild>
+              <Link href={`/dashboard/${earlier.restaurant.slug}/menu`}>
+                {t("toDashboard")}
+              </Link>
             </Button>
           </div>
-        </div>
-      </div>
+        </Platter>
+      </Cloth>
     );
   }
 
@@ -79,24 +107,29 @@ export default async function StartPage({
     reusableBilling(userId),
   ]);
   return (
-    <div className="container mx-auto space-y-10 px-4 py-12">
+    <Cloth as="div" className="space-y-10 px-4 py-12 sm:py-16">
       {header}
-      <StartForm
-        initialTier={tier}
-        initialCycle={cycle}
-        countries={countryOptions(locale)}
-        defaultCountry={visitorCountry}
-        addressPrefix={`${origin.replace(/^https?:\/\//, "")}/`}
-        reusable={reusable}
-      />
-    </div>
+      <Platter className="table-form mx-auto max-w-3xl">
+        <StartForm
+          initialTier={tier}
+          initialCycle={cycle}
+          countries={countryOptions(locale)}
+          defaultCountry={visitorCountry}
+          addressPrefix={`${origin.replace(/^https?:\/\//, "")}/`}
+          reusable={reusable}
+        />
+      </Platter>
+    </Cloth>
   );
 }
 
 /** The person's own restaurants with billing details, to offer them again. */
 async function reusableBilling(userId: string): Promise<ReusableBilling[]> {
   const owned = await db.query.usersToRestaurants.findMany({
-    where: and(eq(usersToRestaurants.userId, userId), eq(usersToRestaurants.accessLevel, "owner")),
+    where: and(
+      eq(usersToRestaurants.userId, userId),
+      eq(usersToRestaurants.accessLevel, "owner"),
+    ),
     columns: { restaurantId: true },
     with: { restaurant: { columns: { name: true } } },
   });
@@ -110,7 +143,9 @@ async function reusableBilling(userId: string): Promise<ReusableBilling[]> {
   });
   return details.map((d) => ({
     restaurantId: d.restaurantId,
-    restaurantName: owned.find((o) => o.restaurantId === d.restaurantId)?.restaurant.name ?? "",
+    restaurantName:
+      owned.find((o) => o.restaurantId === d.restaurantId)?.restaurant.name ??
+      "",
     legalName: d.legalName,
   }));
 }

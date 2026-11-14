@@ -47,11 +47,11 @@ export function InviteResponse({ inviteId }: { inviteId: string }) {
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap gap-2">
-        <Button onClick={accept} disabled={isPending}>
+        <Button className="min-h-11 rounded-full px-5" onClick={accept} disabled={isPending}>
           <Check className="h-4 w-4" />
           {isPending ? t("joining") : t("accept")}
         </Button>
-        <Button variant="ghost" onClick={decline} disabled={isPending}>
+        <Button variant="ghost" className="min-h-11 rounded-full" onClick={decline} disabled={isPending}>
           {t("decline")}
         </Button>
       </div>

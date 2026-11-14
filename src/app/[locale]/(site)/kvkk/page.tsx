@@ -2,6 +2,9 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "~/i18n/navigation";
+import { CLOTH_LINK } from "~/components/shared/MarketingBlocks";
+import { Cloth } from "~/components/table/Cloth";
+import { Platter } from "~/components/table/Plate";
 import { NOTICE_UPDATED, kvkkNotice } from "~/content/kvkk";
 import { CONTACT_EMAIL, DATA_CONTROLLER } from "~/lib/site-contact";
 import { clip, sitePageMetadata } from "~/server/public-metadata";
@@ -33,38 +36,44 @@ export default async function KvkkPage({ params }: Props) {
   );
 
   return (
-    <article className="container mx-auto max-w-3xl px-4 py-12" lang={locale === "tr" ? "tr" : "en"}>
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{notice.title}</h1>
-      <p className="text-muted-foreground mt-2 text-sm">
-        {notice.updated}: {updated}
-        {locale !== "tr" && (
-          <>
-            {" · "}
-            <Link href="/kvkk" locale="tr" className="text-primary underline underline-offset-2">
-              Türkçe
-            </Link>
-          </>
-        )}
-      </p>
-      <p className="mt-6 leading-relaxed">{notice.intro}</p>
-      {notice.sections.map((section) => (
-        <section key={section.heading} className="mt-8 space-y-3">
-          <h2 className="text-xl font-bold">{section.heading}</h2>
-          {section.paragraphs?.map((text) => (
-            <p key={text} className="leading-relaxed">
-              {text}
-            </p>
-          ))}
-          {section.list && (
-            <ul className="list-disc space-y-1.5 ps-6 leading-relaxed">
-              {section.list.map((item) => (
-                <li key={item}>{item}</li>
+    <Cloth as="div" className="px-4 pt-12 pb-16 sm:pt-16 lg:pb-24">
+      <article className="mx-auto max-w-3xl" lang={locale === "tr" ? "tr" : "en"}>
+        <header className="mb-8 text-center">
+          <h1 className="text-on-cloth text-4xl font-extrabold tracking-[-0.03em] text-balance sm:text-5xl">{notice.title}</h1>
+          <p className="text-on-cloth-muted mt-3">
+            {notice.updated}: {updated}
+            {locale !== "tr" && (
+              <>
+                {" · "}
+                <Link href="/kvkk" locale="tr" className={CLOTH_LINK}>
+                  Türkçe
+                </Link>
+              </>
+            )}
+          </p>
+        </header>
+        <Platter className="p-7 text-[1.0625rem] sm:p-12">
+          <p className="leading-[1.75]">{notice.intro}</p>
+          {notice.sections.map((section) => (
+            <section key={section.heading} className="mt-10 space-y-3">
+              <h2 className="text-2xl leading-snug font-extrabold tracking-tight">{section.heading}</h2>
+              {section.paragraphs?.map((text) => (
+                <p key={text} className="leading-[1.75]">
+                  {text}
+                </p>
               ))}
-            </ul>
-          )}
-          {section.note && <p className="leading-relaxed">{section.note}</p>}
-        </section>
-      ))}
-    </article>
+              {section.list && (
+                <ul className="list-disc space-y-2 ps-6 leading-[1.75]">
+                  {section.list.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )}
+              {section.note && <p className="leading-[1.75]">{section.note}</p>}
+            </section>
+          ))}
+        </Platter>
+      </article>
+    </Cloth>
   );
 }
