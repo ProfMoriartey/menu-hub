@@ -45,7 +45,7 @@ export default async function StartPage({
   }
 
   const header = (
-    <div className="mx-auto max-w-2xl text-center">
+    <div className="napkin mx-auto max-w-2xl px-6 py-6 text-center">
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t("title")}</h1>
       <p className="text-muted-foreground mt-3 text-lg">{t("intro")}</p>
     </div>
@@ -59,7 +59,7 @@ export default async function StartPage({
     return (
       <div className="container mx-auto space-y-8 px-4 py-12">
         {header}
-        <div className="bg-primary/5 border-primary/20 mx-auto flex max-w-2xl items-start gap-3 rounded-2xl border p-6">
+        <div className="napkin dark:bg-card border-primary/20 mx-auto flex max-w-2xl items-start gap-3 border p-6">
           <Store className="text-primary mt-0.5 h-5 w-5 shrink-0" aria-hidden />
           <div className="space-y-3">
             <h2 className="font-semibold">{t("alreadyTitle", { name: earlier.restaurant.name })}</h2>

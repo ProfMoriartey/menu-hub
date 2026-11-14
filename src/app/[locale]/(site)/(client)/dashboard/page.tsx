@@ -8,6 +8,7 @@ import { db } from "~/server/db";
 import { planRequests, usersToRestaurants } from "~/server/db/schema";
 import { isSystemAdmin } from "~/app/actions/auth";
 import { Button } from "~/components/ui/button";
+import { Plate, PlatedLogo } from "~/components/shared/Plate";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { canEditDetails, isLive, toAccessLevel } from "~/lib/access";
 import { setupProgress } from "~/lib/setup-checklist";
@@ -139,7 +140,10 @@ export default async function ClientUserDashboardPage() {
 
       {restaurants.length === 0 && openInvitations.length > 0 ? null : restaurants.length === 0 ? (
         <div className="border-border flex flex-col items-center rounded-xl border border-dashed px-6 py-16 text-center">
-          <Store className="text-primary mb-4 h-10 w-10" aria-hidden />
+          {/* An empty plate, waiting for the first menu. */}
+          <Plate size="sm" className="mb-6 size-28">
+            <Store className="text-primary h-8 w-8" aria-hidden />
+          </Plate>
           <h2 className="text-lg font-semibold">{tHome("createTitle")}</h2>
           <p className="text-muted-foreground mt-1 max-w-md text-sm">{tHome("createText")}</p>
           <Button className="mt-6 rounded-[10px] px-6" asChild>
@@ -156,7 +160,7 @@ export default async function ClientUserDashboardPage() {
             >
               <div className="flex flex-1 flex-col gap-4 p-5">
                 <div className="flex items-start gap-3">
-                  <RestaurantLogo restaurant={restaurant} />
+                  <PlatedLogo restaurant={restaurant} />
                   <div className="min-w-0 flex-1">
                     <h2 className="truncate font-semibold">
                       <Link href={`/dashboard/${restaurant.slug}/menu`} className="hover:underline">

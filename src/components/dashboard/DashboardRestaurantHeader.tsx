@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { ChevronRight, ExternalLink, Eye } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
-import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
+import { PlatedLogo } from "~/components/shared/Plate";
 import { ExperimentalBadge } from "~/components/dashboard/ExperimentalNote";
 import { canEditDetails, isLive, type RestaurantRole } from "~/lib/access";
 import { cn } from "~/lib/utils";
@@ -90,7 +90,7 @@ export async function DashboardRestaurantHeader({
 
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-4">
-          <RestaurantLogo restaurant={restaurant} size="lg" />
+          <PlatedLogo restaurant={restaurant} size="lg" />
           <div className="min-w-0">
             <h1 className="text-foreground truncate text-3xl font-bold tracking-tight">
               {restaurant.name}

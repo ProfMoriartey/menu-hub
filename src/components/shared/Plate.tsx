@@ -1,5 +1,7 @@
 import Image from "next/image";
+import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { cn } from "~/lib/utils";
+import type { Restaurant } from "~/types/restaurant";
 
 const PLATE_SIZES = {
   sm: "size-24",
@@ -36,6 +38,26 @@ export function PlatePhoto({ src, alt, sizes, className }: { src: string; alt: s
       <span className="absolute inset-[11%] overflow-hidden rounded-full">
         <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
       </span>
+    </Plate>
+  );
+}
+
+/** A restaurant's logo served on a small plate (dashboard home cards and restaurant header). */
+export function PlatedLogo({
+  restaurant,
+  size = "md",
+}: {
+  restaurant: Pick<Restaurant, "name" | "logoUrl">;
+  size?: "md" | "lg";
+}) {
+  const lg = size === "lg";
+  return (
+    <Plate size="sm" className={lg ? "size-24" : "size-16"}>
+      <RestaurantLogo
+        restaurant={restaurant}
+        className={cn("rounded-full border-0", lg ? "size-[62%] text-lg" : "size-[62%] text-sm")}
+        imageSizes={lg ? "60px" : "40px"}
+      />
     </Plate>
   );
 }

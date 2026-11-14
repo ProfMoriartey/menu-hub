@@ -187,7 +187,7 @@ export function StartForm({
 
   if (step === 1) {
     return (
-      <form onSubmit={next} noValidate className="mx-auto max-w-3xl space-y-8">
+      <form onSubmit={next} noValidate className="napkin dark:bg-card mx-auto max-w-3xl space-y-8 p-6 sm:p-10">
         <section aria-labelledby="start-details-title" className="space-y-5">
           <div>
             {stepLabel}
@@ -304,7 +304,7 @@ export function StartForm({
   }
 
   return (
-    <form onSubmit={submit} noValidate className="mx-auto max-w-3xl space-y-10">
+    <form onSubmit={submit} noValidate className="napkin dark:bg-card mx-auto max-w-3xl space-y-10 p-6 sm:p-10">
       {/* The plan and its free trial */}
       <section aria-labelledby="start-plan-title" className="space-y-4">
         <div>

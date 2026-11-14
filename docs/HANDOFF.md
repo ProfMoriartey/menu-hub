@@ -749,6 +749,19 @@ only: never merge it, and never use its logo.** Look at it with
   controls) has them added by hand. **New text placed straight on the
   page needs `napkin` too**, and buttons on the cloth use `outline`, not
   see-through `ghost`. The footer has its own background.
+- *Dashboard*: no tablecloth behind the work screens (forms and lists stay
+  plain). Light touches only: restaurant logos served on small plates
+  (`PlatedLogo`) on the home cards and the restaurant header, and an
+  empty plate in "create your restaurant". (A gingham strip under the top
+  bar was tried and removed: the owner didn't like it.) **Admin stays
+  plain on purpose** (the owner's call, 2026-11-14); `PlatedLogo` is only
+  used in dashboard files, and shared editor components (menu-editor) are
+  untouched so admin doesn't change with them.
+- */start* (sign-up) is a marketing page, so it lies on the tablecloth: its
+  heading and each step of `StartForm` sit on a napkin, and the form steps
+  and the "already signed up" box use the solid card colour in dark mode
+  (`dark:bg-card`), because inputs are see-through and the cloth would
+  show through them.
 - *Mock-ups*: the tablecloth options, the crimson light/dark mock-up, the
   stoneware choice and the guest-menu cloth choice are on a private
   artifact: https://claude.ai/artifact/LoTiUJnYqSLCcLZmwjgq7m (the owner
@@ -766,8 +779,8 @@ Git history (`git log`) has a detailed commit message for each change.
 
 **Redesign steps (agreed 2026-11-14; one at a time, plan first, owner OKs
 each, owner commits).** Done and committed: font, pricing structure,
-plates, home sections, crimson rebrand (`d308882`). Done, awaiting the
-owner's commit: tablecloth backgrounds (see §8 "Tablecloth"). Next:
+plates, home sections, crimson rebrand (`d308882`), tablecloth backgrounds. Done, awaiting the
+owner's commit: dashboard touches (see §8). Next:
 1. (done) Tablecloth backgrounds.
 2. **A cloth choice for restaurant menus**: plain / gingham / damask, set
    in the menu editor (Appearance), saved per restaurant (needs a new
