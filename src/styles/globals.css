@@ -250,6 +250,45 @@
   }
 }
 
+/* A rectangular plate (components/shared/Plate, Platter): the plate's rim,
+   band and sunken well on a rounded rectangle, with a fixed rim width. */
+@utility platter {
+  --platter-rim: 1rem;
+  position: relative;
+  isolation: isolate;
+  border-radius: 2rem;
+  color: var(--foreground);
+  background:
+    radial-gradient(ellipse 25% 2.5rem at 20% 0, var(--plate-glaze), transparent 70%),
+    linear-gradient(135deg, var(--plate-rim-light) 15%, var(--plate-rim) 55%, var(--plate-rim-shadow) 100%);
+  box-shadow:
+    0 1.5rem 3rem -0.5rem var(--plate-shadow),
+    0 0.25rem 0.5rem var(--plate-shadow),
+    inset 0 0 0 1px var(--plate-rim-shadow);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: var(--platter-rim);
+    z-index: -1;
+    border-radius: calc(2rem - var(--platter-rim));
+    background: radial-gradient(ellipse at 30% 20%, var(--plate-glaze), var(--plate) 45%, var(--plate-well-edge));
+    box-shadow:
+      inset 0.35rem 0.5rem 0.9rem var(--plate-well-shade),
+      inset -0.2rem -0.25rem 0.5rem var(--plate-glaze);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--platter-rim) / 2);
+    z-index: -1;
+    border-radius: calc(2rem - var(--platter-rim) / 2);
+    border: 1.5px solid var(--plate-band);
+    pointer-events: none;
+  }
+}
+
 /* Rows that scroll sideways (chips, category bars) without a scrollbar. */
 @utility scrollbar-hide {
   scrollbar-width: none;

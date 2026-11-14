@@ -908,10 +908,53 @@
         "text": "Print QR table cards. Guests scan, and you see how many opened your menu each day."
       }
     },
+    "guests": {
+      "title": "What your guests see",
+      "intro": "A page that opens in the browser: no app, no account.",
+      "p1": "Photos, and prices in their own format",
+      "p2": "Their language, Arabic right to left",
+      "p3": "Search and dietary filters",
+      "p4": "Opening hours, and sold-out dishes marked"
+    },
     "features": {
       "title": "Everything your menu needs",
       "intro": "Made for phones at the table, and for owners who want to change things themselves.",
-      "cta": "See all features"
+      "cta": "See all features",
+      "items": {
+        "designs": {
+          "name": "Menu designs",
+          "note": "Classic, photo grid or compact. Switch any time.",
+          "value": "3"
+        },
+        "languages": {
+          "name": "Languages",
+          "note": "English, Turkish, Arabic, Spanish and Russian.",
+          "value": "5"
+        },
+        "colors": {
+          "name": "Colour themes",
+          "note": "Your own colours, with a live preview.",
+          "value": "light and dark"
+        },
+        "instant": {
+          "name": "Updates",
+          "note": "Change a price or mark a dish sold out. No reprinting.",
+          "value": "seconds"
+        },
+        "hours": {
+          "name": "Opening hours",
+          "note": "“Open now” worked out in your time zone.",
+          "value": "built in"
+        },
+        "qr": {
+          "name": "QR table cards",
+          "note": "Print-ready, with your logo.",
+          "value": "included"
+        }
+      }
+    },
+    "pricing": {
+      "cta": "See pricing"
     },
     "menus": {
       "title": "Menus on Menupedia",
@@ -993,8 +1036,6 @@
     "limitReachedAdmin": "{count, plural, one {This plan allows # branch.} other {This plan allows up to # branches.}} Change the plan, or raise the limit on the Features card."
   },
   "Plans": {
-    "pricingTitle": "Simple plans",
-    "pricingIntro": "One plan with everything: your full menu with photos, a QR code, table cards, branches, languages and your own colours. The first {count} months are free.",
     "pricingNote": "Prices in US dollars. Nothing to pay during the trial: billing starts only when it ends, by card or in cash.",
     "cycleLabel": "Billing",
     "monthly": "Monthly",
@@ -1004,12 +1045,6 @@
     "perYear": "{price} / year",
     "perMonthShort": "/ month",
     "perYearShort": "/ year",
-    "popular": "Most popular",
-    "tagline": {
-      "standard": "Everything a café or restaurant needs.",
-      "pro": "Your own colours, more languages, a few branches.",
-      "business": "For chains, with every language."
-    },
     "everything": "Menu, photos, QR code and table cards",
     "oneBranch": "1 branch",
     "branchesIncluded": "{count} branches included",
@@ -1026,7 +1061,6 @@
     "regularPrice": "Regular price {price}",
     "thenPerMonth": "Then {price} a month, once the trial ends.",
     "thenPerYear": "Then {price} a year, once the trial ends.",
-    "startTrial": "Start your free trial",
     "months": "{count, plural, one {# month} other {# months}}"
   },
   "Start": {

@@ -908,10 +908,53 @@
         "text": "Imprime tarjetas QR para las mesas. Tus clientes escanean y tú ves cuántos abrieron tu menú cada día."
       }
     },
+    "guests": {
+      "title": "Lo que ven tus clientes",
+      "intro": "Una página que se abre en el navegador: sin app ni cuenta.",
+      "p1": "Fotos y precios en su propio formato",
+      "p2": "Su idioma, el árabe de derecha a izquierda",
+      "p3": "Búsqueda y filtros dietéticos",
+      "p4": "Horario y platos agotados marcados"
+    },
     "features": {
       "title": "Todo lo que tu menú necesita",
       "intro": "Pensado para el móvil en la mesa y para dueños que quieren hacer los cambios ellos mismos.",
-      "cta": "Ver todas las funciones"
+      "cta": "Ver todas las funciones",
+      "items": {
+        "designs": {
+          "name": "Diseños de menú",
+          "note": "Clásico, cuadrícula de fotos o compacto. Cámbialo cuando quieras.",
+          "value": "3"
+        },
+        "languages": {
+          "name": "Idiomas",
+          "note": "Inglés, turco, árabe, español y ruso.",
+          "value": "5"
+        },
+        "colors": {
+          "name": "Temas de color",
+          "note": "Tus propios colores, con vista previa en vivo.",
+          "value": "claro y oscuro"
+        },
+        "instant": {
+          "name": "Actualizaciones",
+          "note": "Cambia un precio o marca un plato como agotado. Sin reimprimir.",
+          "value": "segundos"
+        },
+        "hours": {
+          "name": "Horario",
+          "note": "«Abierto ahora» calculado en tu zona horaria.",
+          "value": "integrado"
+        },
+        "qr": {
+          "name": "Tarjetas QR de mesa",
+          "note": "Listas para imprimir, con tu logo.",
+          "value": "incluidas"
+        }
+      }
+    },
+    "pricing": {
+      "cta": "Ver precios"
     },
     "menus": {
       "title": "Menús en Menupedia",
@@ -993,8 +1036,6 @@
     "limitReachedAdmin": "{count, plural, one {Este plan permite # sucursal.} other {Este plan permite hasta # sucursales.}} Cambia el plan o sube el límite en la tarjeta Features."
   },
   "Plans": {
-    "pricingTitle": "Planes sencillos",
-    "pricingIntro": "Un plan con todo: tu menú completo con fotos, código QR, tarjetas de mesa, sucursales, idiomas y tus propios colores. Los primeros {count} meses son gratis.",
     "pricingNote": "Precios en dólares estadounidenses. Nada que pagar durante la prueba: la facturación empieza solo cuando termina, con tarjeta o en efectivo.",
     "cycleLabel": "Facturación",
     "monthly": "Mensual",
@@ -1004,12 +1045,6 @@
     "perYear": "{price} / año",
     "perMonthShort": "/ mes",
     "perYearShort": "/ año",
-    "popular": "El más elegido",
-    "tagline": {
-      "standard": "Todo lo que necesita una cafetería o un restaurante.",
-      "pro": "Tus propios colores, más idiomas, varias sucursales.",
-      "business": "Para cadenas, con todos los idiomas."
-    },
     "everything": "Carta, fotos, código QR y tarjetas de mesa",
     "oneBranch": "1 sucursal",
     "branchesIncluded": "{count} sucursales incluidas",
@@ -1026,7 +1061,6 @@
     "regularPrice": "Precio normal {price}",
     "thenPerMonth": "Después, {price} al mes, cuando termine la prueba.",
     "thenPerYear": "Después, {price} al año, cuando termine la prueba.",
-    "startTrial": "Empieza tu prueba gratis",
     "months": "{count, plural, one {# mes} other {# meses}}"
   },
   "Start": {

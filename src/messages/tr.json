@@ -908,10 +908,53 @@
         "text": "QR masa kartlarını yazdırın. Misafirler okutur, siz de menünüzün her gün kaç kez açıldığını görürsünüz."
       }
     },
+    "guests": {
+      "title": "Misafirleriniz ne görür",
+      "intro": "Tarayıcıda açılan bir sayfa: uygulama da hesap da gerekmez.",
+      "p1": "Fotoğraflar ve kendi biçimlerinde fiyatlar",
+      "p2": "Kendi dilleri, Arapça sağdan sola",
+      "p3": "Arama ve beslenme filtreleri",
+      "p4": "Çalışma saatleri ve tükenen yemekler işaretli"
+    },
     "features": {
       "title": "Menünüzün ihtiyacı olan her şey",
       "intro": "Masadaki telefonlar ve değişiklikleri kendisi yapmak isteyen işletme sahipleri için tasarlandı.",
-      "cta": "Tüm özellikleri görün"
+      "cta": "Tüm özellikleri görün",
+      "items": {
+        "designs": {
+          "name": "Menü tasarımları",
+          "note": "Klasik, fotoğraf ızgarası ya da kompakt. İstediğiniz zaman değiştirin.",
+          "value": "3"
+        },
+        "languages": {
+          "name": "Diller",
+          "note": "İngilizce, Türkçe, Arapça, İspanyolca ve Rusça.",
+          "value": "5"
+        },
+        "colors": {
+          "name": "Renk temaları",
+          "note": "Kendi renkleriniz, canlı önizlemeyle.",
+          "value": "açık ve koyu"
+        },
+        "instant": {
+          "name": "Güncellemeler",
+          "note": "Fiyatı değiştirin ya da yemeği tükendi yapın. Yeniden baskı yok.",
+          "value": "saniyeler"
+        },
+        "hours": {
+          "name": "Çalışma saatleri",
+          "note": "“Şimdi açık” bilgisi saat diliminize göre hesaplanır.",
+          "value": "dahili"
+        },
+        "qr": {
+          "name": "QR masa kartları",
+          "note": "Logonuzla, yazdırmaya hazır.",
+          "value": "dahil"
+        }
+      }
+    },
+    "pricing": {
+      "cta": "Fiyatları gör"
     },
     "menus": {
       "title": "Menupedia'daki menüler",
@@ -993,8 +1036,6 @@
     "limitReachedAdmin": "Bu plan en fazla {count} şubeye izin veriyor. Planı değiştirin ya da Features kartından sınırı yükseltin."
   },
   "Plans": {
-    "pricingTitle": "Basit planlar",
-    "pricingIntro": "Her şeyi içeren tek plan: fotoğraflı menünüzün tamamı, QR kod, masa kartları, şubeler, diller ve kendi renkleriniz. İlk {count} ay ücretsiz.",
     "pricingNote": "Fiyatlar ABD doları. Deneme süresince ödeme yok: faturalama yalnızca süre bitince, kartla ya da nakit olarak başlar.",
     "cycleLabel": "Ödeme dönemi",
     "monthly": "Aylık",
@@ -1004,12 +1045,6 @@
     "perYear": "{price} / yıl",
     "perMonthShort": "/ ay",
     "perYearShort": "/ yıl",
-    "popular": "En çok tercih edilen",
-    "tagline": {
-      "standard": "Bir kafe ya da restoranın ihtiyacı olan her şey.",
-      "pro": "Kendi renkleriniz, daha fazla dil, birkaç şube.",
-      "business": "Zincirler için, tüm dillerle."
-    },
     "everything": "Menü, fotoğraflar, QR kod ve masa kartları",
     "oneBranch": "1 şube",
     "branchesIncluded": "{count} şube dahil",
@@ -1026,7 +1061,6 @@
     "regularPrice": "Normal fiyat {price}",
     "thenPerMonth": "Deneme süresi bitince aylık {price}.",
     "thenPerYear": "Deneme süresi bitince yıllık {price}.",
-    "startTrial": "Ücretsiz denemeyi başlat",
     "months": "{count} ay"
   },
   "Start": {

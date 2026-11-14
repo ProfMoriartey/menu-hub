@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "~/lib/utils";
 
 const PLATE_SIZES = {
@@ -26,4 +27,20 @@ export function Plate({ as: Tag = "div", size = "md", className, ...props }: Pla
       {...props}
     />
   );
+}
+
+/** A dish photo filling a plate's well, the rim showing around it. `alt` is empty when the dish name is beside it. */
+export function PlatePhoto({ src, alt, sizes, className }: { src: string; alt: string; sizes: string; className?: string }) {
+  return (
+    <Plate className={className}>
+      <span className="absolute inset-[11%] overflow-hidden rounded-full">
+        <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
+      </span>
+    </Plate>
+  );
+}
+
+/** A rectangular plate, for rows a round plate can't hold: same rim, band and well as the plate. */
+export function Platter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn("platter p-8 sm:p-10", className)} {...props} />;
 }
