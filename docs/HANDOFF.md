@@ -2,8 +2,9 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-10-23, at commit `67113b8` on
-branch `perf/users-dashboard`.
+that cost time before. Last updated 2026-11-14, after commit `d308882` on
+branch `new/unslop` (the redesign: see §8 "Design system" and the
+redesign steps in §9).
 
 ---
 
@@ -334,8 +335,13 @@ goes for **0007 and 0008 (2026-10-26)**: public pages read their columns.
   anything else ("3.000 دينار", "10-12 TL") shows exactly as typed. The
   editors show the raw `"{price} {currency}"`.
 - Colors come from theme tokens; charts were validated with the dataviz
-  method (bar color `#BE7721`, the brand orange, passes on both theme
-  surfaces).
+  method (scan-stats bar colour `#D24B5E`, a mid crimson that reads at 3:1+
+  on both theme cards; neither theme's own primary does on the other).
+- Buttons have a 10px corner radius (`rounded-[10px]`, the shared `Button`
+  base), never pills; toggle tracks around them use `rounded-[14px]`.
+  Badges, dots, avatars and switches stay round.
+- No small "eyebrow" labels above or below headings on the marketing pages
+  (removed on purpose, 2026-11-14); `PageHero` has no `eyebrow` prop.
 
 ### Code style
 - Match the surrounding code; comments explain *why*, in plain sentences.
@@ -473,9 +479,11 @@ overrides, limits; old plan names become tiers, colours/languages an admin
 had switched on and branches beyond one become overrides) and 0015 (drops
 `plan_name`).
 
-**Sign-up and publishing:** the home and Features pages show the plans
-(`components/plans/PricingSection`, `#pricing`; navbar "Pricing" and "Get
-started"). `/start?plan=&cycle=` signs people up (Clerk `SignIn withSignUp`)
+**Sign-up and publishing:** the home and pricing pages show the plan with
+`components/plans/PlanSummary` (free months and price on a plate, what's
+included as leader rows from `plan-lines.ts`, create button; the home one
+is `#pricing`). The old `PricingSection` card with a monthly/yearly toggle
+is gone (2026-11-14); monthly or yearly is chosen on `/start`. `/start?plan=&cycle=` signs people up (Clerk `SignIn withSignUp`)
 and creates their restaurant (`actions/onboarding.createOwnRestaurant`):
 name, menu address, type, menu currency, city, country, phone, plan, cycle,
 how they'd like to pay and a note. It's created unpublished, with them as
@@ -564,8 +572,10 @@ selects it. `[restaurantSlug]/layout.tsx` wraps public pages in
 `body:has(.brand-scope)`, because pop-ups (dish sheet, filter panel,
 language list) render at the end of `<body>`, outside the scope; keep that
 when changing it. The unchanged "Default" palette uses the site's exact
-tokens (`SITE_TOKENS`, white text on amber) instead of derived ones, and
-gets no contrast warnings. Legacy: the
+tokens (`SITE_TOKENS`, white text on crimson; rose in dark mode) instead of
+derived ones, and gets no contrast warnings. Restaurants without their own
+colours get this default (crimson since 2026-11-14); saved palettes are
+never touched. Legacy: the
 single `brandColor` (before themes) still applies, primary + accent, until a
 theme is saved; saving or "Use the default colours" clears it. Default
 palette values are hex conversions of globals.css: update `DEFAULT_THEME`
@@ -589,11 +599,16 @@ block. The home page's hero shows the same demo without controls. Prices for the
 and `SOCIAL_PROFILES`: Instagram, Facebook and X page URLs, each shown as
 an icon in the footer once filled in).
 
-**Home page** (`(site)/page.tsx`, for restaurant owners): hero with the
-demo phone, "How it works" (3 steps), six feature tiles (texts reused from
-`featuresPage.features`), "Menus in <country>" or "Menus on Menupedia" (six
-`MenuCard`s from `server/directory-venues`, featured first) and the
-`#contact` band (WhatsApp, email). The navbar's "Get in touch" points
+**Home page** (`(site)/page.tsx`, for restaurant owners), top to bottom:
+hero (headline and buttons on a big plate, cropped on phones; the demo
+phone beside it), "How it works" (`StepPlates`), "What your guests see"
+(four points with dotted rules, demo dishes on `PlatePhoto`s; texts
+`HomePage.guests`), "Everything your menu needs" (`LeaderRow`s on a
+`Platter`; texts `HomePage.features.items`), "Menus in <country>" or
+"Menus on Menupedia" (six `MenuCard`s from `server/directory-venues`,
+featured first), the plan (`PlanSummary`, as on /pricing, linking to
+/pricing) and the `#contact` band (`components/shared/ContactBand`:
+WhatsApp, email; shared with /pricing). The navbar's "Get in touch" points
 there (`CONTACT_HREF`). Texts: `HomePage`; footer: `Footer`. **Doodles**
 (`components/svg/*`) draw their blob in `--doodle-fill` (default primary)
 and outline in `--doodle-ink` (default current text colour); set those on a
@@ -619,9 +634,10 @@ covered by `i18n:check`.
 
 Each page has one job, and links to the others rather than repeating them:
 Features shows what a menu can do (the demo and the feature cards) and only
-a one-line pricing band to `/pricing`; Pricing has the plan card (its
-checklist is what's included), the trial and payment questions, and links
-to Features for the details; Multilingual menu covers languages, linked
+a one-line pricing band to `/pricing`; Pricing (structure taken from the
+Table redesign) has, in order: the hero, "Everything is in the plan"
+(`PlanSummary`), the trial steps (`StepPlates`), the questions and the
+contact band; it links to Features for the details; Multilingual menu covers languages, linked
 from the Features page's languages card (`FEATURE_PAGES`). A new marketing
 page also needs its path in `LayoutWrapper`'s `basePublicPaths`, or it
 shows without the navbar, footer and background glow.
@@ -691,6 +707,53 @@ Missing restaurants/items answer a real 404, and
 inactive ones a 307: there must be **no `loading.tsx` above
 `[restaurantSlug]`**, or responses start streaming as 200 first.
 
+**Design system (redesign on `new/unslop`, 2026-11-14).** The owner keeps
+the old design as the base and takes selected pieces from the "Table"
+redesign on branch `troupe/set-table` (PR #16). **That branch is reference
+only: never merge it, and never use its logo.** Look at it with
+`git show origin/troupe/set-table:<path>`.
+- *Font*: Bricolage Grotesque for Latin and Turkish, Onest for Russian,
+  Noto Sans Arabic for Arabic, on every page (dashboard and admin too).
+  `src/styles/fonts.ts` (next/font) plus self-hosted headline subsets in
+  `public/fonts` ("Site Latin/Cyrillic/Arabic" `@font-face` in
+  globals.css), preloaded per locale from `[locale]/layout.tsx` (sent as a
+  `Link` header). `--font-sans` holds the stack; Russian puts Onest first;
+  Arabic gets `letter-spacing: 0` (tracking utilities would break joins).
+- *Colour*: one brand colour, **crimson** `#9b1c2e` (light; 7.6:1 with
+  white text), pale rose `#f7e1e1` for chips. Dark mode: wine-tinted dark
+  neutrals (`#221316` page, `#30201f` cards), a soft **rose** `#f2a7b1` as
+  the brand colour (crimson is too dark to read there), dark text on rose
+  buttons. All in `globals.css` `:root` / `.dark`; restaurant defaults in
+  `lib/color-theme.ts` (`DEFAULT_THEME`, `SITE_TOKENS`) must stay in step
+  (the menu header values are computed by `paletteTokens`: run it rather
+  than guess). Amber Tailwind classes that remain are warnings (sold out,
+  hidden, unpaid, preview banner), not brand.
+- *Plates*: `components/shared/Plate.tsx` (`Plate`, `PlatePhoto`,
+  `Platter`) with the `plate` / `platter` utilities in globals.css: a
+  sunken well, a raised rim lit from the top-left, a glaze highlight and a
+  painted band drawn as a real border (a gradient ring looked jagged).
+  Every colour is a `--plate-*` token. Light: white porcelain with a
+  crimson band. Dark: **stoneware** (dark charcoal-brown, thin gold band),
+  chosen so plates don't glare. `StepPlates` puts numbered steps on
+  plates (number inside, above the title). `LeaderRow` sets a menu-style
+  "name ····· value" line.
+- *Tablecloth*: every marketing page (`LayoutWrapper`, the `.site-cloth`
+  layer; replaces the old amber glows) lies on a crimson **gingham** in
+  light mode (the softer strength: stripes `--cloth-thread`, 34px) and a
+  crimson **damask** in dark mode (`--cloth-ground` `#521320` with a faint
+  diamond-and-flower SVG). Text that sits straight on the cloth goes on a
+  **napkin** (`napkin` utility: cream `--napkin`, rounded, soft shadow;
+  transparent in dark mode, where the damask is calm enough). `PageHero`
+  and `PageSection` headings have napkins built in; page-specific text
+  (home, features, about, multilingual, FAQ, KVKK, menus, the demo
+  controls) has them added by hand. **New text placed straight on the
+  page needs `napkin` too**, and buttons on the cloth use `outline`, not
+  see-through `ghost`. The footer has its own background.
+- *Mock-ups*: the tablecloth options, the crimson light/dark mock-up, the
+  stoneware choice and the guest-menu cloth choice are on a private
+  artifact: https://claude.ai/artifact/LoTiUJnYqSLCcLZmwjgq7m (the owner
+  can open it; it is the visual reference for the next steps).
+
 **Infrastructure:** Clerk webhook syncs users (created/updated/deleted);
 UploadThing cleanup only deletes unreferenced files; `scripts/cleanup-uploads.mjs`
 removes orphans (dry run first).
@@ -700,6 +763,20 @@ Git history (`git log`) has a detailed commit message for each change.
 ---
 
 ## 9. Open items and decisions
+
+**Redesign steps (agreed 2026-11-14; one at a time, plan first, owner OKs
+each, owner commits).** Done and committed: font, pricing structure,
+plates, home sections, crimson rebrand (`d308882`). Done, awaiting the
+owner's commit: tablecloth backgrounds (see §8 "Tablecloth"). Next:
+1. (done) Tablecloth backgrounds.
+2. **A cloth choice for restaurant menus**: plain / gingham / damask, set
+   in the menu editor (Appearance), saved per restaurant (needs a new
+   column and migration), applied on the public menu; the dish cards stay
+   cream so the menu stays readable.
+3. **New logo** (later; the owner has an idea): a plate with a fork and
+   knife coming in from the left, an SVG in `currentColor`, for navbar,
+   footer and favicon. Until then the logo files in `public/` are still
+   the old orange.
 
 **Possible follow-ups to team management:** sending invitation emails (needs
 an email service such as Resend and a verified sender domain; links are
@@ -785,6 +862,11 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 - **End every finished change set with a ready-to-paste commit message**
   (imperative subject, body grouped into changes and fixes, plus any deploy
   steps such as migrations). **Don't commit unless asked**; the owner commits.
+- **Keep this file up to date with every finished change** (what changed,
+  the current state, open steps, the "Last updated" line), in the same
+  change the owner commits. The owner works from several PCs and sessions;
+  this file is how the next one picks up.
+- Changes go on the branch the owner names (don't create branches).
 - **Never mention Claude** in commit messages, pushes or PRs: no
   `Co-Authored-By` line, no "Generated with" footer. Commits are authored
   as **Chrollo** with the owner's email (set in this repo's git config).

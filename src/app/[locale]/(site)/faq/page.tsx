@@ -63,7 +63,7 @@ export default async function FaqPage({ params }: Props) {
       <div className="container mx-auto max-w-3xl space-y-12 px-4 pb-12">
         {groups.map((group) => (
           <section key={group.id} aria-labelledby={`faq-${group.id}`}>
-            <h2 id={`faq-${group.id}`} className="mb-4 text-2xl font-bold tracking-tight">
+            <h2 id={`faq-${group.id}`} className="napkin w-fit px-5 py-2 mb-4 text-2xl font-bold tracking-tight">
               {group.title}
             </h2>
             <FaqList items={group.items} />

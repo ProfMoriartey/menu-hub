@@ -116,7 +116,7 @@ export default async function HomePage() {
                 </div>
               </div>
             </Plate>
-            <ul className="text-muted-foreground mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+            <ul className="napkin text-muted-foreground mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 px-5 py-3 text-sm">
               {(["point1", "point2", "point3"] as const).map((point) => (
                 <li key={point} className="flex items-center gap-1.5">
                   <Check className="text-primary h-4 w-4" aria-hidden /> {t(`hero.${point}`)}
@@ -134,7 +134,7 @@ export default async function HomePage() {
       {/* How it works: the heading and the doodle side by side, near the middle. */}
       <section aria-labelledby="steps-title" className="container mx-auto px-4 py-16 lg:py-20">
         <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-6 text-center sm:flex-row sm:gap-12 sm:text-start">
-          <div>
+          <div className="napkin px-6 py-4">
             <h2 id="steps-title" className="text-3xl font-bold tracking-tight">
               {t("steps.title")}
             </h2>
@@ -152,7 +152,7 @@ export default async function HomePage() {
       {/* What your guests see: what the menu page does for them, and dishes from the demo menu on plates. */}
       <PageSection id="guests" title={t("guests.title")} intro={t("guests.intro")}>
         <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2">
-          <ul className="text-lg font-semibold">
+          <ul className="napkin px-6 py-5 text-lg font-semibold">
             {GUEST_POINTS.map((p) => (
               <li key={p} className="border-border border-b-2 border-dotted py-4 first:pt-0 last:border-b-0">
                 {t(`guests.${p}`)}
@@ -163,7 +163,7 @@ export default async function HomePage() {
             {dishes.map((dish) => (
               <li key={dish.id} className="flex flex-col items-center gap-3 text-center">
                 <PlatePhoto src={dish.imageUrl!} alt="" sizes="10rem" className="size-32 sm:size-40" />
-                <span className="text-sm leading-snug font-semibold">{dish.name}</span>
+                <span className="napkin px-3 py-1 text-sm leading-snug font-semibold">{dish.name}</span>
               </li>
             ))}
           </ul>
@@ -176,7 +176,7 @@ export default async function HomePage() {
           <DoodleReveal from="start" className="w-44 shrink-0 sm:w-52">
             <SittingDoodle />
           </DoodleReveal>
-          <div>
+          <div className="napkin px-6 py-4">
             <h2 id="features-title" className="text-3xl font-bold tracking-tight">
               {t("features.title")}
             </h2>
@@ -215,14 +215,14 @@ export default async function HomePage() {
                 <DoodleReveal from="start" className="hidden w-40 shrink-0 sm:block">
                   <GroovySittingDoodle />
                 </DoodleReveal>
-                <div className="text-center sm:text-start">
+                <div className="napkin px-6 py-4 text-center sm:text-start">
                   <h2 id="menus-title" className="text-3xl font-bold tracking-tight">
                     {isLocal ? t("menus.titleLocal", { country: local.name }) : t("menus.title")}
                   </h2>
                   <p className="text-muted-foreground mt-3">{t("menus.intro")}</p>
                 </div>
               </div>
-              <Button variant="ghost" asChild>
+              <Button variant="outline" asChild>
                 <Link href="/menus">
                   {t("menus.cta")} <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
                 </Link>

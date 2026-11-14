@@ -45,9 +45,9 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
   return (
     <>
       {isPublicNavbarVisible ? (
-        // The marketing pages share a soft amber glow behind everything.
+        // The marketing pages lie on a tablecloth (.site-cloth in globals.css).
         <div className="relative isolate">
-          <div className="site-glow pointer-events-none absolute inset-0 -z-10" aria-hidden />
+          <div className="site-cloth pointer-events-none absolute inset-0 -z-10" aria-hidden />
           <Navbar />
           {children}
           <SiteFooter />

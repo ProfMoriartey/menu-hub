@@ -57,7 +57,7 @@ export default async function AboutPage({ params }: Props) {
   return (
     <div className="text-foreground">
       <section className="container mx-auto flex max-w-5xl flex-col items-center gap-8 px-4 pt-16 pb-12 sm:pt-24 md:flex-row">
-        <div className="flex-1 text-center md:text-start">
+        <div className="napkin flex-1 px-6 py-6 text-center md:text-start">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
             {t("hero.title")}
           </h1>
@@ -70,7 +70,7 @@ export default async function AboutPage({ params }: Props) {
 
       <section
         aria-labelledby="story-title"
-        className="container mx-auto max-w-3xl px-4 pb-16"
+        className="napkin container mx-auto mb-16 max-w-3xl px-8 py-8"
       >
         <h2 id="story-title" className="text-2xl font-bold tracking-tight">
           {t("story.title")}
@@ -90,7 +90,7 @@ export default async function AboutPage({ params }: Props) {
         <div className="container mx-auto max-w-5xl px-4">
           <h2
             id="steps-title"
-            className="mb-8 text-center text-3xl font-bold tracking-tight"
+            className="napkin mx-auto mb-8 w-fit px-5 py-2 text-center text-3xl font-bold tracking-tight"
           >
             {t("steps.title")}
           </h2>
@@ -125,7 +125,7 @@ export default async function AboutPage({ params }: Props) {
       >
         <h2
           id="audiences-title"
-          className="mb-6 text-2xl font-bold tracking-tight"
+          className="napkin w-fit px-5 py-2 mb-6 text-2xl font-bold tracking-tight"
         >
           {t("audiences.title")}
         </h2>
@@ -158,11 +158,11 @@ export default async function AboutPage({ params }: Props) {
       >
         <h2
           id="values-title"
-          className="mb-6 text-2xl font-bold tracking-tight"
+          className="napkin w-fit px-5 py-2 mb-6 text-2xl font-bold tracking-tight"
         >
           {t("values.title")}
         </h2>
-        <ul className="grid gap-6 sm:grid-cols-2">
+        <ul className="napkin grid gap-6 p-6 sm:grid-cols-2">
           {VALUES.map(({ id, icon: Icon }) => (
             <li key={id} className="flex gap-4">
               <span className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">

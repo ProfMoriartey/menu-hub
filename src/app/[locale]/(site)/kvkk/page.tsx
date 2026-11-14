@@ -33,7 +33,7 @@ export default async function KvkkPage({ params }: Props) {
   );
 
   return (
-    <article className="container mx-auto max-w-3xl px-4 py-12" lang={locale === "tr" ? "tr" : "en"}>
+    <article className="napkin container mx-auto my-12 max-w-3xl px-6 py-10 sm:px-10" lang={locale === "tr" ? "tr" : "en"}>
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{notice.title}</h1>
       <p className="text-muted-foreground mt-2 text-sm">
         {notice.updated}: {updated}

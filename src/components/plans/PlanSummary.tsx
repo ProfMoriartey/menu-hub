@@ -41,12 +41,12 @@ export async function PlanSummary({ link }: { link: { href: string; label: strin
           ))}
         </ul>
       </div>
-      <p className="text-muted-foreground mx-auto mt-8 max-w-xl text-center text-sm">{tPlans("pricingNote")}</p>
+      <p className="napkin text-muted-foreground mx-auto mt-8 w-fit max-w-xl px-4 py-2 text-center text-sm">{tPlans("pricingNote")}</p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         <Button size="lg" asChild>
           <Link href="/start">{t("cta.start")}</Link>
         </Button>
-        <Button size="lg" variant="ghost" asChild>
+        <Button size="lg" variant="outline" asChild>
           <Link href={link.href}>
             {link.label} <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
           </Link>

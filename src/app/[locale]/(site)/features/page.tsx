@@ -99,7 +99,7 @@ export default async function FeaturesPage({ params }: Props) {
 
   return (
     <div className="text-foreground">
-      <section className="container mx-auto max-w-3xl px-4 pt-16 pb-12 text-center sm:pt-24">
+      <section className="napkin container mx-auto mt-16 mb-12 max-w-3xl px-6 py-8 text-center sm:mt-24">
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
           {t("hero.title")}
         </h1>
@@ -120,7 +120,7 @@ export default async function FeaturesPage({ params }: Props) {
         className="bg-muted/40 border-border scroll-mt-16 border-y py-16"
       >
         <div className="container mx-auto px-4">
-          <div className="mx-auto mb-10 max-w-2xl text-center">
+          <div className="napkin mx-auto mb-10 w-fit max-w-2xl px-6 py-4 text-center">
             <h2 id="demo-title" className="text-3xl font-bold tracking-tight">
               {t("demo.title")}
             </h2>
@@ -135,7 +135,7 @@ export default async function FeaturesPage({ params }: Props) {
           <section key={group.id} aria-labelledby={`group-${group.id}`}>
             <h2
               id={`group-${group.id}`}
-              className="mb-6 text-2xl font-bold tracking-tight"
+              className="napkin w-fit px-5 py-2 mb-6 text-2xl font-bold tracking-tight"
             >
               {t(`groups.${group.id}`)}
             </h2>

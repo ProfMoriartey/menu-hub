@@ -109,6 +109,12 @@
   --plate-band: rgb(155 28 46 / 0.5);
   --plate-shadow: oklch(35% 0.05 70 / 0.3);
 
+  /* The tablecloth (.site-cloth) and the napkins on it (.napkin). */
+  --cloth-ground: #fbf6f0;
+  --cloth-thread: rgb(168 30 48 / 0.2);
+  --napkin: #fbf6f0;
+  --napkin-shadow: 0 6px 14px -6px rgb(60 10 20 / 0.35);
+
   --secondary: #f7e1e1; /* a pale rose - for secondary elements (chips) */
   --secondary-foreground: oklch(25.99% 0.026 82.52); /* stone-700 for text on secondary */
   --muted: #f7e1e1; /* as secondary */
@@ -177,6 +183,10 @@
   --plate-glaze: oklch(100% 0 0 / 0.06);
   --plate-band: rgb(222 184 135 / 0.5);
   --plate-shadow: oklch(0% 0 0 / 0.55);
+
+  --cloth-ground: #521320; /* the damask's deep red; ivory text 12.5:1 */
+  --napkin: transparent;
+  --napkin-shadow: none;
 
   --secondary: #43302e;
   --secondary-foreground: #f3e9e1;
@@ -316,29 +326,30 @@
   }
 }
 
-/* The marketing pages' background: separate round crimson glows of
-   different sizes, on the sides and in the middle, the largest behind the
-   hero and none near the footer. Positions are a share of the page's
-   height, so every page gets the same pattern. Mirrored in Arabic,
-   and gentler in dark mode. */
-.site-glow {
-  /* The crimson (rose at night), see-through. Plain colours rather than color-mix,
-     which older browsers would replace with solid crimson. */
-  --glow: rgb(184 40 60 / 0.16);
-  --glow-soft: rgb(184 40 60 / 0.09);
+/* The marketing pages' tablecloth (components/layout/LayoutWrapper): a
+   crimson gingham by day, a crimson damask by night. Gingham: two
+   see-through stripe sets; where they cross the square is darker. Damask:
+   a faint diamond lattice with a small flower at each crossing, tone on
+   tone. Text that sits straight on the cloth goes on a napkin (below). */
+.site-cloth {
+  background-color: var(--cloth-ground);
   background-image:
-    radial-gradient(circle 26rem at 88% 6%, var(--glow), transparent),
-    radial-gradient(circle 14rem at 6% 24%, var(--glow-soft), transparent),
-    radial-gradient(circle 20rem at 52% 42%, var(--glow-soft), transparent),
-    radial-gradient(circle 11rem at 94% 56%, var(--glow-soft), transparent),
-    radial-gradient(circle 17rem at 14% 72%, var(--glow-soft), transparent);
+    linear-gradient(90deg, var(--cloth-thread) 50%, transparent 50%),
+    linear-gradient(var(--cloth-thread) 50%, transparent 50%);
+  background-size: 34px 34px;
 }
-.dark .site-glow {
-  --glow: rgb(242 167 177 / 0.1);
-  --glow-soft: rgb(242 167 177 / 0.06);
+.dark .site-cloth {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M28 2 54 28 28 54 2 28Z' fill='none' stroke='%23fff' stroke-opacity='.08' stroke-width='1.5'/%3E%3Cg fill='%23fff' fill-opacity='.09'%3E%3Ccircle cx='28' cy='28' r='3'/%3E%3Ccircle cx='28' cy='21' r='2'/%3E%3Ccircle cx='28' cy='35' r='2'/%3E%3Ccircle cx='21' cy='28' r='2'/%3E%3Ccircle cx='35' cy='28' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 56px 56px;
 }
-[dir="rtl"] .site-glow {
-  transform: scaleX(-1);
+
+/* A cream napkin under text that sits on the tablecloth, so it reads on the
+   check. At night the damask is calm enough for text, so the napkin turns
+   see-through (same padding, so nothing moves between themes). */
+@utility napkin {
+  background-color: var(--napkin);
+  border-radius: 1rem;
+  box-shadow: var(--napkin-shadow);
 }
 
 /* The public menu's top section, in its own colour. Text inside switches

@@ -128,7 +128,7 @@ export function MenuDemo({
   return (
     <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
       {controls && (
-        <div className="w-full max-w-sm space-y-5 lg:order-2 lg:pt-6">
+        <div className="napkin w-full max-w-sm space-y-5 p-5 lg:order-2 lg:mt-6">
           <Choice
             label={t("design")}
             options={MENU_DESIGNS}

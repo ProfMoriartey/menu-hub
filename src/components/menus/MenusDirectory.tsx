@@ -488,7 +488,7 @@ function Section({
 }) {
   return (
     <section className="space-y-4">
-      <h2 className="flex items-baseline gap-2 text-xl font-bold">
+      <h2 className="napkin flex w-fit items-baseline gap-2 px-4 py-1.5 text-xl font-bold">
         {title}
         {count !== undefined && (
           <span className="text-muted-foreground text-base font-normal tabular-nums">{count}</span>

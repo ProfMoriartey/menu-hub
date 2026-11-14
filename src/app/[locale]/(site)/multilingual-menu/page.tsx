@@ -97,7 +97,7 @@ export default async function MultilingualMenuPage({ params }: Props) {
         className="bg-muted/40 border-border my-12 scroll-mt-16 border-y py-16"
       >
         <div className="container mx-auto px-4">
-          <div className="mx-auto mb-10 max-w-2xl text-center">
+          <div className="napkin mx-auto mb-10 w-fit max-w-2xl px-6 py-4 text-center">
             <h2 id="demo-title" className="text-3xl font-bold tracking-tight">
               {t("demo.title")}
             </h2>
@@ -108,7 +108,7 @@ export default async function MultilingualMenuPage({ params }: Props) {
       </section>
 
       <PageSection id="details" title={t("details.title")}>
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="napkin grid gap-6 p-6 sm:grid-cols-2 lg:grid-cols-3">
           {DETAILS.map(({ id, icon: Icon }) => (
             <li key={id} className="flex gap-4">
               <span className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
@@ -126,7 +126,7 @@ export default async function MultilingualMenuPage({ params }: Props) {
       </PageSection>
 
       <PageSection id="who" title={t("who.title")} className="max-w-3xl">
-        <p className="text-muted-foreground text-center text-lg leading-relaxed">{t("who.text")}</p>
+        <p className="napkin text-muted-foreground px-6 py-5 text-center text-lg leading-relaxed">{t("who.text")}</p>
       </PageSection>
 
       <PageSection id="multilingual-faq" title={t("faq.title")} className="max-w-3xl">

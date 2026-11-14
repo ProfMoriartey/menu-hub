@@ -14,8 +14,11 @@ export function PageHero({
 }) {
   return (
     <section className={cn("container mx-auto max-w-3xl px-4 pt-16 pb-12 text-center sm:pt-24", className)}>
-      <h1 className="text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">{title}</h1>
-      <p className="text-muted-foreground mt-4 text-lg leading-relaxed">{intro}</p>
+      {/* On a napkin, so it reads on the tablecloth. */}
+      <div className="napkin px-6 py-8 sm:px-10">
+        <h1 className="text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">{title}</h1>
+        <p className="text-muted-foreground mt-4 text-lg leading-relaxed">{intro}</p>
+      </div>
     </section>
   );
 }
@@ -36,10 +39,12 @@ export function PageSection({
 }) {
   return (
     <section aria-labelledby={`${id}-title`} className={cn("container mx-auto max-w-5xl px-4 py-12", className)}>
-      <h2 id={`${id}-title`} className="text-center text-3xl font-bold tracking-tight">
-        {title}
-      </h2>
-      {intro && <p className="text-muted-foreground mx-auto mt-3 max-w-2xl text-center">{intro}</p>}
+      <div className="napkin mx-auto w-fit max-w-2xl px-6 py-4 text-center">
+        <h2 id={`${id}-title`} className="text-3xl font-bold tracking-tight text-balance">
+          {title}
+        </h2>
+        {intro && <p className="text-muted-foreground mt-3">{intro}</p>}
+      </div>
       <div className="mt-8">{children}</div>
     </section>
   );
