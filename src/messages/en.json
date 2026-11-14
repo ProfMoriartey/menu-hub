@@ -372,6 +372,7 @@
     "print": "Print",
     "printScaleTip": "In the print dialog, choose \"Actual size\" or 100% scale (not \"Fit to page\") so the cards come out at their real size.",
     "scansTitle": "QR code scans",
+    "lastWeek": "{count, plural, =0 {No scans in the last 7 days} one {# scan in the last 7 days} other {# scans in the last 7 days}}",
     "scansDescription": "How often guests open your menu by scanning the QR code.",
     "last7": "Last 7 days",
     "last30": "Last 30 days",

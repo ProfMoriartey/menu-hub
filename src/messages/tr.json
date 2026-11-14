@@ -372,6 +372,7 @@
     "print": "Yazdır",
     "printScaleTip": "Kartların gerçek boyutunda çıkması için yazdırma penceresinde \"Gerçek boyut\" veya %100 ölçeği seçin (\"Sayfaya sığdır\" değil).",
     "scansTitle": "QR kod okutmaları",
+    "lastWeek": "{count, plural, =0 {Son 7 günde okutma yok} other {Son 7 günde # okutma}}",
     "scansDescription": "Misafirlerin menünüzü QR kodu okutarak ne sıklıkla açtığı.",
     "last7": "Son 7 gün",
     "last30": "Son 30 gün",

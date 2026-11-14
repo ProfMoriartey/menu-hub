@@ -9,6 +9,9 @@ import { planRequests, usersToRestaurants } from "~/server/db/schema";
 import { isSystemAdmin } from "~/app/actions/auth";
 import { Button } from "~/components/ui/button";
 import { Plate, PlatedLogo } from "~/components/shared/Plate";
+import { WeekScans } from "~/components/dashboard/WeekScans";
+import { MAIN_BRANCH } from "~/server/branches";
+import { scansLastWeek } from "~/server/qr-scans";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { canEditDetails, isLive, toAccessLevel } from "~/lib/access";
 import { setupProgress } from "~/lib/setup-checklist";
@@ -44,8 +47,10 @@ export default async function ClientUserDashboardPage() {
             liveUntil: true,
             description: true,
           },
-          // Ids are enough for the category and item counts.
+          // Ids are enough for the category and item counts; the main
+          // branch gives the time zone the scan days are counted in.
           with: {
+            ...MAIN_BRANCH,
             categories: {
               columns: { id: true },
               with: { menuItems: { columns: { id: true } } },
@@ -76,6 +81,7 @@ export default async function ClientUserDashboardPage() {
     .map(({ restaurant, accessLevel }) => ({
       ...restaurant,
       accessLevel: toAccessLevel(accessLevel),
+      timeZone: restaurant.branches[0]?.timeZone ?? null,
       categoryCount: restaurant.categories.length,
       itemCount: restaurant.categories.reduce((sum, c) => sum + c.menuItems.length, 0),
     }))
@@ -91,8 +97,16 @@ export default async function ClientUserDashboardPage() {
     return redirect({ href: `/dashboard/${only.slug}/menu`, locale: await getLocale() });
   }
 
-  // Setup progress for every card, with one grouped query per table.
-  const setupFacts = await getSetupFacts(restaurants);
+  // Setup progress for every card, with one grouped query per table, and
+  // last week's scans for the live ones (few cards: one small query each).
+  const [setupFacts, weekScans] = await Promise.all([
+    getSetupFacts(restaurants),
+    Promise.all(
+      restaurants.map(async (r) =>
+        isLive(r) ? ([r.id, await scansLastWeek(r.id, r.timeZone)] as const) : null,
+      ),
+    ).then((pairs) => new Map(pairs.filter((p) => p !== null))),
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 sm:px-6">
@@ -189,9 +203,10 @@ export default async function ClientUserDashboardPage() {
                       <Clock className="h-3 w-3" aria-hidden /> {tHome("awaitingApproval")}
                     </span>
                   )}
-                  <p className="text-muted-foreground text-xs">
-                    {t(`accessLevelHints.${restaurant.accessLevel}`)}
-                  </p>
+                  {/* Owners know what they can do; editors are told it's the menu only. */}
+                  {restaurant.accessLevel === "editor" && (
+                    <p className="text-muted-foreground text-xs">{t("accessLevelHints.editor")}</p>
+                  )}
                 </div>
 
                 <p className="text-muted-foreground mt-auto flex items-center gap-2 text-sm">
@@ -201,6 +216,9 @@ export default async function ClientUserDashboardPage() {
                     items: restaurant.itemCount,
                   })}
                 </p>
+                {weekScans.has(restaurant.id) && (
+                  <WeekScans slug={restaurant.slug} count={weekScans.get(restaurant.id)!} />
+                )}
 
                 {(() => {
                   const facts = setupFacts.get(restaurant.id);

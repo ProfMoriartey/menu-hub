@@ -921,8 +921,11 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    restaurant header (breadcrumb only inside a category, smaller logo and
    name), the open tab scrolled into view on phones (`ActiveTabIntoView`),
    and /dashboard opening the menu directly for someone with one
-   restaurant, no invitations and not an admin. Part 2 (agreed): a scan
-   count on the menu tab and home card, and the role hint only for editors.
+   restaurant, no invitations and not an admin. Part 2: a "scans in the
+   last 7 days" line (`WeekScans`, `qr-scans.scansLastWeek`, in the main
+   branch's time zone like the stats) on the menu tab and the home cards
+   of live restaurants, linking to `share#scans`; the home card's role hint
+   only for editors.
 8. **Next:** a guide page for search and AI ("How to make a QR menu",
    Turkish and English first); to be planned with the owner.
 7. **Next: one page at a time** (owner's rule): the other marketing pages

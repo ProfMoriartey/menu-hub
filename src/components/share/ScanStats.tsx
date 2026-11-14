@@ -64,6 +64,7 @@ export function ScanStats({ stats }: { stats: ScanStatsData }) {
 
   return (
     <section
+      id="scans"
       aria-labelledby="scans-title"
       className="bg-card border-border rounded-xl border shadow-sm"
     >

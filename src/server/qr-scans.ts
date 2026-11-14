@@ -38,6 +38,19 @@ export async function recordScan(
     });
 }
 
+/** Scans in the last 7 days, today included (the stats' "last 7 days"). */
+export async function scansLastWeek(
+  restaurantId: string,
+  timeZone: string | null,
+): Promise<number> {
+  const start = shiftDay(zonedDay(new Date(), timeZone), -6);
+  const [row] = await db
+    .select({ total: sql<number>`coalesce(sum(${qrScanDays.count}), 0)::int` })
+    .from(qrScanDays)
+    .where(and(eq(qrScanDays.restaurantId, restaurantId), gte(qrScanDays.day, start)));
+  return row?.total ?? 0;
+}
+
 export interface ScanStats {
   last7: number;
   last30: number;

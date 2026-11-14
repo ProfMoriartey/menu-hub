@@ -8,7 +8,9 @@ import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardResta
 import { CategoryList } from "~/components/menu-editor/CategoryList";
 import { SetupChecklist } from "~/components/dashboard/SetupChecklist";
 import { getSetupFactsFor } from "~/server/setup-facts";
-import { canEditDetails } from "~/lib/access";
+import { canEditDetails, isLive } from "~/lib/access";
+import { WeekScans } from "~/components/dashboard/WeekScans";
+import { scansLastWeek } from "~/server/qr-scans";
 
 export const metadata: Metadata = {
   title: "Menu Editor | Menupedia",
@@ -24,9 +26,12 @@ export default async function DashboardMenuPage({
   const { restaurant, role } = await getDashboardRestaurant(restaurantSlug);
   const t = await getTranslations("DashboardRestaurant");
 
-  const [summaries, setupFacts] = await Promise.all([
+  const live = isLive(restaurant);
+  const [summaries, setupFacts, weekScans] = await Promise.all([
     getCategorySummaries(restaurant.id),
     getSetupFactsFor(restaurant),
+    // Only a live menu gets scanned.
+    live ? scansLastWeek(restaurant.id, restaurant.timeZone) : null,
   ]);
   const totalItems = summaries.reduce((sum, c) => sum + c.itemCount, 0);
 
@@ -45,14 +50,17 @@ export default async function DashboardMenuPage({
           canEditDetails={canEditDetails(role)}
           firstCategorySlug={summaries[0]?.slug ?? null}
         />
-        <div>
-          <h2 className="text-xl font-semibold">{t("categoriesTitle")}</h2>
-          <p className="text-muted-foreground mt-1 text-sm">
-            {t("categoriesSummary", {
-              categories: summaries.length,
-              items: totalItems,
-            })}
-          </p>
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+          <div>
+            <h2 className="text-xl font-semibold">{t("categoriesTitle")}</h2>
+            <p className="text-muted-foreground mt-1 text-sm">
+              {t("categoriesSummary", {
+                categories: summaries.length,
+                items: totalItems,
+              })}
+            </p>
+          </div>
+          {weekScans !== null && <WeekScans slug={restaurant.slug} count={weekScans} />}
         </div>
         <CategoryList
           restaurantId={restaurant.id}

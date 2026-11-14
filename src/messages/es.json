@@ -372,6 +372,7 @@
     "print": "Imprimir",
     "printScaleTip": "En el cuadro de impresión, elige \"Tamaño real\" o escala 100% (no \"Ajustar a la página\") para que las tarjetas salgan a su tamaño real.",
     "scansTitle": "Escaneos del código QR",
+    "lastWeek": "{count, plural, =0 {Ningún escaneo en los últimos 7 días} one {# escaneo en los últimos 7 días} other {# escaneos en los últimos 7 días}}",
     "scansDescription": "Con qué frecuencia los clientes abren tu menú escaneando el código QR.",
     "last7": "Últimos 7 días",
     "last30": "Últimos 30 días",
