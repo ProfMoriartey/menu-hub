@@ -1,9 +1,9 @@
-# Menupedia design: The Table (working draft)
+# Menupedia design: The Table
 
-> **Working draft (ticket 1 of Operation Set Table).** Written from the
-> direction contract (`.impeccable/surfaces/src-app-locale-site-page-tsx.md`)
-> before the pages are built. The final DESIGN.md is written in ticket 8 from
-> the built world and replaces this file.
+> The built world, as shipped by Operation Set Table (tickets 1 to 8). The
+> direction contract is `.impeccable/surfaces/src-app-locale-site-page-tsx.md`;
+> the final review is in `project-notes/review-final.md`. Screenshots for the
+> owner: `docs/screenshots/set-table/`.
 
 ## The world
 
@@ -77,8 +77,11 @@ brass-ink by default (porcelain, paper, off-white), brass on the cloth
   button (`aria-pressed`) or, with `asChild`, a link (set `aria-current`),
   at least 44 px.
 - **Leaders** (`<LeaderRow>`): name, dotted leader, price; prices in tabular
-  figures; long names wrap and the leader follows the last line
-  (`align-items: last baseline`); RTL flips it with no extra code.
+  figures; long names wrap between words (never inside one: Arabic would
+  lose its joins) and the leader follows the last line (`align-items: last
+  baseline`); a name too long to sit beside its price puts the leader and
+  price on a line of their own. Prices are isolated (`<bdi dir="ltr">`) so
+  "6.50 US$" keeps its order in Arabic. RTL flips the row with no extra code.
 - **Stamp** (`<Stamp>`): red, bordered, uppercase, tilted -8° (mirrored in
   RTL). The only ornament. Arabic is never letter-spaced.
 - **Buttons**: `Button` variants `table` (cloth-red pill on porcelain) and
@@ -161,6 +164,9 @@ All made once on 2026-11-09 by Chrollo; no image generation. The only photos are
 | `public/apple-icon.png` | 180 x 180 | Playwright screenshot of the square mark |
 | `public/icon-192.png`, `icon-512.png` | 192, 512 | same; the plate stays inside the maskable safe zone |
 | `public/og-image.png` | 1200 x 630 | Playwright screenshot of an HTML template: the cloth texture, a plate with the wordmark, the headline "Every seat reads your menu in their language.", the Lokanta Demo phone (demo dishes, photos from `public/demo/`) and five place cards (English ringed, Türkçe, العربية, Español, Русский), set in Bricolage Grotesque, Onest and Noto Sans Arabic |
+| `docs/screenshots/set-table/*.jpg` | 390 (at 2x) or 1440 wide | Playwright screenshots of the local production build with the fake seed data (ticket 8, 14 Nov 2026), JPEG quality 72; documentation only, not shipped to visitors. Photos in them come from `public/demo/`. The sign-in frame shows the empty plate: Clerk's widget cannot load offline |
+
+Fonts (not rasters): `public/fonts/*.woff2` are the Bricolage Grotesque latin, Onest cyrillic and Noto Sans Arabic arabic subsets exactly as Google Fonts serves them through next/font (SIL Open Font License), copied in ticket 8 so each locale can preload its own.
 
 ## Home pattern
 
@@ -262,30 +268,27 @@ and ink).
 
 ## Open
 
-- ~~`/menus` restyled in the Table (ticket 6).~~ Done, see "Menus pattern".
-- Wordmark and colours need the owner's approval.
-- ~~Ticket 3 (from the reviews of the preview): first viewport relative to its
-  container; hero copy inside the plate at 320 px; looser Arabic headline
-  line height; contrast guard for brand colours on the dark plate.~~ Done in
-  ticket 3 (see "Home pattern"). The only restaurant colour on the home is
-  Lokanta Demo's green band on the phone's screen (white on it, 10:1); no
-  brand colour sits on a dimmed plate.
-- ~~Arabic and Cyrillic faces are not preloaded on /ar and /ru.~~ Done in
-  ticket 8: each locale preloads only its headline face (latin Bricolage
-  77 KB, cyrillic Onest 16 KB, Noto Sans Arabic 166 KB), self-hosted in
-  `public/fonts` (see `table/fonts.ts`).
-- ~~Ticket 2: the "●" in "Open now" ... draw the dot in CSS.~~ Done in
-  ticket 7 (`OpenStatusText` draws it; no "●" glyph left in the code).
-- ~~Guest menus in The Table, sold-out stamp clear of names, guest portals
-  carry the scope (ticket 7).~~ Done, see "Guest menu pattern".
-- The colours editor still offers seven roles per mode; guest pages now use
-  only one colour from it (owner to decide whether to simplify the editor).
-- Radix portals (done in ticket 2): the mobile sheet and the language popover
-  carry `table-world` plus `tableFontVariables` on their own content, so they
-  get the tokens and fonts. Do the same for any new portal.
-- Clerk's `appearance` (done in ticket 2, `(site)/layout.tsx`): cloth-red
-  primary, `--table-font`, brass-ink focus, see-through card on a porcelain
-  plate. It could not be seen offline (the widget needs Clerk); check it once
-  with real keys.
-- ~~Geist preloaded on every page.~~ Done in ticket 8: only the dashboard
-  and admin layouts load it (`src/styles/geist.tsx`).
+Owner decisions:
+- Wordmark and palette approval (`public/brand/`, the cloth red and brass).
+- Whether to simplify the colours editor: it offers seven roles per mode,
+  guest pages use one colour from it.
+- Photos: the site shows only the demo dishes in `public/demo/`.
+- /menus labels every live restaurant "Example" (the contract's "labelled
+  examples"); confirm that real restaurants should carry it.
+
+Still to do:
+- The Features demo phone is drawn from its own components: no brand band,
+  other chips and headings than a real guest menu; on phones its controls
+  come before the phone; its open-now status and dietary tags stay in the
+  page language. Rebuild it from the guest components.
+- Clerk's widget and account menu were never seen (offline): check the
+  `appearance` in `(site)/layout.tsx` once with real keys.
+- Small items from the final review: `project-notes/review-final.md`.
+
+Notes for the next person:
+- Sign-in sits on a rounded porcelain platter, not a round plate: a form
+  needs the width. Deliberate.
+- Radix portals carry `table-world` plus `tableFontVariables` on their own
+  content; do the same for any new portal.
+- A dark brand band is lightened at night until it shows (3:1 on the night
+  ground, `guestBrandCss`); prices and open-now use `--brand-ink`.
