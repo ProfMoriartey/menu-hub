@@ -18,6 +18,19 @@ const LEGACY: Record<string, MenuDesign> = {
   "category-cards-image-dominant": "photo-grid",
 };
 
+// The tablecloth behind a public menu (restaurants.menu_cloth), woven from
+// the restaurant's own main colour (globals.css: .menu-cloth-*).
+export const MENU_CLOTHS = ["plain", "gingham", "damask"] as const;
+export type MenuCloth = (typeof MENU_CLOTHS)[number];
+
+export const isMenuCloth = (value: unknown): value is MenuCloth =>
+  typeof value === "string" &&
+  (MENU_CLOTHS as readonly string[]).includes(value);
+
+/** The cloth to render for a stored value; plain for anything unknown. */
+export const menuClothOf = (value: string | null | undefined): MenuCloth =>
+  isMenuCloth(value) ? value : "plain";
+
 /** The design to render for a stored `theme` value; Classic by default. */
 export function menuDesignOf(theme: string | null | undefined): MenuDesign {
   if (isMenuDesign(theme)) return theme;

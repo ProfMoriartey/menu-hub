@@ -30,13 +30,13 @@ export function MenuItemDetail({ item, restaurant }: MenuItemDetailProps) {
   return (
     <div
       className={cn(
-        "bg-background text-foreground min-h-screen",
+        "text-foreground min-h-screen",
         `theme-${restaurant.theme ?? "default"}`,
       )}
     >
       <div className="container mx-auto max-w-3xl px-4 py-4 sm:py-8">
         <div className="mb-4 flex items-center justify-between gap-2">
-          <Button variant="ghost" className="-ms-2" asChild>
+          <Button variant="ghost" className="napkin -ms-2" asChild>
             <Link href={menuHref}>
               <ChevronLeft className="h-4 w-4 rtl:rotate-180" aria-hidden />
               {t("backToMenu")}

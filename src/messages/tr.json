@@ -584,7 +584,6 @@
     "modeLabel": "Renk modu",
     "light": "Açık mod",
     "dark": "Koyu mod",
-    "generateDark": "Açık moddan oluştur",
     "previewLabel": "Önizleme",
     "previewHint": "Hangi rengi kullandığını görmek için menünün herhangi bir yerinin üzerine gelin; o rengi değiştirmek için tıklayın.",
     "colorsLabel": "Renkler · {mode}",
@@ -642,6 +641,12 @@
     "notInPlanAdmin": "Bu restoranın planı özel renkleri içermiyor. Planını değiştirin ya da Features kartından açın."
   },
   "MenuDesign": {
+    "cloth": {
+      "title": "Masa örtüsü",
+      "plain": "Düz",
+      "gingham": "Kareli",
+      "damask": "Damask"
+    },
     "title": "Menü tasarımı",
     "intro": "Ürünlerinizin nasıl dizildiği. Her tasarım, kategorileri üstte olan tek kaydırmalı bir sayfadır ve telefon için yapılmıştır.",
     "classic": {

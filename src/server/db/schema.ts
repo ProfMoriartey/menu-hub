@@ -66,6 +66,9 @@ export const restaurants = pgTable("menu-hub_restaurants", {
   currency: varchar("currency", { length: 10 }).default("USD").notNull(),
   description: text("description"),
   theme: varchar("theme", { length: 50 }),
+  // The tablecloth behind the public menu (lib/menu-design MENU_CLOTHS).
+  // New restaurants start on gingham; those from before it stay plain.
+  menuCloth: varchar("menu_cloth", { length: 10 }).default("gingham").notNull(),
   // A venue type key (lib/venue-types); older rows may hold free text.
   typeOfEstablishment: varchar("type_of_establishment", { length: 100 }),
 

@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `d308882` on
+that cost time before. Last updated 2026-11-14, after commit `4f9359e` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -194,7 +194,7 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 
 | Table | Notes |
 |---|---|
-| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb) |
+| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb); `menuCloth` (`plain`/`gingham`/`damask`, the public menu's tablecloth) |
 | `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card. Public pages per branch (see Branch pages); the Menus page uses every branch. Restaurant-level reads that need one location use the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
 | `menu-hub_restaurant_billing` | Admin-only, one row per billed restaurant: `planName` (null = not billed), `monthlyPrice` (numeric; 0 = free), `currency`, `startsOn` (first billed day), `notes`. Kept out of `restaurants` so it never reaches the cached public data |
 | `menu-hub_payments` | Payments recorded by hand: `paidOn`, `amount`, `currency`, `coversFrom`–`coversUntil` (inclusive), `method`, `note`, `recordedBy`. Paid-until = latest `coversUntil`. `restaurantId` is set null if the restaurant is deleted (`restaurantName` keeps the name for the books) |
@@ -232,6 +232,11 @@ are used** (the Team and People pages error without the table). **0006
 (2026-10-26) must run before deploying the menu-languages change: every
 public restaurant page and the menu editors read its columns.** The same
 goes for **0007 and 0008 (2026-10-26)**: public pages read their columns.
+**`0020` (2026-11-14) adds `menu_cloth`: existing restaurants get
+`plain`, then the default becomes `gingham` for new ones. It must run
+(`pnpm db:migrate`, dev and production) before deploying the cloth
+change: every public restaurant page and the Appearance page read it.**
+Applied in dev 2026-11-14.
 
 **Reserved slugs** (`RESERVED_SLUGS`): app routes like `admin`, `dashboard`,
 `restaurants`, `menus`, … plus `new` (admin route), `r` (QR link route) and `invite`
@@ -563,8 +568,7 @@ colours, design kept. Six colours per mode, light and dark
 (`lib/color-theme.ts`: background, card, text, primary, secondary, accent);
 every token the pages use (`--muted-foreground`, `--border`, text on
 buttons …) is derived from them in `paletteTokens`, so hover (`accent`) and
-every state follow the theme. The editor has presets, "Make from light
-mode" (`darkFromLight`), contrast warnings (never auto-changes the owner's
+every state follow the theme. The editor has presets, contrast warnings (never auto-changes the owner's
 choice) and a live preview (`MenuColorPreview`) whose parts carry
 `data-role`: hovering outlines the part and highlights its control, clicking
 selects it. `[restaurantSlug]/layout.tsx` wraps public pages in
@@ -749,6 +753,38 @@ only: never merge it, and never use its logo.** Look at it with
   controls) has them added by hand. **New text placed straight on the
   page needs `napkin` too**, and buttons on the cloth use `outline`, not
   see-through `ghost`. The footer has its own background.
+- *Restaurant menus' tablecloth*: each restaurant picks **Plain**,
+  **Gingham** or **Damask** on the Appearance page (under the design
+  picker, saved with the design by `updateMenuDesign`; every plan, owner
+  or admin). It is woven from the restaurant's own `--primary` (crimson
+  without custom colours), so it always matches their brand: classes
+  `.menu-cloth-plain|gingham|damask` in `globals.css`, on the wrapper in
+  `[restaurantSlug]/layout.tsx` (every public restaurant page) and on the
+  editor preview and swatches. Gingham: 26px check (12% at night).
+  Damask: a 40px lattice on a ground tinted with the main colour (a deep
+  shade of it at night; light: 14% tint, pattern at 15-16%; dark: the
+  ground is the main colour at a deep lightness, `oklch(from var(--primary)
+  0.3 calc(c * 1.05) h)`, so the default rose gives the site damask's
+  crimson `#521320` and a green restaurant a deep green; older browsers
+  fall back to a 26% tint; pattern at 21%). The day/night strengths are theme variables
+  (`--cloth-*` on `:root`/`.dark`); the editor preview and swatches set
+  `.cloth-day`/`.cloth-night` from the tab being edited, because the
+  preview shows that tab's colours whatever mode the dashboard is in.
+  (Before that fix the preview mixed night ink with day colours and the
+  damask looked invisible there; judge the cloth on the real menu.) Napkins there are the restaurant's
+  background colour, with 10px corners (`--napkin-radius`; 1rem made a
+  one-word heading look like a pill); on Plain they are transparent, and their padding is cancelled
+  with negative margins, so plain menus look exactly as before. Napkins
+  sit under category headings, the filter result line, the empty states,
+  "Menu by Menupedia" and the dish page's back button. Pages under the
+  wrapper must not paint `bg-background` themselves (it hides the cloth).
+  Existing restaurants stay Plain until the owner changes it; new ones
+  start on Gingham (column default).
+- *Colour editor*: owners set light and dark colours themselves. The
+  "Make from light mode" button was removed (the owner's call,
+  2026-11-14), and no "Make from dark mode" either; `darkFromLight` only
+  remains inside `startingTheme`, for restaurants with the old single
+  brand colour.
 - *Dashboard*: no tablecloth behind the work screens (forms and lists stay
   plain). Light touches only: restaurant logos served on small plates
   (`PlatedLogo`) on the home cards and the restaurant header, and an
@@ -779,13 +815,12 @@ Git history (`git log`) has a detailed commit message for each change.
 
 **Redesign steps (agreed 2026-11-14; one at a time, plan first, owner OKs
 each, owner commits).** Done and committed: font, pricing structure,
-plates, home sections, crimson rebrand (`d308882`), tablecloth backgrounds. Done, awaiting the
-owner's commit: dashboard touches (see §8). Next:
+plates, home sections, crimson rebrand (`d308882`), tablecloth backgrounds, dashboard
+touches (`4f9359e`). Done, awaiting the owner's commit: the restaurant
+menus' cloth choice (see §8; migration `0020` applied in dev
+2026-11-14, production still needs it). Next:
 1. (done) Tablecloth backgrounds.
-2. **A cloth choice for restaurant menus**: plain / gingham / damask, set
-   in the menu editor (Appearance), saved per restaurant (needs a new
-   column and migration), applied on the public menu; the dish cards stay
-   cream so the menu stays readable.
+2. (done) A cloth choice for restaurant menus.
 3. **New logo** (later; the owner has an idea): a plate with a fork and
    knife coming in from the left, an SVG in `currentColor`, for navbar,
    footer and favicon. Until then the logo files in `public/` are still

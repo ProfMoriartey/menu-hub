@@ -9,7 +9,7 @@ import { startingTheme } from "~/lib/color-theme";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { AppearanceEditor } from "~/components/colors/AppearanceEditor";
 import { ExperimentalNote } from "~/components/dashboard/ExperimentalNote";
-import { menuDesignOf } from "~/lib/menu-design";
+import { menuClothOf, menuDesignOf } from "~/lib/menu-design";
 
 export const metadata: Metadata = {
   title: "Appearance | Menupedia",
@@ -45,6 +45,7 @@ export default async function DashboardColorsPage({
         isAdmin={role === "admin"}
         colorsEnabled={restaurant.brandColorEnabled}
         design={menuDesignOf(restaurant.theme)}
+        cloth={menuClothOf(restaurant.menuCloth)}
         startTheme={startingTheme(restaurant.colorTheme, restaurant.brandColor)}
         hasSavedTheme={Boolean(restaurant.colorTheme ?? restaurant.brandColor)}
         menu={await getPreviewMenu(restaurant)}

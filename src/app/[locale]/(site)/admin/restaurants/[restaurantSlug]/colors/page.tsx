@@ -7,7 +7,7 @@ import { getPreviewMenu } from "~/server/color-preview";
 import { startingTheme } from "~/lib/color-theme";
 import { RestaurantAdminHeader } from "~/components/admin/RestaurantAdminHeader";
 import { AppearanceEditor } from "~/components/colors/AppearanceEditor";
-import { menuDesignOf } from "~/lib/menu-design";
+import { menuClothOf, menuDesignOf } from "~/lib/menu-design";
 
 // The same Appearance page owners get, plus the custom-colours switch.
 export default async function AdminColorsPage({
@@ -29,6 +29,7 @@ export default async function AdminColorsPage({
         isAdmin
         colorsEnabled={restaurant.brandColorEnabled}
         design={menuDesignOf(restaurant.theme)}
+        cloth={menuClothOf(restaurant.menuCloth)}
         startTheme={startingTheme(restaurant.colorTheme, restaurant.brandColor)}
         hasSavedTheme={Boolean(restaurant.colorTheme ?? restaurant.brandColor)}
         menu={await getPreviewMenu(restaurant)}

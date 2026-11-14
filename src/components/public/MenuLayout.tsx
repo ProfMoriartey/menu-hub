@@ -79,7 +79,7 @@ export function MenuLayout({
         >
           <h2
             id={`${categorySectionId(category.slug)}-heading`}
-            className="text-foreground mb-3 text-xl font-semibold sm:text-2xl"
+            className="napkin text-foreground -mx-3 -mt-1 mb-2 w-fit px-3 py-1 text-xl font-semibold sm:text-2xl"
           >
             <span lang={category.lang} dir="auto">
               {category.name}

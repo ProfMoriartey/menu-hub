@@ -134,6 +134,13 @@
       "when": 1793700692383,
       "tag": "0019_payment_providers",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1794668287369,
+      "tag": "0020_menu_cloth",
+      "breakpoints": true
     }
   ]
 }

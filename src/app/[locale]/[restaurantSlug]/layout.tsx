@@ -12,6 +12,8 @@ import { MenuByMenupedia } from "~/components/public/MenuByMenupedia";
 import { brandCss } from "~/lib/brand-color";
 import { colorThemeCss } from "~/lib/color-theme";
 import { isLive } from "~/lib/access";
+import { menuClothOf } from "~/lib/menu-design";
+import { cn } from "~/lib/utils";
 
 interface DynamicPublicLayoutProps {
   children: React.ReactNode;
@@ -102,16 +104,19 @@ export default async function DynamicPublicLayout({
     );
     return (
       <NextIntlClientProvider messages={await clientMessages()}>
-        {brand ? (
-          // Its own background and text, so the page behind the menu matches.
-          <div className="brand-scope bg-background text-foreground min-h-screen">
-            {/* Built from validated #rrggbb values only (lib/color-theme). */}
-            <style dangerouslySetInnerHTML={{ __html: brand }} />
-            {page}
-          </div>
-        ) : (
-          page
-        )}
+        {/* The restaurant's tablecloth, and with its own colours its own
+            background and text, so the page behind the menu matches. */}
+        <div
+          className={cn(
+            "min-h-screen",
+            `menu-cloth-${menuClothOf(restaurant.menuCloth)}`,
+            brand && "brand-scope bg-background text-foreground",
+          )}
+        >
+          {/* Built from validated #rrggbb values only (lib/color-theme). */}
+          {brand && <style dangerouslySetInnerHTML={{ __html: brand }} />}
+          {page}
+        </div>
       </NextIntlClientProvider>
     );
   };

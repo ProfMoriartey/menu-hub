@@ -11,7 +11,6 @@ import {
   Palette,
   Sun,
   TriangleAlert,
-  Wand2,
 } from "lucide-react";
 import { useRouter } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
@@ -24,14 +23,18 @@ import {
   updateColorTheme,
   updateMenuDesign,
 } from "~/app/actions/restaurant-settings";
-import { MENU_DESIGNS, type MenuDesign } from "~/lib/menu-design";
+import {
+  MENU_CLOTHS,
+  MENU_DESIGNS,
+  type MenuCloth,
+  type MenuDesign,
+} from "~/lib/menu-design";
 import { isBrandColor } from "~/lib/brand-color";
 import {
   COLOR_ROLES,
   DEFAULT_THEME,
   PRESETS,
   contrastWarnings,
-  darkFromLight,
   paletteTokens,
   type ColorRole,
   type ColorTheme,
@@ -166,6 +169,7 @@ interface AppearanceEditorProps {
   // Details tab's Features card). The design is every owner's choice.
   colorsEnabled: boolean;
   design: MenuDesign;
+  cloth: MenuCloth;
   // What the colours start from (saved theme, or built from the old brand colour).
   startTheme: ColorTheme;
   hasSavedTheme: boolean;
@@ -183,6 +187,7 @@ export function AppearanceEditor({
   isAdmin,
   colorsEnabled,
   design: savedDesign,
+  cloth: savedCloth,
   startTheme,
   hasSavedTheme,
   menu,
@@ -197,10 +202,12 @@ export function AppearanceEditor({
 
   const [initialDesign, setInitialDesign] = useState(savedDesign);
   const [design, setDesign] = useState(savedDesign);
+  const [initialCloth, setInitialCloth] = useState(savedCloth);
+  const [cloth, setCloth] = useState(savedCloth);
   const [initial, setInitial] = useState(() => copy(startTheme));
   const [theme, setTheme] = useState(() => copy(startTheme));
   const [mode, setMode] = useState<ThemeMode>("light");
-  const designDirty = design !== initialDesign;
+  const designDirty = design !== initialDesign || cloth !== initialCloth;
   const colorsDirty =
     colorsEnabled && JSON.stringify(theme) !== JSON.stringify(initial);
   const isDirty = designDirty || colorsDirty;
@@ -249,6 +256,13 @@ export function AppearanceEditor({
         ]),
       ) as CSSProperties)
     : undefined;
+  // The tablecloth's day or night look, matching the colours being edited
+  // rather than the dashboard's own mode (globals.css: .cloth-day/-night).
+  const clothMode = colorsEnabled
+    ? mode === "dark"
+      ? "cloth-night"
+      : "cloth-day"
+    : undefined;
   const warnings = colorsEnabled ? contrastWarnings(palette) : [];
 
   // Design and colours are saved separately: an owner without custom colours
@@ -257,9 +271,10 @@ export function AppearanceEditor({
     setError(null);
     startSave(async () => {
       if (designDirty) {
-        const result = await updateMenuDesign(restaurantId, design);
+        const result = await updateMenuDesign(restaurantId, design, cloth);
         if (!result.ok) return setError(result.error);
         setInitialDesign(design);
+        setInitialCloth(cloth);
       }
       if (colors !== "keep") {
         const result = await updateColorTheme(restaurantId, colors);
@@ -337,6 +352,57 @@ export function AppearanceEditor({
                   </button>
                 );
               })}
+            </div>
+
+            {/* The tablecloth behind the menu, in the menu's own colours. */}
+            <div className="space-y-2 pt-2">
+              <h3 id="cloth-title" className="text-sm font-medium">
+                {tDesign("cloth.title")}
+              </h3>
+              <div
+                role="radiogroup"
+                aria-labelledby="cloth-title"
+                className="grid grid-cols-3 gap-3"
+              >
+                {MENU_CLOTHS.map((option) => {
+                  const on = cloth === option;
+                  return (
+                    <button
+                      key={option}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      onClick={() => {
+                        setSaved(false);
+                        setCloth(option);
+                      }}
+                      className={cn(
+                        "flex flex-col gap-2 rounded-lg border p-2 text-start transition-colors",
+                        "focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
+                        on
+                          ? "border-primary bg-primary/5 ring-primary/30 ring-2"
+                          : "border-border hover:bg-accent/40",
+                      )}
+                    >
+                      <span
+                        style={previewStyle}
+                        className={cn(
+                          "border-border bg-background block h-12 w-full overflow-hidden rounded-md border",
+                          `menu-cloth-${option}`,
+                          clothMode,
+                        )}
+                        aria-hidden
+                      />
+                      <span className="flex items-center gap-1.5 text-sm font-medium">
+                        {on && (
+                          <Check className="text-primary h-4 w-4" aria-hidden />
+                        )}
+                        {tDesign(`cloth.${option}`)}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </section>
 
@@ -424,21 +490,6 @@ export function AppearanceEditor({
                       </button>
                     ))}
                   </div>
-                  {mode === "dark" && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setSaved(false);
-                        setTheme((current) => ({
-                          ...current,
-                          dark: darkFromLight(current.light),
-                        }));
-                      }}
-                    >
-                      <Wand2 className="h-4 w-4" /> {t("generateDark")}
-                    </Button>
-                  )}
                 </div>
               </>
             )}
@@ -518,11 +569,12 @@ export function AppearanceEditor({
             }}
             className={cn(
               "border-border overflow-hidden rounded-xl border shadow-sm",
+              clothMode,
               colorsEnabled &&
                 "cursor-pointer [&_[data-hovered]]:outline-2 [&_[data-hovered]]:outline-offset-2 [&_[data-hovered]]:outline-sky-500 [&_[data-hovered]]:outline-dashed",
             )}
           >
-            <MenuColorPreview menu={menu} design={design} />
+            <MenuColorPreview menu={menu} design={design} cloth={cloth} />
           </div>
         </section>
       </div>
@@ -538,6 +590,7 @@ export function AppearanceEditor({
           variant="ghost"
           onClick={() => {
             setDesign(initialDesign);
+            setCloth(initialCloth);
             setTheme(copy(initial));
           }}
           disabled={!isDirty || isSaving}

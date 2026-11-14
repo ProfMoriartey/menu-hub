@@ -16,7 +16,7 @@ export async function MenuByMenupedia() {
         href="/"
         target="_blank"
         rel="noopener"
-        className="hover:text-foreground rounded-sm underline-offset-2 transition-colors hover:underline"
+        className="napkin hover:text-foreground -my-1 inline-block px-3 py-1 underline-offset-2 transition-colors hover:underline"
       >
         {t.rich("madeWith", {
           brand: (chunks) => (

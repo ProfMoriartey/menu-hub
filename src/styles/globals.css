@@ -348,8 +348,93 @@
    see-through (same padding, so nothing moves between themes). */
 @utility napkin {
   background-color: var(--napkin);
-  border-radius: 1rem;
+  border-radius: var(--napkin-radius, 1rem);
   box-shadow: var(--napkin-shadow);
+}
+
+/* A restaurant's own tablecloth behind its public pages and the editor's
+   preview (restaurants.menu_cloth), woven from its main colour, so a green
+   restaurant gets green gingham (crimson without colours of its own).
+   Dish cards, the header and the category bar are solid; text that sits
+   straight on the cloth goes on a napkin, which vanishes on a plain page.
+   Day and night strengths follow the theme; the editor's preview sets
+   .cloth-day or .cloth-night to show the mode being edited, whatever mode
+   the dashboard itself is in. */
+:root,
+.cloth-day {
+  --cloth-check: 20%; /* gingham stripes */
+  --cloth-tint: 14%; /* damask ground */
+  --cloth-ink: #000; /* damask lattice and flowers */
+  --cloth-ink-strength: 0.16;
+  --cloth-damask-napkin: 100%; /* at night the damask is calm enough for text */
+  --cloth-napkin-shadow: 0 6px 14px -6px rgb(0 0 0 / 0.3);
+}
+.dark,
+.cloth-night {
+  --cloth-check: 12%;
+  --cloth-tint: 26%;
+  --cloth-ink: #fff;
+  --cloth-ink-strength: 0.21;
+  --cloth-damask-napkin: 0%;
+  --cloth-napkin-shadow: none;
+}
+.menu-cloth-plain {
+  --napkin: transparent;
+  --napkin-shadow: none;
+}
+.menu-cloth-gingham,
+.menu-cloth-damask {
+  --napkin: var(--background);
+  --napkin-shadow: var(--cloth-napkin-shadow);
+  /* Small napkins (one heading) would look like pills at 1rem. */
+  --napkin-radius: 10px;
+  position: relative;
+  isolation: isolate;
+}
+.menu-cloth-gingham::before,
+.menu-cloth-damask::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.menu-cloth-gingham::before {
+  --thread: color-mix(in srgb, var(--primary) var(--cloth-check), transparent);
+  background-image:
+    linear-gradient(90deg, var(--thread) 50%, transparent 50%),
+    linear-gradient(var(--thread) 50%, transparent 50%);
+  background-size: 26px 26px;
+}
+/* Damask: the site cloth's lattice and flowers, tone on tone, on a ground
+   tinted with the main colour (a deep shade of it at night). The pattern
+   is a mask, so one drawing serves dark ink by day and light ink at night. */
+.menu-cloth-damask {
+  --napkin: color-mix(in srgb, var(--background) var(--cloth-damask-napkin), transparent);
+  background-color: color-mix(in oklab, var(--primary) var(--cloth-tint), var(--background));
+}
+.menu-cloth-damask::before {
+  --damask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M20 1.5 38.5 20 20 38.5 1.5 20Z' fill='none' stroke='%23000' stroke-opacity='.9' stroke-width='1.4'/%3E%3Cg%3E%3Ccircle cx='20' cy='20' r='2.2'/%3E%3Ccircle cx='20' cy='15' r='1.5'/%3E%3Ccircle cx='20' cy='25' r='1.5'/%3E%3Ccircle cx='15' cy='20' r='1.5'/%3E%3Ccircle cx='25' cy='20' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-color: var(--cloth-ink);
+  opacity: var(--cloth-ink-strength);
+  -webkit-mask: var(--damask) 0 0 / 40px 40px repeat;
+  mask: var(--damask) 0 0 / 40px 40px repeat;
+}
+/* At night the ground is the main colour itself at a deep lightness, like
+   the site's damask: the default rose (#f2a7b1) gives the site's crimson
+   (#521320), a green restaurant a deep green. Browsers without relative
+   colours keep the tinted ground above. The last rule keeps the editor's
+   Light-tab preview on the day ground inside a dark dashboard. */
+@supports (color: oklch(from red l c h)) {
+  .dark .menu-cloth-damask,
+  .cloth-night .menu-cloth-damask,
+  .cloth-night.menu-cloth-damask {
+    background-color: oklch(from var(--primary) 0.3 calc(c * 1.05) h);
+  }
+  .cloth-day .menu-cloth-damask,
+  .cloth-day.menu-cloth-damask {
+    background-color: color-mix(in oklab, var(--primary) var(--cloth-tint), var(--background));
+  }
 }
 
 /* The public menu's top section, in its own colour. Text inside switches

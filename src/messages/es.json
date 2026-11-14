@@ -584,7 +584,6 @@
     "modeLabel": "Modo de color",
     "light": "Modo claro",
     "dark": "Modo oscuro",
-    "generateDark": "Crear a partir del modo claro",
     "previewLabel": "Vista previa",
     "previewHint": "Señala cualquier parte del menú para ver qué color usa; haz clic para cambiar ese color.",
     "colorsLabel": "Colores · {mode}",
@@ -642,6 +641,12 @@
     "notInPlanAdmin": "El plan de este restaurante no incluye colores personalizados. Cambia su plan o actívalos en la tarjeta Features."
   },
   "MenuDesign": {
+    "cloth": {
+      "title": "Mantel",
+      "plain": "Liso",
+      "gingham": "Cuadros",
+      "damask": "Damasco"
+    },
     "title": "Diseño del menú",
     "intro": "Cómo se muestran tus platos. Cada diseño es una sola página con las categorías arriba, pensada para el móvil.",
     "classic": {

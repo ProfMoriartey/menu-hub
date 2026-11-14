@@ -174,11 +174,11 @@ export function parseColorTheme(raw: unknown): ColorTheme | null {
 }
 
 /**
- * A dark version of a light palette, as a starting point: deep surfaces with
- * a trace of the light colours, light text, and primary lightened until it
- * reads on the dark cards.
+ * A dark version of a light palette, for a restaurant that only had the old
+ * single brand colour: deep surfaces with a trace of the light colours,
+ * light text, and primary lightened until it reads on the dark cards.
  */
-export function darkFromLight(light: Palette): Palette {
+function darkFromLight(light: Palette): Palette {
   const background = mix(light.background, "#000000", 0.88);
   const card = mix(light.card, "#000000", 0.82);
   return {

@@ -11,7 +11,7 @@ import {
 import { cn } from "~/lib/utils";
 
 import type { PublicMenuItem } from "~/components/public/menu-types";
-import type { MenuDesign } from "~/lib/menu-design";
+import type { MenuCloth, MenuDesign } from "~/lib/menu-design";
 
 export interface PreviewMenu {
   name: string;
@@ -42,9 +42,11 @@ const SAMPLE_ITEM: Omit<PublicMenuItem, "name" | "description"> = {
 export function MenuColorPreview({
   menu,
   design,
+  cloth,
 }: {
   menu: PreviewMenu;
   design: MenuDesign;
+  cloth: MenuCloth;
 }) {
   const t = useTranslations("ColorTheme");
   const categories = menu.categories.slice(0, 4);
@@ -67,7 +69,10 @@ export function MenuColorPreview({
   return (
     <div
       data-role="background"
-      className="bg-background text-foreground space-y-3 p-3 sm:p-4"
+      className={cn(
+        "bg-background text-foreground space-y-3 p-3 sm:p-4",
+        `menu-cloth-${cloth}`,
+      )}
     >
       <header
         data-role="header"
@@ -126,7 +131,10 @@ export function MenuColorPreview({
         ))}
       </nav>
 
-      <p data-role="text" className="text-foreground text-lg font-semibold">
+      <p
+        data-role="text"
+        className="napkin text-foreground -mx-2 w-fit px-2 text-lg font-semibold"
+      >
         {categories[0]?.name ?? t("sampleCategory")}
       </p>
       {design === "compact" ? (

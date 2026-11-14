@@ -104,7 +104,7 @@ export async function AboutPage({ restaurantSlug, branchSlug }: AboutPageProps) 
   const themeClass = `theme-${restaurantDetails.theme ?? "default"}`
 
   return (
-    <div className={cn("relative min-h-screen p-4 sm:p-8", "bg-background text-foreground", themeClass)}>
+    <div className={cn("relative min-h-screen p-4 sm:p-8", "text-foreground", themeClass)}>
       
       {/* Theme Toggle - Top Right */}
       <div className="absolute end-4 top-4 z-50">

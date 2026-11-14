@@ -281,7 +281,7 @@ export async function MenuPage({ restaurantSlug, branchSlug }: MenuPageProps) {
           />
         )}
         {menuData.categories.length === 0 ? (
-          <div className="text-muted-foreground py-10 text-center">
+          <div className="napkin text-muted-foreground mx-auto my-6 w-fit px-6 py-4 text-center">
             <p>{t("noMenuItemsAvailable")}</p>
             <p>{t("checkBackLater")}</p>
           </div>

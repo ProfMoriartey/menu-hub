@@ -233,7 +233,7 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
       <p
         aria-live="polite"
         className={cn(
-          "text-muted-foreground flex items-center gap-2 text-sm",
+          "napkin text-muted-foreground -mx-3 -my-1 flex w-fit items-center gap-2 px-3 py-1 text-sm",
           !filters.isFiltering && "sr-only",
         )}
       >
@@ -257,7 +257,7 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
 export function NoMenuResults({ onClear }: { onClear: () => void }) {
   const t = useTranslations("PublicMenu");
   return (
-    <div className="text-muted-foreground py-12 text-center">
+    <div className="napkin text-muted-foreground mx-auto my-6 w-fit px-6 py-6 text-center">
       <p>{t("noResults")}</p>
       <button
         type="button"

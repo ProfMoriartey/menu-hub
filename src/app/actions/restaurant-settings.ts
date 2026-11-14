@@ -7,7 +7,7 @@ import { restaurants } from "~/server/db/schema";
 import { checkOwnerAuthorization } from "~/app/actions/auth";
 import { ActionError, type ActionResult } from "~/lib/action-result";
 import { parseColorTheme } from "~/lib/color-theme";
-import { isMenuDesign } from "~/lib/menu-design";
+import { isMenuCloth, isMenuDesign } from "~/lib/menu-design";
 import { runAction } from "~/server/run-action";
 import { revalidatePublicRestaurant } from "~/server/public-menu";
 
@@ -57,13 +57,14 @@ export async function updateColorTheme(
 export async function updateMenuDesign(
   restaurantId: string,
   design: string,
+  cloth: string,
 ): Promise<ActionResult> {
   return runAction("saveDesignFailed", async () => {
     await checkOwnerAuthorization(restaurantId);
-    if (!isMenuDesign(design)) throw new ActionError("invalidDesign");
+    if (!isMenuDesign(design) || !isMenuCloth(cloth)) throw new ActionError("invalidDesign");
     await db
       .update(restaurants)
-      .set({ theme: design, updatedAt: new Date() })
+      .set({ theme: design, menuCloth: cloth, updatedAt: new Date() })
       .where(eq(restaurants.id, restaurantId));
     revalidatePublicRestaurant(restaurantId);
   });

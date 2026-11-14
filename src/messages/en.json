@@ -584,7 +584,6 @@
     "modeLabel": "Colour mode",
     "light": "Light mode",
     "dark": "Dark mode",
-    "generateDark": "Make from light mode",
     "previewLabel": "Preview",
     "previewHint": "Point at any part of the menu to see which colour it uses; click it to change that colour.",
     "colorsLabel": "Colours · {mode}",
@@ -642,6 +641,12 @@
     "notInPlanAdmin": "This restaurant's plan doesn't include custom colours. Change its plan, or turn them on in the Features card."
   },
   "MenuDesign": {
+    "cloth": {
+      "title": "Tablecloth",
+      "plain": "Plain",
+      "gingham": "Gingham",
+      "damask": "Damask"
+    },
     "title": "Menu design",
     "intro": "How your dishes are laid out. Every design is one scrolling page with the categories at the top, made for phones.",
     "classic": {
