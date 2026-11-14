@@ -73,6 +73,8 @@ const push = spawnSync("pnpm", ["exec", "drizzle-kit", "push", "--force"], {
 });
 if (push.status !== 0) process.exit(push.status ?? 1);
 
+// Dummy keys, offline only: never put real keys here (the file is git-ignored,
+// this script is not).
 writeFileSync(
   ".env.development.local",
   [

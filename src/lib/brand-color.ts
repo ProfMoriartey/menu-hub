@@ -8,11 +8,6 @@ const HEX = /^#[0-9a-f]{6}$/;
 export const isBrandColor = (value: unknown): value is string =>
   typeof value === "string" && HEX.test(value.toLowerCase());
 
-// The theme surfaces the colour sits on (globals.css, converted to sRGB):
-// light page/cards, and the lighter of the dark surfaces (cards) as the
-// harder case.
-const LIGHT_SURFACE = "#fcf9f4";
-const DARK_SURFACE = "#2a2315";
 // Text on the colour: whichever of these reads better.
 const LIGHT_TEXT = "#ffffff";
 const DARK_TEXT = "#1c1917";
@@ -68,33 +63,4 @@ export function readableOn(hex: string, surface: string, towards: string) {
     }
   }
   return mix(hex, towards, 1);
-}
-
-export interface BrandPalette {
-  light: { primary: string; foreground: string };
-  dark: { primary: string; foreground: string };
-}
-
-/** The colour as used in light and in dark mode, each with its text colour. */
-export function brandPalette(hex: string): BrandPalette {
-  const color = hex.toLowerCase();
-  const light = readableOn(color, LIGHT_SURFACE, "#000000");
-  const dark = readableOn(color, DARK_SURFACE, "#ffffff");
-  return {
-    light: { primary: light, foreground: bestText(light) },
-    dark: { primary: dark, foreground: bestText(dark) },
-  };
-}
-
-/**
- * CSS that sets the theme's accent colour inside `.brand-scope`, for both
- * light and dark mode, hover highlights included. Only built from validated hex values.
- */
-export function brandCss(hex: string): string | null {
-  if (!isBrandColor(hex)) return null;
-  const { light, dark } = brandPalette(hex);
-  return (
-    `.brand-scope,body:has(.brand-scope){--primary:${light.primary};--primary-foreground:${light.foreground};--ring:${light.primary};--accent:${light.primary};--accent-foreground:${light.foreground}}` +
-    `.dark .brand-scope,.dark body:has(.brand-scope){--primary:${dark.primary};--primary-foreground:${dark.foreground};--ring:${dark.primary};--accent:${dark.primary};--accent-foreground:${dark.foreground}}`
-  );
 }

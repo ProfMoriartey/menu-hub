@@ -3,7 +3,6 @@
     "home": "Home",
     "restaurants": "Menus",
     "themes": "Features",
-    "aboutUs": "About Us",
     "language": "Language",
     "mainNav": "Main",
     "signIn": "Sign in",
@@ -11,7 +10,6 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "pricing": "Pricing",
-    "getStarted": "Get started",
     "exampleMenus": "Example menus",
     "startFree": "Start free",
     "menuTitle": "Menu",
@@ -817,13 +815,6 @@
         "title": "Your restaurant",
         "text": "Your name, your design and your colours. The menu should feel like part of your restaurant, not ours."
       }
-    },
-    "cta": {
-      "title": "See it for yourself",
-      "text": "Try our demo restaurant, or browse the menus already on Menupedia.",
-      "features": "Explore the features",
-      "restaurants": "Browse menus",
-      "contact": "Get in touch"
     }
   },
   "VenueTypes": {
@@ -1274,11 +1265,7 @@
       }
     },
     "cta": {
-      "title": "Start your free trial",
-      "text": "Set up your menu today and pay nothing for {months}.",
-      "start": "Create your menu",
-      "faq": "Read the FAQ",
-      "contact": "Ask us a question"
+      "start": "Create your menu"
     }
   },
   "multilingualPage": {
@@ -1469,13 +1456,6 @@
           }
         }
       }
-    },
-    "more": {
-      "title": "Still have a question?",
-      "text": "Email us or message us on WhatsApp. We're happy to help.",
-      "contact": "Get in touch",
-      "pricing": "See pricing",
-      "multilingual": "Multilingual menus"
     }
   },
   "NotFoundPage": {

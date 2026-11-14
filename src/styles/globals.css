@@ -227,10 +227,37 @@
 /* Public pages: overscroll (iOS rubber-band) shows cloth, not cream. The
    dashboard and admin have no .table-world, so they keep their ground. Same
    values as --table-cloth, which is only defined inside the scope. */
-html:has(.table-world) {
+/* The headline subsets, self-hosted so TableWorld can preload one per
+   locale (src/components/table/fonts.ts). Same descriptors as next/font. */
+@font-face {
+  font-family: "Table Latin";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("/fonts/bricolage-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Table Cyrillic";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/onest-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Table Arabic";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/noto-sans-arabic.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+
+html:has(.table-world:not(.table-inset)) {
   background-color: #7a1f2b;
 }
-html.dark:has(.table-world) {
+html.dark:has(.table-world:not(.table-inset)) {
   background-color: #6a1a25;
 }
 /* Guest menus: the off-white ground (warm near-black at night). */
@@ -341,8 +368,9 @@ html.dark:has(.guest-menu) {
        on the cloth (.table-cloth), brass-ink again on a plate. */
     --table-focus: var(--table-brass-ink);
     --table-font:
-      var(--font-bricolage), var(--font-onest), var(--font-noto-arabic),
-      ui-sans-serif, system-ui, sans-serif;
+      "Table Latin", var(--font-bricolage), "Table Cyrillic", var(--font-onest),
+      "Table Arabic", var(--font-noto-arabic), ui-sans-serif, system-ui,
+      sans-serif;
 
     font-family: var(--table-font);
     color: var(--table-ink);
@@ -365,8 +393,9 @@ html.dark:has(.guest-menu) {
     --table-brass-ink: #7d5f17; /* 4.6:1 on the dimmed plate */
     --table-place-card: #ece5db;
     --table-place-card-muted: #625853; /* 5.5:1 on the dimmed card */
+    --table-sold-out: #9e1b12; /* 4.6:1 on the stamp's see-through dimmed plate */
     /* Unchanged from light: ink (13.3:1 on the dimmed plate), cloth-action
-       and cloth-ink (7.9:1), sold-out (4.5:1), place-card-ink. */
+       and cloth-ink (7.9:1), place-card-ink. */
   }
 
 
@@ -445,8 +474,8 @@ html.dark:has(.guest-menu) {
      never mixes two faces. */
   .table-world:lang(ru) {
     --table-font:
-      var(--font-onest), var(--font-noto-arabic), ui-sans-serif, system-ui,
-      sans-serif;
+      "Table Cyrillic", var(--font-onest), "Table Arabic",
+      var(--font-noto-arabic), ui-sans-serif, system-ui, sans-serif;
   }
 
   /* Arabic letters join: never letter-space them (eyebrows, stamps). */
@@ -501,8 +530,11 @@ html.dark:has(.guest-menu) {
      item: its baseline is its bottom edge, so lifting it a little sets the
      dots level with the name's last line (they start at the end of the
      name's box, so a wrapped name leaves a gap before them). */
+  /* A name too long to sit beside its price keeps its words whole and the
+     leader and price drop to a line of their own. */
   .table-leader-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.375rem;
     align-items: last baseline;
   }

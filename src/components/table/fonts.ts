@@ -9,11 +9,19 @@ import { Bricolage_Grotesque, Noto_Sans_Arabic, Onest } from "next/font/google";
  * to Onest for Cyrillic (Bricolage has none) and to Noto Sans Arabic for
  * Arabic. Each subset is a separate file with its own unicode-range, so a
  * page only downloads the scripts it shows.
+ *
+ * The one subset each locale's headline needs (Bricolage latin, Onest
+ * cyrillic, Noto Sans Arabic arabic) is also in public/fonts under its own
+ * family ("Table Latin", ...), first in the stacks (globals.css), so
+ * TableWorld can preload the right one per locale; next/font cannot. Same
+ * files as Google serves; replace them (new file name) when updating.
  */
 
 export const bricolage = Bricolage_Grotesque({
-  // Preloads latin only; latin-ext (Turkish ğ ş ı İ) still loads on demand.
+  // Latin comes from public/fonts (preloaded per locale); latin-ext
+  // (Turkish ğ ş ı İ) loads from here on demand.
   subsets: ["latin"],
+  preload: false,
   // Optical size: tighter, more characterful letters at headline sizes.
   axes: ["opsz"],
   display: "swap",

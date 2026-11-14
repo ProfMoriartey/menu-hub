@@ -5,6 +5,12 @@ if (!process.env.DATABASE_URL) {
   console.error("DATABASE_URL is not set. Run `pnpm dev:setup` first.");
   process.exit(1);
 }
+// It deletes and inserts rows: only ever against the local throwaway database.
+const { hostname } = new URL(process.env.DATABASE_URL);
+if (!["localhost", "127.0.0.1", "::1", "[::1]"].includes(hostname)) {
+  console.error(`Refusing to seed ${hostname}: only a local database (see pnpm dev:setup).`);
+  process.exit(1);
+}
 const sql = postgres(process.env.DATABASE_URL, { onnotice: () => {} });
 
 const LANGS = ["en", "tr", "ar", "es", "ru"];

@@ -68,33 +68,9 @@ export function PlatterList({ items, className }: { items: PlatterItem[]; classN
   );
 }
 
-/** The opening of a marketing page: a small label, the page's heading and an intro. */
-export function PageHero({
-  eyebrow,
-  title,
-  intro,
-  className,
-}: {
-  eyebrow?: string;
-  title: string;
-  intro: string;
-  className?: string;
-}) {
-  return (
-    <section className={cn("container mx-auto max-w-3xl px-4 pt-16 pb-12 text-center sm:pt-24", className)}>
-      {eyebrow && (
-        <p className="text-primary text-sm font-semibold tracking-wide uppercase">{eyebrow}</p>
-      )}
-      <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">{title}</h1>
-      <p className="text-muted-foreground mt-4 text-lg leading-relaxed">{intro}</p>
-    </section>
-  );
-}
-
 /**
- * A section with a heading, as on the About page. With `tone` it is a band
- * of cloth (full width) with the heading on it: the Table's section, used by
- * the home page. Without it, the old look (pages not yet moved to the Table).
+ * A section of the home page: a band of cloth (full width) with the heading
+ * on it.
  */
 export function PageSection({
   id,
@@ -109,46 +85,32 @@ export function PageSection({
   intro?: string;
   children: ReactNode;
   className?: string;
-  tone?: "cloth" | "deep";
+  tone: "cloth" | "deep";
 }) {
   const head = (
     <>
       <h2
         id={`${id}-title`}
-        className={cn(
-          "text-center text-3xl font-bold tracking-tight",
-          tone && "text-on-cloth text-4xl font-extrabold tracking-[-0.03em] text-balance rtl:tracking-normal rtl:leading-snug",
-        )}
+        className="text-on-cloth text-center text-4xl font-extrabold tracking-[-0.03em] text-balance rtl:leading-snug rtl:tracking-normal"
       >
         {title}
       </h2>
       {intro && (
         <p
-          className={cn(
-            "mx-auto mt-3 max-w-2xl text-center",
-            tone ? "text-on-cloth-muted text-lg" : "text-muted-foreground",
-          )}
+          className="text-on-cloth-muted mx-auto mt-3 max-w-2xl text-center text-lg"
         >
           {intro}
         </p>
       )}
     </>
   );
-  if (tone) {
-    return (
-      <Cloth as="section" tone={tone} id={id} aria-labelledby={`${id}-title`} className="scroll-mt-20">
-        <div className={cn("container mx-auto max-w-6xl px-4 py-16 lg:py-24", className)}>
-          {head}
-          <div className="mt-10 lg:mt-14">{children}</div>
-        </div>
-      </Cloth>
-    );
-  }
   return (
-    <section aria-labelledby={`${id}-title`} className={cn("container mx-auto max-w-5xl px-4 py-12", className)}>
-      {head}
-      <div className="mt-8">{children}</div>
-    </section>
+    <Cloth as="section" tone={tone} id={id} aria-labelledby={`${id}-title`} className="scroll-mt-20">
+      <div className={cn("container mx-auto max-w-6xl px-4 py-16 lg:py-24", className)}>
+        {head}
+        <div className="mt-10 lg:mt-14">{children}</div>
+      </div>
+    </Cloth>
   );
 }
 

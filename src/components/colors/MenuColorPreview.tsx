@@ -9,6 +9,7 @@ import {
   PhotoDish,
 } from "~/components/public/MenuItemCard";
 import { cn } from "~/lib/utils";
+import { TableWorld } from "~/components/table/TableWorld";
 
 import type { PublicMenuItem } from "~/components/public/menu-types";
 import type { MenuDesign } from "~/lib/menu-design";
@@ -64,10 +65,13 @@ export function MenuColorPreview({
         ? CompactDish
         : ClassicDish;
 
+  // Inside the world (as an inset, which leaves the page's own ground
+  // alone) so the dish parts drawn in its tokens, the plate rim and the
+  // sold-out stamp, keep their colours here.
   return (
-    <div
+    <TableWorld
       data-role="background"
-      className="bg-background text-foreground space-y-3 p-3 sm:p-4"
+      className="table-inset bg-background text-foreground space-y-3 p-3 sm:p-4"
     >
       <header
         data-role="header"
@@ -152,6 +156,6 @@ export function MenuColorPreview({
           ))}
         </div>
       )}
-    </div>
+    </TableWorld>
   );
 }

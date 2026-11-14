@@ -81,7 +81,7 @@ export function MenuItemDetail({ item, restaurant }: MenuItemDetailProps) {
                   {item.name}
                 </span>
               }
-              price={item.displayPrice}
+              price={<bdi dir="ltr">{item.displayPrice}</bdi>}
               nameClassName="text-foreground text-2xl leading-tight font-extrabold sm:text-3xl"
               priceClassName="text-primary text-xl sm:text-2xl"
             />

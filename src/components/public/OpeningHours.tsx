@@ -95,7 +95,10 @@ export function OpenStatusText({
   const t = useTranslations("PublicMenu");
   const locale = useLocale();
   const now = useNow();
-  if (!now || !hours || !timeZone) return null;
+  if (!hours || !timeZone) return null;
+  // Worked out in the browser: hold the line's place until then, so the
+  // header doesn't shift when it appears.
+  if (!now) return <span aria-hidden className={cn("block", className)}>&nbsp;</span>;
   const status = describeOpenStatus(hours, timeZone, now, t, locale);
 
   return (

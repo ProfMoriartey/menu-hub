@@ -75,14 +75,15 @@ export function MenuLayout({
           key={category.id}
           id={categorySectionId(category.slug)}
           aria-labelledby={`${categorySectionId(category.slug)}-heading`}
-          className="scroll-mt-24"
+          // Compact rows run name to price: keep the leaders a readable length.
+          className={cn("scroll-mt-24", design === "compact" && "max-w-3xl")}
         >
           <h2
             id={`${categorySectionId(category.slug)}-heading`}
             // Muted, with a rule to the end: a section of the menu, not a title.
             className="text-on-ground-muted mb-3 flex items-center gap-3 text-sm font-bold tracking-[0.08em] uppercase sm:text-base"
           >
-            <span lang={category.lang} dir="auto" className="min-w-0 [overflow-wrap:anywhere]">
+            <span lang={category.lang} dir="auto" className="min-w-0 [overflow-wrap:break-word]">
               {category.name}
             </span>
             <span aria-hidden className="bg-on-ground-muted/30 h-px min-w-6 flex-1" />

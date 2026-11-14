@@ -18,9 +18,10 @@ import {
  */
 export async function planFacts(locale: string) {
   const t = await getTranslations({ locale, namespace: "Plans" });
-  // As on the pricing cards: "$25", not "$25.00".
+  // As on the pricing cards: "$25", not "$25.00". Isolated, so "US$ 25"
+  // keeps its order inside right-to-left text.
   const money = (amount: number) =>
-    formatMoney(amount, PLAN_CURRENCY, locale).replace(/[.,]00(?=\D*$)/, "");
+    `\u2066${formatMoney(amount, PLAN_CURRENCY, locale).replace(/[.,]00(?=\D*$)/, "")}\u2069`;
   const monthly = TIER_FEATURES[OFFERED_TIERS[0] ?? "standard"].price;
   return {
     months: t("months", { count: FREE_MONTHS }),

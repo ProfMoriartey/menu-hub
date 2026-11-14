@@ -3,7 +3,6 @@
     "home": "Ana Sayfa",
     "restaurants": "Menüler",
     "themes": "Özellikler",
-    "aboutUs": "Hakkımızda",
     "language": "Dil",
     "mainNav": "Ana menü",
     "signIn": "Giriş yap",
@@ -11,7 +10,6 @@
     "openMenu": "Menüyü aç",
     "closeMenu": "Menüyü kapat",
     "pricing": "Fiyatlar",
-    "getStarted": "Başlayın",
     "exampleMenus": "Örnek menüler",
     "startFree": "Ücretsiz başla",
     "menuTitle": "Menü",
@@ -817,13 +815,6 @@
         "title": "Sizin restoranınız",
         "text": "Sizin adınız, tasarımınız ve renkleriniz. Menü bizim değil, restoranınızın bir parçası gibi hissettirmeli."
       }
-    },
-    "cta": {
-      "title": "Kendiniz görün",
-      "text": "Demo restoranımızı deneyin ya da Menupedia'daki menülere göz atın.",
-      "features": "Özellikleri keşfedin",
-      "restaurants": "Menülere göz atın",
-      "contact": "Bize ulaşın"
     }
   },
   "VenueTypes": {
@@ -1274,11 +1265,7 @@
       }
     },
     "cta": {
-      "title": "Ücretsiz denemenizi başlatın",
-      "text": "Menünüzü bugün oluşturun, {months} boyunca hiçbir ücret ödemeyin.",
-      "start": "Menünüzü oluşturun",
-      "faq": "SSS'yi okuyun",
-      "contact": "Bize soru sorun"
+      "start": "Menünüzü oluşturun"
     }
   },
   "multilingualPage": {
@@ -1469,13 +1456,6 @@
           }
         }
       }
-    },
-    "more": {
-      "title": "Hâlâ sorunuz mu var?",
-      "text": "Bize e-posta gönderin ya da WhatsApp'tan yazın; yardımcı olmaktan memnuniyet duyarız.",
-      "contact": "Bize ulaşın",
-      "pricing": "Fiyatları görün",
-      "multilingual": "Çok dilli menüler"
     }
   },
   "NotFoundPage": {
