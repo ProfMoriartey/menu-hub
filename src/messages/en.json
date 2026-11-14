@@ -667,65 +667,67 @@
     "metaDescription": "Digital menus restaurants shape themselves: three designs, their own colours, several languages, QR codes and more.",
     "hero": {
       "title": "Everything your menu needs",
-      "intro": "A digital menu your guests open with one scan, and you update in seconds. Try it below on our demo restaurant.",
-      "ctaDemo": "Try the demo",
-      "ctaContact": "Get in touch"
+      "intro": "Try it on Lokanta Demo, a made-up restaurant: change its design, colours and language, and tap a dish."
     },
     "demo": {
-      "title": "Try it yourself",
-      "intro": "This is Lokanta Demo, a made-up restaurant. Change its design, colours and language, and tap a dish, just as your guests would.",
       "design": "Design",
       "colors": "Colours",
       "mode": "Mode",
       "language": "Menu language",
       "hint": "Tap a dish to open it. Real menus work the same way on any phone."
     },
-    "groups": {
-      "look": "Your menu, your look",
-      "guests": "Made for every guest",
-      "current": "Always up to date",
-      "found": "Found and shared"
+    "menu": {
+      "subtitle": "What every restaurant gets",
+      "starters": "Starters",
+      "mains": "Mains",
+      "desserts": "Desserts",
+      "side": "On the side"
     },
     "features": {
       "designs": {
         "title": "Three menu designs",
-        "text": "Classic, Photo grid or Compact. Pick the one that suits your food and switch any time."
+        "text": "Classic, photo grid or compact. Switch any time.",
+        "value": "3"
       },
       "colors": {
         "title": "Your own colours",
-        "text": "Choose the background, text, buttons and highlights, for light and dark mode, with a live preview. Or start from a ready-made palette."
+        "text": "For light and dark mode, with a live preview.",
+        "value": "light & dark"
       },
       "fast": {
         "title": "Built for phones",
-        "text": "Light, fast pages for guests scanning at the table, with a compact header so the dishes come first."
+        "text": "Light pages that open at the table. No app to install.",
+        "value": "one scan"
       },
       "languages": {
         "title": "Menus in several languages",
-        "text": "Offer your menu in English, Turkish, Arabic, Spanish and Russian. Guests see it in their own language, right-to-left included."
+        "text": "Guests read it in their own, Arabic right to left included.",
+        "value": "5"
       },
       "search": {
         "title": "Search and dietary filters",
-        "text": "Guests find dishes by name or ingredient, and filter for vegetarian, vegan, gluten-free and more."
-      },
-      "friendly": {
-        "title": "Friendly for guests",
-        "text": "Prices in each guest's own format, dark mode, and one tap opens any dish with its photo and details."
+        "text": "By name or ingredient; vegetarian, vegan, gluten-free and more.",
+        "value": "built in"
       },
       "instant": {
         "title": "Changes go live instantly",
-        "text": "Change a price, add a dish or mark it sold out, and guests see it straight away. No reprinting."
+        "text": "Change a price or mark a dish sold out. No reprinting.",
+        "value": "seconds"
       },
       "hours": {
         "title": "Opening hours",
-        "text": "Show \"Open now\" or when you open next, worked out in your time zone and shown in the guest's language."
+        "text": "Or when you open next, worked out in your time zone.",
+        "value": "“Open now”"
       },
       "qr": {
         "title": "QR codes and table cards",
-        "text": "QR codes with your logo that keep working even if your menu's address changes, plus table cards ready to print."
+        "text": "Table cards ready to print, and codes that keep working.",
+        "value": "your logo"
       },
       "stats": {
         "title": "Scan statistics",
-        "text": "See how many guests opened your menu each day."
+        "text": "How many guests opened your menu each day.",
+        "value": "daily"
       },
       "google": {
         "title": "Found on Google",
@@ -748,8 +750,9 @@
       "whatsappMessage": "Hello! I'd like to know more about Menupedia for my restaurant."
     },
     "pricing": {
-      "title": "{months} free, then one simple plan",
-      "text": "After the trial, {price} a month covers everything on this page. No add-ons, no charge per scan.",
+      "bill": "The bill",
+      "title": "{months} free, then {price} a month",
+      "text": "Everything on this menu is included. No add-ons, no charge per scan.",
       "link": "See pricing"
     },
     "featureLinks": {

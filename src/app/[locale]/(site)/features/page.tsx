@@ -1,27 +1,12 @@
 // app/[locale]/(site)/features/page.tsx
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
-import {
-  ArrowRight,
-  BarChart3,
-  ChefHat,
-  Clock,
-  Globe,
-  Languages,
-  LayoutTemplate,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Palette,
-  QrCode,
-  Search,
-  Share2,
-  Smartphone,
-  Zap,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, Mail, MessageCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { MenuDemo } from "~/components/features/MenuDemo";
+import { Platter } from "~/components/shared/Plate";
+import { LeaderRow } from "~/components/shared/LeaderRow";
 import { getDemoMenus } from "~/server/demo-menu";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
 import { Link } from "~/i18n/navigation";
@@ -41,151 +26,109 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-// Each group's features, in the order they appear. Texts are in the
-// featuresPage.features messages.
-const GROUPS: { id: string; features: { id: string; icon: LucideIcon }[] }[] = [
-  {
-    id: "look",
-    features: [
-      { id: "designs", icon: LayoutTemplate },
-      { id: "colors", icon: Palette },
-      { id: "fast", icon: Smartphone },
-    ],
-  },
-  {
-    id: "guests",
-    features: [
-      { id: "languages", icon: Languages },
-      { id: "search", icon: Search },
-      { id: "friendly", icon: ChefHat },
-    ],
-  },
-  {
-    id: "current",
-    features: [
-      { id: "instant", icon: Zap },
-      { id: "hours", icon: Clock },
-      { id: "qr", icon: QrCode },
-      { id: "stats", icon: BarChart3 },
-    ],
-  },
-  {
-    id: "found",
-    features: [
-      { id: "google", icon: Globe },
-      { id: "sharing", icon: Share2 },
-      { id: "about", icon: MapPin },
-    ],
-  },
-];
+// The features as courses on a menu; each is a "dish" with a short note
+// and a "price" (featuresPage.features.<id>.text / .value).
+const COURSES = [
+  { id: "starters", features: ["designs", "colors", "fast"] },
+  { id: "mains", features: ["languages", "search", "hours"] },
+  { id: "desserts", features: ["instant", "qr", "stats"] },
+] as const;
+// Served on the side: names only, in one line.
+const SIDES = ["google", "sharing", "about"] as const;
 
-// Features with a page of their own, linked from their card.
-const FEATURE_PAGES: Record<string, string> = { languages: "/multilingual-menu" };
+// Features with a page of their own, linked under their line.
+const FEATURE_PAGES: Partial<Record<string, string>> = { languages: "/multilingual-menu" };
 
 /**
- * What restaurants get, with a working demo menu (a made-up restaurant) so
- * potential customers can try designs, colours and languages themselves.
- * Was /themes, which showed the old menu designs; /themes redirects here.
- * Getting started and teamwork are told on the About page ("How it works").
- * Prices are on /pricing: this page only points there.
+ * What restaurants get: a working demo menu (a made-up restaurant) to try
+ * designs, colours and languages, then the features set like a printed
+ * menu on a platter, ending with the bill (the price; the plan, trial and
+ * questions are on /pricing). Was /themes, which redirects here. Getting
+ * started and teamwork are told on the About page.
  */
 export default async function FeaturesPage({ params }: Props) {
   setRequestLocale((await params).locale);
   const locale = await getLocale();
-  const [t, facts] = await Promise.all([
-    getTranslations("featuresPage"),
-    planFacts(locale),
-  ]);
+  const [t, facts] = await Promise.all([getTranslations("featuresPage"), planFacts(locale)]);
 
   return (
     <div className="text-foreground">
-      <section className="napkin container mx-auto mt-16 mb-12 max-w-3xl px-6 py-8 text-center sm:mt-24">
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-          {t("hero.title")}
-        </h1>
-        <p className="text-muted-foreground mt-4 text-lg">{t("hero.intro")}</p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Button size="lg" asChild>
-            <a href="#demo">{t("hero.ctaDemo")}</a>
-          </Button>
-          <Button size="lg" variant="outline" asChild>
-            <a href="#contact">{t("hero.ctaContact")}</a>
-          </Button>
+      <section id="demo" aria-labelledby="demo-title" className="container mx-auto scroll-mt-16 px-4 pt-12 pb-16 sm:pt-16">
+        <div className="napkin mx-auto mb-10 w-fit max-w-2xl px-6 py-4 text-center">
+          <h1 id="demo-title" className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            {t("hero.title")}
+          </h1>
+          <p className="text-muted-foreground mt-3">{t("hero.intro")}</p>
         </div>
+        <MenuDemo menus={getDemoMenus()} initialLanguage={locale} />
       </section>
 
-      <section
-        id="demo"
-        aria-labelledby="demo-title"
-        className="bg-muted/40 border-border scroll-mt-16 border-y py-16"
-      >
-        <div className="container mx-auto px-4">
-          <div className="napkin mx-auto mb-10 w-fit max-w-2xl px-6 py-4 text-center">
-            <h2 id="demo-title" className="text-3xl font-bold tracking-tight">
-              {t("demo.title")}
+      <section aria-labelledby="menu-title" className="container mx-auto px-4 pb-16">
+        <Platter className="mx-auto max-w-3xl">
+          <header className="text-center">
+            <h2 id="menu-title" className="text-3xl font-extrabold tracking-tight">
+              Menupedia
             </h2>
-            <p className="text-muted-foreground mt-3">{t("demo.intro")}</p>
-          </div>
-          <MenuDemo menus={getDemoMenus()} initialLanguage={locale} />
-        </div>
-      </section>
+            <p className="text-muted-foreground mt-1">{t("menu.subtitle")}</p>
+          </header>
 
-      <div className="container mx-auto space-y-16 px-4 py-16">
-        {GROUPS.map((group) => (
-          <section key={group.id} aria-labelledby={`group-${group.id}`}>
-            <h2
-              id={`group-${group.id}`}
-              className="napkin w-fit px-5 py-2 mb-6 text-2xl font-bold tracking-tight"
-            >
-              {t(`groups.${group.id}`)}
-            </h2>
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {group.features.map(({ id, icon: Icon }) => (
-                <li
-                  key={id}
-                  className="bg-card border-border rounded-xl border p-5 shadow-sm"
-                >
-                  <span className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-lg">
-                    <Icon className="h-5 w-5" aria-hidden />
-                  </span>
-                  <h3 className="mt-4 font-semibold">
-                    {t(`features.${id}.title`)}
-                  </h3>
-                  <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-                    {t(`features.${id}.text`)}
-                  </p>
-                  {FEATURE_PAGES[id] && (
-                    <Link
-                      href={FEATURE_PAGES[id]}
-                      className="text-primary mt-3 inline-flex items-center gap-1 text-sm font-medium hover:underline"
-                    >
-                      {t(`featureLinks.${id}`)}
-                      <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden />
-                    </Link>
-                  )}
+          {COURSES.map((course) => (
+            <section key={course.id} aria-labelledby={`course-${course.id}`} className="mt-10">
+              <CourseTitle id={`course-${course.id}`}>{t(`menu.${course.id}`)}</CourseTitle>
+              <ul className="mt-5 space-y-5">
+                {course.features.map((id) => (
+                  <LeaderRow
+                    key={id}
+                    nameAs="h3"
+                    name={t(`features.${id}.title`)}
+                    value={t(`features.${id}.value`)}
+                    note={t(`features.${id}.text`)}
+                    nameClassName="text-lg font-semibold"
+                  >
+                    {FEATURE_PAGES[id] && (
+                      <Link
+                        href={FEATURE_PAGES[id]}
+                        className="text-primary mt-1 inline-flex items-center gap-1 text-sm font-medium hover:underline"
+                      >
+                        {t(`featureLinks.${id}`)}
+                        <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden />
+                      </Link>
+                    )}
+                  </LeaderRow>
+                ))}
+              </ul>
+            </section>
+          ))}
+
+          <section aria-labelledby="course-side" className="mt-10">
+            <CourseTitle id="course-side">{t("menu.side")}</CourseTitle>
+            <ul className="mt-5 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center font-semibold">
+              {SIDES.map((id, i) => (
+                <li key={id} className="flex gap-3">
+                  {i > 0 && <span className="text-muted-foreground" aria-hidden>·</span>}
+                  {t(`features.${id}.title`)}
                 </li>
               ))}
             </ul>
           </section>
-        ))}
-      </div>
 
-      {/* The price in a line; the plan, trial and questions are on /pricing. */}
-      <section
-        aria-labelledby="pricing-band-title"
-        className="container mx-auto px-4 pb-16"
-      >
-        <div className="bg-card border-border mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-2xl border px-6 py-8 text-center shadow-sm sm:flex-row sm:text-start">
-          <div className="flex-1">
-            <h2 id="pricing-band-title" className="text-xl font-bold tracking-tight">
-              {t("pricing.title", facts)}
-            </h2>
-            <p className="text-muted-foreground mt-1 text-sm">{t("pricing.text", facts)}</p>
-          </div>
-          <Button size="lg" variant="outline" className="shrink-0" asChild>
-            <Link href="/pricing">{t("pricing.link")}</Link>
-          </Button>
-        </div>
+          {/* The bill: the price in a line, the details on /pricing. */}
+          <section
+            aria-labelledby="bill-title"
+            className="border-border mt-10 flex flex-col items-center gap-4 border-t-4 border-double pt-6 text-center sm:flex-row sm:text-start"
+          >
+            <div className="flex-1">
+              <p className="text-muted-foreground text-sm font-semibold">{t("pricing.bill")}</p>
+              <h2 id="bill-title" className="mt-1 text-xl font-bold tracking-tight">
+                {t("pricing.title", facts)}
+              </h2>
+              <p className="text-muted-foreground mt-1 text-sm">{t("pricing.text", facts)}</p>
+            </div>
+            <Button variant="outline" className="shrink-0" asChild>
+              <Link href="/pricing">{t("pricing.link")}</Link>
+            </Button>
+          </section>
+        </Platter>
       </section>
 
       <section
@@ -221,5 +164,16 @@ export default async function FeaturesPage({ params }: Props) {
         </div>
       </section>
     </div>
+  );
+}
+
+// A course name between two thin rules, as on a printed menu.
+function CourseTitle({ id, children }: { id: string; children: ReactNode }) {
+  return (
+    <h2 id={id} className="text-primary flex items-center gap-4 text-sm font-bold tracking-wide">
+      <span className="bg-border h-px flex-1" aria-hidden />
+      {children}
+      <span className="bg-border h-px flex-1" aria-hidden />
+    </h2>
   );
 }

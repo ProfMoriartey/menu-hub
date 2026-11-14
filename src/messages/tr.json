@@ -667,65 +667,67 @@
     "metaDescription": "Restoranların kendi şekillendirdiği dijital menüler: üç tasarım, kendi renkleri, birden fazla dil, QR kodlar ve daha fazlası.",
     "hero": {
       "title": "Menünüzün ihtiyacı olan her şey",
-      "intro": "Misafirlerinizin tek okutmayla açtığı, sizin saniyeler içinde güncellediğiniz dijital bir menü. Aşağıda demo restoranımızda deneyin.",
-      "ctaDemo": "Demoyu deneyin",
-      "ctaContact": "Bize ulaşın"
+      "intro": "Uydurma bir restoran olan Lokanta Demo'da deneyin: tasarımını, renklerini ve dilini değiştirin, bir ürüne dokunun."
     },
     "demo": {
-      "title": "Kendiniz deneyin",
-      "intro": "Bu, uydurma bir restoran olan Lokanta Demo. Tasarımını, renklerini ve dilini değiştirin, bir ürüne dokunun; tıpkı misafirlerinizin yapacağı gibi.",
       "design": "Tasarım",
       "colors": "Renkler",
       "mode": "Mod",
       "language": "Menü dili",
       "hint": "Açmak için bir ürüne dokunun. Gerçek menüler her telefonda aynı şekilde çalışır."
     },
-    "groups": {
-      "look": "Menünüz, tarzınız",
-      "guests": "Her misafir için",
-      "current": "Her zaman güncel",
-      "found": "Bulunur ve paylaşılır"
+    "menu": {
+      "subtitle": "Her restorana sunulanlar",
+      "starters": "Başlangıçlar",
+      "mains": "Ana yemekler",
+      "desserts": "Tatlılar",
+      "side": "Yanında"
     },
     "features": {
       "designs": {
         "title": "Üç menü tasarımı",
-        "text": "Klasik, Fotoğraf ızgarası ya da Sade. Yemeklerinize uyanı seçin, istediğiniz zaman değiştirin."
+        "text": "Klasik, Fotoğraf ızgarası ya da Sade. İstediğiniz zaman değiştirin.",
+        "value": "3"
       },
       "colors": {
         "title": "Kendi renkleriniz",
-        "text": "Arka planı, yazıyı, düğmeleri ve vurguları açık ve koyu mod için canlı önizlemeyle seçin. Ya da hazır bir paletle başlayın."
+        "text": "Açık ve koyu mod için, canlı önizlemeyle.",
+        "value": "açık & koyu"
       },
       "fast": {
         "title": "Telefon için yapıldı",
-        "text": "Masada okutan misafirler için hafif ve hızlı sayfalar; ürünler öne çıksın diye kompakt bir başlık."
+        "text": "Masada hemen açılan hafif sayfalar. Uygulama yüklemek yok.",
+        "value": "tek okutma"
       },
       "languages": {
         "title": "Birden fazla dilde menü",
-        "text": "Menünüzü İngilizce, Türkçe, Arapça, İspanyolca ve Rusça sunun. Misafirler sağdan sola yazılanlar dahil kendi dillerinde görür."
+        "text": "Misafirler kendi dilinde okur, sağdan sola Arapça dahil.",
+        "value": "5"
       },
       "search": {
         "title": "Arama ve beslenme filtreleri",
-        "text": "Misafirler ürünleri adına ya da içeriğine göre bulur; vejetaryen, vegan, glütensiz ve daha fazlasına göre filtreler."
-      },
-      "friendly": {
-        "title": "Misafir dostu",
-        "text": "Her misafirin kendi biçiminde fiyatlar, koyu mod ve tek dokunuşla fotoğrafı ve ayrıntılarıyla açılan ürünler."
+        "text": "Ada ya da malzemeye göre; vejetaryen, vegan, glütensiz ve dahası.",
+        "value": "hazır"
       },
       "instant": {
         "title": "Değişiklikler anında yayında",
-        "text": "Bir fiyatı değiştirin, ürün ekleyin ya da tükendi olarak işaretleyin; misafirler hemen görsün. Yeniden baskı yok."
+        "text": "Bir fiyatı değiştirin ya da ürünü tükendi diye işaretleyin. Yeniden baskı yok.",
+        "value": "saniyeler"
       },
       "hours": {
         "title": "Çalışma saatleri",
-        "text": "\"Şu an açık\" ya da bir sonraki açılış saati, sizin saat diliminize göre hesaplanır ve misafirin dilinde gösterilir."
+        "text": "Ya da bir sonraki açılışınız, kendi saat diliminize göre.",
+        "value": "“Şimdi açık”"
       },
       "qr": {
         "title": "QR kodlar ve masa kartları",
-        "text": "Menünüzün adresi değişse bile çalışmaya devam eden, logolu QR kodlar ve basıma hazır masa kartları."
+        "text": "Basıma hazır masa kartları ve hep çalışan kodlar.",
+        "value": "logonuzla"
       },
       "stats": {
         "title": "Okutma istatistikleri",
-        "text": "Menünüzü her gün kaç misafirin açtığını görün."
+        "text": "Her gün kaç misafirin menünüzü açtığı.",
+        "value": "günlük"
       },
       "google": {
         "title": "Google'da bulunur",
@@ -748,8 +750,9 @@
       "whatsappMessage": "Merhaba! Restoranım için Menupedia hakkında bilgi almak istiyorum."
     },
     "pricing": {
-      "title": "{months} ücretsiz, sonra tek ve basit bir plan",
-      "text": "Deneme süresinden sonra aylık {price} ile bu sayfadaki her şey sizin. Ek paket yok, okutma başına ücret yok.",
+      "bill": "Hesap",
+      "title": "{months} ücretsiz, sonra aylık {price}",
+      "text": "Bu menüdeki her şey dahil. Ek paket yok, okutma başına ücret yok.",
       "link": "Fiyatlara bakın"
     },
     "featureLinks": {

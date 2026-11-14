@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `85be6c4` on
+that cost time before. Last updated 2026-11-14, after commit `9973781` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -588,15 +588,17 @@ colours, or custom themes won't reach them.
 
 **Features page** (`/features`, was `/themes`, which redirects permanently
 in `next.config.js`): marketing page for potential customers, built for
-selling without plan labels (no plans exist yet). Hero, an interactive demo
+selling without plan labels. A small heading, then an interactive demo
 (`components/features/MenuDemo`: Lokanta Demo, a made-up restaurant in
 `lib/demo-menu.ts`, nine dishes in all five languages, each with a photo (`public/` and
 `public/demo/`, Unsplash License, sources listed in `lib/demo-menu.ts`); visitors switch design, palette, light/dark and menu language
 and tap dishes; it renders the real dish components and
 `DishSheetInPlaceProvider`, a sheet that opens inside the phone frame and
 keeps its state instead of using `?dish=`, and is non-modal so the page
-keeps scrolling while it is open), feature groups, and a contact
-block. The home page's hero shows the same demo without controls. Prices for the demo are formatted on the server
+keeps scrolling while it is open), then the features set as a printed
+menu on a platter (`COURSES` in the page: three courses of `LeaderRow`s
+with a note and a "price", names-only sides, and the bill with the price
+and a link to /pricing), and a contact block. The home page's hero shows the same demo without controls. Prices for the demo are formatted on the server
 (`server/demo-menu.ts`). **Contact details live only in
 `lib/site-contact.ts`** (email info.menupedia@gmail.com, WhatsApp/phone,
 and `SOCIAL_PROFILES`: Instagram, Facebook and X page URLs, each shown as
@@ -869,11 +871,17 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    `secondary` with ivory text) instead of a see-through tint that vanished
    on the damask; like the napkin-coloured button by day. The contact band's
    button stays see-through on purpose.
-6c. (done, awaiting commit) Menus page pass: no title napkin (the `h1` is
+6c. (done, `9973781`) Menus page pass: no title napkin (the `h1` is
    `sr-only`), the search first; on wider screens one row under it with
    type, country and city as dropdowns, open now and the language as
    chips, and the number of menus at the end (no "All menus" heading).
    The Featured row only shows with 12+ menus (`FEATURED_MIN_MENUS`).
+6d. (done, awaiting commit) Features page pass: no hero block (one small
+   heading over the demo, which lost its pale band); the 13 feature cards
+   became one menu on a platter: courses (Starters, Mains, Desserts, On
+   the side) of `LeaderRow`s with a short note and a "price" each
+   (`featuresPage.features.<id>.value`), ending with the bill (the price,
+   link to /pricing). "Friendly for guests" was dropped.
 7. **Next: one page at a time** (owner's rule): the other marketing pages
    get the same treatment, platters only where there is a lot of text.
 

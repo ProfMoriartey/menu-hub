@@ -667,65 +667,67 @@
     "metaDescription": "Menús digitales que cada restaurante diseña a su gusto: tres diseños, sus propios colores, varios idiomas, códigos QR y más.",
     "hero": {
       "title": "Todo lo que tu menú necesita",
-      "intro": "Un menú digital que tus clientes abren con un escaneo y que tú actualizas en segundos. Pruébalo abajo con nuestro restaurante de demostración.",
-      "ctaDemo": "Probar la demo",
-      "ctaContact": "Contactar"
+      "intro": "Pruébalo en Lokanta Demo, un restaurante inventado: cambia su diseño, sus colores y su idioma, y toca un plato."
     },
     "demo": {
-      "title": "Pruébalo tú mismo",
-      "intro": "Este es Lokanta Demo, un restaurante inventado. Cambia su diseño, colores e idioma, y toca un plato, igual que harían tus clientes.",
       "design": "Diseño",
       "colors": "Colores",
       "mode": "Modo",
       "language": "Idioma del menú",
       "hint": "Toca un plato para abrirlo. Los menús reales funcionan igual en cualquier móvil."
     },
-    "groups": {
-      "look": "Tu menú, a tu estilo",
-      "guests": "Pensado para cada cliente",
-      "current": "Siempre al día",
-      "found": "Fácil de encontrar y compartir"
+    "menu": {
+      "subtitle": "Lo que recibe cada restaurante",
+      "starters": "Entrantes",
+      "mains": "Principales",
+      "desserts": "Postres",
+      "side": "Para acompañar"
     },
     "features": {
       "designs": {
         "title": "Tres diseños de menú",
-        "text": "Clásico, Cuadrícula de fotos o Compacto. Elige el que mejor va con tu cocina y cámbialo cuando quieras."
+        "text": "Clásico, Cuadrícula de fotos o Compacto. Cámbialo cuando quieras.",
+        "value": "3"
       },
       "colors": {
         "title": "Tus propios colores",
-        "text": "Elige el fondo, el texto, los botones y los resaltados, en modo claro y oscuro, con vista previa en directo. O empieza con una paleta lista."
+        "text": "Para el modo claro y el oscuro, con vista previa en vivo.",
+        "value": "claro y oscuro"
       },
       "fast": {
         "title": "Hecho para el móvil",
-        "text": "Páginas ligeras y rápidas para quien escanea en la mesa, con una cabecera compacta para que los platos vayan primero."
+        "text": "Páginas ligeras que se abren en la mesa. Sin instalar ninguna app.",
+        "value": "un escaneo"
       },
       "languages": {
         "title": "Menús en varios idiomas",
-        "text": "Ofrece tu menú en inglés, turco, árabe, español y ruso. Cada cliente lo ve en su idioma, incluida la escritura de derecha a izquierda."
+        "text": "Cada cliente lo lee en su idioma, árabe de derecha a izquierda incluido.",
+        "value": "5"
       },
       "search": {
         "title": "Búsqueda y filtros de dieta",
-        "text": "Los clientes encuentran platos por nombre o ingrediente y filtran por vegetariano, vegano, sin gluten y más."
-      },
-      "friendly": {
-        "title": "Cómodo para los clientes",
-        "text": "Precios en el formato de cada cliente, modo oscuro, y un toque abre cualquier plato con su foto y sus detalles."
+        "text": "Por nombre o ingrediente; vegetariano, vegano, sin gluten y más.",
+        "value": "incluidos"
       },
       "instant": {
         "title": "Los cambios, al instante",
-        "text": "Cambia un precio, añade un plato o márcalo como agotado, y los clientes lo ven enseguida. Sin reimprimir."
+        "text": "Cambia un precio o marca un plato como agotado. Sin reimprimir.",
+        "value": "segundos"
       },
       "hours": {
         "title": "Horario",
-        "text": "Muestra «Abierto ahora» o cuándo abres, calculado en tu zona horaria y en el idioma del cliente."
+        "text": "O cuándo vuelves a abrir, según tu zona horaria.",
+        "value": "«Abierto ahora»"
       },
       "qr": {
         "title": "Códigos QR y tarjetas de mesa",
-        "text": "Códigos QR con tu logo que siguen funcionando aunque cambie la dirección de tu menú, y tarjetas de mesa listas para imprimir."
+        "text": "Tarjetas de mesa listas para imprimir y códigos que siguen funcionando.",
+        "value": "con tu logo"
       },
       "stats": {
         "title": "Estadísticas de escaneo",
-        "text": "Mira cuántos clientes abren tu menú cada día."
+        "text": "Cuántos clientes abrieron tu menú cada día.",
+        "value": "diarias"
       },
       "google": {
         "title": "Te encuentran en Google",
@@ -748,8 +750,9 @@
       "whatsappMessage": "¡Hola! Me gustaría saber más sobre Menupedia para mi restaurante."
     },
     "pricing": {
-      "title": "{months} gratis, y después un solo plan sencillo",
-      "text": "Tras la prueba, {price} al mes incluye todo lo de esta página. Sin extras ni cargos por escaneo.",
+      "bill": "La cuenta",
+      "title": "{months} gratis, y después {price} al mes",
+      "text": "Todo lo de este menú está incluido. Sin extras ni cargos por escaneo.",
       "link": "Ver precios"
     },
     "featureLinks": {
