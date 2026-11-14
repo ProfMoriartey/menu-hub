@@ -15,12 +15,3 @@ export async function ExperimentalNote() {
     </p>
   );
 }
-
-/** The small "Experimental" label beside a tab's name. */
-export function ExperimentalBadge({ label }: { label: string }) {
-  return (
-    <span className="bg-attention/15 text-foreground ms-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
-      {label}
-    </span>
-  );
-}

@@ -926,6 +926,12 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    branch's time zone like the stats) on the menu tab and the home cards
    of live restaurants, linking to `share#scans`; the home card's role hint
    only for editors.
+6k. (done, awaiting commit) The restaurant's sections are one menu
+   instead of a tab row (`DashboardTabsMenu`, a popover: a button with the
+   open section beside "View live menu"; the tab row and
+   `ActiveTabIntoView` went). Experimental sections (Appearance, Languages,
+   Branches & hours) carry a flask in the menu instead of the old
+   "Experimental" badge, and their pages show `ExperimentalNote`.
 8. **Next:** a guide page for search and AI ("How to make a QR menu",
    Turkish and English first); to be planned with the owner.
 7. **Next: one page at a time** (owner's rule): the other marketing pages

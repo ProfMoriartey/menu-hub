@@ -5,6 +5,7 @@ import { redirect } from "~/i18n/navigation";
 import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
+import { ExperimentalNote } from "~/components/dashboard/ExperimentalNote";
 import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
 
 export const metadata: Metadata = {
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
 
 /**
  * The menu's languages: the main one and the extra ones each dish can be
- * translated into (was part of the Branches page). Owners and admins only.
+ * translated into (was part of the Branches page). Experimental: every plan
+ * has them for now. Owners and admins only.
  */
 export default async function RestaurantLanguagesPage({
   params,
@@ -32,6 +34,7 @@ export default async function RestaurantLanguagesPage({
   return (
     <>
       <DashboardRestaurantHeader restaurant={restaurant} role={role} activeTab="languages" />
+      <ExperimentalNote />
       <MenuLanguagesSettings
         restaurantId={restaurant.id}
         isAdmin={role === "admin"}

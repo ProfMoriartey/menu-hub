@@ -4,10 +4,8 @@ import { ChevronRight, ExternalLink, Eye } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { PlatedLogo } from "~/components/shared/Plate";
-import { ExperimentalBadge } from "~/components/dashboard/ExperimentalNote";
-import { ActiveTabIntoView } from "~/components/dashboard/ActiveTabIntoView";
+import { DashboardTabsMenu, type DashboardTab } from "~/components/dashboard/DashboardTabsMenu";
 import { canEditDetails, isLive, type RestaurantRole } from "~/lib/access";
-import { cn } from "~/lib/utils";
 import type { Restaurant } from "~/types/restaurant";
 
 interface DashboardRestaurantHeaderProps {
@@ -32,15 +30,16 @@ export async function DashboardRestaurantHeader({
   // share; the team and the plan are rare visits. Editors manage the menu
   // only, so they see Menu, Share & stats and Team.
   const owner = canEditDetails(role);
-  const tabs: { id: string; label: string; href: string; experimental?: boolean }[] = [
+  const tabs: DashboardTab[] = [
     { id: "menu", label: t("menuTab"), href: `${base}/menu` },
     ...(owner
       ? [
           { id: "details", label: t("detailsTab"), href: `${base}/edit` },
-          // Experimental: every plan has these for now (lib/plans). The
-          // colours page explains itself when an admin hasn't enabled it.
+          // Experimental (a flask in the menu, a note on the page): every
+          // plan has these for now (lib/plans). The colours page explains
+          // itself when an admin hasn't enabled it.
           { id: "colors", label: t("colorsTab"), href: `${base}/colors`, experimental: true },
-          { id: "languages", label: t("languagesTab"), href: `${base}/languages` },
+          { id: "languages", label: t("languagesTab"), href: `${base}/languages`, experimental: true },
           { id: "branches", label: t("branchesTab"), href: `${base}/branches`, experimental: true },
         ]
       : []),
@@ -117,8 +116,20 @@ export async function DashboardRestaurantHeader({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* The sections in one menu, beside the way to the guests' page. */}
+      <div className="flex items-center gap-3">
+        <div className="min-w-0 flex-1 sm:max-w-72">
+          <DashboardTabsMenu
+            tabs={tabs}
+            activeId={activeTab}
+            label={t("sectionsLabel")}
+            experimentalLabel={t("experimental")}
+          />
+        </div>
         {/* Not live yet: the same page opens as a preview only they can see. */}
-        <Button variant="outline" asChild>
+        <Button variant="outline" className="h-11 shrink-0" asChild>
           <Link href={`/${restaurant.slug}/preview`} target="_blank">
             {isLive(restaurant) ? t("viewLive") : t("preview")}{" "}
             {isLive(restaurant) ? (
@@ -129,33 +140,6 @@ export async function DashboardRestaurantHeader({
           </Link>
         </Button>
       </div>
-
-      {/* Scrolls sideways on small screens rather than wrapping. The line
-          under the tabs is an inset shadow, not a border: tabs pulled over a
-          border would overflow it and make the bar scroll up and down too. */}
-      <nav
-        id="dashboard-tabs"
-        aria-label={t("menuTab")}
-        className="scrollbar-thin flex gap-1 overflow-x-auto overflow-y-hidden shadow-[inset_0_-1px_0_var(--border)]"
-      >
-        {tabs.map((tab) => (
-          <Link
-            key={tab.id}
-            href={tab.href}
-            aria-current={activeTab === tab.id ? "page" : undefined}
-            className={cn(
-              "shrink-0 border-b-2 px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors",
-              activeTab === tab.id
-                ? "border-primary text-foreground"
-                : "text-muted-foreground hover:text-foreground border-transparent",
-            )}
-          >
-            {tab.label}
-            {tab.experimental && <ExperimentalBadge label={t("experimental")} />}
-          </Link>
-        ))}
-      </nav>
-      <ActiveTabIntoView navId="dashboard-tabs" />
     </div>
   );
 }
