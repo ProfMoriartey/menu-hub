@@ -50,11 +50,10 @@ export default async function MenusPage({ searchParams }: { searchParams: Search
 
   return (
     <div className="text-foreground min-h-screen">
-      <header className="napkin mx-auto mt-10 mb-6 max-w-5xl px-6 py-6 sm:mt-16">
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl">{t("title")}</h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl text-base sm:text-lg">{t("intro")}</p>
-      </header>
-      <main className="mx-auto max-w-5xl px-4 pb-16">
+      {/* The search is the first thing on the page; the heading is for
+          screen readers and search engines. */}
+      <h1 className="sr-only">{t("title")}</h1>
+      <main className="mx-auto max-w-5xl px-4 pt-8 pb-16 sm:pt-12">
         <MenusDirectory
           venues={venues}
           local={local}

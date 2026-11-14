@@ -3,7 +3,7 @@
 
 import { useState, type ReactNode } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Clock, Flag, Languages, MapPin, SlidersHorizontal, X, type LucideIcon } from "lucide-react";
+import { Clock, Flag, Languages, MapPin, SlidersHorizontal, Store, X, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
 import {
@@ -85,50 +85,56 @@ export function Chip({
   );
 }
 
-/** Wider screens: type chips in a row, the other filters below them. */
+/**
+ * Wider screens: one row under the search. Type, country and city are
+ * dropdowns, open now and the language on/off chips, and the number of
+ * menus at the end.
+ */
 export function InlineFilters({ model }: { model: FilterModel }) {
   const t = useTranslations("MenusPage");
   const m = model;
-  const hasMore =
-    m.showOpenNow || m.myLanguageName !== null || m.countries.length > 1 || m.cities.length > 1;
 
   return (
-    <div className="hidden space-y-4 sm:block">
-      {m.types.length > 0 && (
-        <div role="group" aria-label={t("typeFilterLabel")} className="flex flex-wrap gap-2">
-          <TypeChips model={m} />
-        </div>
+    <div className="hidden flex-wrap items-center gap-2 sm:flex">
+      {m.types.length > 1 && (
+        <FilterSelect
+          icon={Store}
+          label={t("typeFilterLabel")}
+          allLabel={t("allTypesOption")}
+          options={m.types.map((o) => ({ key: o.type, name: o.label, count: o.count }))}
+          value={m.type}
+          onChange={m.setType}
+        />
       )}
-      {hasMore && (
-        <div className="flex flex-wrap items-center gap-2">
-          <ToggleChips model={m} />
-          {m.countries.length > 1 && (
-            <FilterSelect
-              icon={Flag}
-              label={t("countryLabel")}
-              allLabel={t("allCountries")}
-              options={m.countries}
-              value={m.country}
-              onChange={m.setCountry}
-            />
-          )}
-          {m.cities.length > 1 && (
-            <FilterSelect
-              icon={MapPin}
-              label={t("cityLabel")}
-              allLabel={t("allCities")}
-              options={m.cities}
-              value={m.city}
-              onChange={m.setCity}
-            />
-          )}
-          {m.activeCount > 0 && (
-            <Button type="button" variant="ghost" size="sm" onClick={m.clear}>
-              {t("clearFilters")}
-            </Button>
-          )}
-        </div>
+      {m.countries.length > 1 && (
+        <FilterSelect
+          icon={Flag}
+          label={t("countryLabel")}
+          allLabel={t("allCountries")}
+          options={m.countries}
+          value={m.country}
+          onChange={m.setCountry}
+        />
       )}
+      {m.cities.length > 1 && (
+        <FilterSelect
+          icon={MapPin}
+          label={t("cityLabel")}
+          allLabel={t("allCities")}
+          options={m.cities}
+          value={m.city}
+          onChange={m.setCity}
+        />
+      )}
+      <ToggleChips model={m} />
+      {m.activeCount > 0 && (
+        <Button type="button" variant="ghost" size="sm" onClick={m.clear}>
+          {t("clearFilters")}
+        </Button>
+      )}
+      <p className="napkin text-muted-foreground ms-auto px-3 py-1 text-sm tabular-nums">
+        {t("count", { count: m.resultCount })}
+      </p>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `ad92c53` on
+that cost time before. Last updated 2026-11-14, after commit `85be6c4` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -659,8 +659,10 @@ venue as a card with a strip of its first three dish photos, logo, venue
 type and cuisine, city and country, open/closed now and menu languages.
 Filters: type, open now, "menu in my language", country (only when not
 local) and its cities, each shown only when some venue matches; a
-featured row when nothing is filtered. Wider screens show them inline
-(chips and dropdowns); phones get a Filters button beside the search that
+featured row when nothing is filtered and there are 12+ menus. The search
+is the first thing on the page (no title block). Wider screens show the
+filters in one row under it (type, country, city as dropdowns; open now
+and language as chips; the menu count at the end); phones get a Filters button beside the search that
 opens a bottom sheet, with the filters in use as removable pills
 (`components/menus/DirectoryFilters.tsx`).
 Visitors start with menus from their own country when it has any (a
@@ -862,11 +864,16 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
 6. (done) Home page pass: doodles removed everywhere (home, about,
    contact band; drawings, `Reveal`, their CSS); headings stay centred;
    platters under the guests points and the plan's list (`ad92c53`).
-6b. (done, awaiting commit) Outline buttons in dark mode get a solid card
+6b. (done, `85be6c4`) Outline buttons in dark mode get a solid card
    surface (`components/ui/button.tsx`: `dark:bg-card`, hover
    `secondary` with ivory text) instead of a see-through tint that vanished
    on the damask; like the napkin-coloured button by day. The contact band's
    button stays see-through on purpose.
+6c. (done, awaiting commit) Menus page pass: no title napkin (the `h1` is
+   `sr-only`), the search first; on wider screens one row under it with
+   type, country and city as dropdowns, open now and the language as
+   chips, and the number of menus at the end (no "All menus" heading).
+   The Featured row only shows with 12+ menus (`FEATURED_MIN_MENUS`).
 7. **Next: one page at a time** (owner's rule): the other marketing pages
    get the same treatment, platters only where there is a lot of text.
 

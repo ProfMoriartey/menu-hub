@@ -44,6 +44,8 @@ export interface DirectoryFilters {
 
 const NO_FILTERS = { type: "", country: "", city: "", openNow: false, inMyLanguage: false };
 const SEARCH_DELAY_MS = 250;
+// Below this the Featured row would only repeat cards from the list under it.
+const FEATURED_MIN_MENUS = 12;
 
 type DishSearch =
   | { state: "idle" }
@@ -337,7 +339,7 @@ export function MenusDirectory({
               placeholder={t("searchPlaceholder")}
               aria-label={t("searchLabel")}
               enterKeyHint="search"
-              className="bg-card h-12 rounded-full ps-12 pe-12 text-base shadow-sm [&::-webkit-search-cancel-button]:hidden"
+              className="bg-card dark:bg-card h-12 rounded-full ps-12 pe-12 text-base shadow-sm [&::-webkit-search-cancel-button]:hidden"
             />
             {filters.query && (
               <button
@@ -410,7 +412,7 @@ export function MenusDirectory({
         </>
       ) : (
         <>
-          {!anyFilter && featured.length > 0 && featured.length < venues.length && (
+          {!anyFilter && featured.length > 0 && venues.length >= FEATURED_MIN_MENUS && (
             <Section title={t("featured")}>
               {/* `relative` keeps the cards' absolutely placed parts inside
                   the scroller; without it they widen the page on phones. */}
@@ -427,23 +429,22 @@ export function MenusDirectory({
               </div>
             </Section>
           )}
-          <Section title={anyFilter ? t("matching") : t("allMenus")} count={places.length}>
-            {places.length > 0 ? (
-              <CardGrid venues={places} hideCountry={hideCountry} />
-            ) : (
-              <EmptyState
-                title={t("noMatches")}
-                action={
-                  <div className="flex flex-wrap justify-center gap-2">
-                    <Button variant="outline" onClick={clearFilters}>
-                      {t("clearFilters")}
-                    </Button>
-                    {scope === "local" && searchEverywhere}
-                  </div>
-                }
-              />
-            )}
-          </Section>
+          {/* No heading: the filter row shows how many menus there are. */}
+          {places.length > 0 ? (
+            <CardGrid venues={places} hideCountry={hideCountry} />
+          ) : (
+            <EmptyState
+              title={t("noMatches")}
+              action={
+                <div className="flex flex-wrap justify-center gap-2">
+                  <Button variant="outline" onClick={clearFilters}>
+                    {t("clearFilters")}
+                  </Button>
+                  {scope === "local" && searchEverywhere}
+                </div>
+              }
+            />
+          )}
         </>
       )}
     </div>
