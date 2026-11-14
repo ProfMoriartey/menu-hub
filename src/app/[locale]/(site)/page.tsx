@@ -194,27 +194,29 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Menus near you: the heading, centred, with its link. */}
+      {/* Menus near you: the heading, the cards, then the link to all of them. */}
       {shown.length > 0 && (
         <section aria-labelledby="menus-title">
-          <div className="container mx-auto px-4 py-16 lg:py-20">
-            <div className="flex flex-col items-center gap-4">
-              <div className="napkin w-fit max-w-2xl px-6 py-4 text-center">
-                <h2 id="menus-title" className="text-3xl font-bold tracking-tight">
-                  {isLocal ? t("menus.titleLocal", { country: local.name }) : t("menus.title")}
-                </h2>
-                <p className="text-muted-foreground mt-3">{t("menus.intro")}</p>
-              </div>
-              <Button variant="outline" asChild>
-                <Link href="/menus">
-                  {t("menus.cta")} <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
-                </Link>
-              </Button>
+          {/* As wide as the Menus page, so the cards keep the same shape. */}
+          <div className="mx-auto max-w-5xl px-4 py-16 lg:py-20">
+            <div className="napkin mx-auto w-fit max-w-2xl px-6 py-4 text-center">
+              <h2 id="menus-title" className="text-3xl font-bold tracking-tight">
+                {isLocal ? t("menus.titleLocal", { country: local.name }) : t("menus.title")}
+              </h2>
+              <p className="text-muted-foreground mt-3">{t("menus.intro")}</p>
             </div>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {shown.map((venue) => (
                 <MenuCard key={venue.id} venue={venue} hideCountry={isLocal} />
               ))}
+            </div>
+            {/* After the menus: look first, then see them all. */}
+            <div className="mt-8 text-center">
+              <Button variant="outline" asChild>
+                <Link href="/menus">
+                  {t("menus.cta")} <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>

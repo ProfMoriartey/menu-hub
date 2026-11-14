@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `b9b9162` on
+that cost time before. Last updated 2026-11-14, after commit `776b049` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -908,13 +908,13 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    contract (owner 2026-11-14: monthly has no contract, stop any time; a
    yearly plan is paid up front and can be cancelled, no refund). The old
    `PageHero` and `CtaCard` are gone from `MarketingBlocks`.
-6i. (done, awaiting commit) Napkins solid at night everywhere (owner's
+6i. (done, `e687f64`) Napkins solid at night everywhere (owner's
    call 2026-11-14): site `.dark` `--napkin` is the page colour with a
    shadow, and restaurant damask napkins no longer fade out at night
    (`--cloth-damask-napkin` removed). Restaurant menus: category names
    centred on their napkin with the number of dishes (`MenuLayout`, and the
    editor preview), and the search box solid in dark mode.
-6j. (done, awaiting commit) Owner dashboard, part 1: tabs in the order an
+6j. (done, `59882a3` and `776b049`) Owner dashboard, part 1: tabs in the order an
    owner works (Menu, Details, Appearance, Languages, Branches & hours,
    Share & stats, Team, Plan; editors: Menu, Share & stats, Team), the menu
    languages on their own tab (`/languages`, out of Branches), a shorter
@@ -926,12 +926,20 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    branch's time zone like the stats) on the menu tab and the home cards
    of live restaurants, linking to `share#scans`; the home card's role hint
    only for editors.
-6k. (done, awaiting commit) The restaurant's sections are one menu
+6k. (done, `776b049`) The restaurant's sections are one menu
    instead of a tab row (`DashboardTabsMenu`, a popover: a button with the
    open section beside "View live menu"; the tab row and
    `ActiveTabIntoView` went). Experimental sections (Appearance, Languages,
    Branches & hours) carry a flask in the menu instead of the old
    "Experimental" badge, and their pages show `ExperimentalNote`.
+6l. (done, awaiting commit) Home "Menus on Menupedia" as wide as /menus
+   (`max-w-5xl`), its link under the cards. The demo phone (`MenuDemo`,
+   home and features) set like a real menu: a tablecloth (gingham by
+   default, a Tablecloth choice on /features; `menu-cloth-*` with
+   `cloth-day`/`cloth-night` from the demo's mode), category names centred
+   on a napkin with their count, and a working search (names and
+   descriptions, `normalizeForSearch`). Category jumps are measured on
+   screen, since the cloth is the sections' offset parent.
 8. **Next:** a guide page for search and AI ("How to make a QR menu",
    Turkish and English first); to be planned with the owner.
 7. **Next: one page at a time** (owner's rule): the other marketing pages

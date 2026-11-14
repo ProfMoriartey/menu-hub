@@ -3,13 +3,14 @@
 
 import { useRef, useState, type CSSProperties } from "react";
 import { useTranslations } from "next-intl";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Search, Sun, X } from "lucide-react";
 import {
   ClassicDish,
   CompactDish,
   PhotoDish,
 } from "~/components/public/MenuItemCard";
 import { DishSheetInPlaceProvider } from "~/components/public/DishSheet";
+import { normalizeForSearch } from "~/components/public/MenuFilters";
 import { RestaurantLogo } from "~/components/shared/RestaurantLogo";
 import { useTheme } from "~/context/ThemeContext";
 import { PRESETS, paletteTokens, type ThemeMode } from "~/lib/color-theme";
@@ -20,7 +21,12 @@ import {
   isMenuLanguage,
   type MenuLanguage,
 } from "~/lib/menu-languages";
-import { MENU_DESIGNS, type MenuDesign } from "~/lib/menu-design";
+import {
+  MENU_CLOTHS,
+  MENU_DESIGNS,
+  type MenuCloth,
+  type MenuDesign,
+} from "~/lib/menu-design";
 import { cn } from "~/lib/utils";
 
 import type { DemoMenus } from "~/server/demo-menu";
@@ -72,8 +78,10 @@ function Choice<T extends string>({
 
 /**
  * A working copy of a menu, Lokanta Demo, in a phone frame: visitors switch
- * its design, colours, light/dark and language, and tap dishes to open the
- * bottom sheet. Built from the same components as real menus.
+ * its design, colours, light/dark, tablecloth and language, search it, and
+ * tap dishes to open the bottom sheet. Built from the same components as
+ * real menus, and set like them: the tablecloth (gingham, as new
+ * restaurants start), category names centred on a napkin with their count.
  */
 export function MenuDemo({
   menus,
@@ -100,11 +108,25 @@ export function MenuDemo({
   const [lang, setLang] = useState<MenuLanguage>(
     isMenuLanguage(initialLanguage) ? initialLanguage : "en",
   );
+  const [cloth, setCloth] = useState<MenuCloth>("gingham");
+  const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [frame, setFrame] = useState<HTMLDivElement | null>(null);
   const scroller = useRef<HTMLDivElement>(null);
 
   const menu = menus[lang];
+  // Search as on real menus: names and descriptions, accents folded.
+  const needle = normalizeForSearch(query.trim());
+  const shown = needle
+    ? menu.categories
+        .map((category) => ({
+          ...category,
+          menuItems: category.menuItems.filter((item) =>
+            normalizeForSearch(`${item.name} ${item.description ?? ""}`).includes(needle),
+          ),
+        }))
+        .filter((category) => category.menuItems.length > 0)
+    : menu.categories;
   const theme = PRESETS.find((p) => p.id === preset)!.theme;
   const style = Object.fromEntries(
     Object.entries(paletteTokens(theme[mode])).map(([token, value]) => [
@@ -121,8 +143,17 @@ export function MenuDemo({
     const section = box?.querySelector<HTMLElement>(
       `[data-category="${slug}"]`,
     );
+    // Measured on screen: the tablecloth is the sections' offset parent,
+    // not the scroller. 52px leaves room for the sticky category bar.
     if (box && section)
-      box.scrollTo({ top: section.offsetTop - 52, behavior: "smooth" });
+      box.scrollTo({
+        top:
+          section.getBoundingClientRect().top -
+          box.getBoundingClientRect().top +
+          box.scrollTop -
+          52,
+        behavior: "smooth",
+      });
   };
 
   return (
@@ -184,6 +215,15 @@ export function MenuDemo({
               />
             </>
           )}
+          {controls !== "compact" && (
+            <Choice
+              label={tDesign("cloth.title")}
+              options={MENU_CLOTHS}
+              value={cloth}
+              onChange={setCloth}
+              render={(option) => tDesign(`cloth.${option}`)}
+            />
+          )}
           <Choice
             label={t("language")}
             options={MENU_LANGUAGES}
@@ -214,9 +254,9 @@ export function MenuDemo({
             >
               <div
                 ref={scroller}
-                className="scrollbar-thin h-full overflow-y-auto overscroll-contain"
+                className="scrollbar-thin flex h-full flex-col overflow-y-auto overscroll-contain"
               >
-                <header className="bg-card border-border border-b px-3 pt-4 pb-3">
+                <header className="bg-card border-border shrink-0 border-b px-3 pt-4 pb-3">
                   <div className="flex items-start gap-3">
                     <RestaurantLogo
                       restaurant={DEMO_RESTAURANT}
@@ -238,9 +278,33 @@ export function MenuDemo({
                   <p className="text-muted-foreground mt-2 line-clamp-1 text-sm">
                     {menu.description}
                   </p>
+                  <div role="search" className="relative mt-3">
+                    <Search
+                      className="text-muted-foreground pointer-events-none absolute start-2.5 top-1/2 h-4 w-4 -translate-y-1/2"
+                      aria-hidden
+                    />
+                    <input
+                      type="search"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder={tMenu("searchPlaceholder")}
+                      aria-label={tMenu("searchLabel")}
+                      className="bg-background border-input placeholder:text-muted-foreground focus-visible:ring-ring/50 h-9 w-full rounded-[10px] border ps-8 pe-8 text-sm outline-none focus-visible:ring-[3px] [&::-webkit-search-cancel-button]:hidden"
+                    />
+                    {query && (
+                      <button
+                        type="button"
+                        onClick={() => setQuery("")}
+                        className="text-muted-foreground hover:text-foreground absolute end-1 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md"
+                        aria-label={tMenu("clearSearch")}
+                      >
+                        <X className="h-3.5 w-3.5" aria-hidden />
+                      </button>
+                    )}
+                  </div>
                 </header>
 
-                <nav className="bg-card border-border scrollbar-hide sticky top-0 z-10 flex gap-1.5 overflow-x-auto border-b px-2 py-2">
+                <nav className="bg-card border-border scrollbar-hide sticky top-0 z-10 flex shrink-0 gap-1.5 overflow-x-auto border-b px-2 py-2">
                   {menu.categories.map((category) => {
                     const active =
                       (activeCategory ?? menu.categories[0]?.slug) ===
@@ -264,11 +328,27 @@ export function MenuDemo({
                   })}
                 </nav>
 
-                <div className="space-y-5 p-3">
-                  {menu.categories.map((category) => (
+                {/* The tablecloth, in the chosen colours and its day or
+                    night look (globals.css: .menu-cloth-*, .cloth-day/-night). */}
+                <div
+                  className={cn(
+                    "flex-1 space-y-5 p-3",
+                    `menu-cloth-${cloth}`,
+                    mode === "dark" ? "cloth-night" : "cloth-day",
+                  )}
+                >
+                  {shown.length === 0 && (
+                    <p className="napkin text-muted-foreground mx-auto my-6 w-fit px-4 py-3 text-center text-sm">
+                      {tMenu("noResults")}
+                    </p>
+                  )}
+                  {shown.map((category) => (
                     <section key={category.slug} data-category={category.slug}>
-                      <h3 className="mb-2 text-base font-semibold">
+                      <h3 className="napkin mx-auto mb-2 w-fit px-3 py-0.5 text-center text-base font-semibold">
                         {category.name}
+                        <span className="text-muted-foreground ms-1.5 text-sm font-normal tabular-nums" aria-hidden>
+                          · {category.menuItems.length}
+                        </span>
                       </h3>
                       {design === "compact" ? (
                         <ul className="bg-card border-border divide-border divide-y overflow-hidden rounded-xl border">
