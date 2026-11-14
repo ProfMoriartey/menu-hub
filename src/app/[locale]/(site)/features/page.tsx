@@ -1,12 +1,12 @@
 // app/[locale]/(site)/features/page.tsx
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight, Mail, MessageCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { MenuDemo } from "~/components/features/MenuDemo";
 import { Platter } from "~/components/shared/Plate";
 import { LeaderRow } from "~/components/shared/LeaderRow";
+import { CourseTitle } from "~/components/shared/CourseTitle";
 import { getDemoMenus } from "~/server/demo-menu";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
 import { Link } from "~/i18n/navigation";
@@ -44,7 +44,7 @@ const FEATURE_PAGES: Partial<Record<string, string>> = { languages: "/multilingu
  * designs, colours and languages, then the features set like a printed
  * menu on a platter, ending with the bill (the price; the plan, trial and
  * questions are on /pricing). Was /themes, which redirects here. Getting
- * started and teamwork are told on the About page.
+ * started is on the home page, staff and roles in the FAQ.
  */
 export default async function FeaturesPage({ params }: Props) {
   setRequestLocale((await params).locale);
@@ -164,16 +164,5 @@ export default async function FeaturesPage({ params }: Props) {
         </div>
       </section>
     </div>
-  );
-}
-
-// A course name between two thin rules, as on a printed menu.
-function CourseTitle({ id, children }: { id: string; children: ReactNode }) {
-  return (
-    <h2 id={id} className="text-primary flex items-center gap-4 text-sm font-bold tracking-wide">
-      <span className="bg-border h-px flex-1" aria-hidden />
-      {children}
-      <span className="bg-border h-px flex-1" aria-hidden />
-    </h2>
   );
 }

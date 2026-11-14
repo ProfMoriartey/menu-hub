@@ -763,69 +763,35 @@
     "metaTitle": "Hakkında | Menupedia",
     "metaDescription": "Menupedia, restoranlara misafirlerin tek okutmayla açtığı ve restoranın kendisinin güncel tuttuğu dijital bir menü sunar.",
     "hero": {
-      "title": "Restoranların kendi yönettiği dijital menüler",
-      "intro": "Misafirler masadaki QR kodu okutur ve menünüzü telefonlarında, kendi dillerinde görür. Fiyatları, ürünleri ve fotoğrafları siz değiştirirsiniz; saniyeler içinde yayındadır."
+      "eyebrow": "Hikâyemiz",
+      "title": "Restoranların kendi yönettiği dijital menüler"
     },
     "story": {
-      "title": "Neden Menupedia",
       "p1": "Basılı menüler, bir fiyat değiştiği ya da bir ürün tükendiği anda eskir. Birçok dijital menü ise sadece bir PDF'tir: telefonda zor okunur, her misafire aynıdır ve güncellemesi yine başkasına kalır.",
       "p2": "Menupedia tam tersi şekilde kuruldu: telefon için yapılmış gerçek bir menü sayfası. Restoranın kendi ekibi onu her cihazdan, misafirlerinin konuştuğu dillerde güncel tutar."
     },
-    "steps": {
-      "title": "Nasıl çalışır",
-      "s1": {
-        "title": "Hesabınızı alın",
-        "text": "Restoranınızı kurar ve size bir bağlantı göndeririz. Çalışanlarınızı kendi bağlantılarıyla davet edin: sahipler her şeyi, editörler menüyü yönetir."
-      },
-      "s2": {
-        "title": "Menünüzü oluşturun",
-        "text": "Fiyat, fotoğraf ve beslenme etiketleriyle kategoriler ve ürünler ekleyin. Adım adım kontrol listesi ve özel önizleme, misafirler görmeden her şeyi hazırlamanıza yardım eder."
-      },
-      "s3": {
-        "title": "Size özel yapın",
-        "text": "Bir tasarım ve renklerinizi seçin, çalışma saatlerinizi ekleyin ve menüyü başka dil konuşan misafirleriniz için çevirin."
-      },
-      "s4": {
-        "title": "Masalara koyun",
-        "text": "QR kodlu masa kartlarınızı basın. Misafirler okutur ve güncel menüyü görür; siz de her gün kaç kişinin açtığını görürsünüz."
-      }
-    },
-    "audiences": {
-      "title": "Masanın iki tarafı için",
-      "guests": {
-        "title": "Misafirler için",
-        "text": "Telefonda anında açılan, kendi dillerinde; fotoğraflı, tanıdık biçimde fiyatlı, beslenme filtreli ve restoranın saatlerini ve konumunu gösteren bir menü."
-      },
-      "restaurants": {
-        "title": "Restoranlar için",
-        "text": "Yeniden baskı yok, kimseyi beklemek yok: menüyü kendiniz değiştirin, misafirlerin ne yaptığını görün; Google'da ve menünüz paylaşıldığında en iyi şekilde görünün."
-      }
-    },
-    "values": {
-      "title": "Önem verdiklerimiz",
+    "rules": {
+      "title": "Ev kuralları",
       "phones": {
         "title": "Önce telefon",
-        "text": "Misafirlerin çoğu menüyü masada telefonla açar; bu yüzden her sayfa önce küçük ekranlar için tasarlanır ve test edilir."
+        "text": "Menülerin çoğu masada, telefonda açılır."
       },
       "everyone": {
         "title": "Her misafir",
-        "text": "Sağdan sola dahil beş dil, okunaklı renkler ve ekran okuyucu desteği; hiçbir misafir tahmin etmek zorunda kalmaz."
+        "text": "Kendi dili, okunaklı renkler, ekran okuyucular da."
       },
       "current": {
         "title": "Her zaman güncel",
-        "text": "Misafirlerin gördüğü, bugün elinizde olandır: tükenen ürünler işaretlenir, değişiklikler hemen görünür."
+        "text": "Misafirin gördüğü, bugün elinizde olandır."
       },
       "yours": {
-        "title": "Sizin restoranınız",
-        "text": "Sizin adınız, tasarımınız ve renkleriniz. Menü bizim değil, restoranınızın bir parçası gibi hissettirmeli."
+        "title": "Sizin restoranınız, bizim değil",
+        "text": "Sizin adınız, tasarımınız, renkleriniz."
       }
     },
-    "cta": {
-      "title": "Kendiniz görün",
-      "text": "Demo restoranımızı deneyin ya da Menupedia'daki menülere göz atın.",
-      "features": "Özellikleri keşfedin",
-      "restaurants": "Menülere göz atın",
-      "contact": "Bize ulaşın"
+    "links": {
+      "demo": "Demoyu deneyin",
+      "menus": "Menülere göz atın"
     }
   },
   "VenueTypes": {

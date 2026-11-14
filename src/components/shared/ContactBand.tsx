@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Button } from "~/components/ui/button";
 import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
 
-/** The "get in touch" band (WhatsApp and email) that closes the home and pricing pages, at #contact. */
+/** The "get in touch" band (WhatsApp and email) that closes the home, pricing and about pages, at #contact. */
 export async function ContactBand() {
   const [t, tContact] = await Promise.all([
     getTranslations("HomePage"),

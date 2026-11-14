@@ -763,69 +763,35 @@
     "metaTitle": "Acerca de | Menupedia",
     "metaDescription": "Menupedia da a los restaurantes un menú digital que los clientes abren con un escaneo y que el propio restaurante mantiene al día.",
     "hero": {
-      "title": "Menús digitales que los restaurantes gestionan ellos mismos",
-      "intro": "Los clientes escanean un código QR en la mesa y ven tu menú en su móvil, en su idioma. Tú cambias precios, platos y fotos, y en segundos está publicado."
+      "eyebrow": "Nuestra historia",
+      "title": "Menús digitales que los restaurantes gestionan ellos mismos"
     },
     "story": {
-      "title": "Por qué Menupedia",
       "p1": "Los menús impresos se quedan anticuados en cuanto cambia un precio o se acaba un plato. Muchos menús digitales son solo un PDF: difíciles de leer en el móvil, iguales para todos y su actualización sigue dependiendo de otra persona.",
       "p2": "Menupedia se hizo al revés: una página de menú de verdad, pensada para el móvil, que el propio equipo del restaurante mantiene al día desde cualquier dispositivo, en tantos idiomas como hablen sus clientes."
     },
-    "steps": {
-      "title": "Cómo funciona",
-      "s1": {
-        "title": "Consigue tu cuenta",
-        "text": "Preparamos tu restaurante y te enviamos un enlace. Invita a tu personal con sus propios enlaces: los propietarios lo gestionan todo y los editores se ocupan del menú."
-      },
-      "s2": {
-        "title": "Crea tu menú",
-        "text": "Añade categorías y platos con precios, fotos y etiquetas de dieta. Una lista paso a paso y una vista previa privada te ayudan a tenerlo todo listo antes de que lo vean los clientes."
-      },
-      "s3": {
-        "title": "Hazlo tuyo",
-        "text": "Elige un diseño y tus colores, añade tu horario y traduce el menú para los clientes que hablan otros idiomas."
-      },
-      "s4": {
-        "title": "Llévalo a las mesas",
-        "text": "Imprime tarjetas de mesa con tu código QR. Los clientes escanean y ven un menú actualizado, y tú ves cuántos lo abrieron cada día."
-      }
-    },
-    "audiences": {
-      "title": "Para los dos lados de la mesa",
-      "guests": {
-        "title": "Para los clientes",
-        "text": "Un menú que se abre al instante en el móvil, en su idioma, con fotos, precios en un formato conocido, filtros de dieta y el horario y la ubicación del restaurante."
-      },
-      "restaurants": {
-        "title": "Para los restaurantes",
-        "text": "Sin reimprimir y sin esperar a nadie: cambia el menú tú mismo, mira qué hacen los clientes y luce lo mejor posible en Google y cuando se comparte tu menú."
-      }
-    },
-    "values": {
-      "title": "Lo que nos importa",
+    "rules": {
+      "title": "Normas de la casa",
       "phones": {
         "title": "Primero el móvil",
-        "text": "La mayoría de los clientes abre el menú en el móvil, en la mesa, así que cada página se diseña y se prueba primero para pantallas pequeñas."
+        "text": "Casi todos los menús se abren en el móvil, en la mesa."
       },
       "everyone": {
         "title": "Cada cliente",
-        "text": "Cinco idiomas, incluida la escritura de derecha a izquierda, colores legibles y compatibilidad con lectores de pantalla, para que nadie tenga que adivinar."
+        "text": "En su idioma, con colores legibles y lectores de pantalla."
       },
       "current": {
         "title": "Siempre al día",
-        "text": "Lo que ven los clientes es lo que tienes hoy: los platos agotados se marcan y los cambios aparecen al momento."
+        "text": "Lo que ven tus clientes es lo que tienes hoy."
       },
       "yours": {
-        "title": "Tu restaurante",
-        "text": "Tu nombre, tu diseño y tus colores. El menú debe sentirse parte de tu restaurante, no del nuestro."
+        "title": "Tu restaurante, no el nuestro",
+        "text": "Tu nombre, tu diseño, tus colores."
       }
     },
-    "cta": {
-      "title": "Compruébalo tú mismo",
-      "text": "Prueba nuestro restaurante de demostración o mira los menús que ya están en Menupedia.",
-      "features": "Ver las funciones",
-      "restaurants": "Ver menús",
-      "contact": "Contactar"
+    "links": {
+      "demo": "Probar la demo",
+      "menus": "Ver menús"
     }
   },
   "VenueTypes": {

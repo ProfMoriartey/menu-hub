@@ -763,69 +763,35 @@
     "metaTitle": "About | Menupedia",
     "metaDescription": "Menupedia gives restaurants a digital menu guests open with one scan, and that the restaurant keeps up to date itself.",
     "hero": {
-      "title": "Digital menus that restaurants run themselves",
-      "intro": "Guests scan a QR code at the table and see your menu on their phone, in their language. You change prices, dishes and photos yourself, and it's live in seconds."
+      "eyebrow": "Our story",
+      "title": "Digital menus that restaurants run themselves"
     },
     "story": {
-      "title": "Why Menupedia",
       "p1": "Printed menus go out of date the moment a price changes or a dish runs out. Many digital menus are just a PDF: hard to read on a phone, the same for every guest, and still a job for someone else to update.",
       "p2": "Menupedia is built the other way round: a real menu page made for phones, which the restaurant's own team keeps up to date from any device, in as many languages as its guests speak."
     },
-    "steps": {
-      "title": "How it works",
-      "s1": {
-        "title": "Get your account",
-        "text": "We set up your restaurant and send you a link. Invite your staff with their own links: owners manage everything, editors look after the menu."
-      },
-      "s2": {
-        "title": "Build your menu",
-        "text": "Add categories and dishes with prices, photos and dietary labels. A step-by-step checklist and a private preview help you get everything ready before guests see it."
-      },
-      "s3": {
-        "title": "Make it yours",
-        "text": "Choose a design and your colours, add your opening hours, and translate the menu for guests who speak other languages."
-      },
-      "s4": {
-        "title": "Put it on the tables",
-        "text": "Print table cards with your QR code. Guests scan and see an up-to-date menu, and you see how many opened it each day."
-      }
-    },
-    "audiences": {
-      "title": "Made for both sides of the table",
-      "guests": {
-        "title": "For guests",
-        "text": "A menu that opens instantly on their phone, in their language, with photos, prices in a familiar format, dietary filters and the restaurant's hours and location."
-      },
-      "restaurants": {
-        "title": "For restaurants",
-        "text": "No reprinting and no waiting for anyone: change the menu yourself, see what guests do, and look your best on Google and when your menu is shared."
-      }
-    },
-    "values": {
-      "title": "What we care about",
+    "rules": {
+      "title": "House rules",
       "phones": {
         "title": "Phones first",
-        "text": "Most guests open a menu on a phone at the table, so every page is designed and tested for small screens first."
+        "text": "Most menus are opened on a phone at the table."
       },
       "everyone": {
         "title": "Every guest",
-        "text": "Five languages, right-to-left included, readable colours and screen-reader support, so no guest is left guessing."
+        "text": "Their language, readable colours, screen readers too."
       },
       "current": {
         "title": "Always current",
-        "text": "What guests see is what you have today: sold-out dishes are marked, and changes appear straight away."
+        "text": "What guests see is what you have today."
       },
       "yours": {
-        "title": "Your restaurant",
-        "text": "Your name, your design and your colours. The menu should feel like part of your restaurant, not ours."
+        "title": "Your restaurant, not ours",
+        "text": "Your name, your design, your colours."
       }
     },
-    "cta": {
-      "title": "See it for yourself",
-      "text": "Try our demo restaurant, or browse the menus already on Menupedia.",
-      "features": "Explore the features",
-      "restaurants": "Browse menus",
-      "contact": "Get in touch"
+    "links": {
+      "demo": "Try the demo",
+      "menus": "Browse menus"
     }
   },
   "VenueTypes": {

@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `9973781` on
+that cost time before. Last updated 2026-11-14, after commit `33463a2` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -649,12 +649,12 @@ from the Features page's languages card (`FEATURE_PAGES`). A new marketing
 page also needs its path in `LayoutWrapper`'s `basePublicPaths`, or it
 shows without the navbar, footer and background glow.
 
-**About page** (`/about`, server component, no animation library): the
-story, "How it works" in four steps (account and team invites, building
-the menu with the checklist and preview, design/colours/hours/languages,
-QR table cards and scan stats), who it's for, values, and links to
-Features, menus and contact. Getting started and teamwork are told
-here rather than on Features. Texts: `aboutPage` messages.
+**About page** (`/about`, server component, no animation library): "Our story",
+like the story on the back of a menu: one platter with the headline, why
+Menupedia exists, four house rules (`aboutPage.rules`) and links to the
+demo and the menus, then the shared contact band. Nothing else on purpose:
+how it works is on the home page, staff and roles in the FAQ, the
+features on /features. Texts: `aboutPage` messages.
 
 **Menus page** (`/menus`, was `/restaurants`, which redirects): every live
 venue as a card with a strip of its first three dish photos, logo, venue
@@ -876,12 +876,17 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    type, country and city as dropdowns, open now and the language as
    chips, and the number of menus at the end (no "All menus" heading).
    The Featured row only shows with 12+ menus (`FEATURED_MIN_MENUS`).
-6d. (done, awaiting commit) Features page pass: no hero block (one small
+6d. (done, `33463a2`) Features page pass: no hero block (one small
    heading over the demo, which lost its pale band); the 13 feature cards
    became one menu on a platter: courses (Starters, Mains, Desserts, On
    the side) of `LeaderRow`s with a short note and a "price" each
    (`featuresPage.features.<id>.value`), ending with the bill (the price,
    link to /pricing). "Friendly for guests" was dropped.
+6e. (done, awaiting commit) About page pass: "Our story" on one platter
+   (the headline, the why, four one-line house rules, links to the demo
+   and the menus), then the shared `ContactBand`. How it works, who it is
+   for and the values cards went (said on home, features and the FAQ).
+   `CourseTitle` (the heading between two rules) is shared with features.
 7. **Next: one page at a time** (owner's rule): the other marketing pages
    get the same treatment, platters only where there is a lot of text.
 
