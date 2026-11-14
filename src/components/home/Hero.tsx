@@ -25,7 +25,7 @@ export async function Hero() {
     <Cloth className="overflow-x-clip">
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-8 px-4 pt-4 pb-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-8 lg:px-8 lg:pt-8 lg:pb-10">
         <div className="flex justify-center">
-          <Plate size="fluid" className="@container w-[min(40rem,150vw)] lg:w-full lg:max-w-[40rem]">
+          <Plate size="fluid" className="@container w-[min(40rem,130vw)] lg:w-full lg:max-w-[40rem]">
             <div className="flex w-[min(68%,calc(100vw-3.5rem))] flex-col items-center text-center">
               <p className="text-cloth-ink max-w-[86%] text-[0.75rem] leading-snug text-balance font-bold tracking-[0.14em] uppercase rtl:tracking-normal">
                 {t("eyebrow")}

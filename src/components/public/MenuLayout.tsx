@@ -75,7 +75,8 @@ export function MenuLayout({
           key={category.id}
           id={categorySectionId(category.slug)}
           aria-labelledby={`${categorySectionId(category.slug)}-heading`}
-          className="scroll-mt-24"
+          // Compact rows run name to price: keep the leaders a readable length.
+          className={cn("scroll-mt-24", design === "compact" && "max-w-3xl")}
         >
           <h2
             id={`${categorySectionId(category.slug)}-heading`}
