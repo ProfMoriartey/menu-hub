@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `ff08c9d` on
+that cost time before. Last updated 2026-11-14, after commit `1d93e6c` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -629,7 +629,8 @@ a `value`).
 `faqPage`): pages written for searches like "QR menü fiyatları", "çok dilli
 QR menü" and common questions. Each has a question list
 (`components/shared/FaqList`, plain `<details>`) with FAQPage JSON-LD, and
-uses `components/shared/MarketingBlocks` (hero, section, closing card).
+uses `components/shared/MarketingBlocks` (`PageSection`; the FAQ still
+uses the hero and closing card).
 Prices, free months and the yearly saving come from `lib/plans` through
 `server/plan-facts`, so they follow the plans. The answers describe what the
 app does today (no automatic translation, no card at sign-up, menu goes
@@ -888,13 +889,18 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    and the menus), then the shared `ContactBand`. How it works, who it is
    for and the values cards went (said on home, features and the FAQ).
    `CourseTitle` (the heading between two rules) is shared with features.
-6f. (done, awaiting commit) Pricing page pass: one price card. `PlanSummary`
+6f. (done, `1d93e6c`) Pricing page pass: one price card. `PlanSummary`
    is a single platter (the free months big, the monthly and yearly price,
    "What's included" as leader rows, then the page's own part, the note
    and buttons under a double rule); home uses it too. On /pricing a small
    heading replaces the hero, and the trial is three one-liners inside the
    card (`NumberedLines`, shared with about's house rules) instead of
    plates.
+6g. (done, awaiting commit) Multilingual menu page slimmed (kept for
+   search: "çok dilli QR menü"): small heading, one platter (how it works
+   as numbered lines, what guests get, who it's for, a link to the demo
+   on /features), the questions, the contact band. The demo copy, the
+   cards and the closing card went.
 7. **Next: one page at a time** (owner's rule): the other marketing pages
    get the same treatment, platters only where there is a lot of text.
 

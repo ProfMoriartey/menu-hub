@@ -1251,8 +1251,7 @@
       }
     },
     "demo": {
-      "title": "Pruébalo en el menú de demostración",
-      "intro": "Cambia el idioma del menú de nuestro restaurante de demostración y mira cómo cambia cada plato, incluido el árabe de derecha a izquierda."
+      "title": "Pruébalo en el menú de demostración"
     },
     "details": {
       "title": "Pensado para clientes de todas partes",
@@ -1311,12 +1310,6 @@
           "a": "No. Los menús en varios idiomas están incluidos en el plan."
         }
       }
-    },
-    "cta": {
-      "title": "Ofrece tu menú a cada cliente en su idioma",
-      "text": "Empieza tu prueba gratuita: los menús en varios idiomas están incluidos en el plan.",
-      "start": "Crea tu menú",
-      "pricing": "Ver precios"
     }
   },
   "faqPage": {

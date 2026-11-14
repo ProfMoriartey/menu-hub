@@ -1251,8 +1251,7 @@
       }
     },
     "demo": {
-      "title": "Try it in the demo menu",
-      "intro": "Switch the language of our demo restaurant's menu and watch every dish change, Arabic right to left included."
+      "title": "Try it in the demo menu"
     },
     "details": {
       "title": "Made for guests from everywhere",
@@ -1311,12 +1310,6 @@
           "a": "No. Menus in several languages are included in the plan."
         }
       }
-    },
-    "cta": {
-      "title": "Give every guest your menu in their language",
-      "text": "Start your free trial: menus in several languages are included in the plan.",
-      "start": "Create your menu",
-      "pricing": "See pricing"
     }
   },
   "faqPage": {

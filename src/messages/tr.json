@@ -1251,8 +1251,7 @@
       }
     },
     "demo": {
-      "title": "Demo menüde deneyin",
-      "intro": "Demo restoranımızın menüsünün dilini değiştirin ve her yemeğin değiştiğini görün; sağdan sola Arapça da dahil."
+      "title": "Demo menüde deneyin"
     },
     "details": {
       "title": "Her yerden gelen misafirler için",
@@ -1311,12 +1310,6 @@
           "a": "Hayır. Birden fazla dilde menü plana dahildir."
         }
       }
-    },
-    "cta": {
-      "title": "Her misafire menünüzü kendi dilinde sunun",
-      "text": "Ücretsiz denemenizi başlatın: birden fazla dilde menü plana dahildir.",
-      "start": "Menünüzü oluşturun",
-      "pricing": "Fiyatları görün"
     }
   },
   "faqPage": {
