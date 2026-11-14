@@ -107,7 +107,7 @@ export async function DemoScreen({
                       <LeaderRow
                         nameAs="h4"
                         name={dish.name}
-                        price={dish.displayPrice}
+                        price={<bdi dir="ltr">{dish.displayPrice}</bdi>}
                         muted={soldOut}
                         className="min-w-0 flex-1"
                         nameClassName="text-[0.8125rem]"

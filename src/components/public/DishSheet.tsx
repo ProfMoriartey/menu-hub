@@ -261,7 +261,7 @@ function DishSheetContent({
                     </span>
                   </DialogPrimitive.Title>
                 }
-                price={item.displayPrice}
+                price={<bdi dir="ltr">{item.displayPrice}</bdi>}
                 nameClassName="text-2xl leading-tight font-extrabold"
                 priceClassName="text-primary text-xl"
               />

@@ -94,7 +94,7 @@ function DishLeader({
           {item.name}
         </span>
       }
-      price={<span data-role="primary">{item.displayPrice}</span>}
+      price={<span data-role="primary"><bdi dir="ltr">{item.displayPrice}</bdi></span>}
       // Sold out: name and price step back; the stamp says why.
       muted={item.availability === "sold_out"}
       nameClassName={cn("text-foreground", nameClassName)}

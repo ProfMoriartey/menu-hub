@@ -34,7 +34,8 @@ export function HeroStage({
 
   return (
     <>
-      <div className="flex justify-center lg:absolute lg:left-1/2 lg:top-1/2 lg:w-[58%] lg:-translate-x-1/2 lg:-translate-y-1/2">
+      {/* Phones: the cards come first, so they and the phone's header share the first screen. */}
+      <div className="order-1 flex justify-center lg:order-none lg:absolute lg:left-1/2 lg:top-1/2 lg:w-[58%] lg:-translate-x-1/2 lg:-translate-y-1/2">
         <PhoneShell label={phoneLabel}>
           <div key={active} className={turned ? "plate-turn h-full" : "h-full"}>
             {screens[active]}

@@ -14,7 +14,7 @@ export function Stamp({ className, children, ...props }: StampProps) {
   return (
     <span
       className={cn(
-        "border-sold-out text-sold-out bg-plate/85 inline-block -rotate-8 rounded-[3px] border-[2.5px] px-2 py-0.5 text-[0.8125rem] leading-tight font-extrabold tracking-[0.08em] whitespace-nowrap uppercase [[dir=rtl]_&]:rotate-8",
+        "border-sold-out text-sold-out bg-plate/85 inline-block w-fit -rotate-8 rounded-[3px] border-[2.5px] px-2 py-0.5 text-[0.8125rem] leading-tight font-extrabold tracking-[0.08em] whitespace-nowrap uppercase [[dir=rtl]_&]:rotate-8",
         className,
       )}
       {...props}

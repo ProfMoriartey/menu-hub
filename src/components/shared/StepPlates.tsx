@@ -6,11 +6,11 @@ import { Plate } from "~/components/table/Plate";
 export async function StepPlates({ steps }: { steps: { id: string; title: string; text: string }[] }) {
   const t = await getTranslations("HomePage.steps");
   return (
-    <ol className={cn("grid justify-items-center gap-14 sm:grid-cols-2 lg:gap-8", steps.length === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3")}>
+    <ol className={cn("grid justify-items-center gap-14 sm:grid-cols-2 lg:gap-8", steps.length === 4 ? "2xl:grid-cols-4" : "lg:grid-cols-3")}>
       {steps.map(({ id, title, text }, i) => (
         <li key={id} className="relative w-full max-w-80">
           <Plate as="div" size="fluid" className="@container">
-            <div className="w-[70%] text-center">
+            <div className="w-[70%] pt-[8%] text-center">
               <h3 className="text-[clamp(1.125rem,6.4cqw,1.375rem)] leading-tight font-extrabold rtl:leading-snug">{title}</h3>
               <p className="text-ink-muted mt-2 text-[clamp(0.875rem,4.6cqw,1rem)] leading-snug">{text}</p>
             </div>

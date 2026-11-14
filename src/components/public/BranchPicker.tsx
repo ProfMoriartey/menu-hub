@@ -58,7 +58,7 @@ export function BranchPicker({ restaurantName, branches, allHref, onAll, classNa
       >
         <MapPin className="text-primary h-3.5 w-3.5 shrink-0" aria-hidden />
         {/* Wraps, never cut short: branch names can be long. */}
-        <span className="min-w-0 leading-tight [overflow-wrap:anywhere]">
+        <span className="min-w-0 leading-tight [overflow-wrap:break-word]">
           {current ? current.label : t("chooseBranch", { count: branches.length })}
         </span>
         <ChevronDown className="text-muted-foreground h-3.5 w-3.5 shrink-0" aria-hidden />
