@@ -1,7 +1,8 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { preload } from "react-dom";
+import { DEFAULT_HEADLINE_FONT, HEADLINE_FONT, fontVariables } from "~/styles/fonts";
 import { ThemeProvider, themeInitScript } from "~/context/ThemeContext";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -56,11 +57,6 @@ export async function generateMetadata({
   };
 }
 
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
-
 // One build per language, so pages that don't depend on the visitor (About,
 // Features, KVKK) are rendered once and served from the cache.
 export function generateStaticParams() {
@@ -79,6 +75,11 @@ export default async function LocaleLayout({
     notFound();
   }
   setRequestLocale(locale);
+  preload(HEADLINE_FONT[locale] ?? DEFAULT_HEADLINE_FONT, {
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  });
   // Only what every page needs. Sign-in (Clerk), the site navbar, upload
   // setup and the full set of translations live in (site)/layout.tsx, so
   // public menu pages, the ones guests open from a QR code, don't load them.
@@ -86,7 +87,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className={`${geist.variable}`}
+      className={fontVariables}
       // themeInitScript adds the "dark" class before React hydrates
       suppressHydrationWarning
     >

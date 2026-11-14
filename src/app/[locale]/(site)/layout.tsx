@@ -41,7 +41,7 @@ const clerkAppearance = {
   variables: {
     colorPrimary: "#a0611a",
     borderRadius: "0.625rem",
-    fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
+    fontFamily: "var(--font-sans)",
   },
 };
 

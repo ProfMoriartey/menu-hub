@@ -8,7 +8,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  /* src/styles/fonts.ts: Bricolage for Latin and Turkish, Onest for
+     Cyrillic, Noto Sans Arabic for Arabic; "Site …" are the preloaded
+     self-hosted copies of each headline subset. */
+  --font-sans: "Site Latin", var(--font-bricolage), "Site Cyrillic", var(--font-onest),
+    "Site Arabic", var(--font-noto-arabic), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   /* The home page doodles bob gently once they've slid in (motion-safe only). */
@@ -281,7 +285,44 @@
   }
 }
 
+/* The headline subsets, self-hosted so the locale layout can preload one per
+   locale (src/styles/fonts.ts). Same descriptors as next/font. */
+@font-face {
+  font-family: "Site Latin";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("/fonts/bricolage-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Site Cyrillic";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/onest-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Site Arabic";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/noto-sans-arabic.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+
 @layer base {
+  /* Russian: Onest first, so Latin brand names and digits in a Russian
+     sentence match the Cyrillic around them. */
+  :root:lang(ru) {
+    --font-sans: "Site Cyrillic", var(--font-onest), "Site Arabic",
+      var(--font-noto-arabic), ui-sans-serif, system-ui, sans-serif;
+  }
+  /* Arabic letters join; tracking utilities would pull them apart. */
+  :lang(ar) {
+    letter-spacing: 0 !important;
+  }
   * {
     @apply border-border outline-ring/50;
   }
