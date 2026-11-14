@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `b0d78ca` on
+that cost time before. Last updated 2026-11-14, after commit `b9b9162` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -250,7 +250,7 @@ Applied in dev 2026-11-14.
 - **Owner**: restaurant details (name, address, phone, map link,
   description, logo, social/delivery links) **and** the menu.
 - **Editor**: the menu only (categories, items, availability, duplicate,
-  reorder) plus the Share tab. Sees the Team tab read-only and can leave.
+  reorder) plus the "Share & stats" tab. Sees the Team tab read-only and can leave.
 - **Team management** (`app/actions/team.ts`, dashboard Team tab): owners
   (and admins, from the admin People tab) invite **editors only**, by a
   copyable link (WhatsApp button), and remove editors. Both screens render
@@ -416,7 +416,7 @@ current slug, count scans after the redirect, skip bots/HEAD/repeats within
 **Menus in several languages:** existing columns hold the main language;
 translations sit in `translations` jsonb (see §4). Settings card
 `components/menu-languages/MenuLanguagesSettings` on the admin edit page and
-the owner Details tab. Editor: language tabs in `MenuItemDialog`, a Translate
+the owner Languages tab (`dashboard/[slug]/languages`). Editor: language tabs in `MenuItemDialog`, a Translate
 button per category, "Not translated: …" markers. Public pages localize with
 `server/localize-menu.ts` (guest's language if the menu has it, else main,
 field by field; text in another language than the page gets `lang` +
@@ -427,7 +427,7 @@ admin SEO title/description (untranslated) are only used on main-language
 pages. Slugs stay in the main language. Automatic translation: deferred.
 
 **Branches:** card `components/branches/BranchesSettings` on the admin
-edit page and the owner Details tab (actions in `actions/branches`). Each
+edit page and the owner "Branches & hours" tab (actions in `actions/branches`). Each
 branch opens to its name, address, city, country (admins only; owners see
 it read-only), phone, map link, delivery links and its opening hours. Add
 (name only; it starts in the main branch's country and time zone), reorder
@@ -753,7 +753,7 @@ only: never merge it, and never use its logo.** Look at it with
   crimson **damask** in dark mode (`--cloth-ground` `#521320` with a faint
   diamond-and-flower SVG). Text that sits straight on the cloth goes on a
   **napkin** (`napkin` utility: cream `--napkin`, rounded, soft shadow;
-  transparent in dark mode, where the damask is calm enough). `PageHero`
+  in dark mode the page colour, also solid). `PageHero`
   and `PageSection` headings have napkins built in; page-specific text
   (home, features, about, multilingual, FAQ, KVKK, menus, the demo
   controls) has them added by hand. **New text placed straight on the
@@ -779,9 +779,9 @@ only: never merge it, and never use its logo.** Look at it with
   (Before that fix the preview mixed night ink with day colours and the
   damask looked invisible there; judge the cloth on the real menu.) Napkins there are the restaurant's
   background colour, with 10px corners (`--napkin-radius`; 1rem made a
-  one-word heading look like a pill); on Plain they are transparent, and their padding is cancelled
-  with negative margins, so plain menus look exactly as before. Napkins
-  sit under category headings, the filter result line, the empty states,
+  one-word heading look like a pill), solid by day and at night; on Plain
+  they are transparent. Napkins sit under category headings (centred,
+  with the number of dishes), the filter result line, the empty states,
   "Menu by Menupedia" and the dish page's back button. Pages under the
   wrapper must not paint `bg-background` themselves (it hides the cloth).
   Existing restaurants stay Plain until the owner changes it; new ones
@@ -900,7 +900,7 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    as numbered lines, what guests get, who it's for, a link to the demo
    on /features), the questions, the contact band. The demo copy, the
    cards and the closing card went.
-6h. (done, awaiting commit) FAQ page pass: small heading with links to
+6h. (done, `b9b9162`) FAQ page pass: small heading with links to
    the four topics, every question on one platter (`FaqList plain`,
    `CourseTitle` per topic), links to /multilingual-menu and /pricing under
    their topics, then the contact band. New questions: PDF menu vs
@@ -908,6 +908,21 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    contract (owner 2026-11-14: monthly has no contract, stop any time; a
    yearly plan is paid up front and can be cancelled, no refund). The old
    `PageHero` and `CtaCard` are gone from `MarketingBlocks`.
+6i. (done, awaiting commit) Napkins solid at night everywhere (owner's
+   call 2026-11-14): site `.dark` `--napkin` is the page colour with a
+   shadow, and restaurant damask napkins no longer fade out at night
+   (`--cloth-damask-napkin` removed). Restaurant menus: category names
+   centred on their napkin with the number of dishes (`MenuLayout`, and the
+   editor preview), and the search box solid in dark mode.
+6j. (done, awaiting commit) Owner dashboard, part 1: tabs in the order an
+   owner works (Menu, Details, Appearance, Languages, Branches & hours,
+   Share & stats, Team, Plan; editors: Menu, Share & stats, Team), the menu
+   languages on their own tab (`/languages`, out of Branches), a shorter
+   restaurant header (breadcrumb only inside a category, smaller logo and
+   name), the open tab scrolled into view on phones (`ActiveTabIntoView`),
+   and /dashboard opening the menu directly for someone with one
+   restaurant, no invitations and not an admin. Part 2 (agreed): a scan
+   count on the menu tab and home card, and the role hint only for editors.
 8. **Next:** a guide page for search and AI ("How to make a QR menu",
    Turkish and English first); to be planned with the owner.
 7. **Next: one page at a time** (owner's rule): the other marketing pages

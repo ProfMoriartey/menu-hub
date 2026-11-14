@@ -79,10 +79,14 @@ export function MenuLayout({
         >
           <h2
             id={`${categorySectionId(category.slug)}-heading`}
-            className="napkin text-foreground -mx-3 -mt-1 mb-2 w-fit px-3 py-1 text-xl font-semibold sm:text-2xl"
+            className="napkin text-foreground mx-auto mb-3 w-fit px-4 py-1 text-center text-xl font-semibold sm:text-2xl"
           >
+            {/* Centred like a course on a printed menu, with its number of dishes. */}
             <span lang={category.lang} dir="auto">
               {category.name}
+            </span>
+            <span className="text-muted-foreground ms-2 text-base font-normal tabular-nums" aria-hidden>
+              · {category.menuItems.length}
             </span>
           </h2>
           {/* Compact rows are plain list items; cards are a grid. */}

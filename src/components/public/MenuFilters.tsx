@@ -161,7 +161,7 @@ export function MenuFilterBar({ filters }: { filters: MenuFilters }) {
               aria-label={t("searchLabel")}
               enterKeyHint="search"
               // The native clear button differs per browser; ours is below.
-              className="bg-card h-10 ps-9 pe-10 text-base [&::-webkit-search-cancel-button]:hidden"
+              className="bg-card dark:bg-card h-10 ps-9 pe-10 text-base [&::-webkit-search-cancel-button]:hidden"
             />
             {filters.query && (
               <button

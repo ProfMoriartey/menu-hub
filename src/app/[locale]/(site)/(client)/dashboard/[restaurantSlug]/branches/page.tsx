@@ -6,19 +6,19 @@ import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { ExperimentalNote } from "~/components/dashboard/ExperimentalNote";
-import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
 import { BranchesSettings } from "~/components/branches/BranchesSettings";
 import { getBranchesForEdit } from "~/server/branches";
 import { countryOptions } from "~/lib/countries";
 
 export const metadata: Metadata = {
-  title: "Branches & languages | Menupedia",
-  description: "Manage your restaurant's branches and menu languages.",
+  title: "Branches & hours | Menupedia",
+  description: "Manage your restaurant's branches and their opening hours.",
 };
 
 /**
- * The owner's branches and menu languages. Experimental: every plan has
- * them for now. Owners and admins only.
+ * The owner's branches, each with its address and opening hours (the menu
+ * languages have their own tab). Experimental: every plan has them for
+ * now. Owners and admins only.
  */
 export default async function RestaurantBranchesPage({
   params,
@@ -42,25 +42,13 @@ export default async function RestaurantBranchesPage({
         activeTab="branches"
       />
       <ExperimentalNote />
-      <div className="space-y-8">
-        <BranchesSettings
-          restaurantId={restaurant.id}
-          branches={await getBranchesForEdit(restaurant.id)}
-          maxBranches={restaurant.maxBranches}
-          isAdmin={role === "admin"}
-          countries={countryOptions(locale)}
-        />
-        <MenuLanguagesSettings
-          restaurantId={restaurant.id}
-          isAdmin={role === "admin"}
-          enabled={restaurant.multilingualEnabled}
-          maxExtraLanguages={restaurant.maxExtraLanguages}
-          mainLanguage={restaurant.mainLanguage}
-          extraLanguages={restaurant.extraLanguages}
-          description={restaurant.description}
-          translations={restaurant.translations}
-        />
-      </div>
+      <BranchesSettings
+        restaurantId={restaurant.id}
+        branches={await getBranchesForEdit(restaurant.id)}
+        maxBranches={restaurant.maxBranches}
+        isAdmin={role === "admin"}
+        countries={countryOptions(locale)}
+      />
     </>
   );
 }

@@ -84,6 +84,13 @@ export default async function ClientUserDashboardPage() {
   const memberOf = new Set(assignments.map((a) => a.restaurant.id));
   const openInvitations = invitations.filter((invite) => !memberOf.has(invite.restaurantId));
 
+  // Most owners have one restaurant (one sign-up per account): with nothing
+  // else to show (no invitations, not an admin), open its menu directly.
+  const only = restaurants.length === 1 ? restaurants[0] : undefined;
+  if (only && openInvitations.length === 0 && !isAdmin) {
+    return redirect({ href: `/dashboard/${only.slug}/menu`, locale: await getLocale() });
+  }
+
   // Setup progress for every card, with one grouped query per table.
   const setupFacts = await getSetupFacts(restaurants);
 

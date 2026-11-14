@@ -133,7 +133,7 @@ export function MenuColorPreview({
 
       <p
         data-role="text"
-        className="napkin text-foreground -mx-2 w-fit px-2 text-lg font-semibold"
+        className="napkin text-foreground mx-auto w-fit px-3 text-center text-lg font-semibold"
       >
         {categories[0]?.name ?? t("sampleCategory")}
       </p>

@@ -176,8 +176,10 @@
   --plate-shadow: oklch(0% 0 0 / 0.55);
 
   --cloth-ground: #521320; /* the damask's deep red; ivory text 12.5:1 */
-  --napkin: transparent;
-  --napkin-shadow: none;
+  /* Napkins stay solid at night too, in the page colour, so text and
+     buttons on the damask read the same as by day. */
+  --napkin: var(--background);
+  --napkin-shadow: 0 6px 14px -6px rgb(0 0 0 / 0.45);
 
   --secondary: #43302e;
   --secondary-foreground: #f3e9e1;
@@ -328,9 +330,8 @@
   background-size: 56px 56px;
 }
 
-/* A cream napkin under text that sits on the tablecloth, so it reads on the
-   check. At night the damask is calm enough for text, so the napkin turns
-   see-through (same padding, so nothing moves between themes). */
+/* A napkin under text that sits on the tablecloth, so it reads on the
+   pattern: cream by day, the page's dark colour at night. */
 @utility napkin {
   background-color: var(--napkin);
   border-radius: var(--napkin-radius, 1rem);
@@ -351,7 +352,6 @@
   --cloth-tint: 14%; /* damask ground */
   --cloth-ink: #000; /* damask lattice and flowers */
   --cloth-ink-strength: 0.16;
-  --cloth-damask-napkin: 100%; /* at night the damask is calm enough for text */
   --cloth-napkin-shadow: 0 6px 14px -6px rgb(0 0 0 / 0.3);
 }
 .dark,
@@ -360,8 +360,7 @@
   --cloth-tint: 26%;
   --cloth-ink: #fff;
   --cloth-ink-strength: 0.21;
-  --cloth-damask-napkin: 0%;
-  --cloth-napkin-shadow: none;
+  --cloth-napkin-shadow: 0 6px 14px -6px rgb(0 0 0 / 0.45);
 }
 .menu-cloth-plain {
   --napkin: transparent;
@@ -395,7 +394,6 @@
    tinted with the main colour (a deep shade of it at night). The pattern
    is a mask, so one drawing serves dark ink by day and light ink at night. */
 .menu-cloth-damask {
-  --napkin: color-mix(in srgb, var(--background) var(--cloth-damask-napkin), transparent);
   background-color: color-mix(in oklab, var(--primary) var(--cloth-tint), var(--background));
 }
 .menu-cloth-damask::before {
