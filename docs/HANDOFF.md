@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `1d93e6c` on
+that cost time before. Last updated 2026-11-14, after commit `b0d78ca` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -629,8 +629,7 @@ a `value`).
 `faqPage`): pages written for searches like "QR menü fiyatları", "çok dilli
 QR menü" and common questions. Each has a question list
 (`components/shared/FaqList`, plain `<details>`) with FAQPage JSON-LD, and
-uses `components/shared/MarketingBlocks` (`PageSection`; the FAQ still
-uses the hero and closing card).
+uses `components/shared/MarketingBlocks` (`PageSection`).
 Prices, free months and the yearly saving come from `lib/plans` through
 `server/plan-facts`, so they follow the plans. The answers describe what the
 app does today (no automatic translation, no card at sign-up, menu goes
@@ -896,11 +895,21 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    heading replaces the hero, and the trial is three one-liners inside the
    card (`NumberedLines`, shared with about's house rules) instead of
    plates.
-6g. (done, awaiting commit) Multilingual menu page slimmed (kept for
+6g. (done, `b0d78ca`) Multilingual menu page slimmed (kept for
    search: "çok dilli QR menü"): small heading, one platter (how it works
    as numbered lines, what guests get, who it's for, a link to the demo
    on /features), the questions, the contact band. The demo copy, the
    cards and the closing card went.
+6h. (done, awaiting commit) FAQ page pass: small heading with links to
+   the four topics, every question on one platter (`FaqList plain`,
+   `CourseTitle` per topic), links to /multilingual-menu and /pricing under
+   their topics, then the contact band. New questions: PDF menu vs
+   Menupedia, own website, ordering/paying (no; delivery app links),
+   contract (owner 2026-11-14: monthly has no contract, stop any time; a
+   yearly plan is paid up front and can be cancelled, no refund). The old
+   `PageHero` and `CtaCard` are gone from `MarketingBlocks`.
+8. **Next:** a guide page for search and AI ("How to make a QR menu",
+   Turkish and English first); to be planned with the owner.
 7. **Next: one page at a time** (owner's rule): the other marketing pages
    get the same treatment, platters only where there is a lot of text.
 

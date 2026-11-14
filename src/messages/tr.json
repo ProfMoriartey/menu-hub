@@ -1331,6 +1331,14 @@
             "q": "Misafirlerin uygulama indirmesi gerekir mi?",
             "a": "Hayır. Misafirler QR kodu telefon kamerasıyla okutur ve menü tarayıcıda açılır."
           },
+          "pdf": {
+            "q": "PDF menüden farkı ne?",
+            "a": "PDF, ekrandaki basılı bir menüdür: telefonda okunması zor, tek dilde ve her değişiklikte yeni bir dosya. Menupedia telefon için yapılmış gerçek bir menü sayfasıdır; her misafirin kendi dilindedir ve saniyeler içinde kendiniz değiştirirsiniz."
+          },
+          "website": {
+            "q": "Kendi web sitem olması gerekir mi?",
+            "a": "Hayır. Menünüzün Menupedia'da kendi bağlantısı ve QR koduyla kendi sayfası olur. Web siteniz varsa oradan menünüze bağlantı verebilirsiniz."
+          },
           "how": {
             "q": "Nasıl başlarım?",
             "a": "Kaydolun, restoranınızın bilgilerini girin ve yemeklerinizi ekleyin. Bir kontrol listesi ve özel bir önizleme her şeyi hazırlamanıza yardım eder. Kaydınızı onayladığımızda menünüzü yayına alın ve masa kartlarınızı basın."
@@ -1392,6 +1400,10 @@
           "data": {
             "q": "Misafirlerin kaydolması ya da bilgi vermesi gerekir mi?",
             "a": "Hayır. Misafirler menünüzü kaydolmadan ve hiçbir şey girmeden okur."
+          },
+          "order": {
+            "q": "Misafirler menüden sipariş verebilir veya ödeme yapabilir mi?",
+            "a": "Hayır, menü okumak içindir. Paket servis uygulamalarınızın bağlantılarını ekleyebilirsiniz (Yemeksepeti, Getir, Trendyol Yemek, Migros Yemek, Uber Eats, Deliveroo ya da kendi bağlantınız); misafirler bunları menünüzden açar."
           }
         }
       },
@@ -1405,16 +1417,18 @@
           "pay": {
             "q": "Nasıl ödeme yaparım?",
             "a": "Kartla ya da nakit; aylık veya yıllık. Ücretsiz deneme süresince hiçbir ücret alınmaz."
+          },
+          "contract": {
+            "q": "Sözleşme var mı? İstediğim zaman bırakabilir miyim?",
+            "a": "Aylık planda sözleşme yok: istediğiniz zaman bırakabilirsiniz. Yıllık plan peşin ödenir; iptal edebilirsiniz ama yılın kalanı iade edilmez."
           }
         }
       }
     },
-    "more": {
-      "title": "Hâlâ sorunuz mu var?",
-      "text": "Bize e-posta gönderin ya da WhatsApp'tan yazın; yardımcı olmaktan memnuniyet duyarız.",
-      "contact": "Bize ulaşın",
-      "pricing": "Fiyatları görün",
-      "multilingual": "Çok dilli menüler"
+    "links": {
+      "topics": "Konulara göre sorular",
+      "multilingual": "Çok dilli menüler hakkında daha fazlası",
+      "pricing": "Ayrıntılı fiyatlar"
     }
   },
   "NotFoundPage": {

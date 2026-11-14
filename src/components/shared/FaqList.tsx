@@ -10,18 +10,21 @@ export interface FaqItem {
 /**
  * Questions that open to their answers. Plain <details>, so it works without
  * JavaScript and every answer is in the page for search engines and AI
- * assistants, even while closed.
+ * assistants, even while closed. `plain` drops the card, for a list that
+ * already sits on a platter (the FAQ page): dotted lines between questions.
  */
-export function FaqList({ items, className }: { items: FaqItem[]; className?: string }) {
+export function FaqList({ items, plain, className }: { items: FaqItem[]; plain?: boolean; className?: string }) {
   return (
     <div
       className={cn(
-        "bg-card border-border divide-border divide-y rounded-2xl border shadow-sm",
+        plain
+          ? "divide-border divide-y-2 divide-dotted"
+          : "bg-card border-border divide-border divide-y rounded-2xl border shadow-sm",
         className,
       )}
     >
       {items.map(({ question, answer }) => (
-        <details key={question} className="group px-5 py-4 sm:px-6">
+        <details key={question} className={cn("group py-4", plain ? "" : "px-5 sm:px-6")}>
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
             {question}
             <ChevronDown

@@ -1331,6 +1331,14 @@
             "q": "Do guests need to download an app?",
             "a": "No. Guests scan the QR code with their phone camera and the menu opens in the browser."
           },
+          "pdf": {
+            "q": "How is this different from a PDF menu?",
+            "a": "A PDF is a printed menu on a screen: hard to read on a phone, in one language, and a new file every time something changes. Menupedia is a real menu page made for phones, in each guest's language, and you change it yourself in seconds."
+          },
+          "website": {
+            "q": "Do I need my own website?",
+            "a": "No. Your menu gets its own page on Menupedia, with its own link and QR code. If you have a website, you can link to your menu from it."
+          },
           "how": {
             "q": "How do I get started?",
             "a": "Sign up, enter your restaurant's details and add your dishes. A checklist and a private preview help you get everything ready. Once we've confirmed your sign-up, put your menu live and print your table cards."
@@ -1392,6 +1400,10 @@
           "data": {
             "q": "Do guests have to sign up or share any details?",
             "a": "No. Guests read your menu without signing up or entering anything."
+          },
+          "order": {
+            "q": "Can guests order or pay through the menu?",
+            "a": "No, the menu is for reading. You can add links to your delivery apps (Yemeksepeti, Getir, Trendyol Yemek, Migros Yemek, Uber Eats, Deliveroo or a link of your own), and guests open them from your menu."
           }
         }
       },
@@ -1405,16 +1417,18 @@
           "pay": {
             "q": "How do I pay?",
             "a": "By card or in cash, monthly or yearly. Nothing is charged during the free trial."
+          },
+          "contract": {
+            "q": "Is there a contract? Can I stop any time?",
+            "a": "Monthly plans have no contract: you can stop whenever you like. A yearly plan is paid up front; you can cancel it, but the rest of the year isn't refunded."
           }
         }
       }
     },
-    "more": {
-      "title": "Still have a question?",
-      "text": "Email us or message us on WhatsApp. We're happy to help.",
-      "contact": "Get in touch",
-      "pricing": "See pricing",
-      "multilingual": "Multilingual menus"
+    "links": {
+      "topics": "Questions by topic",
+      "multilingual": "More about multilingual menus",
+      "pricing": "Pricing in detail"
     }
   },
   "NotFoundPage": {

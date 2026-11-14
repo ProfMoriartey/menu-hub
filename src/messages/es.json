@@ -1331,6 +1331,14 @@
             "q": "¿Los clientes tienen que descargar una app?",
             "a": "No. Los clientes escanean el código QR con la cámara del móvil y el menú se abre en el navegador."
           },
+          "pdf": {
+            "q": "¿En qué se diferencia de un menú en PDF?",
+            "a": "Un PDF es un menú impreso en una pantalla: difícil de leer en el móvil, en un solo idioma y un archivo nuevo cada vez que algo cambia. Menupedia es una página de menú de verdad, hecha para el móvil, en el idioma de cada cliente, y la cambias tú en segundos."
+          },
+          "website": {
+            "q": "¿Necesito mi propia web?",
+            "a": "No. Tu menú tiene su propia página en Menupedia, con su enlace y su código QR. Si tienes web, puedes enlazar tu menú desde ella."
+          },
           "how": {
             "q": "¿Cómo empiezo?",
             "a": "Regístrate, introduce los datos de tu restaurante y añade tus platos. Una lista de pasos y una vista previa privada te ayudan a dejarlo todo listo. Cuando confirmemos tu registro, publica tu menú e imprime tus tarjetas de mesa."
@@ -1392,6 +1400,10 @@
           "data": {
             "q": "¿Tienen los clientes que registrarse o dar algún dato?",
             "a": "No. Los clientes leen tu menú sin registrarse ni introducir nada."
+          },
+          "order": {
+            "q": "¿Pueden los clientes pedir o pagar desde el menú?",
+            "a": "No, el menú es para leer. Puedes añadir enlaces a tus apps de reparto (Yemeksepeti, Getir, Trendyol Yemek, Migros Yemek, Uber Eats, Deliveroo o un enlace propio), y los clientes las abren desde tu menú."
           }
         }
       },
@@ -1405,16 +1417,18 @@
           "pay": {
             "q": "¿Cómo pago?",
             "a": "Con tarjeta o en efectivo, al mes o al año. No se cobra nada durante la prueba gratuita."
+          },
+          "contract": {
+            "q": "¿Hay permanencia? ¿Puedo dejarlo cuando quiera?",
+            "a": "El plan mensual no tiene permanencia: puedes dejarlo cuando quieras. El plan anual se paga por adelantado; puedes cancelarlo, pero el resto del año no se reembolsa."
           }
         }
       }
     },
-    "more": {
-      "title": "¿Aún tienes preguntas?",
-      "text": "Escríbenos por correo o por WhatsApp; te ayudaremos con gusto.",
-      "contact": "Contáctanos",
-      "pricing": "Ver precios",
-      "multilingual": "Menús multilingües"
+    "links": {
+      "topics": "Preguntas por tema",
+      "multilingual": "Más sobre menús en varios idiomas",
+      "pricing": "Precios en detalle"
     }
   },
   "NotFoundPage": {
