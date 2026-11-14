@@ -35,7 +35,7 @@ export async function ContactBand() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground/60 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground rounded-[10px] bg-transparent"
+                className="border-primary-foreground/60 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground dark:hover:bg-primary-foreground/10 dark:hover:text-primary-foreground rounded-[10px] bg-transparent dark:bg-transparent"
                 asChild
               >
                 <a href={`mailto:${CONTACT_EMAIL}`}>
