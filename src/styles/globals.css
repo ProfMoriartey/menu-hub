@@ -94,6 +94,20 @@
   --menu-header-foreground: #2a2315;
   --menu-header-muted: #73695a;
 
+  /* Plates (components/shared/Plate). Change these to recolour every plate:
+     the well and its rim-side edge, the shade on the well's near wall, the
+     rim from lit to shaded, the glaze highlights, the painted band on the
+     rim (transparent for none) and the shadow under the plate. */
+  --plate: oklch(99.6% 0.003 85);
+  --plate-well-edge: oklch(96.5% 0.008 85);
+  --plate-well-shade: oklch(50% 0.04 75 / 0.2);
+  --plate-rim-light: oklch(99% 0.004 85);
+  --plate-rim: oklch(95.5% 0.01 85);
+  --plate-rim-shadow: oklch(89.5% 0.016 88.45);
+  --plate-glaze: oklch(100% 0 0 / 0.95);
+  --plate-band: oklch(55.14% 0.115 63.3 / 0.55);
+  --plate-shadow: oklch(35% 0.05 70 / 0.3);
+
   --secondary: oklch(90.72% 0.051 68.34); /* #F8DBBD, a pale orange - for secondary elements */
   --secondary-foreground: oklch(25.99% 0.026 82.52); /* stone-700 for text on secondary */
   --muted: oklch(90.72% 0.051 68.34); /* #F8DBBD, as secondary */
@@ -148,6 +162,17 @@
   --menu-header-foreground: #e1dcd1;
   --menu-header-muted: #9d9689;
 
+  /* Dimmed plates for now; item 5 (dark mode) tries brighter ones. */
+  --plate: oklch(30% 0.026 83);
+  --plate-well-edge: oklch(27.5% 0.026 83);
+  --plate-well-shade: oklch(0% 0 0 / 0.45);
+  --plate-rim-light: oklch(31.5% 0.026 83);
+  --plate-rim: oklch(27% 0.026 83);
+  --plate-rim-shadow: oklch(22.5% 0.027 84);
+  --plate-glaze: oklch(100% 0 0 / 0.07);
+  --plate-band: oklch(80.52% 0.177 82.8 / 0.45);
+  --plate-shadow: oklch(0% 0 0 / 0.55);
+
   --secondary: oklch(35.03% 0.033 84.81); /* stone-600: #57534E - Darker neutral for secondary elements */
   --secondary-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
   --muted: oklch(35.03% 0.033 84.81); /* stone-600 */
@@ -178,6 +203,51 @@
   --sidebar-accent-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
   --sidebar-border: oklch(35.03% 0.033 84.81); /* stone-600 */
   --sidebar-ring: oklch(80.52% 0.177 82.8); /* #F6B200, as primary */
+}
+
+/* A plate seen from above (components/shared/Plate), lit from the top-left:
+   a raised rim (lighter top-left, darker bottom-right) with a glaze glint
+   and a painted band (::after), and a sunken well (::before) whose near wall is in
+   shade and far wall catches the light. Colours: the --plate tokens. */
+@utility plate {
+  --plate-rim-width: 11%;
+  position: relative;
+  isolation: isolate;
+  /* cqw in the well's shading scales with the plate. */
+  container-type: inline-size;
+  border-radius: 9999px;
+  color: var(--foreground);
+  background:
+    radial-gradient(ellipse 20% 7% at 30% 8%, var(--plate-glaze), transparent 70%),
+    linear-gradient(135deg, var(--plate-rim-light) 15%, var(--plate-rim) 55%, var(--plate-rim-shadow) 100%);
+  box-shadow:
+    0 1.5rem 3rem -0.5rem var(--plate-shadow),
+    0 0.25rem 0.5rem var(--plate-shadow),
+    inset 0 0 0 1px var(--plate-rim-shadow);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: var(--plate-rim-width);
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(circle at 38% 32%, var(--plate-glaze), var(--plate) 45%, var(--plate-well-edge));
+    box-shadow:
+      inset 1.2cqw 1.6cqw 2.4cqw var(--plate-well-shade),
+      inset -0.6cqw -0.8cqw 1.2cqw var(--plate-glaze);
+  }
+
+  /* The painted band, halfway across the rim: a real border, which the
+     browser anti-aliases (a gradient ring would look jagged). */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--plate-rim-width) / 2);
+    z-index: -1;
+    border-radius: inherit;
+    border: 1.5px solid var(--plate-band);
+    pointer-events: none;
+  }
 }
 
 /* Rows that scroll sideways (chips, category bars) without a scrollbar. */

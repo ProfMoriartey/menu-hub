@@ -8,6 +8,8 @@ import { planLines, planMoney } from "~/components/plans/plan-lines";
 import { ContactBand } from "~/components/shared/ContactBand";
 import { FaqList, faqStructuredData } from "~/components/shared/FaqList";
 import { PageHero, PageSection } from "~/components/shared/MarketingBlocks";
+import { Plate } from "~/components/shared/Plate";
+import { StepPlates } from "~/components/shared/StepPlates";
 import { FREE_MONTHS, OFFERED_TIERS } from "~/lib/plans";
 import { jsonLd } from "~/server/menu-structured-data";
 import { planFacts } from "~/server/plan-facts";
@@ -62,12 +64,16 @@ export default async function PricingPage({ params }: Props) {
 
       <PageSection id="included" title={t("included.title")} intro={t("included.intro")}>
         <div className="mx-auto grid max-w-4xl items-center gap-8 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-          <div className="bg-card border-border rounded-2xl border p-8 text-center shadow-sm">
-            <p className="text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">
-              {tPlans("freeMonthsShort", { count: FREE_MONTHS })}
-            </p>
-            <p className="text-muted-foreground mt-3">{tPlans("thenPerMonth", { price: facts.price })}</p>
-          </div>
+          <Plate size="fluid" className="@container mx-auto max-w-[22rem]">
+            <div className="w-[68%] text-center">
+              <p className="text-[clamp(1.75rem,12cqw,2.75rem)] leading-[1.05] font-extrabold tracking-tight text-balance rtl:leading-snug">
+                {tPlans("freeMonthsShort", { count: FREE_MONTHS })}
+              </p>
+              <p className="text-muted-foreground mt-2 text-[clamp(0.875rem,4.8cqw,1rem)] leading-snug">
+                {tPlans("thenPerMonth", { price: facts.price })}
+              </p>
+            </div>
+          </Plate>
           <ul className="bg-card border-border space-y-4 rounded-2xl border p-6 shadow-sm sm:p-8">
             {included.map((line) => (
               <li key={line} className="flex items-baseline gap-3">
@@ -93,17 +99,9 @@ export default async function PricingPage({ params }: Props) {
       </PageSection>
 
       <PageSection id="trial" title={t("trial.title")}>
-        <ol className="grid gap-4 md:grid-cols-3">
-          {TRIAL_STEPS.map((id, index) => (
-            <li key={id} className="bg-card border-border relative rounded-xl border p-5 shadow-sm">
-              <span className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold tabular-nums">
-                {index + 1}
-              </span>
-              <h3 className="mt-4 font-semibold">{t(`trial.${id}.title`, facts)}</h3>
-              <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{t(`trial.${id}.text`, facts)}</p>
-            </li>
-          ))}
-        </ol>
+        <StepPlates
+          steps={TRIAL_STEPS.map((id) => ({ id, title: t(`trial.${id}.title`, facts), text: t(`trial.${id}.text`, facts) }))}
+        />
       </PageSection>
 
       <PageSection id="pricing-faq" title={t("faq.title")} className="max-w-3xl">

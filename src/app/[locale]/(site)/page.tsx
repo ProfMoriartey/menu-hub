@@ -19,7 +19,9 @@ import { MenuDemo } from "~/components/features/MenuDemo";
 import { MenuCard } from "~/components/menus/MenuCard";
 import { PricingSection } from "~/components/plans/PricingSection";
 import { ContactBand } from "~/components/shared/ContactBand";
+import { Plate } from "~/components/shared/Plate";
 import { DoodleReveal } from "~/components/shared/Reveal";
+import { StepPlates } from "~/components/shared/StepPlates";
 import CoffeeDoodle from "~/components/svg/CoffeeDoodle";
 import GroovySittingDoodle from "~/components/svg/GroovySittingDoodle";
 import SittingDoodle from "~/components/svg/SittingDoodle";
@@ -96,25 +98,30 @@ export default async function HomePage() {
           ),
         }}
       />
-      {/* Hero */}
+      {/* Hero: the headline on a big plate (on phones wider than the screen,
+          as if seen up close), the working demo menu beside it. */}
       <section>
-        <div className="container mx-auto grid items-center gap-12 px-4 pt-8 pb-16 sm:pt-12 lg:grid-cols-2 lg:pb-24">
-          <div className="text-center lg:text-start">
-            <h1 className="text-4xl font-extrabold tracking-tight text-balance sm:text-6xl">
-              {t("hero.title")}
-            </h1>
-            <p className="text-muted-foreground mx-auto mt-5 max-w-xl text-lg leading-relaxed lg:mx-0">
-              {t("hero.intro")}
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <Button size="lg" className="rounded-[10px] px-6" asChild>
-                <Link href="/start">{t("hero.ctaStart")}</Link>
-              </Button>
-              <Button size="lg" variant="outline" className="rounded-[10px] px-6" asChild>
-                <Link href="/menus">{t("hero.ctaMenus")}</Link>
-              </Button>
-            </div>
-            <ul className="text-muted-foreground mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm lg:justify-start">
+        <div className="container mx-auto grid grid-cols-[minmax(0,1fr)] items-center gap-12 px-4 pt-6 pb-16 sm:pt-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:pb-24">
+          <div className="flex flex-col items-center">
+            <Plate size="fluid" className="@container w-[min(40rem,130vw)] lg:w-full lg:max-w-[40rem]">
+              <div className="flex w-[min(68%,calc(100vw-3.5rem))] flex-col items-center text-center">
+                <h1 className="text-[clamp(1.75rem,8.2vw,2.75rem)] leading-[1.05] font-extrabold tracking-tight text-balance lg:text-[clamp(1.9rem,7cqw,3.1rem)] rtl:leading-[1.3]">
+                  {t("hero.title")}
+                </h1>
+                <p className="text-muted-foreground mt-4 text-[clamp(0.9375rem,3.6vw,1.0625rem)] leading-snug text-pretty lg:text-[clamp(0.9375rem,2.7cqw,1.125rem)]">
+                  {t("hero.intro")}
+                </p>
+                <div className="mt-6 flex flex-wrap justify-center gap-3">
+                  <Button className="sm:h-10 sm:px-6" asChild>
+                    <Link href="/start">{t("hero.ctaStart")}</Link>
+                  </Button>
+                  <Button variant="outline" className="sm:h-10 sm:px-6" asChild>
+                    <Link href="/menus">{t("hero.ctaMenus")}</Link>
+                  </Button>
+                </div>
+              </div>
+            </Plate>
+            <ul className="text-muted-foreground mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
               {(["point1", "point2", "point3"] as const).map((point) => (
                 <li key={point} className="flex items-center gap-1.5">
                   <Check className="text-primary h-4 w-4" aria-hidden /> {t(`hero.${point}`)}
@@ -130,30 +137,20 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section aria-labelledby="steps-title">
-        <div className="container mx-auto grid items-center gap-10 px-4 py-16 lg:grid-cols-[1fr_auto] lg:py-20">
+      <section aria-labelledby="steps-title" className="container mx-auto px-4 py-16 lg:py-20">
+        <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-start">
           <div>
             <h2 id="steps-title" className="text-3xl font-bold tracking-tight">
               {t("steps.title")}
             </h2>
             <p className="text-muted-foreground mt-3 max-w-2xl">{t("steps.intro")}</p>
-            <ol className="mt-10 grid gap-8 sm:grid-cols-3">
-              {STEPS.map((step, i) => (
-                <li key={step}>
-                  <span className="bg-primary text-primary-foreground flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold">
-                    {i + 1}
-                  </span>
-                  <h3 className="mt-4 text-lg font-semibold">{t(`steps.${step}.title`)}</h3>
-                  <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                    {t(`steps.${step}.text`)}
-                  </p>
-                </li>
-              ))}
-            </ol>
           </div>
-          <DoodleReveal from="end" className="mx-auto w-64 lg:w-80">
+          <DoodleReveal from="end" className="w-44 shrink-0 sm:w-56">
             <CoffeeDoodle />
           </DoodleReveal>
+        </div>
+        <div className="mt-10">
+          <StepPlates steps={STEPS.map((id) => ({ id, title: t(`steps.${id}.title`), text: t(`steps.${id}.text`) }))} />
         </div>
       </section>
 
