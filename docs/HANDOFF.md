@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `4f9359e` on
+that cost time before. Last updated 2026-11-14, after commit `fb55780` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -833,18 +833,21 @@ Git history (`git log`) has a detailed commit message for each change.
 each, owner commits).** Done and committed: font, pricing structure,
 plates, home sections, crimson rebrand (`d308882`), tablecloth backgrounds, dashboard
 touches (`4f9359e`), the restaurant menus' cloth choice (migration
-`0020`, applied in dev and production). Done, awaiting the owner's
-commit: the new logo (see §8). Next:
+`0020`, applied in dev and production), the new logo (`fb55780`). Done,
+awaiting the owner's commit: dark mode in ivory and gold (item 4). Next:
 1. (done) Tablecloth backgrounds.
 2. (done) A cloth choice for restaurant menus.
 3. (done) New logo.
-4. **Dark mode in ivory and gold** (chosen 2026-11-14, from the logo
-   mock-ups): the pink (`#f2a7b1`) goes; in dark mode headings/name-like
-   accents are ivory and buttons, prices, links and the selected category
-   gold, so the site uses the logo's three colours. Plan to be shown to
-   the owner before building (touches the dark tokens, the restaurant
-   default dark theme, and the menu damask's night ground, which is built
-   from the dark primary).
+4. (built, on trial) **Dark mode in ivory and gold**: the pink is gone;
+   dark `--primary`/`--accent` are the logo's gold `#dcaa48` (dark text
+   `#2a1a0a` on it, 7.9:1; gold 5.8–8.4:1 on the dark surfaces), text stays
+   ivory. Same in `DEFAULT_THEME.dark` / `SITE_TOKENS.dark`, so restaurants
+   without their own colours follow. The menu damask's night ground now
+   comes from its own token `--cloth-night-tone` (`:root`; `#f2a7b1` keeps
+   the site's crimson; custom palettes set it to their primary). Open
+   question for the owner: keep the damask crimson, or set the token to
+   the gold (which gives a chocolate brown). Comparison:
+   https://claude.ai/artifact/Kth7mdrm7H82Bpk1nGgASa
 
 **Possible follow-ups to team management:** sending invitation emails (needs
 an email service such as Resend and a verified sender domain; links are

@@ -53,9 +53,9 @@ export const DEFAULT_THEME: ColorTheme = withHeader({
     background: "#221316",
     card: "#30201f",
     text: "#f3e9e1",
-    primary: "#f2a7b1",
+    primary: "#dcaa48",
     secondary: "#43302e",
-    accent: "#f2a7b1",
+    accent: "#dcaa48",
   },
 });
 
@@ -249,17 +249,17 @@ const SITE_TOKENS: Record<ThemeMode, Record<string, string>> = {
     "card-foreground": "#f3e9e1",
     popover: "#30201f",
     "popover-foreground": "#f3e9e1",
-    primary: "#f2a7b1",
-    "primary-foreground": "#2a0e14",
+    primary: "#dcaa48",
+    "primary-foreground": "#2a1a0a",
     secondary: "#43302e",
     "secondary-foreground": "#f3e9e1",
-    accent: "#f2a7b1",
-    "accent-foreground": "#2a0e14",
+    accent: "#dcaa48",
+    "accent-foreground": "#2a1a0a",
     muted: "#43302e",
     "muted-foreground": "#c9b9b1",
     border: "#4a3533",
     input: "#4a3533",
-    ring: "#f2a7b1",
+    ring: "#dcaa48",
     ...headerTokens(DEFAULT_THEME.dark),
   },
 };
@@ -321,6 +321,8 @@ export function paletteTokens(p: Palette): Record<string, string> {
     border,
     input: border,
     ring: p.primary,
+    // Their damask at night is woven from their own main colour.
+    "cloth-night-tone": p.primary,
     ...headerTokens(p),
   };
 }

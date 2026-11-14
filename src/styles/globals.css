@@ -112,6 +112,11 @@
   /* The tablecloth (.site-cloth) and the napkins on it (.napkin). */
   --cloth-ground: #fbf6f0;
   --cloth-thread: rgb(168 30 48 / 0.2);
+  /* What a restaurant menu's damask is woven from at night (.menu-cloth-damask),
+     in both modes (the editor previews night colours in a light dashboard);
+     restaurants with their own colours use their main colour instead
+     (lib/color-theme paletteTokens). #f2a7b1 gives the site damask's crimson. */
+  --cloth-night-tone: #f2a7b1;
   --napkin: #fbf6f0;
   --napkin-shadow: 0 6px 14px -6px rgb(60 10 20 / 0.35);
 
@@ -148,10 +153,12 @@
 }
 
 .dark {
-  /* Dark mode: deep wine-tinted neutrals (dinner by candlelight), a soft rose
-     for the brand (crimson itself is too dark to read on them) and stoneware
-     plates. Contrast: body text 15:1, muted 8:1 on cards, rose 9:1 on the
-     page, dark text on rose buttons 9:1. */
+  /* Dark mode: deep wine-tinted neutrals (dinner by candlelight), in the
+     logo's colours: ivory text, and gold (the logo's ribbon) for buttons,
+     links, prices and the chosen category (crimson itself is too dark to
+     read on these). Stoneware plates. Contrast: body text 15:1, muted 8:1 on
+     cards, gold 8.4:1 on the page, 7.3:1 on cards, 5.8:1 on chips, dark
+     text on gold buttons 7.9:1. */
   --background: #221316;
   --card: #30201f;
   --popover: #30201f;
@@ -161,10 +168,10 @@
   --popover-foreground: #f3e9e1;
   --muted-foreground: #c9b9b1; /* 6.5:1+ on cards, the page and muted chips */
 
-  --primary: #f2a7b1; /* a soft rose: the crimson, lifted for dark backgrounds */
-  --primary-foreground: #2a0e14;
-  --accent: #f2a7b1;
-  --accent-foreground: #2a0e14;
+  --primary: #dcaa48; /* the logo's gold */
+  --primary-foreground: #2a1a0a;
+  --accent: #dcaa48;
+  --accent-foreground: #2a1a0a;
 
   --attention: #e0899a;
 
@@ -195,9 +202,9 @@
   --destructive: oklch(70.4% 0.191 22.216); /* Brighter red for dark mode (remains similar) */
   --border: #4a3533;
   --input: #4a3533;
-  --ring: #f2a7b1; /* as primary */
+  --ring: #dcaa48; /* as primary */
 
-  --chart-1: #f2a7b1; /* as primary */
+  --chart-1: #dcaa48; /* as primary */
   --chart-2: oklch(70.4% 0.191 22.216); /* red-400 */
   --chart-3: #8a7a74;
   --chart-4: #f3e9e1;
@@ -212,12 +219,12 @@
 
   --sidebar: #30201f; /* Matches card background */
   --sidebar-foreground: #f3e9e1;
-  --sidebar-primary: #f2a7b1; /* as primary */
-  --sidebar-primary-foreground: #2a0e14;
+  --sidebar-primary: #dcaa48; /* as primary */
+  --sidebar-primary-foreground: #2a1a0a;
   --sidebar-accent: #43302e;
   --sidebar-accent-foreground: #f3e9e1;
   --sidebar-border: #4a3533;
-  --sidebar-ring: #f2a7b1; /* as primary */
+  --sidebar-ring: #dcaa48; /* as primary */
 }
 
 /* A plate seen from above (components/shared/Plate), lit from the top-left:
@@ -420,16 +427,17 @@
   -webkit-mask: var(--damask) 0 0 / 40px 40px repeat;
   mask: var(--damask) 0 0 / 40px 40px repeat;
 }
-/* At night the ground is the main colour itself at a deep lightness, like
-   the site's damask: the default rose (#f2a7b1) gives the site's crimson
-   (#521320), a green restaurant a deep green. Browsers without relative
+/* At night the ground is a deep shade of --cloth-night-tone, like the
+   site's damask: the default (#f2a7b1) gives the site's crimson (#521320);
+   a restaurant with its own colours gets its main colour, deep (green
+   gives a deep green). Browsers without relative
    colours keep the tinted ground above. The last rule keeps the editor's
    Light-tab preview on the day ground inside a dark dashboard. */
 @supports (color: oklch(from red l c h)) {
   .dark .menu-cloth-damask,
   .cloth-night .menu-cloth-damask,
   .cloth-night.menu-cloth-damask {
-    background-color: oklch(from var(--primary) 0.3 calc(c * 1.05) h);
+    background-color: oklch(from var(--cloth-night-tone) 0.3 calc(c * 1.05) h);
   }
   .cloth-day .menu-cloth-damask,
   .cloth-day.menu-cloth-damask {
