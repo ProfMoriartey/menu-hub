@@ -4,7 +4,7 @@ import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
 import { planLines, planMoney } from "~/components/plans/plan-lines";
 import { LeaderRow } from "~/components/shared/LeaderRow";
-import { Plate } from "~/components/shared/Plate";
+import { Plate, Platter } from "~/components/shared/Plate";
 import { FREE_MONTHS, OFFERED_TIERS, TIER_FEATURES } from "~/lib/plans";
 
 /**
@@ -35,11 +35,13 @@ export async function PlanSummary({ link }: { link: { href: string; label: strin
             </p>
           </div>
         </Plate>
-        <ul className="bg-card border-border space-y-4 rounded-2xl border p-6 shadow-sm sm:p-8">
-          {included.map((line) => (
-            <LeaderRow key={line} name={line} value={t("included.yes")} />
-          ))}
-        </ul>
+        <Platter>
+          <ul className="space-y-4">
+            {included.map((line) => (
+              <LeaderRow key={line} name={line} value={t("included.yes")} />
+            ))}
+          </ul>
+        </Platter>
       </div>
       <p className="napkin text-muted-foreground mx-auto mt-8 w-fit max-w-xl px-4 py-2 text-center text-sm">{tPlans("pricingNote")}</p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

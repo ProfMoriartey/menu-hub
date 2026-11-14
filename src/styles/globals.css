@@ -15,17 +15,6 @@
     "Site Arabic", var(--font-noto-arabic), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-  /* The home page doodles bob gently once they've slid in (motion-safe only). */
-  --animate-doodle-float: doodle-float 7s ease-in-out infinite;
-  @keyframes doodle-float {
-    0%,
-    100% {
-      transform: translateY(0) rotate(0deg);
-    }
-    50% {
-      transform: translateY(-10px) rotate(-1.5deg);
-    }
-  }
 }
 
 @theme inline {
@@ -145,11 +134,6 @@
   --chart-4: oklch(82.91% 0.093 120.93); /* yellow-500 */
   --chart-5: oklch(76.2% 0.12 100.9); /* lime-500 */
 
-  /* Doodles (components/svg): the blob, the ink and a tile behind them.
-     Light: crimson blob, dark ink, no tile. */
-  --doodle-fill: var(--primary);
-  --doodle-ink: var(--foreground);
-  --doodle-backdrop: transparent;
 }
 
 .dark {
@@ -210,12 +194,6 @@
   --chart-4: #f3e9e1;
   --chart-5: oklch(76.2% 0.12 100.9); /* lime-500 */
 
-  /* Dark: the drawings leave faces and skin see-through and draw hair and
-     outlines in solid ink, so light ink would look like a negative. They
-     keep dark ink and sit on a soft warm tile instead, like stickers. */
-  --doodle-fill: #9b1c2e; /* the light crimson, on the tile */
-  --doodle-ink: oklch(25.99% 0.026 82.52); /* stone-700 */
-  --doodle-backdrop: #ead9d3; /* a warm rose-beige */
 
   --sidebar: #30201f; /* Matches card background */
   --sidebar-foreground: #f3e9e1;

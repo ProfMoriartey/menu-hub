@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
-import SittingDoodle from "~/components/svg/SittingDoodle";
 import { sitePageMetadata } from "~/server/public-metadata";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -56,8 +55,8 @@ export default async function AboutPage({ params }: Props) {
 
   return (
     <div className="text-foreground">
-      <section className="container mx-auto flex max-w-5xl flex-col items-center gap-8 px-4 pt-16 pb-12 sm:pt-24 md:flex-row">
-        <div className="napkin flex-1 px-6 py-6 text-center md:text-start">
+      <section className="container mx-auto max-w-3xl px-4 pt-16 pb-12 sm:pt-24">
+        <div className="napkin px-6 py-6 text-center">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
             {t("hero.title")}
           </h1>
@@ -65,7 +64,6 @@ export default async function AboutPage({ params }: Props) {
             {t("hero.intro")}
           </p>
         </div>
-        <SittingDoodle className="h-48 w-48 shrink-0 sm:h-64 sm:w-64" />
       </section>
 
       <section

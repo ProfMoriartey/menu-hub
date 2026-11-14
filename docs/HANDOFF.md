@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `202c33c` on
+that cost time before. Last updated 2026-11-14, after commit `2441cdd` on
 branch `new/unslop` (the redesign: see §8 "Design system" and the
 redesign steps in §9).
 
@@ -38,7 +38,7 @@ There are three audiences:
   Dev runs with Turbopack (`next dev --turbo`).
 - **Tailwind CSS v4** (CSS-first config in `src/styles/globals.css`), shadcn/ui
   components on Radix (`src/components/ui`), `lucide-react` icons. Animation
-  is CSS (`tw-animate-css`, `components/shared/Reveal`); `framer-motion` and
+  is CSS (`tw-animate-css`); `framer-motion` and
   `react-scroll-parallax` are no longer imported and can be removed from
   `package.json`.
 - **Drizzle ORM** on **PostgreSQL** (driver `postgres`). Schema in
@@ -183,8 +183,7 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
   `MenuItemDetail` (server), `PublicPageControls`, `PreviewBanner`,
   `SoldOutBadge`, `menu-types.ts`.
 - `components/shared/`: `Navbar` (slim sticky bar; phones get a panel),
-  `SiteFooter` (marketing pages, via `LayoutWrapper`), `Reveal` /
-  `DoodleReveal` (slide in on scroll, motion-safe), `VenueTypeIcon`,
+  `SiteFooter` (marketing pages, via `LayoutWrapper`), `VenueTypeIcon`,
   `ThemeToggle`, `LanguageSwitcher`,
   `RestaurantLogo` (logo or initials; admin, dashboard and public).
 
@@ -613,10 +612,12 @@ phone beside it), "How it works" (`StepPlates`), "What your guests see"
 featured first), the plan (`PlanSummary`, as on /pricing, linking to
 /pricing) and the `#contact` band (`components/shared/ContactBand`:
 WhatsApp, email; shared with /pricing). The navbar's "Get in touch" points
-there (`CONTACT_HREF`). Texts: `HomePage`; footer: `Footer`. **Doodles**
-(`components/svg/*`) draw their blob in `--doodle-fill` (default primary)
-and outline in `--doodle-ink` (default current text colour); set those on a
-parent to adapt them, as the contact band does. When a feature is added, add it to
+there (`CONTACT_HREF`). Texts: `HomePage`; footer: `Footer`. **No doodles**: the drawings were
+removed 2026-11-14 (the owner: the site has enough personality); section
+headings are centred on napkins, and a **platter** (`Platter`, the
+rectangular plate) goes only under larger blocks of text: the guests
+points, the features list, and the plan's list in `PlanSummary` (so on
+/pricing too). The contact band is centred. When a feature is added, add it to
 the Features page's `GROUPS` and messages (`featuresPage.features`).
 
 **Pricing, multilingual menu and FAQ pages** (`/pricing`,
@@ -839,8 +840,9 @@ Git history (`git log`) has a detailed commit message for each change.
 each, owner commits).** Done and committed: font, pricing structure,
 plates, home sections, crimson rebrand (`d308882`), tablecloth backgrounds, dashboard
 touches (`4f9359e`), the restaurant menus' cloth choice (migration
-`0020`, applied in dev and production), the new logo (`fb55780`), dark mode in ivory and gold (`202c33c`).
-Done, awaiting the owner's commit: the clean-up (item 5). Next:
+`0020`, applied in dev and production), the new logo (`fb55780`), dark mode in ivory and gold (`202c33c`), the clean-up
+(`2441cdd`). Done, awaiting the owner's commit: the home page pass (item
+6). Next:
 1. (done) Tablecloth backgrounds.
 2. (done) A cloth choice for restaurant menus.
 3. (done) New logo.
@@ -857,6 +859,11 @@ Done, awaiting the owner's commit: the clean-up (item 5). Next:
 5. (done) Clean-up after the redesign: the last pinks gone (warnings,
    scan chart), the unused old logo image `public/menupedia1.png`
    deleted, dashboard and admin on the night crimson in dark mode.
+6. (done) Home page pass: doodles removed everywhere (home, about,
+   contact band; drawings, `Reveal`, their CSS); headings stay centred;
+   platters under the guests points and the plan's list.
+7. **Next: one page at a time** (owner's rule): the other marketing pages
+   get the same treatment, platters only where there is a lot of text.
 
 **Possible follow-ups to team management:** sending invitation emails (needs
 an email service such as Resend and a verified sender domain; links are

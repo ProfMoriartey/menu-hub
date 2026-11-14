@@ -12,11 +12,7 @@ import { ContactBand } from "~/components/shared/ContactBand";
 import { LeaderRow } from "~/components/shared/LeaderRow";
 import { PageSection } from "~/components/shared/MarketingBlocks";
 import { Plate, PlatePhoto, Platter } from "~/components/shared/Plate";
-import { DoodleReveal } from "~/components/shared/Reveal";
 import { StepPlates } from "~/components/shared/StepPlates";
-import CoffeeDoodle from "~/components/svg/CoffeeDoodle";
-import GroovySittingDoodle from "~/components/svg/GroovySittingDoodle";
-import SittingDoodle from "~/components/svg/SittingDoodle";
 import { getDemoMenus } from "~/server/demo-menu";
 import { getDirectoryVenues } from "~/server/directory-venues";
 import { venueWithBranches } from "~/lib/menus-directory";
@@ -131,18 +127,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* How it works: the heading and the doodle side by side, near the middle. */}
+      {/* How it works. */}
       <section aria-labelledby="steps-title" className="container mx-auto px-4 py-16 lg:py-20">
-        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-6 text-center sm:flex-row sm:gap-12 sm:text-start">
-          <div className="napkin px-6 py-4">
-            <h2 id="steps-title" className="text-3xl font-bold tracking-tight">
-              {t("steps.title")}
-            </h2>
-            <p className="text-muted-foreground mt-3 max-w-xl">{t("steps.intro")}</p>
-          </div>
-          <DoodleReveal from="end" className="w-44 shrink-0 sm:w-56">
-            <CoffeeDoodle />
-          </DoodleReveal>
+        <div className="napkin mx-auto w-fit max-w-2xl px-6 py-4 text-center">
+          <h2 id="steps-title" className="text-3xl font-bold tracking-tight">
+            {t("steps.title")}
+          </h2>
+          <p className="text-muted-foreground mt-3">{t("steps.intro")}</p>
         </div>
         <div className="mt-10">
           <StepPlates steps={STEPS.map((id) => ({ id, title: t(`steps.${id}.title`), text: t(`steps.${id}.text`) }))} />
@@ -152,13 +143,15 @@ export default async function HomePage() {
       {/* What your guests see: what the menu page does for them, and dishes from the demo menu on plates. */}
       <PageSection id="guests" title={t("guests.title")} intro={t("guests.intro")}>
         <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2">
-          <ul className="napkin px-6 py-5 text-lg font-semibold">
-            {GUEST_POINTS.map((p) => (
-              <li key={p} className="border-border border-b-2 border-dotted py-4 first:pt-0 last:border-b-0">
-                {t(`guests.${p}`)}
-              </li>
-            ))}
-          </ul>
+          <Platter>
+            <ul className="text-lg font-semibold">
+              {GUEST_POINTS.map((p) => (
+                <li key={p} className="border-border border-b-2 border-dotted py-4 first:pt-0 last:border-b-0 last:pb-0">
+                  {t(`guests.${p}`)}
+                </li>
+              ))}
+            </ul>
+          </Platter>
           <ul className="grid grid-cols-2 gap-x-6 gap-y-8">
             {dishes.map((dish) => (
               <li key={dish.id} className="flex flex-col items-center gap-3 text-center">
@@ -172,16 +165,11 @@ export default async function HomePage() {
 
       {/* Features, set like a short menu on a platter. */}
       <section aria-labelledby="features-title" className="container mx-auto px-4 py-16 lg:py-20">
-        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-6 text-center sm:flex-row sm:gap-12 sm:text-start">
-          <DoodleReveal from="start" className="w-44 shrink-0 sm:w-52">
-            <SittingDoodle />
-          </DoodleReveal>
-          <div className="napkin px-6 py-4">
-            <h2 id="features-title" className="text-3xl font-bold tracking-tight">
-              {t("features.title")}
-            </h2>
-            <p className="text-muted-foreground mt-3 max-w-xl">{t("features.intro")}</p>
-          </div>
+        <div className="napkin mx-auto w-fit max-w-2xl px-6 py-4 text-center">
+          <h2 id="features-title" className="text-3xl font-bold tracking-tight">
+            {t("features.title")}
+          </h2>
+          <p className="text-muted-foreground mt-3">{t("features.intro")}</p>
         </div>
         <Platter className="mx-auto mt-10 max-w-3xl">
           <ul className="space-y-5">
@@ -206,21 +194,16 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Menus near you: the heading and its link close together, near the middle. */}
+      {/* Menus near you: the heading, centred, with its link. */}
       {shown.length > 0 && (
         <section aria-labelledby="menus-title">
           <div className="container mx-auto px-4 py-16 lg:py-20">
-            <div className="mx-auto flex max-w-4xl flex-wrap items-end justify-center gap-x-12 gap-y-4">
-              <div className="flex items-center gap-5">
-                <DoodleReveal from="start" className="hidden w-40 shrink-0 sm:block">
-                  <GroovySittingDoodle />
-                </DoodleReveal>
-                <div className="napkin px-6 py-4 text-center sm:text-start">
-                  <h2 id="menus-title" className="text-3xl font-bold tracking-tight">
-                    {isLocal ? t("menus.titleLocal", { country: local.name }) : t("menus.title")}
-                  </h2>
-                  <p className="text-muted-foreground mt-3">{t("menus.intro")}</p>
-                </div>
+            <div className="flex flex-col items-center gap-4">
+              <div className="napkin w-fit max-w-2xl px-6 py-4 text-center">
+                <h2 id="menus-title" className="text-3xl font-bold tracking-tight">
+                  {isLocal ? t("menus.titleLocal", { country: local.name }) : t("menus.title")}
+                </h2>
+                <p className="text-muted-foreground mt-3">{t("menus.intro")}</p>
               </div>
               <Button variant="outline" asChild>
                 <Link href="/menus">
