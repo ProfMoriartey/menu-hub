@@ -1163,7 +1163,8 @@
     "included": {
       "title": "Her şey plana dahil",
       "intro": "Ek paket yok; okutma, masa ya da yemek başına ücret yok.",
-      "link": "Tüm özellikleri görün"
+      "link": "Tüm özellikleri görün",
+      "yes": "Dahil"
     },
     "trial": {
       "title": "Ücretsiz deneme nasıl işler?",
@@ -1214,11 +1215,7 @@
       }
     },
     "cta": {
-      "title": "Ücretsiz denemenizi başlatın",
-      "text": "Menünüzü bugün oluşturun, {months} boyunca hiçbir ücret ödemeyin.",
-      "start": "Menünüzü oluşturun",
-      "faq": "SSS'yi okuyun",
-      "contact": "Bize soru sorun"
+      "start": "Menünüzü oluşturun"
     }
   },
   "multilingualPage": {

@@ -3,42 +3,20 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { Check } from "lucide-react";
-import { formatMoney } from "~/lib/billing";
-import { PLAN_CURRENCY, TIER_FEATURES, periodPrice, type Tier } from "~/lib/plans";
+import { TIER_FEATURES, periodPrice, type Tier } from "~/lib/plans";
+import { planLines, planMoney } from "./plan-lines";
 
 /** "$45" in the page's language. */
 export function usePlanMoney() {
   const locale = useLocale();
-  return (amount: number) =>
-    formatMoney(amount, PLAN_CURRENCY, locale).replace(/[.,]00(?=\D*$)/, "");
+  return (amount: number) => planMoney(amount, locale);
 }
 
 /** What a tier includes, a line each (sign-up form and pricing section). */
 export function PlanFeatureList({ tier, className }: { tier: Tier; className?: string }) {
   const t = useTranslations("Plans");
   const money = usePlanMoney();
-  const f = TIER_FEATURES[tier];
-  const lines = [
-    t("everything"),
-    f.maxBranches === 1
-      ? t("oneBranch")
-      : f.maxBranches === null && f.extraBranchPrice === 0
-        ? t("branchesNoLimit")
-        : t("branchesIncluded", { count: f.includedBranches }),
-    ...(f.extraBranchPrice > 0
-      ? [
-          f.maxBranches === null
-            ? t("extraBranchesNoLimit", { price: money(f.extraBranchPrice) })
-            : t("extraBranches", { price: money(f.extraBranchPrice), max: f.maxBranches }),
-        ]
-      : []),
-    f.customColors ? t("customColors") : t("defaultColors"),
-    f.extraLanguages === null
-      ? t("allLanguages")
-      : f.extraLanguages === 0
-        ? t("oneLanguage")
-        : t("extraLanguages", { count: f.extraLanguages }),
-  ];
+  const lines = planLines(tier, t, money);
   return (
     <ul className={className ?? "space-y-1.5 text-sm"}>
       {lines.map((line) => (

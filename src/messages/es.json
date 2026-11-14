@@ -1163,7 +1163,8 @@
     "included": {
       "title": "Todo está incluido en el plan",
       "intro": "Sin extras ni cargos por escaneo, mesa o plato.",
-      "link": "Ver todas las funciones"
+      "link": "Ver todas las funciones",
+      "yes": "Incluido"
     },
     "trial": {
       "title": "Cómo funciona la prueba gratuita",
@@ -1214,11 +1215,7 @@
       }
     },
     "cta": {
-      "title": "Empieza tu prueba gratuita",
-      "text": "Crea tu menú hoy y no pagues nada durante {months}.",
-      "start": "Crea tu menú",
-      "faq": "Leer las preguntas frecuentes",
-      "contact": "Haznos una pregunta"
+      "start": "Crea tu menú"
     }
   },
   "multilingualPage": {

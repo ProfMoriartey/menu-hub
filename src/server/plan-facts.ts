@@ -1,11 +1,10 @@
 // src/server/plan-facts.ts
 import { getTranslations } from "next-intl/server";
-import { formatMoney } from "~/lib/billing";
+import { planMoney } from "~/components/plans/plan-lines";
 import {
   FREE_MONTHS,
   MONTHS_PAID_PER_YEAR,
   OFFERED_TIERS,
-  PLAN_CURRENCY,
   TIER_FEATURES,
   periodPrice,
 } from "~/lib/plans";
@@ -18,9 +17,7 @@ import {
  */
 export async function planFacts(locale: string) {
   const t = await getTranslations({ locale, namespace: "Plans" });
-  // As on the pricing cards: "$25", not "$25.00".
-  const money = (amount: number) =>
-    formatMoney(amount, PLAN_CURRENCY, locale).replace(/[.,]00(?=\D*$)/, "");
+  const money = (amount: number) => planMoney(amount, locale);
   const monthly = TIER_FEATURES[OFFERED_TIERS[0] ?? "standard"].price;
   return {
     months: t("months", { count: FREE_MONTHS }),

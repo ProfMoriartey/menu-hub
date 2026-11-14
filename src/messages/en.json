@@ -1163,7 +1163,8 @@
     "included": {
       "title": "Everything is in the plan",
       "intro": "No add-ons, and no charges per scan, table or dish.",
-      "link": "See every feature"
+      "link": "See every feature",
+      "yes": "Included"
     },
     "trial": {
       "title": "How the free trial works",
@@ -1214,11 +1215,7 @@
       }
     },
     "cta": {
-      "title": "Start your free trial",
-      "text": "Set up your menu today and pay nothing for {months}.",
-      "start": "Create your menu",
-      "faq": "Read the FAQ",
-      "contact": "Ask us a question"
+      "start": "Create your menu"
     }
   },
   "multilingualPage": {

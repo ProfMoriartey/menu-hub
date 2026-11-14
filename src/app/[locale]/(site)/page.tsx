@@ -8,8 +8,6 @@ import {
   Clock,
   Languages,
   LayoutTemplate,
-  Mail,
-  MessageCircle,
   Palette,
   QrCode,
   Zap,
@@ -20,15 +18,14 @@ import { Button } from "~/components/ui/button";
 import { MenuDemo } from "~/components/features/MenuDemo";
 import { MenuCard } from "~/components/menus/MenuCard";
 import { PricingSection } from "~/components/plans/PricingSection";
+import { ContactBand } from "~/components/shared/ContactBand";
 import { DoodleReveal } from "~/components/shared/Reveal";
 import CoffeeDoodle from "~/components/svg/CoffeeDoodle";
 import GroovySittingDoodle from "~/components/svg/GroovySittingDoodle";
 import SittingDoodle from "~/components/svg/SittingDoodle";
-import ZombieingDoodle from "~/components/svg/ZombieingDoodle";
 import { getDemoMenus } from "~/server/demo-menu";
 import { getDirectoryVenues } from "~/server/directory-venues";
 import { venueWithBranches } from "~/lib/menus-directory";
-import { CONTACT_EMAIL, whatsappLink } from "~/lib/site-contact";
 import { jsonLd } from "~/server/menu-structured-data";
 import { sitePageMetadata } from "~/server/public-metadata";
 import { cachedPageOrigin } from "~/server/public-origin";
@@ -67,10 +64,9 @@ const MENUS_SHOWN = 6;
 export default async function HomePage() {
   // Menus near you show open/closed now.
   await connection();
-  const [t, tFeature, tContact, locale, { venues, local }] = await Promise.all([
+  const [t, tFeature, locale, { venues, local }] = await Promise.all([
     getTranslations("HomePage"),
     getTranslations("featuresPage.features"),
-    getTranslations("featuresPage.contact"),
     getLocale(),
     getDirectoryVenues(),
   ]);
@@ -229,51 +225,7 @@ export default async function HomePage() {
 
       <PricingSection className="container mx-auto px-4 py-16 lg:py-20" />
 
-      {/* Get in touch */}
-      <section
-        id="contact"
-        aria-labelledby="contact-title"
-        className="container mx-auto scroll-mt-20 px-4 py-16 lg:py-24"
-      >
-        <div className="bg-primary text-primary-foreground relative overflow-hidden rounded-3xl px-6 py-12 sm:px-12">
-          <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_auto]">
-            <div className="text-center lg:text-start">
-              <h2 id="contact-title" className="text-3xl font-bold tracking-tight sm:text-4xl">
-                {t("contact.title")}
-              </h2>
-              <p className="mt-3 max-w-xl text-lg opacity-90 lg:mx-0">{t("contact.text")}</p>
-              <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-                <Button
-                  size="lg"
-                  className="bg-background text-foreground hover:bg-background/90 rounded-[10px]"
-                  asChild
-                >
-                  <a href={whatsappLink(tContact("whatsappMessage"))} target="_blank" rel="noreferrer">
-                    <MessageCircle className="h-4 w-4" aria-hidden /> {tContact("whatsapp")}
-                  </a>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-primary-foreground/60 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground rounded-[10px] bg-transparent"
-                  asChild
-                >
-                  <a href={`mailto:${CONTACT_EMAIL}`}>
-                    <Mail className="h-4 w-4" aria-hidden /> {tContact("email")}
-                  </a>
-                </Button>
-              </div>
-            </div>
-            {/* The band is amber in both themes: dark ink on a cream blob, no tile. */}
-            <DoodleReveal
-              from="bottom"
-              className="mx-auto w-56 sm:w-72 [--doodle-backdrop:transparent] [--doodle-fill:oklch(97%_0.02_85)] [--doodle-ink:oklch(25.99%_0.026_82.52)]"
-            >
-              <ZombieingDoodle />
-            </DoodleReveal>
-          </div>
-        </div>
-      </section>
+      <ContactBand />
     </div>
   );
 }
