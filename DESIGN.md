@@ -147,9 +147,7 @@ renders without the font. viewBox 469 x 100, the same proportions as the old
 logo, so the navbar and footer only changed their `src`. **Pending the
 owner's approval.**
 
-The old `public/menupedia-logo.svg`, `-dark.svg` and `.png` are kept
-(unreferenced now; delete once the owner approves). The site's structured
-data uses the new square mark, `public/icon-512.png`.
+The site's structured data uses the new square mark, `public/icon-512.png`.
 
 ## Raster provenance
 

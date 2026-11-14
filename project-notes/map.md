@@ -36,5 +36,5 @@ One line per area: where it is, and what to copy.
 - `scripts/dev/`: local setup, seed, UI checker. `scripts/*.mjs`: uploads cleanup and photo shrink.
 
 ## Assets and docs
-- `public/brand/` wordmarks, `public/menupedia-logo*`, icons; demo food photos in `public/demo/*.jpg` and `lokanta-logo.svg`.
+- `public/brand/` wordmarks, icons; demo food photos in `public/demo/*.jpg` and `lokanta-logo.svg`.
 - `DESIGN.md`, `PRODUCT.md`, `.impeccable/surfaces/` (direction contract for home, marketing, `/menus`, guest menus, sign-in).

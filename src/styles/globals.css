@@ -227,10 +227,10 @@
 /* Public pages: overscroll (iOS rubber-band) shows cloth, not cream. The
    dashboard and admin have no .table-world, so they keep their ground. Same
    values as --table-cloth, which is only defined inside the scope. */
-html:has(.table-world) {
+html:has(.table-world:not(.table-inset)) {
   background-color: #7a1f2b;
 }
-html.dark:has(.table-world) {
+html.dark:has(.table-world:not(.table-inset)) {
   background-color: #6a1a25;
 }
 /* Guest menus: the off-white ground (warm near-black at night). */
