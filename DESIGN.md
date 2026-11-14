@@ -270,10 +270,10 @@ and ink).
   ticket 3 (see "Home pattern"). The only restaurant colour on the home is
   Lokanta Demo's green band on the phone's screen (white on it, 10:1); no
   brand colour sits on a dimmed plate.
-- Arabic and Cyrillic faces are not preloaded on /ar and /ru (one font
-  instance serves all locales); the Arabic headline swaps in after load.
-  /ru still preloads Bricolage latin (~77 KB) though Russian pages set Onest
-  first.
+- ~~Arabic and Cyrillic faces are not preloaded on /ar and /ru.~~ Done in
+  ticket 8: each locale preloads only its headline face (latin Bricolage
+  77 KB, cyrillic Onest 16 KB, Noto Sans Arabic 166 KB), self-hosted in
+  `public/fonts` (see `table/fonts.ts`).
 - ~~Ticket 2: the "●" in "Open now" ... draw the dot in CSS.~~ Done in
   ticket 7 (`OpenStatusText` draws it; no "●" glyph left in the code).
 - ~~Guest menus in The Table, sold-out stamp clear of names, guest portals
@@ -287,7 +287,5 @@ and ink).
   primary, `--table-font`, brass-ink focus, see-through card on a porcelain
   plate. It could not be seen offline (the widget needs Clerk); check it once
   with real keys.
-- Geist is still declared (and preloaded) in the root layout for every page.
-  Once all public pages are inside `<TableWorld>`, move it to the dashboard
-  and admin layouts so public pages preload only Bricolage (latin ~77 KB
-  woff2).
+- ~~Geist preloaded on every page.~~ Done in ticket 8: only the dashboard
+  and admin layouts load it (`src/styles/geist.tsx`).

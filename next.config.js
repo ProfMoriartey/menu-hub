@@ -28,6 +28,18 @@ const nextConfig = {
       },
     ];
   },
+  // The self-hosted headline fonts (src/components/table/fonts.ts): a new
+  // version gets a new file name, so they can be cached for good.
+  async headers() {
+    return [
+      {
+        source: "/fonts/:file*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+    ];
+  },
   images: {
     // Smaller files than WebP alone, for guests on mobile data.
     formats: ["image/avif", "image/webp"],

@@ -3,7 +3,7 @@
 One line per area: where it is, and what to copy.
 
 ## Routes (`src/app/[locale]`)
-- `layout.tsx`: root. Sets `<html lang dir>` (rtl for `ar`), Geist font, theme provider.
+- `layout.tsx`: root. Sets `<html lang dir>` (rtl for `ar`), theme provider. Geist is loaded by the dashboard and admin layouts (`src/styles/geist.tsx`).
 - `(site)/`: shared layout (Clerk, navbar, messages). Marketing pages (`page.tsx`, `about`, `faq`, `features`, `pricing`, `menus`, `multilingual-menu`, `kvkk`, `start`, `invite/[token]`) and `sign-in/[[...sign-in]]`. Copy a sibling page.
 - `(site)/(client)/dashboard/[restaurantSlug]/...`: owner dashboard (menu, edit, team, share, plan, branches, colors).
 - `(site)/admin/...`: system admin (users, requests, payments, restaurants).
@@ -23,7 +23,7 @@ One line per area: where it is, and what to copy.
 
 ## Styles and fonts
 - `src/styles/globals.css`: dashboard/shadcn tokens in `:root` and `.dark` (oklch, warm stone). Table tokens (`--table-*`) only inside `.table-world` (and `.dark .table-world`). Utilities for them live in `@theme inline` and resolve to nothing outside `.table-world`.
-- `src/components/table/fonts.ts`: Bricolage Grotesque (latin), Onest (cyrillic), Noto Sans Arabic. Loaded only on routes that render `TableWorld`. Dashboard and admin keep Geist.
+- `src/components/table/fonts.ts`: Bricolage Grotesque (latin), Onest (cyrillic), Noto Sans Arabic. Loaded only on routes that render `TableWorld`; the headline subset per locale is self-hosted in `public/fonts` and preloaded by `TableWorld`. Dashboard and admin keep Geist.
 
 ## i18n
 - Messages: `src/messages/{en,tr,ar,es,ru}.json`. Routing: `src/i18n/routing.ts` (default `en`, prefix always present). Use `Link`/`redirect` from `src/i18n/navigation.ts`.
