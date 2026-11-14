@@ -9,6 +9,7 @@ Needs Postgres 16 binaries in `/usr/lib/postgresql/16/bin` and a `postgres` syst
 | `pnpm dev` | Next dev server on :3000. |
 | `pnpm check:ui [baseUrl] [paths...] [--shots dir]` | Browser sweep (paths x en/tr/ar/es/ru x 320/390/768/1440). Exits 1 on overflow or console errors. |
 | `pnpm check:lcp [baseUrl] [paths...] [--runs n]` | LCP median at 390 px, CPU 4x and Fast 3G, cold cache (default: the 4 seeded menus). Run against `pnpm build && pnpm start` (load `.env.development.local` into the shell first), not `pnpm dev`. |
+| `node scripts/dev/tap-test.mjs [baseUrl]` | Home hero place cards on /en and /ar: tap (390), click (1440) and keyboard, with and without reduced motion; each card must turn the phone to its language (rtl for Arabic). Exits 1 on failure. |
 | `pnpm lint` / `pnpm typecheck` / `pnpm i18n:check` | Static checks. |
 
 ## Env (`.env.development.local`, git-ignored; values are dummies)
