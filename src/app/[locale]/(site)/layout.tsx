@@ -35,11 +35,11 @@ const clerkLocalizations = {
   tr: withTitle(trTR, "{{applicationName}} ile devam edin"),
 };
 
-// Sign-in screens in Menupedia's colours. The primary is the darker brand
-// orange that keeps white button text readable (see --primary in globals.css).
+// Sign-in screens in Menupedia's colours: the brand crimson, which keeps
+// white button text readable (see --primary in globals.css).
 const clerkAppearance = {
   variables: {
-    colorPrimary: "#a0611a",
+    colorPrimary: "#9b1c2e",
     borderRadius: "0.625rem",
     fontFamily: "var(--font-sans)",
   },

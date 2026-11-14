@@ -79,20 +79,21 @@
   --popover-foreground: oklch(25.99% 0.026 82.52); /* stone-700: #44403C */
   --muted-foreground: oklch(35.03% 0.033 84.81); /* stone-600: #57534E */
 
-  /* #A0611A, the brand orange (#BE7721, logo and icons) darkened just enough
-     for 4.5:1 with white button text and as text on the page (WCAG AA). */
-  --primary: oklch(55.14% 0.115 63.3);
-  --primary-foreground: oklch(98.43% 0.003 247.86); /* Near white for text on primary */
-  --accent: oklch(55.14% 0.115 63.3); /* #A0611A, as primary */
-  --accent-foreground: oklch(98.43% 0.003 247.86); /* Near white for text on accent */
+  /* The brand crimson: 7.6:1 with white button text and as text on the page
+     (WCAG AAA). Restaurants without their own colours get it too
+     (lib/color-theme DEFAULT_THEME and SITE_TOKENS; keep them in step). */
+  --primary: #9b1c2e;
+  --primary-foreground: #fbf8f6;
+  --accent: #9b1c2e;
+  --accent-foreground: #fbf8f6;
 
-  --attention: oklch(38.6% 0.065 65.4); /* #5C3C1B, a dark brown */
+  --attention: #6b1422; /* a deep wine */
 
   /* The public menu's top section (.menu-header); lib/color-theme makes the
      same three from a restaurant's own colours. */
-  --menu-header: #faead9;
+  --menu-header: #faedeb;
   --menu-header-foreground: #2a2315;
-  --menu-header-muted: #73695a;
+  --menu-header-muted: #736a60;
 
   /* Plates (components/shared/Plate). Change these to recolour every plate:
      the well and its rim-side edge, the shade on the well's near wall, the
@@ -105,104 +106,108 @@
   --plate-rim: oklch(95.5% 0.01 85);
   --plate-rim-shadow: oklch(89.5% 0.016 88.45);
   --plate-glaze: oklch(100% 0 0 / 0.95);
-  --plate-band: oklch(55.14% 0.115 63.3 / 0.55);
+  --plate-band: rgb(155 28 46 / 0.5);
   --plate-shadow: oklch(35% 0.05 70 / 0.3);
 
-  --secondary: oklch(90.72% 0.051 68.34); /* #F8DBBD, a pale orange - for secondary elements */
+  --secondary: #f7e1e1; /* a pale rose - for secondary elements (chips) */
   --secondary-foreground: oklch(25.99% 0.026 82.52); /* stone-700 for text on secondary */
-  --muted: oklch(90.72% 0.051 68.34); /* #F8DBBD, as secondary */
+  --muted: #f7e1e1; /* as secondary */
 
   --border: oklch(89.5% 0.016 88.45); /* stone-200: #E7E5E4 */
   --input: oklch(89.5% 0.016 88.45); /* stone-200: #E7E5E4 */
-  --ring: oklch(63.09% 0.129 65.4); /* Match primary/accent for ring */
+  --ring: #b8283c; /* a lighter crimson for focus rings */
 
   --destructive: oklch(57.7% 0.245 27.325); /* Original destructive for consistency */
 
   --sidebar: oklch(98.36% 0.007 88.07); /* stone-50 */
   --sidebar-foreground: oklch(25.99% 0.026 82.52); /* stone-700 */
-  --sidebar-primary: oklch(55.14% 0.115 63.3); /* #A0611A, as primary */
-  --sidebar-primary-foreground: oklch(98.43% 0.003 247.86); /* Near white */
-  --sidebar-accent: oklch(90.72% 0.051 68.34); /* #F8DBBD, as secondary */
+  --sidebar-primary: #9b1c2e; /* as primary */
+  --sidebar-primary-foreground: #fbf8f6;
+  --sidebar-accent: #f7e1e1; /* as secondary */
   --sidebar-accent-foreground: oklch(25.99% 0.026 82.52); /* stone-700 */
   --sidebar-border: oklch(89.5% 0.016 88.45); /* stone-200 */
-  --sidebar-ring: oklch(63.09% 0.129 65.4); /* #BE7721, as primary */
+  --sidebar-ring: #b8283c; /* as ring */
 
-  --chart-1: oklch(63.09% 0.129 65.4); /* #BE7721, as primary */
+  --chart-1: #9b1c2e; /* as primary */
   --chart-2: oklch(50.45% 0.141 24.3); /* red-500 */
   --chart-3: oklch(35.03% 0.033 84.81); /* stone-600 */
   --chart-4: oklch(82.91% 0.093 120.93); /* yellow-500 */
   --chart-5: oklch(76.2% 0.12 100.9); /* lime-500 */
 
   /* Doodles (components/svg): the blob, the ink and a tile behind them.
-     Light: amber blob, dark ink, no tile. */
+     Light: crimson blob, dark ink, no tile. */
   --doodle-fill: var(--primary);
   --doodle-ink: var(--foreground);
   --doodle-backdrop: transparent;
 }
 
 .dark {
-  /* Warm & Inviting Palette - DARK MODE (Even Lighter) */
-  --background: oklch(20.31% 0.027 84.72); /* stone-800: #292524 - Main dark background, lighter */
-  --card: oklch(25.99% 0.026 82.52); /* stone-700: #44403C - Lighter card background */
-  --popover: oklch(25.99% 0.026 82.52); /* stone-700 */
+  /* Dark mode: deep wine-tinted neutrals (dinner by candlelight), a soft rose
+     for the brand (crimson itself is too dark to read on them) and stoneware
+     plates. Contrast: body text 15:1, muted 8:1 on cards, rose 9:1 on the
+     page, dark text on rose buttons 9:1. */
+  --background: #221316;
+  --card: #30201f;
+  --popover: #30201f;
 
-  --foreground: oklch(89.5% 0.016 88.45); /* stone-200: #E7E5E4 - Light, readable text */
-  --card-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
-  --popover-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
-  --muted-foreground: oklch(72% 0.02 85); /* #AAA497: softer text that still reads at 4.5:1+ on cards, the page and muted chips */
+  --foreground: #f3e9e1;
+  --card-foreground: #f3e9e1;
+  --popover-foreground: #f3e9e1;
+  --muted-foreground: #c9b9b1; /* 6.5:1+ on cards, the page and muted chips */
 
-  --primary: oklch(80.52% 0.177 82.8); /* #F6B200, the dark-mode brand orange (dark logo) */
-  --primary-foreground: oklch(20.31% 0.027 84.72); /* stone-800 for text on primary */
-  --accent: oklch(80.52% 0.177 82.8); /* #F6B200, as primary */
-  --accent-foreground: oklch(20.31% 0.027 84.72); /* stone-800 */
+  --primary: #f2a7b1; /* a soft rose: the crimson, lifted for dark backgrounds */
+  --primary-foreground: #2a0e14;
+  --accent: #f2a7b1;
+  --accent-foreground: #2a0e14;
 
-  --attention: oklch(60% 0.1 65.4); /* #A9733A, a lighter brown for the dark theme */
+  --attention: #e0899a;
 
-  --menu-header: #372e1e;
-  --menu-header-foreground: #e1dcd1;
-  --menu-header-muted: #9d9689;
+  --menu-header: #3a2827;
+  --menu-header-foreground: #f3e9e1;
+  --menu-header-muted: #a99c97;
 
-  /* Dimmed plates for now; item 5 (dark mode) tries brighter ones. */
-  --plate: oklch(30% 0.026 83);
-  --plate-well-edge: oklch(27.5% 0.026 83);
-  --plate-well-shade: oklch(0% 0 0 / 0.45);
-  --plate-rim-light: oklch(31.5% 0.026 83);
-  --plate-rim: oklch(27% 0.026 83);
-  --plate-rim-shadow: oklch(22.5% 0.027 84);
-  --plate-glaze: oklch(100% 0 0 / 0.07);
-  --plate-band: oklch(80.52% 0.177 82.8 / 0.45);
+  /* Stoneware: a dark charcoal-brown glaze, easy on the eyes, with a thin
+     gold band, so plates don't glare on a dark page. */
+  --plate: oklch(28% 0.018 45);
+  --plate-well-edge: oklch(25% 0.018 45);
+  --plate-well-shade: oklch(0% 0 0 / 0.5);
+  --plate-rim-light: oklch(34% 0.02 45);
+  --plate-rim: oklch(28.5% 0.018 45);
+  --plate-rim-shadow: oklch(21% 0.018 45);
+  --plate-glaze: oklch(100% 0 0 / 0.06);
+  --plate-band: rgb(222 184 135 / 0.5);
   --plate-shadow: oklch(0% 0 0 / 0.55);
 
-  --secondary: oklch(35.03% 0.033 84.81); /* stone-600: #57534E - Darker neutral for secondary elements */
-  --secondary-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
-  --muted: oklch(35.03% 0.033 84.81); /* stone-600 */
+  --secondary: #43302e;
+  --secondary-foreground: #f3e9e1;
+  --muted: #43302e;
 
   --destructive: oklch(70.4% 0.191 22.216); /* Brighter red for dark mode (remains similar) */
-  --border: oklch(35.03% 0.033 84.81); /* stone-600 */
-  --input: oklch(35.03% 0.033 84.81); /* stone-600 */
-  --ring: oklch(80.52% 0.177 82.8); /* #F6B200, as primary */
+  --border: #4a3533;
+  --input: #4a3533;
+  --ring: #f2a7b1; /* as primary */
 
-  --chart-1: oklch(80.52% 0.177 82.8); /* #F6B200, as primary */
+  --chart-1: #f2a7b1; /* as primary */
   --chart-2: oklch(70.4% 0.191 22.216); /* red-400 */
-  --chart-3: oklch(50% 0.025 85); /* muted-foreground */
-  --chart-4: oklch(89.5% 0.016 88.45); /* stone-200 */
+  --chart-3: #8a7a74;
+  --chart-4: #f3e9e1;
   --chart-5: oklch(76.2% 0.12 100.9); /* lime-500 */
 
   /* Dark: the drawings leave faces and skin see-through and draw hair and
      outlines in solid ink, so light ink would look like a negative. They
      keep dark ink and sit on a soft warm tile instead, like stickers. */
-  --doodle-fill: oklch(80.52% 0.177 82.8); /* #F6B200, as primary */
+  --doodle-fill: #9b1c2e; /* the light crimson, on the tile */
   --doodle-ink: oklch(25.99% 0.026 82.52); /* stone-700 */
-  --doodle-backdrop: oklch(86% 0.035 80); /* warm beige */
+  --doodle-backdrop: #ead9d3; /* a warm rose-beige */
 
-  --sidebar: oklch(25.99% 0.026 82.52); /* Matches card background */
-  --sidebar-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
-  --sidebar-primary: oklch(80.52% 0.177 82.8); /* #F6B200, as primary */
-  --sidebar-primary-foreground: oklch(20.31% 0.027 84.72); /* stone-800 */
-  --sidebar-accent: oklch(35.03% 0.033 84.81); /* stone-600 */
-  --sidebar-accent-foreground: oklch(89.5% 0.016 88.45); /* stone-200 */
-  --sidebar-border: oklch(35.03% 0.033 84.81); /* stone-600 */
-  --sidebar-ring: oklch(80.52% 0.177 82.8); /* #F6B200, as primary */
+  --sidebar: #30201f; /* Matches card background */
+  --sidebar-foreground: #f3e9e1;
+  --sidebar-primary: #f2a7b1; /* as primary */
+  --sidebar-primary-foreground: #2a0e14;
+  --sidebar-accent: #43302e;
+  --sidebar-accent-foreground: #f3e9e1;
+  --sidebar-border: #4a3533;
+  --sidebar-ring: #f2a7b1; /* as primary */
 }
 
 /* A plate seen from above (components/shared/Plate), lit from the top-left:
@@ -311,16 +316,16 @@
   }
 }
 
-/* The marketing pages' background: separate round amber glows of
+/* The marketing pages' background: separate round crimson glows of
    different sizes, on the sides and in the middle, the largest behind the
    hero and none near the footer. Positions are a share of the page's
    height, so every page gets the same pattern. Mirrored in Arabic,
    and gentler in dark mode. */
 .site-glow {
-  /* The primary amber, see-through. Plain colours rather than color-mix,
-     which older browsers would replace with solid amber. */
-  --glow: oklch(63.09% 0.129 65.4 / 0.26);
-  --glow-soft: oklch(63.09% 0.129 65.4 / 0.16);
+  /* The crimson (rose at night), see-through. Plain colours rather than color-mix,
+     which older browsers would replace with solid crimson. */
+  --glow: rgb(184 40 60 / 0.16);
+  --glow-soft: rgb(184 40 60 / 0.09);
   background-image:
     radial-gradient(circle 26rem at 88% 6%, var(--glow), transparent),
     radial-gradient(circle 14rem at 6% 24%, var(--glow-soft), transparent),
@@ -329,8 +334,8 @@
     radial-gradient(circle 17rem at 14% 72%, var(--glow-soft), transparent);
 }
 .dark .site-glow {
-  --glow: oklch(80.52% 0.177 82.8 / 0.15);
-  --glow-soft: oklch(80.52% 0.177 82.8 / 0.09);
+  --glow: rgb(242 167 177 / 0.1);
+  --glow-soft: rgb(242 167 177 / 0.06);
 }
 [dir="rtl"] .site-glow {
   transform: scaleX(-1);

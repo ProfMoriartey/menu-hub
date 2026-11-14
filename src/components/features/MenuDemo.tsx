@@ -199,7 +199,7 @@ export function MenuDemo({
           language and direction; the sheet opens inside it. A slim bezel in
           the site's card colour; "isolate" keeps the sheet and its shade
           under the site's sticky navbar. */}
-      <div className="bg-card ring-foreground/15 relative isolate h-[620px] w-[320px] shrink-0 rounded-[2.5rem] p-[5px] shadow-[0_30px_60px_-24px_rgba(120,60,10,0.45)] ring-1 lg:order-1">
+      <div className="bg-card ring-foreground/15 relative isolate h-[620px] w-[320px] shrink-0 rounded-[2.5rem] p-[5px] shadow-[0_30px_60px_-24px_var(--plate-shadow)] ring-1 lg:order-1">
         <div className="ring-border relative h-full overflow-hidden rounded-[2.2rem] ring-1">
           <div
             ref={setFrame}

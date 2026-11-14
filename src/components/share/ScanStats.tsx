@@ -7,10 +7,10 @@ import { ScanLine } from "lucide-react";
 import type { ScanStats as ScanStatsData } from "~/server/qr-scans";
 import { cn } from "~/lib/utils";
 
-// The brand orange (light --primary). Reads at 3:1 or more on both theme
-// surfaces (light card #FCF9F4: 3.4:1, dark card #2A2315: 4.3:1); the
-// theme's lighter dark-mode amber falls outside the chart lightness band.
-const BAR_COLOR = "#BE7721";
+// A mid crimson, between the light --primary and the dark-mode rose. Reads
+// at 3:1 or more on both theme surfaces (light card #FCF9F4: 4.1:1, dark
+// card #30201F: 3.6:1), which neither theme's own primary does on the other.
+const BAR_COLOR = "#D24B5E";
 const CHART_HEIGHT = 128;
 
 function StatTile({ label, value }: { label: string; value: string }) {
