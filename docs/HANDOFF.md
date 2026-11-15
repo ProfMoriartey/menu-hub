@@ -4,6 +4,10 @@ Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
 that cost time before. Last updated 2026-11-15, after commit `fe85d30` on
 `main` (the redesign: see §8 "Design system" and the redesign steps in §9).
+Marketing videos, posts and stories follow `docs/content-plan.md` (agreed
+ideas, brand rules, schedule); `/brag` videos go in `brag-output*/`.
+Social profile images, covers and transparent logos are in `public/social/`
+(made from `brag-output/work/social.html`; not linked from any page).
 
 ---
 

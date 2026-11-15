@@ -49,3 +49,5 @@ yarn-error.log*
 
 
 .claude
+# brag launch videos (large renders)
+/brag-output*/
