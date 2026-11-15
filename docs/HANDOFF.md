@@ -2,9 +2,8 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-14, after commit `776b049` on
-branch `new/unslop` (the redesign: see §8 "Design system" and the
-redesign steps in §9).
+that cost time before. Last updated 2026-11-15, after commit `fe85d30` on
+`main` (the redesign: see §8 "Design system" and the redesign steps in §9).
 
 ---
 
@@ -397,7 +396,10 @@ Share (status, QR with logo switch, PNG/SVG downloads, link copy, permanent
 link note, printable A4/A6 table cards with card language + second line, scan
 stats); Team (members, invite editors by link with copy/WhatsApp, pending
 invitations with new link/cancel, remove editors, leave); invitations on the
-home page; language switcher; unsaved-changes guard.
+home page; language switcher (`shared/LanguageSwitcher`, a Select with
+`position="popper"`: the list drops below the button in a fixed order, so
+no language hides behind Radix's hover-to-scroll arrow; taller rows on
+phones); unsaved-changes guard.
 
 **Public:** three designs (`lib/menu-design.ts`: classic, photo-grid,
 compact), all one scrolling page (`components/public/MenuLayout.tsx`) with a
@@ -607,7 +609,10 @@ an icon in the footer once filled in).
 
 **Home page** (`(site)/page.tsx`, for restaurant owners), top to bottom:
 hero (headline and buttons on a big plate, cropped on phones; the demo
-phone beside it), "How it works" (`StepPlates`), "What your guests see"
+phone beside it; the Turkish headline is "Menüler artık çok kolay", the
+other languages keep "Your menu on every phone, in every language"; no
+slogan under the logo for now, the owner's decision of 2026-11-15),
+"How it works" (`StepPlates`), "What your guests see"
 (four points with dotted rules, demo dishes on `PlatePhoto`s; texts
 `HomePage.guests`), "Everything your menu needs" (`LeaderRow`s on a
 `Platter`; texts `HomePage.features.items`), "Menus in <country>" or

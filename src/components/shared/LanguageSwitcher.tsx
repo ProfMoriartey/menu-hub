@@ -72,13 +72,18 @@ export function LanguageSwitcher({
           <SelectValue />
         )}
       </SelectTrigger>
-      <SelectContent align="end">
+      {/* Popper: the list drops below the button in a fixed order. The
+          default (item-aligned) puts the current language over the button,
+          so from any language but the first, the ones above it hid behind
+          a hover-to-scroll arrow at the top of the page. */}
+      <SelectContent position="popper" align="end" className="min-w-40">
         {routing.locales.map((code) => (
           <SelectItem
             key={code}
             value={code}
             lang={code}
             dir={code === "ar" ? "rtl" : "ltr"}
+            className="min-h-11 text-base sm:min-h-9 sm:text-sm"
           >
             {LANGUAGE_NAMES[code] ?? code.toUpperCase()}
           </SelectItem>
