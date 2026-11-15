@@ -16,8 +16,9 @@ export function AdminNav({ requestCount }: { requestCount: number }) {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Admin">
-      <ul className="flex gap-1">
+    <nav aria-label="Admin" className="min-w-0">
+      {/* Scrolls sideways on phones instead of widening the whole page. */}
+      <ul className="flex gap-1 overflow-x-auto">
         {NAV_ITEMS.map((item) => {
           const isActive = pathname.startsWith(item.href);
           return (
@@ -26,7 +27,7 @@ export function AdminNav({ requestCount }: { requestCount: number }) {
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150",
+                  "block rounded-lg px-3 py-2 text-sm whitespace-nowrap font-medium transition-colors duration-150",
                   isActive
                     ? "bg-accent text-accent-foreground"
                     : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",

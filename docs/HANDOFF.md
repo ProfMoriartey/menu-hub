@@ -350,6 +350,9 @@ Applied in dev 2026-11-14.
 - Buttons have a 10px corner radius (`rounded-[10px]`, the shared `Button`
   base), never pills; toggle tracks around them use `rounded-[14px]`.
   Badges, dots, avatars and switches stay round.
+- The admin top bar's nav (`AdminNav`) scrolls sideways on phones; its
+  wrappers need `min-w-0`, or the bar widens every admin page past the
+  screen (fixed 2026-11-15).
 - No small "eyebrow" labels above or below headings on the marketing pages
   (removed on purpose, 2026-11-14); `PageHero` has no `eyebrow` prop.
 

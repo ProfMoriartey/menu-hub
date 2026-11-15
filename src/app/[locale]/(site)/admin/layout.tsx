@@ -45,7 +45,7 @@ export default async function AdminDashboardLayout({
     <div className={cn("min-h-screen", "bg-background dark:bg-[var(--cloth-ground)]")}>
       {/* Top Navigation Bar for Admin */}
       <header className="bg-card text-card-foreground border-border sticky top-0 z-20 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b px-4 py-3 sm:px-8 print:hidden">
-        <div className="flex items-center gap-6">
+        <div className="flex min-w-0 items-center gap-6">
           <h2 className="text-primary text-lg font-extrabold tracking-tight">
             Admin
           </h2>
