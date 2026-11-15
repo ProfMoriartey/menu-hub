@@ -5,7 +5,6 @@ import { redirect } from "~/i18n/navigation";
 import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
-import { ExperimentalNote } from "~/components/dashboard/ExperimentalNote";
 import { MenuLanguagesSettings } from "~/components/menu-languages/MenuLanguagesSettings";
 
 export const metadata: Metadata = {
@@ -34,7 +33,6 @@ export default async function RestaurantLanguagesPage({
   return (
     <>
       <DashboardRestaurantHeader restaurant={restaurant} role={role} activeTab="languages" />
-      <ExperimentalNote />
       <MenuLanguagesSettings
         restaurantId={restaurant.id}
         isAdmin={role === "admin"}

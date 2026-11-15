@@ -187,8 +187,7 @@
     "languagesTab": "Idiomas",
     "planTab": "Plan",
     "branchesTab": "Sucursales y horarios",
-    "experimental": "Experimental",
-    "experimentalNote": "Esta sección es experimental: por ahora todos los planes pueden usarla. Puede cambiar y, más adelante, incluirse solo en algunos planes."
+    "experimental": "Experimental"
   },
   "LanguageSwitcher": {
     "label": "Idioma"
@@ -754,8 +753,8 @@
     },
     "pricing": {
       "bill": "La cuenta",
-      "title": "{months} gratis, y después {price} al mes",
-      "text": "Todo lo de este menú está incluido. Sin extras ni cargos por escaneo.",
+      "title": "{months} gratis, y después desde {yearly} al año",
+      "text": "Dos planes, sin extras ni cargos por escaneo. Pro no tiene límites de locales ni de idiomas.",
       "link": "Ver precios"
     },
     "featureLinks": {
@@ -902,10 +901,10 @@
           "note": "Clásico, cuadrícula de fotos o compacto. Cámbialo cuando quieras.",
           "value": "3"
         },
-        "languages": {
-          "name": "Idiomas",
-          "note": "Inglés, turco, árabe, español y ruso.",
-          "value": "5"
+        "stats": {
+          "name": "Visitas al menú",
+          "note": "Mira cuántos clientes abrieron tu menú cada día.",
+          "value": "a diario"
         },
         "colors": {
           "name": "Temas de color",
@@ -1012,7 +1011,7 @@
     "limitReachedAdmin": "{count, plural, one {Este plan permite # sucursal.} other {Este plan permite hasta # sucursales.}} Cambia el plan o sube el límite en la tarjeta Features."
   },
   "Plans": {
-    "pricingNote": "Precios en dólares estadounidenses. Nada que pagar durante la prueba: la facturación empieza solo cuando termina, con tarjeta o en efectivo.",
+    "pricingNote": "Precios en liras turcas. Nada que pagar durante la prueba: la facturación empieza solo cuando termina, con tarjeta o en efectivo.",
     "cycleLabel": "Facturación",
     "monthly": "Mensual",
     "yearly": "Anual",
@@ -1022,16 +1021,14 @@
     "perMonthShort": "/ mes",
     "perYearShort": "/ año",
     "everything": "Carta, fotos, código QR y tarjetas de mesa",
-    "oneBranch": "1 sucursal",
-    "branchesIncluded": "{count} sucursales incluidas",
-    "extraBranches": "{price} por sucursal extra, hasta {max}",
-    "extraBranchesNoLimit": "{price} por sucursal extra",
-    "defaultColors": "Colores predeterminados",
+    "rowBranches": "Locales",
+    "rowLanguages": "Idiomas extra",
+    "upTo": "Hasta {count}",
+    "unlimited": "Sin límite",
     "customColors": "Tus propios colores",
     "oneLanguage": "Carta en un idioma",
     "extraLanguages": "{count, plural, one {Carta en # idioma extra} other {Carta en hasta # idiomas extra}}",
     "allLanguages": "Carta en todos los idiomas",
-    "branchesNoLimit": "Todas las sucursales que necesites",
     "trialBadge": "Prueba gratis",
     "freeMonthsShort": "{count, plural, one {# mes gratis} other {# meses gratis}}",
     "regularPrice": "Precio normal {price}",
@@ -1165,19 +1162,20 @@
   },
   "pricingPage": {
     "metaTitle": "Precios del menú QR: {months} gratis | Menupedia",
-    "metaDescription": "Menupedia es gratis durante {months} y después cuesta {price} al mes con todo incluido: menú con fotos, códigos QR, tarjetas de mesa, 5 idiomas y tu propio diseño.",
+    "metaDescription": "Menupedia es gratis durante {months} y después cuesta desde {yearly} al año ({price} al mes): menú con fotos, códigos QR, tarjetas de mesa y tu propio diseño. Pro no tiene límites.",
     "hero": {
       "title": "Precios sencillos para tu menú digital"
     },
     "included": {
-      "title": "Todo está incluido en el plan",
+      "title": "Dos planes sencillos",
       "intro": "Sin extras ni cargos por escaneo, mesa o plato.",
       "course": "Qué incluye",
       "link": "Ver todas las funciones",
       "yes": "Incluido"
     },
     "price": {
-      "yearly": "O {yearly} al año: {saving}."
+      "monthly": "{saving} frente al pago mensual. O {price} al mes.",
+      "then": "Cuando termine la prueba, elige el plan que te convenga."
     },
     "trial": {
       "title": "Cómo funciona la prueba gratuita",
@@ -1211,7 +1209,7 @@
         },
         "yearly": {
           "q": "¿Sale más barato pagar al año?",
-          "a": "Sí. Un año cuesta {yearly}, es decir, {saving} frente al pago mensual."
+          "a": "Sí. Pagando al año tienes {saving} frente al pago mensual: Standard cuesta {yearly} al año y Pro {topYearly}."
         },
         "extras": {
           "q": "¿Hay costes extra por escaneos, mesas o platos?",
@@ -1223,12 +1221,13 @@
         },
         "chains": {
           "q": "Tengo varios restaurantes o una cadena. ¿Cuánto cuesta?",
-          "a": "Escríbenos y cuéntanos sobre tus locales, y buscaremos contigo el plan adecuado."
+          "a": "Pro incluye todos los locales e idiomas que necesites, por {topYearly} al año. Escríbenos si quieres ayuda para elegir."
         }
       }
     },
     "cta": {
-      "start": "Crea tu menú"
+      "start": "Crea tu menú",
+    "choose": "Elegir {plan}"
     }
   },
   "multilingualPage": {
@@ -1415,7 +1414,7 @@
         "items": {
           "cost": {
             "q": "¿Cuánto cuesta Menupedia?",
-            "a": "Los primeros {months} son gratis. Después cuesta {price} al mes o {yearly} al año, con todo incluido."
+            "a": "Los primeros {months} son gratis. Después, Standard cuesta {yearly} al año o {price} al mes, y Pro, sin límites de locales ni idiomas, {topYearly} al año o {topPrice} al mes."
           },
           "pay": {
             "q": "¿Cómo pago?",

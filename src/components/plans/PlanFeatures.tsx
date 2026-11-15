@@ -2,9 +2,9 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { Check } from "lucide-react";
+import { LeaderRow } from "~/components/shared/LeaderRow";
 import { TIER_FEATURES, periodPrice, type Tier } from "~/lib/plans";
-import { planLines, planMoney } from "./plan-lines";
+import { planMoney, planRows } from "./plan-lines";
 
 /** "$45" in the page's language. */
 export function usePlanMoney() {
@@ -12,17 +12,14 @@ export function usePlanMoney() {
   return (amount: number) => planMoney(amount, locale);
 }
 
-/** What a tier includes, a line each (sign-up form and pricing section). */
+/** What a tier includes, as menu rows (sign-up form and the owner's plan page). */
 export function PlanFeatureList({ tier, className }: { tier: Tier; className?: string }) {
   const t = useTranslations("Plans");
-  const money = usePlanMoney();
-  const lines = planLines(tier, t, money);
+  const included = useTranslations("pricingPage")("included.yes");
   return (
-    <ul className={className ?? "space-y-1.5 text-sm"}>
-      {lines.map((line) => (
-        <li key={line} className="flex items-start gap-2">
-          <Check className="text-primary mt-0.5 h-4 w-4 shrink-0" aria-hidden /> {line}
-        </li>
+    <ul className={className ?? "space-y-2 text-sm"}>
+      {planRows(tier, t, included).map((row) => (
+        <LeaderRow key={row.name} name={row.name} value={row.value} />
       ))}
     </ul>
   );

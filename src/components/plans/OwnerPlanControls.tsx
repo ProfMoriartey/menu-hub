@@ -122,8 +122,8 @@ export function GoLiveCard({
 /**
  * Asking for another plan (or yearly billing): it reaches an admin, who
  * gets in touch about the price. An open request can be withdrawn. Only
- * the plans on offer (lib/plans OFFERED_TIERS) are listed; with just one,
- * it's monthly or yearly.
+ * the plans on offer (lib/plans OFFERED_TIERS) are listed, monthly or
+ * yearly.
  */
 export function PlanChangeForm({
   restaurantId,
@@ -192,7 +192,7 @@ export function PlanChangeForm({
         </div>
       ) : (
         <>
-          <div role="radiogroup" aria-label={t("changeTitle")} className="grid gap-2 sm:grid-cols-3">
+          <div role="radiogroup" aria-label={t("changeTitle")} className="grid gap-2 sm:grid-cols-2">
             {OFFERED_TIERS.map((id) => (
               <button
                 key={id}

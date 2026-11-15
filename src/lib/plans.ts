@@ -1,16 +1,19 @@
 // src/lib/plans.ts
 // The plans restaurants pay for, what each includes, and what a
 // restaurant may use: its tier's features, changed by any admin override
-// (a special deal). Prices are in US dollars.
+// (a special deal). Prices are in Turkish lira.
 
 export const TIERS = ["standard", "pro", "business"] as const;
 export type Tier = (typeof TIERS)[number];
-export const isTier = (value: unknown): value is Tier => TIERS.includes(value as Tier);
+export const isTier = (value: unknown): value is Tier =>
+  TIERS.includes(value as Tier);
 
-// The tiers restaurants can pick for now (pricing, sign-up, plan change).
-// The others stay for restaurants already on them and for admins.
-export const OFFERED_TIERS: readonly Tier[] = ["standard"];
-export const isOfferedTier = (value: unknown): value is Tier => OFFERED_TIERS.includes(value as Tier);
+// The tiers restaurants can pick (pricing, sign-up, plan change), cheapest
+// first. Business is no longer offered: it stays for any restaurant
+// already on it and for admins.
+export const OFFERED_TIERS: readonly Tier[] = ["standard", "pro"];
+export const isOfferedTier = (value: unknown): value is Tier =>
+  OFFERED_TIERS.includes(value as Tier);
 
 // A self sign-up's free months before its first payment is due. When they
 // end, the menu goes offline until a payment is recorded (server/plans).
@@ -18,7 +21,7 @@ export const FREE_MONTHS = 6;
 
 export interface TierFeatures {
   label: string;
-  // US dollars a month.
+  // Turkish lira a month.
   price: number;
   // Branches included in the price, and the most allowed (null = no limit).
   includedBranches: number;
@@ -31,42 +34,36 @@ export interface TierFeatures {
   extraLanguages: number | null;
 }
 
-export const PLAN_CURRENCY = "USD";
-// Each branch beyond those included, on Pro and Business, a month.
-export const EXTRA_BRANCH_PRICE = 15;
+export const PLAN_CURRENCY = "TRY";
 // A year costs 10 months: 2 months free.
 export const MONTHS_PAID_PER_YEAR = 10;
 
+const PRO: TierFeatures = {
+  label: "Pro",
+  price: 449,
+  includedBranches: 1,
+  maxBranches: null,
+  extraBranchPrice: 0,
+  customColors: true,
+  extraLanguages: null,
+};
+
 export const TIER_FEATURES: Record<Tier, TierFeatures> = {
-  // Branches, languages and colours are experimental: open to Standard
-  // for now, at no extra cost.
+  // Standard: the menu, own colours, 1 extra language, up to 3 branches.
   standard: {
     label: "Standard",
-    price: 25,
-    includedBranches: 1,
-    maxBranches: null,
+    price: 199,
+    includedBranches: 3,
+    maxBranches: 3,
     extraBranchPrice: 0,
     customColors: true,
-    extraLanguages: null,
+    extraLanguages: 1,
   },
-  pro: {
-    label: "Pro",
-    price: 45,
-    includedBranches: 3,
-    maxBranches: 5,
-    extraBranchPrice: EXTRA_BRANCH_PRICE,
-    customColors: true,
-    extraLanguages: 2,
-  },
-  business: {
-    label: "Business",
-    price: 120,
-    includedBranches: 10,
-    maxBranches: null,
-    extraBranchPrice: EXTRA_BRANCH_PRICE,
-    customColors: true,
-    extraLanguages: null,
-  },
+  // Pro: no limits.
+  pro: PRO,
+  // Not offered (OFFERED_TIERS): Pro under its old name, for any
+  // restaurant still on it.
+  business: { ...PRO, label: "Business" },
 };
 
 export const BILLING_CYCLES = [
@@ -85,7 +82,11 @@ export interface FeatureOverrides {
   maxBranches: number | null;
 }
 
-export const NO_OVERRIDES: FeatureOverrides = { customColors: null, extraLanguages: null, maxBranches: null };
+export const NO_OVERRIDES: FeatureOverrides = {
+  customColors: null,
+  extraLanguages: null,
+  maxBranches: null,
+};
 
 /** What a restaurant may use: what a restaurant row stores (schema.ts). */
 export interface Entitlements {
@@ -99,7 +100,10 @@ export interface Entitlements {
  * The tier's features with the overrides on top. A restaurant without a
  * plan gets Standard's (an admin can still override them).
  */
-export function entitlements(tier: Tier | null, overrides: FeatureOverrides): Entitlements {
+export function entitlements(
+  tier: Tier | null,
+  overrides: FeatureOverrides,
+): Entitlements {
   const base = TIER_FEATURES[tier ?? "standard"];
   return {
     customColors: overrides.customColors ?? base.customColors,
@@ -109,8 +113,10 @@ export function entitlements(tier: Tier | null, overrides: FeatureOverrides): En
 }
 
 /** The branches a restaurant is billed for: those it has, up to its limit. */
-export const billedBranches = (branchCount: number, maxBranches: number | null) =>
-  maxBranches === null ? branchCount : Math.min(branchCount, maxBranches);
+export const billedBranches = (
+  branchCount: number,
+  maxBranches: number | null,
+) => (maxBranches === null ? branchCount : Math.min(branchCount, maxBranches));
 
 /**
  * What a tier costs a month with `branches` branches: its price plus each
@@ -118,7 +124,11 @@ export const billedBranches = (branchCount: number, maxBranches: number | null) 
  */
 export function tierMonthlyPrice(tier: Tier, branches: number): number {
   const features = TIER_FEATURES[tier];
-  return features.price + Math.max(0, branches - features.includedBranches) * features.extraBranchPrice;
+  return (
+    features.price +
+    Math.max(0, branches - features.includedBranches) *
+      features.extraBranchPrice
+  );
 }
 
 /** What one billing period costs: a month, or a year (10 months' price). */
@@ -164,9 +174,14 @@ export function planPricing(
   const features = TIER_FEATURES[tier];
   const billed = billedBranches(branchCount, limits.maxBranches);
   // Only branches that cost extra are counted as extra.
-  const extraBranches = features.extraBranchPrice > 0 ? Math.max(0, billed - features.includedBranches) : 0;
+  const extraBranches =
+    features.extraBranchPrice > 0
+      ? Math.max(0, billed - features.includedBranches)
+      : 0;
   const custom = plan.monthlyPrice !== null;
-  const monthly = custom ? Number(plan.monthlyPrice) : tierMonthlyPrice(tier, billed);
+  const monthly = custom
+    ? Number(plan.monthlyPrice)
+    : tierMonthlyPrice(tier, billed);
   return {
     tier,
     monthly,

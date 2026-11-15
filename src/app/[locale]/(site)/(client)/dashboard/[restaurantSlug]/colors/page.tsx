@@ -8,7 +8,6 @@ import { canEditDetails } from "~/lib/access";
 import { startingTheme } from "~/lib/color-theme";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
 import { AppearanceEditor } from "~/components/colors/AppearanceEditor";
-import { ExperimentalNote } from "~/components/dashboard/ExperimentalNote";
 import { menuClothOf, menuDesignOf } from "~/lib/menu-design";
 
 export const metadata: Metadata = {
@@ -39,7 +38,6 @@ export default async function DashboardColorsPage({
         role={role}
         activeTab="colors"
       />
-      <ExperimentalNote />
       <AppearanceEditor
         restaurantId={restaurant.id}
         isAdmin={role === "admin"}

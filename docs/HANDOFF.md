@@ -2,7 +2,7 @@
 
 Read this before changing anything. It records how the app is built, the
 rules the code follows, what has been done, what is open, and the traps
-that cost time before. Last updated 2026-11-15, after commit `fe85d30` on
+that cost time before. Last updated 2026-11-15, after commit `4a17f6c` on
 `main` (the redesign: see §8 "Design system" and the redesign steps in §9).
 Marketing videos, posts and stories follow `docs/content-plan.md` (agreed
 ideas, brand rules, schedule); `/brag` videos go in `brag-output*/`.
@@ -466,11 +466,18 @@ show "2 branches · Istanbul, Ankara" and "Open now at 1 branch". Country
 and city options count a chain once per place; the local count and the
 home page's "menus near you" use any branch in the country.
 
-**Plans:** `lib/plans` defines the tiers (prices in US dollars):
-Standard $25 (1 branch, default colours, one language), Pro $45 (3
-branches included, $15 per extra up to 5, custom colours, up to 2 extra
-languages), Business $120 (10 included, $15 per extra, no limit, every
-language). Yearly = 10 months' price for 12. An admin picks the tier,
+**Plans:** `lib/plans` defines the tiers (prices in Turkish lira,
+`PLAN_CURRENCY = "TRY"`, shown as "₺" by `planMoney`). Offered
+(`OFFERED_TIERS`): Standard ₺199 a month / ₺1,990 a year (own colours,
+1 extra language, up to 3 branches) and Pro ₺449 / ₺4,490 (no limits).
+Business is no longer offered; it stays only for restaurants already on it,
+with Pro's price and limits. Yearly is the default and shown first
+on the price card (one column per plan, each linking to
+`/start?plan=<tier>`), `/features` and `/start` (a plan picker). What a plan includes shows as menu rows (`plan-lines.planRows`: included
+first, then "Branches … Up to 3", "Extra languages … Unlimited") on the
+price card, the sign-up picker and the owner's plan page. The
+dashboard's "experimental, every plan can use it" note is gone; the flask
+on those tabs stays. Yearly = 10 months' price for 12. An admin picks the tier,
 cycle and an optional special price (any currency) on the restaurant's
 Plan tab, and can override any feature on the Details tab's Features card
 (colours on/off, extra languages, branch limit: "From plan" or a value).

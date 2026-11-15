@@ -57,8 +57,9 @@ never need reprinting. Not tied to any one country or cuisine.
 - Permanent QR links (`/r/...`), printable table cards, daily scan statistics,
   search-engine friendly pages, link previews for sharing.
 - Teams (owner and editor roles, invite links), a menus directory (`/menus`).
-- Pricing: free for 6 months, then $25 a month or $250 a year, everything
-  included; payment by card or cash, handled manually (no payment provider).
+- Pricing: free for 6 months, then two plans (yearly shown first): Standard ₺1,990 a year / ₺199 a
+  month (own colours, 1 extra language, up to 3 branches) and Pro ₺4,490 /
+  ₺449 (no limits); payment by card or cash, handled manually (no payment provider).
 - Stack: Next.js 15, Tailwind CSS v4, shadcn/Radix, next-intl, Clerk, Drizzle on
   PostgreSQL, UploadThing.
 

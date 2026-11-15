@@ -25,7 +25,7 @@ import {
   type BillingDetailsField,
   type BillingDetailsInput,
 } from "~/lib/billing-details";
-import { FREE_MONTHS, MONTHS_PAID_PER_YEAR, TIER_FEATURES, type Tier } from "~/lib/plans";
+import { FREE_MONTHS, MONTHS_PAID_PER_YEAR, OFFERED_TIERS, TIER_FEATURES, type Tier } from "~/lib/plans";
 import { slugify } from "~/lib/slug";
 import { VENUE_TYPES } from "~/lib/venue-types";
 import type { CountryOption } from "~/lib/countries";
@@ -315,7 +315,7 @@ export function StartForm({
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div role="radiogroup" aria-label={t("cycleLabel")} className="bg-muted inline-flex rounded-[14px] p-1">
-            {(["monthly", "yearly"] as const).map((cycle) => (
+            {(["yearly", "monthly"] as const).map((cycle) => (
               <button
                 key={cycle}
                 type="button"
@@ -337,14 +337,29 @@ export function StartForm({
             ))}
           </div>
         </div>
-        {/* The plan chosen on the pricing section (one is offered for now:
-            lib/plans OFFERED_TIERS). */}
-        <div className="bg-card border-primary ring-primary/30 grid gap-5 rounded-xl border p-5 ring-2 sm:grid-cols-2">
-          <div>
-            <p className="text-lg font-bold">{TIER_FEATURES[values.tier].label}</p>
-            <TrialPrice tier={values.tier} cycle={values.billingCycle} freeMonths={FREE_MONTHS} className="mt-2" />
-          </div>
-          <PlanFeatureList tier={values.tier} className="space-y-1.5 text-sm" />
+        {/* The plans on offer (lib/plans OFFERED_TIERS); the one picked on
+            the pricing page starts selected. */}
+        <div role="radiogroup" aria-label={t("planHeading")} className="space-y-3">
+          {OFFERED_TIERS.map((tier) => (
+            <button
+              key={tier}
+              type="button"
+              role="radio"
+              aria-checked={values.tier === tier}
+              onClick={() => set({ tier })}
+              className={cn(
+                "bg-card grid w-full gap-5 rounded-xl border p-5 text-start sm:grid-cols-2",
+                "focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
+                values.tier === tier ? "border-primary ring-primary/30 ring-2" : "border-border hover:bg-accent/40",
+              )}
+            >
+              <div>
+                <p className="text-lg font-bold">{TIER_FEATURES[tier].label}</p>
+                <TrialPrice tier={tier} cycle={values.billingCycle} freeMonths={FREE_MONTHS} className="mt-2" />
+              </div>
+              <PlanFeatureList tier={tier} />
+            </button>
+          ))}
         </div>
         <p className="text-muted-foreground text-sm">{t("trialExplain", { count: FREE_MONTHS })}</p>
       </section>

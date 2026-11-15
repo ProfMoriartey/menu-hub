@@ -40,7 +40,7 @@ This file is the one to work from; keep both in step.
 - **Honesty:** no invented customers, reviews or numbers. Demo menus from
   real places are shown only as examples, never as customers.
 - **Offer:** say only "6 ay ücretsiz" (free for 6 months). Never show the
-  price ($25 a month / $250 a year): owners see it on the website.
+  prices (Standard ₺2,990 / Pro ₺4,490 a year): owners see it on the website.
 - **On posts and videos:** the website (menu-pedia.com) and Instagram
   @menupediaofficial. No phone number and no email: people reach us from the
   website if they need to.

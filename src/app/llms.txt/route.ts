@@ -40,7 +40,7 @@ export function GET() {
   )}`;
   const plans = OFFERED_TIERS.map((tier) => {
     const { label, price } = TIER_FEATURES[tier];
-    return `- **${label}**: ${price} ${PLAN_CURRENCY} a month, or ${periodPrice(price, "yearly")} ${PLAN_CURRENCY} a year (${12 - MONTHS_PAID_PER_YEAR} months free).`;
+    return `- **${label}**: ${periodPrice(price, "yearly")} ${PLAN_CURRENCY} a year (${12 - MONTHS_PAID_PER_YEAR} months free), or ${price} ${PLAN_CURRENCY} a month.`;
   });
 
   const text = `# ${SITE_NAME}
@@ -56,7 +56,7 @@ ${features.join("\n")}
 ## Pricing
 
 ${plans.join("\n")}
-- The first ${FREE_MONTHS} months are free, with nothing to pay during the trial. Prices are in US dollars.
+- The first ${FREE_MONTHS} months are free, with nothing to pay during the trial. Prices are in Turkish lira.
 - After the trial, pay ${payment}, monthly or yearly.
 - Current plans: ${page("/pricing")}
 
@@ -64,7 +64,7 @@ ${plans.join("\n")}
 
 - [Home](${page("")}): what ${SITE_NAME} does, a working demo menu, pricing and contact
 - [Features](${page("/features")}): everything a menu can do, with a live demo
-- [Pricing](${page("/pricing")}): the plan, what it includes, the free trial and how to pay
+- [Pricing](${page("/pricing")}): the plans, what each includes, the free trial and how to pay
 - [Multilingual menus](${page("/multilingual-menu")}): one QR code, the menu in each guest's language
 - [FAQ](${page("/faq")}): common questions from restaurants, answered
 - [About](${page("/about")}): how ${SITE_NAME} works and who it is for

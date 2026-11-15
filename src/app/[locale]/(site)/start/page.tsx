@@ -36,7 +36,7 @@ export default async function StartPage({
   const params = await searchParams;
   const plan = one(params.plan);
   const tier = isOfferedTier(plan) ? plan : OFFERED_TIERS[0]!;
-  const cycle = one(params.cycle) === "yearly" ? "yearly" : "monthly";
+  const cycle = one(params.cycle) === "monthly" ? "monthly" : "yearly";
   const [t, locale, { userId }] = await Promise.all([getTranslations("Start"), getLocale(), auth()]);
   const here = `/${locale}/start?plan=${tier}&cycle=${cycle}`;
 

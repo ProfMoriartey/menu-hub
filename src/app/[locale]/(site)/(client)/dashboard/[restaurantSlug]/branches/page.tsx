@@ -5,7 +5,6 @@ import { redirect } from "~/i18n/navigation";
 import { getDashboardRestaurant } from "~/server/dashboard-restaurant";
 import { canEditDetails } from "~/lib/access";
 import { DashboardRestaurantHeader } from "~/components/dashboard/DashboardRestaurantHeader";
-import { ExperimentalNote } from "~/components/dashboard/ExperimentalNote";
 import { BranchesSettings } from "~/components/branches/BranchesSettings";
 import { getBranchesForEdit } from "~/server/branches";
 import { countryOptions } from "~/lib/countries";
@@ -41,7 +40,6 @@ export default async function RestaurantBranchesPage({
         role={role}
         activeTab="branches"
       />
-      <ExperimentalNote />
       <BranchesSettings
         restaurantId={restaurant.id}
         branches={await getBranchesForEdit(restaurant.id)}

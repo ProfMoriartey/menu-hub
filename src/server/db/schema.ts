@@ -358,7 +358,7 @@ export const restaurantBilling = pgTable("menu-hub_restaurant_billing", {
   tier: varchar("tier", { length: 16 }),
   // "monthly" or "yearly" (10 months' price for 12).
   billingCycle: varchar("billing_cycle", { length: 8 }).notNull().default("monthly"),
-  // A special price a month, in `currency`. Null = the tier's (US dollars).
+  // A special price a month, in `currency`. Null = the tier's (Turkish lira).
   monthlyPrice: numeric("monthly_price", { precision: 12, scale: 2 }),
   currency: varchar("currency", { length: 3 }).notNull().default("USD"),
   // An admin's changes to the tier's features for this restaurant (a

@@ -3,18 +3,19 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { ArrowRight } from "lucide-react";
 import { Link } from "~/i18n/navigation";
 import { Button } from "~/components/ui/button";
-import { planLines, planMoney } from "~/components/plans/plan-lines";
+import { planMoney, planRows } from "~/components/plans/plan-lines";
 import { CourseTitle } from "~/components/shared/CourseTitle";
 import { LeaderRow } from "~/components/shared/LeaderRow";
 import { Platter } from "~/components/shared/Plate";
-import { FREE_MONTHS, OFFERED_TIERS, TIER_FEATURES } from "~/lib/plans";
+import { FREE_MONTHS, OFFERED_TIERS, TIER_FEATURES, periodPrice } from "~/lib/plans";
 import { planFacts } from "~/server/plan-facts";
 
 /**
  * The price card (pricing and home pages), one platter like the features
- * menu: the free months and the price (monthly and yearly) at the top,
- * what's included, anything the page adds (the trial, on pricing), then
- * the pricing note, the create button and a link (to /features or /pricing).
+ * menu: the free months at the top, then each plan on offer side by side
+ * (its yearly price, the monthly one, what's included and a button to sign
+ * up with it), anything the page adds (the trial, on pricing), then the
+ * pricing note, the create button and a link (to /features or /pricing).
  */
 export async function PlanSummary({
   link,
@@ -29,30 +30,41 @@ export async function PlanSummary({
     getTranslations("Plans"),
     planFacts(locale),
   ]);
-  const tier = OFFERED_TIERS[0]!;
   const money = (n: number) => planMoney(n, locale);
-  const included = planLines(tier, (key, values) => tPlans(key, values), money);
 
   return (
-    <Platter className="mx-auto max-w-3xl">
+    <Platter className="mx-auto max-w-4xl">
       <header className="text-center">
         <p className="text-4xl font-extrabold tracking-tight sm:text-5xl">
           {tPlans("freeMonthsShort", { count: FREE_MONTHS })}
         </p>
-        <p className="text-muted-foreground mt-3 text-lg">
-          {tPlans("thenPerMonth", { price: money(TIER_FEATURES[tier].price) })}
-        </p>
-        <p className="text-muted-foreground mt-1">{t("price.yearly", facts)}</p>
+        <p className="text-muted-foreground mt-3 text-lg">{t("price.then")}</p>
       </header>
 
-      <section aria-labelledby="plan-included" className="mt-10">
-        <CourseTitle id="plan-included">{t("included.course")}</CourseTitle>
-        <ul className="mt-5 space-y-4">
-          {included.map((line) => (
-            <LeaderRow key={line} name={line} value={t("included.yes")} />
-          ))}
-        </ul>
-      </section>
+      <div className="mt-10 grid gap-10 sm:grid-cols-2">
+        {OFFERED_TIERS.map((tier) => {
+          const { label, price } = TIER_FEATURES[tier];
+          return (
+            <section key={tier} aria-labelledby={`plan-${tier}`} className="flex flex-col">
+              <CourseTitle id={`plan-${tier}`}>{label}</CourseTitle>
+              <p className="mt-4 text-center text-3xl font-extrabold tracking-tight tabular-nums">
+                {tPlans("perYear", { price: money(periodPrice(price, "yearly")) })}
+              </p>
+              <p className="text-muted-foreground mt-1 text-center text-sm">
+                {t("price.monthly", { saving: facts.saving, price: money(price) })}
+              </p>
+              <ul className="mt-6 mb-6 space-y-4">
+                {planRows(tier, (key, values) => tPlans(key, values), t("included.yes")).map((row) => (
+                  <LeaderRow key={row.name} name={row.name} value={row.value} />
+                ))}
+              </ul>
+              <Button className="mt-auto self-center" variant="outline" asChild>
+                <Link href={`/start?plan=${tier}`}>{t("cta.choose", { plan: label })}</Link>
+              </Button>
+            </section>
+          );
+        })}
+      </div>
 
       {children}
 

@@ -187,8 +187,7 @@
     "languagesTab": "Languages",
     "planTab": "Plan",
     "branchesTab": "Branches & hours",
-    "experimental": "Experimental",
-    "experimentalNote": "This section is experimental: every plan can use it for now. It may change, and later come with some plans only."
+    "experimental": "Experimental"
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -754,8 +753,8 @@
     },
     "pricing": {
       "bill": "The bill",
-      "title": "{months} free, then {price} a month",
-      "text": "Everything on this menu is included. No add-ons, no charge per scan.",
+      "title": "{months} free, then from {yearly} a year",
+      "text": "Two plans, no add-ons, no charge per scan. Pro has no limits on branches or languages.",
       "link": "See pricing"
     },
     "featureLinks": {
@@ -902,10 +901,10 @@
           "note": "Classic, photo grid or compact. Switch any time.",
           "value": "3"
         },
-        "languages": {
-          "name": "Languages",
-          "note": "English, Turkish, Arabic, Spanish and Russian.",
-          "value": "5"
+        "stats": {
+          "name": "Menu views",
+          "note": "See how many guests opened your menu each day.",
+          "value": "daily"
         },
         "colors": {
           "name": "Colour themes",
@@ -1012,7 +1011,7 @@
     "limitReachedAdmin": "{count, plural, one {This plan allows # branch.} other {This plan allows up to # branches.}} Change the plan, or raise the limit on the Features card."
   },
   "Plans": {
-    "pricingNote": "Prices in US dollars. Nothing to pay during the trial: billing starts only when it ends, by card or in cash.",
+    "pricingNote": "Prices in Turkish lira. Nothing to pay during the trial: billing starts only when it ends, by card or in cash.",
     "cycleLabel": "Billing",
     "monthly": "Monthly",
     "yearly": "Yearly",
@@ -1022,16 +1021,14 @@
     "perMonthShort": "/ month",
     "perYearShort": "/ year",
     "everything": "Menu, photos, QR code and table cards",
-    "oneBranch": "1 branch",
-    "branchesIncluded": "{count} branches included",
-    "extraBranches": "{price} per extra branch, up to {max}",
-    "extraBranchesNoLimit": "{price} per extra branch",
-    "defaultColors": "Default colours",
+    "rowBranches": "Branches",
+    "rowLanguages": "Extra languages",
+    "upTo": "Up to {count}",
+    "unlimited": "Unlimited",
     "customColors": "Your own colours",
     "oneLanguage": "Menu in one language",
     "extraLanguages": "{count, plural, one {Menu in # extra language} other {Menu in up to # extra languages}}",
     "allLanguages": "Menu in every language",
-    "branchesNoLimit": "As many branches as you need",
     "trialBadge": "Free trial",
     "freeMonthsShort": "{count, plural, one {# month free} other {# months free}}",
     "regularPrice": "Regular price {price}",
@@ -1165,19 +1162,20 @@
   },
   "pricingPage": {
     "metaTitle": "QR menu pricing: {months} free | Menupedia",
-    "metaDescription": "Menupedia is free for {months}, then {price} a month for everything: menu with photos, QR codes, table cards, 5 languages and your own design.",
+    "metaDescription": "Menupedia is free for {months}, then from {yearly} a year ({price} a month): menu with photos, QR codes, table cards and your own design. Pro has no limits.",
     "hero": {
       "title": "Simple pricing for your digital menu"
     },
     "included": {
-      "title": "Everything is in the plan",
+      "title": "Two simple plans",
       "intro": "No add-ons, and no charges per scan, table or dish.",
       "course": "What's included",
       "link": "See every feature",
       "yes": "Included"
     },
     "price": {
-      "yearly": "Or {yearly} a year: {saving}."
+      "monthly": "{saving} compared with paying monthly. Or {price} a month.",
+      "then": "Then pick the plan that fits, once the trial ends."
     },
     "trial": {
       "title": "How the free trial works",
@@ -1211,7 +1209,7 @@
         },
         "yearly": {
           "q": "Is it cheaper to pay yearly?",
-          "a": "Yes. A year costs {yearly}, which is {saving} compared with paying monthly."
+          "a": "Yes. Paying yearly gives you {saving} compared with paying monthly: Standard is {yearly} a year, Pro {topYearly}."
         },
         "extras": {
           "q": "Are there extra fees for scans, tables or dishes?",
@@ -1223,12 +1221,13 @@
         },
         "chains": {
           "q": "I run several restaurants or a chain. What does it cost?",
-          "a": "Get in touch and tell us about your places, and we'll find the right plan with you."
+          "a": "Pro has as many branches and languages as you need, for {topYearly} a year. Get in touch if you'd like help choosing."
         }
       }
     },
     "cta": {
-      "start": "Create your menu"
+      "start": "Create your menu",
+    "choose": "Choose {plan}"
     }
   },
   "multilingualPage": {
@@ -1415,7 +1414,7 @@
         "items": {
           "cost": {
             "q": "How much does Menupedia cost?",
-            "a": "The first {months} are free. After that it's {price} a month, or {yearly} a year, with everything included."
+            "a": "The first {months} are free. After that Standard is {yearly} a year or {price} a month, and Pro, with no limits on branches or languages, is {topYearly} a year or {topPrice} a month."
           },
           "pay": {
             "q": "How do I pay?",

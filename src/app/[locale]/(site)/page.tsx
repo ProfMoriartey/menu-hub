@@ -37,7 +37,7 @@ const STEPS = ["s1", "s2", "s3"] as const;
 const GUEST_POINTS = ["p1", "p2", "p3", "p4"] as const;
 
 // The features as menu rows (HomePage.features.items).
-const FEATURES = ["designs", "languages", "colors", "instant", "hours", "qr"] as const;
+const FEATURES = ["designs", "colors", "instant", "hours", "stats", "qr"] as const;
 
 // Cards in "menus near you".
 const MENUS_SHOWN = 6;
