@@ -27,11 +27,11 @@ build billing or sign-up unless asked.
 
 There are three audiences:
 
-| Audience | Where | Language |
-|---|---|---|
-| Guests | public menu `/<slug>`, item pages, `/menus` (directory) | 5 languages |
-| Restaurant staff (owners, editors) | `/dashboard/...` | 5 languages |
-| The project owner (system admin) | `/admin/...` | English (shared components follow the URL locale) |
+| Audience                           | Where                                                   | Language                                          |
+| ---------------------------------- | ------------------------------------------------------- | ------------------------------------------------- |
+| Guests                             | public menu `/<slug>`, item pages, `/menus` (directory) | 5 languages                                       |
+| Restaurant staff (owners, editors) | `/dashboard/...`                                        | 5 languages                                       |
+| The project owner (system admin)   | `/admin/...`                                            | English (shared components follow the URL locale) |
 
 ---
 
@@ -70,14 +70,14 @@ comes from Clerk). `src/env.js` validates the server ones and
 
 ### Commands
 
-| Command | What it does |
-|---|---|
-| `pnpm dev` | dev server |
-| `pnpm typecheck` / `pnpm lint` / `pnpm check` | `tsc --noEmit` / `next lint` / both |
-| `pnpm i18n:check` | every literal `t("key")` exists in all 5 locales, every message formats (ICU, plurals), every server error code has a message |
-| `pnpm db:generate` | generate a migration from schema changes (always read and, if needed, edit the SQL before applying) |
-| `pnpm db:migrate` | apply migrations. **Use this, not `db:push`**: some migrations backfill data that `push` skips |
-| `pnpm uploads:cleanup` | dry run: list UploadThing files nothing references; add `-- --delete` to delete (see §9) |
+| Command                                       | What it does                                                                                                                  |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm dev`                                    | dev server                                                                                                                    |
+| `pnpm typecheck` / `pnpm lint` / `pnpm check` | `tsc --noEmit` / `next lint` / both                                                                                           |
+| `pnpm i18n:check`                             | every literal `t("key")` exists in all 5 locales, every message formats (ICU, plurals), every server error code has a message |
+| `pnpm db:generate`                            | generate a migration from schema changes (always read and, if needed, edit the SQL before applying)                           |
+| `pnpm db:migrate`                             | apply migrations. **Use this, not `db:push`**: some migrations backfill data that `push` skips                                |
+| `pnpm uploads:cleanup`                        | dry run: list UploadThing files nothing references; add `-- --delete` to delete (see §9)                                      |
 
 ---
 
@@ -138,32 +138,32 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 
 ### Key modules
 
-| File | Role |
-|---|---|
-| `lib/action-result.ts` | `ActionResult<T>`, `ActionError(code)`, `ACTION_ERROR_CODES`, `unwrap()`, `ActionFailure`. Browser-safe |
-| `server/run-action.ts` | `runAction(fallbackCode, body)`: translates errors with the request locale; server-only |
-| `app/actions/auth.ts` | `isSystemAdmin`, `getRestaurantRole`, `checkAuthorization` (any access), `checkOwnerAuthorization` (owner/admin) |
-| `lib/access.ts` | `ACCESS_LEVELS` (`owner`, `editor`), `RestaurantRole` (+ `admin`), `canEditDetails` |
-| `server/public-menu.ts` | cached reads for public pages (`getRestaurantBySlug`, `getPublicMenu`, `getPublicMenuItem`, `getMenusDirectory`; `unstable_cache`, no Date columns) and `revalidatePublicMenu(id)` / `revalidatePublicRestaurant(id?)`, which every save action must call |
-| `lib/format-price.ts` | guest-language prices, server only (see §6) |
-| `lib/category-section.ts`, `lib/dietary-labels.ts` | menu section ids; dietary label → translation key |
-| `server/menu-data.ts` | category summaries / category with items, shared by admin + dashboard |
-| `server/dashboard-restaurant.ts` | `getDashboardRestaurant(slug)` → restaurant + viewer's role (React `cache`) |
-| `server/setup-facts.ts` + `lib/setup-checklist.ts` | getting-started checklist data (grouped queries) and rules |
-| `server/qr-scans.ts` | record scans, bot filter, 7/30/all-time stats |
-| `server/uploads.ts` | `deleteUploadedFiles(urls)`: only deletes files no restaurant/item still references |
-| `server/public-origin.ts` | public origin + share links (`menuUrl`, `permanentUrl`) |
-| `server/clerk-profiles.ts` | batch Clerk profile lookup (name, photo, last sign-in, admin) |
-| `lib/slug.ts` | `slugify`, `uniqueSlug`, `isUuid` |
-| `lib/schemas.ts` | restaurant zod schema, `RESERVED_SLUGS` |
-| `lib/venue-types.ts` | fixed venue types (`VENUE_TYPES`), stored as keys in `typeOfEstablishment`; labels in `VenueTypes` messages; icons in `components/shared/VenueTypeIcon` |
-| `lib/countries.ts` | ISO country codes, `countryName(code, locale)`, `countryOptions(locale)`. Name countries on the server (browser and Node name data differ) |
-| `lib/menu-item-schemas.ts` | item zod schemas, `ITEM_AVAILABILITY` |
-| `lib/resize-image.ts` | browser-side image shrinking before upload |
-| `lib/qr-code.ts` | QR to SVG/PNG (logo in the middle), logo loading via `/_next/image` |
-| `lib/unsaved-changes.ts` | `useUnsavedChangesGuard`, `hasUnsavedChanges` |
-| `lib/table-card-text.ts` | printed card headlines per language (not in messages; chosen per print) |
-| `utils/uploadthing.ts` | `UploadButton`, shared `uploadButtonClass` |
+| File                                               | Role                                                                                                                                                                                                                                                      |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lib/action-result.ts`                             | `ActionResult<T>`, `ActionError(code)`, `ACTION_ERROR_CODES`, `unwrap()`, `ActionFailure`. Browser-safe                                                                                                                                                   |
+| `server/run-action.ts`                             | `runAction(fallbackCode, body)`: translates errors with the request locale; server-only                                                                                                                                                                   |
+| `app/actions/auth.ts`                              | `isSystemAdmin`, `getRestaurantRole`, `checkAuthorization` (any access), `checkOwnerAuthorization` (owner/admin)                                                                                                                                          |
+| `lib/access.ts`                                    | `ACCESS_LEVELS` (`owner`, `editor`), `RestaurantRole` (+ `admin`), `canEditDetails`                                                                                                                                                                       |
+| `server/public-menu.ts`                            | cached reads for public pages (`getRestaurantBySlug`, `getPublicMenu`, `getPublicMenuItem`, `getMenusDirectory`; `unstable_cache`, no Date columns) and `revalidatePublicMenu(id)` / `revalidatePublicRestaurant(id?)`, which every save action must call |
+| `lib/format-price.ts`                              | guest-language prices, server only (see §6)                                                                                                                                                                                                               |
+| `lib/category-section.ts`, `lib/dietary-labels.ts` | menu section ids; dietary label → translation key                                                                                                                                                                                                         |
+| `server/menu-data.ts`                              | category summaries / category with items, shared by admin + dashboard                                                                                                                                                                                     |
+| `server/dashboard-restaurant.ts`                   | `getDashboardRestaurant(slug)` → restaurant + viewer's role (React `cache`)                                                                                                                                                                               |
+| `server/setup-facts.ts` + `lib/setup-checklist.ts` | getting-started checklist data (grouped queries) and rules                                                                                                                                                                                                |
+| `server/qr-scans.ts`                               | record scans, bot filter, 7/30/all-time stats                                                                                                                                                                                                             |
+| `server/uploads.ts`                                | `deleteUploadedFiles(urls)`: only deletes files no restaurant/item still references                                                                                                                                                                       |
+| `server/public-origin.ts`                          | public origin + share links (`menuUrl`, `permanentUrl`)                                                                                                                                                                                                   |
+| `server/clerk-profiles.ts`                         | batch Clerk profile lookup (name, photo, last sign-in, admin)                                                                                                                                                                                             |
+| `lib/slug.ts`                                      | `slugify`, `uniqueSlug`, `isUuid`                                                                                                                                                                                                                         |
+| `lib/schemas.ts`                                   | restaurant zod schema, `RESERVED_SLUGS`                                                                                                                                                                                                                   |
+| `lib/venue-types.ts`                               | fixed venue types (`VENUE_TYPES`), stored as keys in `typeOfEstablishment`; labels in `VenueTypes` messages; icons in `components/shared/VenueTypeIcon`                                                                                                   |
+| `lib/countries.ts`                                 | ISO country codes, `countryName(code, locale)`, `countryOptions(locale)`. Name countries on the server (browser and Node name data differ)                                                                                                                |
+| `lib/menu-item-schemas.ts`                         | item zod schemas, `ITEM_AVAILABILITY`                                                                                                                                                                                                                     |
+| `lib/resize-image.ts`                              | browser-side image shrinking before upload                                                                                                                                                                                                                |
+| `lib/qr-code.ts`                                   | QR to SVG/PNG (logo in the middle), logo loading via `/_next/image`                                                                                                                                                                                       |
+| `lib/unsaved-changes.ts`                           | `useUnsavedChangesGuard`, `hasUnsavedChanges`                                                                                                                                                                                                             |
+| `lib/table-card-text.ts`                           | printed card headlines per language (not in messages; chosen per print)                                                                                                                                                                                   |
+| `utils/uploadthing.ts`                             | `UploadButton`, shared `uploadButtonClass`                                                                                                                                                                                                                |
 
 ### Shared component folders
 
@@ -194,18 +194,18 @@ layout split cut a menu page's JavaScript from 394 KB to 212 KB gzipped
 
 ## 4. Data model (`src/server/db/schema.ts`)
 
-| Table | Notes |
-|---|---|
-| `menu-hub_restaurants` | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb); `menuCloth` (`plain`/`gingham`/`damask`, the public menu's tablecloth) |
-| `menu-hub_branches` | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card. Public pages per branch (see Branch pages); the Menus page uses every branch. Restaurant-level reads that need one location use the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
-| `menu-hub_restaurant_billing` | Admin-only, one row per billed restaurant: `planName` (null = not billed), `monthlyPrice` (numeric; 0 = free), `currency`, `startsOn` (first billed day), `notes`. Kept out of `restaurants` so it never reaches the cached public data |
-| `menu-hub_payments` | Payments recorded by hand: `paidOn`, `amount`, `currency`, `coversFrom`–`coversUntil` (inclusive), `method`, `note`, `recordedBy`. Paid-until = latest `coversUntil`. `restaurantId` is set null if the restaurant is deleted (`restaurantName` keeps the name for the books) |
-| `menu-hub_categories` | `slug` unique per restaurant; `order`; `translations` (name per language) |
-| `menu-hub_menu_items` | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language) |
-| `menu-hub_users` | Clerk user id + email (synced by the webhook) |
-| `menu-hub_users_to_restaurants` | `accessLevel` `owner` / `editor` (unknown values count as editor) |
-| `menu-hub_qr_scan_days` | `(restaurantId, day UTC)` → `count`; no personal data |
-| `menu-hub_restaurant_invites` | owner → editor invitations: lower-cased `email`, `tokenHash` (SHA-256 of the link token; the link itself is never stored), `expiresAt` (7 days), `invitedBy`. Unique per `(restaurantId, email)`: inviting again replaces the link. Accepted/cancelled rows are deleted, expired ones cleaned up when listed |
+| Table                           | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `menu-hub_restaurants`          | `slug` unique; `isActive` (live) and `isDisplayed` (featured on homepage); `logoUrl`, `ogImage`, `currency`, `theme`, social links (jsonb), SEO fields; menu languages: `multilingualEnabled` (admin switch), `mainLanguage`, `extraLanguages` (jsonb), `translations` (description per language); `brandColorEnabled` (admin switch for custom colours), `colorTheme` (jsonb light/dark palettes), legacy `brandColor` (#rrggbb); `menuCloth` (`plain`/`gingham`/`damask`, the public menu's tablecloth)                                                            |
+| `menu-hub_branches`             | Where a restaurant is; branches share its menu. `slug` unique per restaurant, `name` (null on an only branch), `order` (lowest = main branch); `address`, `city`, `country` (ISO code), `phoneNumber`, `mapUrl`, `deliveryApps` (jsonb), `timeZone` (IANA), `openingHours` (jsonb, `lib/opening-hours`). Every restaurant has one. Edited on the Branches card. Public pages per branch (see Branch pages); the Menus page uses every branch. Restaurant-level reads that need one location use the main branch (`server/branches`: `MAIN_BRANCH`, `withMainBranch`) |
+| `menu-hub_restaurant_billing`   | Admin-only, one row per billed restaurant: `planName` (null = not billed), `monthlyPrice` (numeric; 0 = free), `currency`, `startsOn` (first billed day), `notes`. Kept out of `restaurants` so it never reaches the cached public data                                                                                                                                                                                                                                                                                                                              |
+| `menu-hub_payments`             | Payments recorded by hand: `paidOn`, `amount`, `currency`, `coversFrom`–`coversUntil` (inclusive), `method`, `note`, `recordedBy`. Paid-until = latest `coversUntil`. `restaurantId` is set null if the restaurant is deleted (`restaurantName` keeps the name for the books)                                                                                                                                                                                                                                                                                        |
+| `menu-hub_categories`           | `slug` unique per restaurant; `order`; `translations` (name per language)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `menu-hub_menu_items`           | `slug` unique per restaurant; `order`; `availability` enum `available` / `sold_out` / `hidden`; `dietaryLabels` jsonb; `price` is free text; `translations` (name/description/ingredients per language)                                                                                                                                                                                                                                                                                                                                                              |
+| `menu-hub_users`                | Clerk user id + email (synced by the webhook)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `menu-hub_users_to_restaurants` | `accessLevel` `owner` / `editor` (unknown values count as editor)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `menu-hub_qr_scan_days`         | `(restaurantId, day UTC)` → `count`; no personal data                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `menu-hub_restaurant_invites`   | owner → editor invitations: lower-cased `email`, `tokenHash` (SHA-256 of the link token; the link itself is never stored), `expiresAt` (7 days), `invitedBy`. Unique per `(restaurantId, email)`: inviting again replaces the link. Accepted/cancelled rows are deleted, expired ones cleaned up when listed                                                                                                                                                                                                                                                         |
 
 Deleting a restaurant cascades to its categories, items, access rows, scan
 counts and invitations. Deleting a user cascades to their access rows.
@@ -294,6 +294,7 @@ Applied in dev 2026-11-14.
 ## 6. Rules the code follows (keep following them)
 
 ### Server actions and errors
+
 - Actions **return** `ActionResult` and never throw to the client: in
   production Next.js hides thrown error messages.
 - User-facing failures are `throw new ActionError("code")` inside
@@ -315,6 +316,7 @@ Applied in dev 2026-11-14.
   paths never match because of the locale prefix.
 
 ### i18n
+
 - Every user-facing string in public pages, the dashboard and shared
   components goes through next-intl in **all five** locales, with proper ICU
   plurals (Arabic zero/one/two/few/many/other, Russian one/few/many/other,
@@ -327,6 +329,7 @@ Applied in dev 2026-11-14.
   phone numbers and slugs `dir="ltr"`.
 
 ### UI conventions
+
 - Shared menu editing lives in `components/menu-editor` (admin and
   dashboard render the same components with different `basePath`).
 - Destructive actions use `ConfirmDialog` (shows errors, stays open while
@@ -351,7 +354,8 @@ Applied in dev 2026-11-14.
   (removed on purpose, 2026-11-14); `PageHero` has no `eyebrow` prop.
 
 ### Code style
-- Match the surrounding code; comments explain *why*, in plain sentences.
+
+- Match the surrounding code; comments explain _why_, in plain sentences.
 - Files in this repo mix LF and CRLF line endings: prefer the Edit tool over
   regex/`sed` for multi-line changes, and check that a scripted edit actually
   matched.
@@ -368,7 +372,7 @@ Applied in dev 2026-11-14.
      `node scripts/i18n/set-keys.cjs src/messages <file>` (refuses namespaces
      that aren't in the standard layout instead of reformatting them)
    - removing unused namespaces: `node scripts/i18n/remove-namespaces.cjs src/messages Ns1 Ns2`
-2. Run `pnpm i18n:check`. Keys built at runtime (`` t(`dietary.${key}`) ``) aren't
+2. Run `pnpm i18n:check`. Keys built at runtime (``t(`dietary.${key}`)``) aren't
    covered by the key scan; check those by hand.
 3. **Restart `next dev` after changing message files.** Turbopack keeps stale
    copies per compiled page, so new keys show as `Namespace.key` on pages
@@ -469,7 +473,7 @@ home page's "menus near you" use any branch in the country.
 **Plans:** `lib/plans` defines the tiers (prices in Turkish lira,
 `PLAN_CURRENCY = "TRY"`, shown as "₺" by `planMoney`). Offered
 (`OFFERED_TIERS`): Standard ₺199 a month / ₺1,990 a year (own colours,
-1 extra language, up to 3 branches) and Pro ₺449 / ₺4,490 (no limits).
+1 extra language, up to 3 branches) and Pro ₺399 / ₺3,990 (no limits).
 Business is no longer offered; it stays only for restaurants already on it,
 with Pro's price and limits. Yearly is the default and shown first
 on the price card (one column per plan, each linking to
@@ -538,10 +542,11 @@ step with what the app collects; have it reviewed by a lawyer.
 
 **Billing (admin only):** payments are collected by hand (bank transfer,
 cash) for now, so the site only records them.
-- *Plan tab* (`/admin/restaurants/<slug>/plan`): only the plan agreed with
+
+- _Plan tab_ (`/admin/restaurants/<slug>/plan`): only the plan agreed with
   the restaurant (name, monthly price, currency, "billed from" date,
   notes), and a link to its payments.
-- *Payments* (`/admin/payments`, in the admin menu): all the money work.
+- _Payments_ (`/admin/payments`, in the admin menu): all the money work.
   Tiles: received this month and this year, owed now (and by how many
   restaurants), due in the next 7 days, expected each month. One list
   (`components/admin/billing/PaymentsWorkspace`) of every payment received
@@ -549,7 +554,7 @@ cash) for now, so the site only records them.
   worked out, not stored), filtered by status (All / Pending / Overdue /
   Paid), restaurant and period, sortable by status, restaurant, date and
   amount; filters are kept in the address (`?status=&restaurant=&period=
-  &sort=&desc=1`, `lib/payment-filters`). "+ Add payment" and each pending
+&sort=&desc=1`, `lib/payment-filters`). "+ Add payment" and each pending
   month's "Mark paid" open the payment form in a dialog; paid rows can be
   deleted. Received by month for the last 12 months below.
 - Rules in `lib/billing`: dates in Europe/Istanbul. A restaurant's pending
@@ -738,14 +743,15 @@ the old design as the base and takes selected pieces from the "Table"
 redesign on branch `troupe/set-table` (PR #16). **That branch is reference
 only: never merge it, and never use its logo.** Look at it with
 `git show origin/troupe/set-table:<path>`.
-- *Font*: Bricolage Grotesque for Latin and Turkish, Onest for Russian,
+
+- _Font_: Bricolage Grotesque for Latin and Turkish, Onest for Russian,
   Noto Sans Arabic for Arabic, on every page (dashboard and admin too).
   `src/styles/fonts.ts` (next/font) plus self-hosted headline subsets in
   `public/fonts` ("Site Latin/Cyrillic/Arabic" `@font-face` in
   globals.css), preloaded per locale from `[locale]/layout.tsx` (sent as a
   `Link` header). `--font-sans` holds the stack; Russian puts Onest first;
   Arabic gets `letter-spacing: 0` (tracking utilities would break joins).
-- *Colour*: one brand colour, **crimson** `#9b1c2e` (light; 7.6:1 with
+- _Colour_: one brand colour, **crimson** `#9b1c2e` (light; 7.6:1 with
   white text), pale rose `#f7e1e1` for chips. Dark mode: wine-tinted dark
   neutrals (`#221316` page, `#30201f` cards), a soft **rose** `#f2a7b1` as
   the brand colour (crimson is too dark to read there), dark text on rose
@@ -754,7 +760,7 @@ only: never merge it, and never use its logo.** Look at it with
   (the menu header values are computed by `paletteTokens`: run it rather
   than guess). Amber Tailwind classes that remain are warnings (sold out,
   hidden, unpaid, preview banner), not brand.
-- *Plates*: `components/shared/Plate.tsx` (`Plate`, `PlatePhoto`,
+- _Plates_: `components/shared/Plate.tsx` (`Plate`, `PlatePhoto`,
   `Platter`) with the `plate` / `platter` utilities in globals.css: a
   sunken well, a raised rim lit from the top-left, a glaze highlight and a
   painted band drawn as a real border (a gradient ring looked jagged).
@@ -763,7 +769,7 @@ only: never merge it, and never use its logo.** Look at it with
   chosen so plates don't glare. `StepPlates` puts numbered steps on
   plates (number inside, above the title). `LeaderRow` sets a menu-style
   "name ····· value" line.
-- *Tablecloth*: every marketing page (`LayoutWrapper`, the `.site-cloth`
+- _Tablecloth_: every marketing page (`LayoutWrapper`, the `.site-cloth`
   layer; replaces the old amber glows) lies on a crimson **gingham** in
   light mode (the softer strength: stripes `--cloth-thread`, 34px) and a
   crimson **damask** in dark mode (`--cloth-ground` `#521320` with a faint
@@ -775,7 +781,7 @@ only: never merge it, and never use its logo.** Look at it with
   controls) has them added by hand. **New text placed straight on the
   page needs `napkin` too**, and buttons on the cloth use `outline`, not
   see-through `ghost`. The footer has its own background.
-- *Restaurant menus' tablecloth*: each restaurant picks **Plain**,
+- _Restaurant menus' tablecloth_: each restaurant picks **Plain**,
   **Gingham** or **Damask** on the Appearance page (under the design
   picker, saved with the design by `updateMenuDesign`; every plan, owner
   or admin). It is woven from the restaurant's own `--primary` (crimson
@@ -786,7 +792,7 @@ only: never merge it, and never use its logo.** Look at it with
   Damask: a 40px lattice on a ground tinted with the main colour (a deep
   shade of it at night; light: 14% tint, pattern at 15-16%; dark: the
   ground is the main colour at a deep lightness, `oklch(from var(--primary)
-  0.3 calc(c * 1.05) h)`, so the default rose gives the site damask's
+0.3 calc(c * 1.05) h)`, so the default rose gives the site damask's
   crimson `#521320` and a green restaurant a deep green; older browsers
   fall back to a 26% tint; pattern at 21%). The day/night strengths are theme variables
   (`--cloth-*` on `:root`/`.dark`); the editor preview and swatches set
@@ -802,18 +808,18 @@ only: never merge it, and never use its logo.** Look at it with
   wrapper must not paint `bg-background` themselves (it hides the cloth).
   Existing restaurants stay Plain until the owner changes it; new ones
   start on Gingham (column default).
-- *Colour editor*: owners set light and dark colours themselves. The
+- _Colour editor_: owners set light and dark colours themselves. The
   "Make from light mode" button was removed (the owner's call,
   2026-11-14), and no "Make from dark mode" either; `darkFromLight` only
   remains inside `startingTheme`, for restaurants with the old single
   brand colour.
-- *Dashboard and admin at night*: their page background is the marketing
+- _Dashboard and admin at night_: their page background is the marketing
   damask's deep crimson (`dark:bg-[var(--cloth-ground)]` on each layout's
   root), plain, with no pattern behind forms (owner's call, 2026-11-14);
   by day they stay on the plain page colour. Warnings (`--attention`) are
   a warm coral `#f0997d` at night, kept apart from the gold; the QR-scan
   chart bars use `--primary` (crimson by day, gold by night).
-- *Dashboard*: no tablecloth behind the work screens (forms and lists stay
+- _Dashboard_: no tablecloth behind the work screens (forms and lists stay
   plain). Light touches only: restaurant logos served on small plates
   (`PlatedLogo`) on the home cards and the restaurant header, and an
   empty plate in "create your restaurant". (A gingham strip under the top
@@ -821,12 +827,12 @@ only: never merge it, and never use its logo.** Look at it with
   plain on purpose** (the owner's call, 2026-11-14); `PlatedLogo` is only
   used in dashboard files, and shared editor components (menu-editor) are
   untouched so admin doesn't change with them.
-- */start* (sign-up) is a marketing page, so it lies on the tablecloth: its
+- _/start_ (sign-up) is a marketing page, so it lies on the tablecloth: its
   heading and each step of `StartForm` sit on a napkin, and the form steps
   and the "already signed up" box use the solid card colour in dark mode
   (`dark:bg-card`), because inputs are see-through and the cloth would
   show through them.
-- *Logo* (2026-11-14, the owner's design through eight rounds of
+- _Logo_ (2026-11-14, the owner's design through eight rounds of
   mock-ups): a rounded crimson square, the site's plate in its middle, and
   a gold bookmark ribbon falling from the top edge across the plate. The
   name "Menupedia" in Bricolage Grotesque ExtraBold, with a gold ribbon
@@ -842,7 +848,7 @@ only: never merge it, and never use its logo.** Look at it with
   two scripts kept with the mock-ups (not in the repo); to change the logo,
   ask for them to be rebuilt rather than editing the SVG paths by hand.
   Mock-ups: https://claude.ai/artifact/Qnuyd7ksCY62QUqd8s33PE (private).
-- *Mock-ups*: the tablecloth options, the crimson light/dark mock-up, the
+- _Mock-ups_: the tablecloth options, the crimson light/dark mock-up, the
   stoneware choice and the guest-menu cloth choice are on a private
   artifact: https://claude.ai/artifact/LoTiUJnYqSLCcLZmwjgq7m (the owner
   can open it; it is the visual reference for the next steps).
@@ -864,6 +870,7 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
 `0020`, applied in dev and production), the new logo (`fb55780`), dark mode in ivory and gold (`202c33c`), the clean-up
 (`2441cdd`). Done, awaiting the owner's commit: the home page pass (item
 6). Next:
+
 1. (done) Tablecloth backgrounds.
 2. (done) A cloth choice for restaurant menus.
 3. (done) New logo.
@@ -883,40 +890,40 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
 6. (done) Home page pass: doodles removed everywhere (home, about,
    contact band; drawings, `Reveal`, their CSS); headings stay centred;
    platters under the guests points and the plan's list (`ad92c53`).
-6b. (done, `85be6c4`) Outline buttons in dark mode get a solid card
+   6b. (done, `85be6c4`) Outline buttons in dark mode get a solid card
    surface (`components/ui/button.tsx`: `dark:bg-card`, hover
    `secondary` with ivory text) instead of a see-through tint that vanished
    on the damask; like the napkin-coloured button by day. The contact band's
    button stays see-through on purpose.
-6c. (done, `9973781`) Menus page pass: no title napkin (the `h1` is
+   6c. (done, `9973781`) Menus page pass: no title napkin (the `h1` is
    `sr-only`), the search first; on wider screens one row under it with
    type, country and city as dropdowns, open now and the language as
    chips, and the number of menus at the end (no "All menus" heading).
    The Featured row only shows with 12+ menus (`FEATURED_MIN_MENUS`).
-6d. (done, `33463a2`) Features page pass: no hero block (one small
+   6d. (done, `33463a2`) Features page pass: no hero block (one small
    heading over the demo, which lost its pale band); the 13 feature cards
    became one menu on a platter: courses (Starters, Mains, Desserts, On
    the side) of `LeaderRow`s with a short note and a "price" each
    (`featuresPage.features.<id>.value`), ending with the bill (the price,
    link to /pricing). "Friendly for guests" was dropped.
-6e. (done, `ff08c9d`) About page pass: "Our story" on one platter
+   6e. (done, `ff08c9d`) About page pass: "Our story" on one platter
    (the headline, the why, four one-line house rules, links to the demo
    and the menus), then the shared `ContactBand`. How it works, who it is
    for and the values cards went (said on home, features and the FAQ).
    `CourseTitle` (the heading between two rules) is shared with features.
-6f. (done, `1d93e6c`) Pricing page pass: one price card. `PlanSummary`
+   6f. (done, `1d93e6c`) Pricing page pass: one price card. `PlanSummary`
    is a single platter (the free months big, the monthly and yearly price,
    "What's included" as leader rows, then the page's own part, the note
    and buttons under a double rule); home uses it too. On /pricing a small
    heading replaces the hero, and the trial is three one-liners inside the
    card (`NumberedLines`, shared with about's house rules) instead of
    plates.
-6g. (done, `b0d78ca`) Multilingual menu page slimmed (kept for
+   6g. (done, `b0d78ca`) Multilingual menu page slimmed (kept for
    search: "çok dilli QR menü"): small heading, one platter (how it works
    as numbered lines, what guests get, who it's for, a link to the demo
    on /features), the questions, the contact band. The demo copy, the
    cards and the closing card went.
-6h. (done, `b9b9162`) FAQ page pass: small heading with links to
+   6h. (done, `b9b9162`) FAQ page pass: small heading with links to
    the four topics, every question on one platter (`FaqList plain`,
    `CourseTitle` per topic), links to /multilingual-menu and /pricing under
    their topics, then the contact band. New questions: PDF menu vs
@@ -924,13 +931,13 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    contract (owner 2026-11-14: monthly has no contract, stop any time; a
    yearly plan is paid up front and can be cancelled, no refund). The old
    `PageHero` and `CtaCard` are gone from `MarketingBlocks`.
-6i. (done, `e687f64`) Napkins solid at night everywhere (owner's
+   6i. (done, `e687f64`) Napkins solid at night everywhere (owner's
    call 2026-11-14): site `.dark` `--napkin` is the page colour with a
    shadow, and restaurant damask napkins no longer fade out at night
    (`--cloth-damask-napkin` removed). Restaurant menus: category names
    centred on their napkin with the number of dishes (`MenuLayout`, and the
    editor preview), and the search box solid in dark mode.
-6j. (done, `59882a3` and `776b049`) Owner dashboard, part 1: tabs in the order an
+   6j. (done, `59882a3` and `776b049`) Owner dashboard, part 1: tabs in the order an
    owner works (Menu, Details, Appearance, Languages, Branches & hours,
    Share & stats, Team, Plan; editors: Menu, Share & stats, Team), the menu
    languages on their own tab (`/languages`, out of Branches), a shorter
@@ -942,13 +949,13 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    branch's time zone like the stats) on the menu tab and the home cards
    of live restaurants, linking to `share#scans`; the home card's role hint
    only for editors.
-6k. (done, `776b049`) The restaurant's sections are one menu
+   6k. (done, `776b049`) The restaurant's sections are one menu
    instead of a tab row (`DashboardTabsMenu`, a popover: a button with the
    open section beside "View live menu"; the tab row and
    `ActiveTabIntoView` went). Experimental sections (Appearance, Languages,
    Branches & hours) carry a flask in the menu instead of the old
    "Experimental" badge, and their pages show `ExperimentalNote`.
-6l. (done, awaiting commit) Home "Menus on Menupedia" as wide as /menus
+   6l. (done, awaiting commit) Home "Menus on Menupedia" as wide as /menus
    (`max-w-5xl`), its link under the cards. The demo phone (`MenuDemo`,
    home and features) set like a real menu: a tablecloth (gingham by
    default, a Tablecloth choice on /features; `menu-cloth-*` with
@@ -956,9 +963,9 @@ touches (`4f9359e`), the restaurant menus' cloth choice (migration
    on a napkin with their count, and a working search (names and
    descriptions, `normalizeForSearch`). Category jumps are measured on
    screen, since the cloth is the sections' offset parent.
-8. **Next:** a guide page for search and AI ("How to make a QR menu",
+7. **Next:** a guide page for search and AI ("How to make a QR menu",
    Turkish and English first); to be planned with the owner.
-7. **Next: one page at a time** (owner's rule): the other marketing pages
+8. **Next: one page at a time** (owner's rule): the other marketing pages
    get the same treatment, platters only where there is a lot of text.
 
 **Possible follow-ups to team management:** sending invitation emails (needs
@@ -967,6 +974,7 @@ copied by hand today); seat limits per plan for the SaaS; an activity log of
 who changed what.
 
 **Ideas raised and deferred:**
+
 - Owner self-publishing ("Publish" button, maybe with admin review), building
   on preview + the "Ready to go live" queue.
 - Translating the admin-only pages.
@@ -978,6 +986,7 @@ who changed what.
 unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 
 **Still to check with the owner:**
+
 - `pnpm db:migrate` in production for migrations 0002–0010, before deploying
   (0005: Team tab; 0006: menu languages; 0007: hours and brand colour; 0008:
   colour themes; 0009: design names; 0010: city, venue types, country codes;
@@ -987,6 +996,7 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
 - Owners set on each restaurant's People tab (all old assignments became editors).
 
 **Agreed next steps, parked for now (2026-10-26):**
+
 1. **Owners publish their own menu**: a Publish button once the checklist
    is complete, probably as "request publishing" that an admin approves in
    one click (the "Ready to go live" filter becomes a review queue); owners
@@ -998,6 +1008,7 @@ unused UploadThing files cleaned up; migrations applied in dev up to 0008.
    activity log.
 
 **Known leftovers:**
+
 - `package-lock.json` is stale (pnpm is canonical).
 - Signed-out visits to the dashboard/admin redirect to sign-in with status 200
   (the redirect streams after `(site)/loading.tsx`). Harmless: crawlers are

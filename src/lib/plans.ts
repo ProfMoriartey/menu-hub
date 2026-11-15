@@ -40,7 +40,7 @@ export const MONTHS_PAID_PER_YEAR = 10;
 
 const PRO: TierFeatures = {
   label: "Pro",
-  price: 449,
+  price: 399,
   includedBranches: 1,
   maxBranches: null,
   extraBranchPrice: 0,

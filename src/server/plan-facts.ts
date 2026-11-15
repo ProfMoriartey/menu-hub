@@ -12,7 +12,7 @@ import {
 /**
  * The numbers the marketing pages quote, in the page's language: the free
  * trial ("6 months"), the cheapest plan's price a month and a year ("₺199",
- * "₺2,990"), the top plan's ("₺449", "₺4,490") and what paying yearly
+ * "₺2,990"), the top plan's ("₺399", "₺3,990") and what paying yearly
  * saves ("2 months free"). They come from lib/plans, so the Pricing and
  * FAQ pages change with the plans.
  */
